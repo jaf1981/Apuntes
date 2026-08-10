@@ -7748,6 +7748,72 @@ body {
     }
   }, true);
 
+  /* ---- resumen de sesión (sesion_fin): foto del progreso al entrar, delta al salir ---- */
+  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo' };
+
+  function fotoProgreso() {
+    var out = {};
+    for (var mat in PROG_KEYS) {
+      var s = null;
+      try { s = JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) {}
+      var fcRev = 0;
+      if (s && s.fcReviewed) {
+        for (var k in s.fcReviewed) {
+          var f = s.fcReviewed[k];
+          fcRev += (f.known || 0) + (f.unknown || 0);
+        }
+      }
+      out[mat] = {
+        xp: (s && s.xp) || 0,
+        preg: (s && s.totalAnswered) || 0,
+        ok: (s && s.totalCorrect) || 0,
+        pag: (s && s.pagesVisited && s.pagesVisited.length) || 0,
+        fc: fcRev,
+        logros: (s && s.unlockedBadges && s.unlockedBadges.length) || 0
+      };
+    }
+    return out;
+  }
+
+  var sesionBase = fotoProgreso();
+  var sesionInicio = Date.now();
+  var sesionEnviada = false;
+
+  function cerrarSesion() {
+    if (sesionEnviada) return;
+    var dur = Math.round((Date.now() - sesionInicio) / 1000);
+    var ahora = fotoProgreso();
+    var huboActividad = false;
+    for (var mat in PROG_KEYS) {
+      var a = sesionBase[mat], b = ahora[mat];
+      var d = { preg: b.preg - a.preg, ok: b.ok - a.ok, fc: b.fc - a.fc,
+                pag: b.pag - a.pag, xp: b.xp - a.xp, logros: b.logros - a.logros };
+      if (d.preg > 0 || d.fc > 0 || d.pag > 0 || d.xp > 0 || d.logros > 0) {
+        huboActividad = true;
+        send('sesion_fin', { materia: mat, dur: dur, preg: d.preg, ok: d.ok,
+                             fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros });
+      }
+    }
+    if (!huboActividad && dur >= 15) {
+      send('sesion_fin', { materia: '', dur: dur, preg: 0, ok: 0, fc: 0, pag: 0, xp: 0, logros: 0 });
+    }
+    if (huboActividad || dur >= 15) sesionEnviada = true;
+  }
+
+  function reabrirSesion() {
+    if (!sesionEnviada) return;
+    sesionEnviada = false;
+    sesionBase = fotoProgreso();
+    sesionInicio = Date.now();
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') cerrarSesion();
+    else if (document.visibilityState === 'visible') reabrirSesion();
+  });
+  window.addEventListener('pagehide', cerrarSesion);
+  window.addEventListener('pageshow', reabrirSesion);
+
   /* ---- botón "¿Viste un error?" + formulario ---- */
   if (!APUNTES_EVENTS_URL) return;
 
