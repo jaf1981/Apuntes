@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apuntes-version" content="10/08 20:42">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1901,6 +1902,7 @@ body {
   <button class="btn-start" id="welcomeStart">Comenzar a leer</button>
   <button class="welcome-resume" id="welcomeResume" style="display:none">Continuar donde quedaste</button>
   <button class="welcome-resume" id="welcomePractice">🎮 Ir directo a practicar</button>
+  <button class="welcome-resume" id="welcomeBack" style="opacity:.75">‹ Volver al inicio</button>
 </div>
 
 <header class="topbar">
@@ -6771,6 +6773,7 @@ body {
   startBtn.addEventListener("click", () => startReading(0));
   resumeBtn.addEventListener("click", () => startReading(state.idx));
   $("welcomePractice").addEventListener("click", () => { startReading(state.idx); openPractice(); });
+  $("welcomeBack").addEventListener("click", () => showSubjectPicker());
   // No hacer renderPage inicial: en su lugar mostrar el subject picker
   showSubjectPicker();
 
@@ -7694,6 +7697,15 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
+  var APUNTES_VERSION = "10/08 20:42";  /* sello de compilacion, inyectado por build_publico.py */
+
+  /* mostrar la version en el pie del selector */
+  (function () {
+    var foot = document.querySelector('#subjectPicker .sp-footer');
+    if (foot && foot.textContent.indexOf(APUNTES_VERSION) === -1) {
+      foot.textContent = foot.textContent.replace('Versión MVP', 'Versión ' + APUNTES_VERSION);
+    }
+  })();
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -7714,7 +7726,7 @@ body {
 
   function send(ev, extra) {
     if (!APUNTES_EVENTS_URL) return;
-    var data = { ev: ev, device: deviceId(), apodo: lsGet('apuntes_apodo') || '' };
+    var data = { ev: ev, device: deviceId(), apodo: lsGet('apuntes_apodo') || '', ver: APUNTES_VERSION };
     if (extra) { for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) data[k] = extra[k]; } }
     var body = JSON.stringify(data);
     try {
@@ -7828,6 +7840,54 @@ body {
   });
   window.addEventListener('pagehide', cerrarSesion);
   window.addEventListener('pageshow', reabrirSesion);
+
+  /* ---- aviso de versión nueva (chequeo liviano contra el servidor) ---- */
+  function mostrarBannerVersion(nueva) {
+    if (document.getElementById('apVerBar')) return;
+    if (lsGet('apuntes_ver_desc') === nueva) return;   /* ya la descartó */
+    var bar = document.createElement('div');
+    bar.id = 'apVerBar';
+    bar.style.cssText = 'position:fixed;left:12px;right:12px;top:12px;z-index:99993;background:#3d5a3d;color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.3);font-size:14px;line-height:1.4;';
+    bar.innerHTML =
+      '<div style="display:flex;align-items:center;gap:10px;">' +
+        '<div style="font-size:20px;">📦</div>' +
+        '<div style="flex:1;">Hay una <strong>versión nueva</strong> de Apuntes (' + nueva + ').</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px;">' +
+        '<button id="apVerNo" type="button" style="padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;font-size:14px;cursor:pointer;">Después</button>' +
+        '<button id="apVerSi" type="button" style="padding:8px 14px;border-radius:9px;border:none;background:#fffdf6;color:#3d5a3d;font-size:14px;font-weight:700;cursor:pointer;">Actualizar ahora</button>' +
+      '</div>';
+    document.body.appendChild(bar);
+    document.getElementById('apVerNo').addEventListener('click', function () {
+      lsSet('apuntes_ver_desc', nueva); bar.remove();
+    });
+    document.getElementById('apVerSi').addEventListener('click', function () {
+      cerrarSesion();  /* que la sesión en curso no se pierda */
+      location.href = location.pathname + '?upd=' + Date.now();
+    });
+  }
+
+  function chequearVersion() {
+    if (!APUNTES_VERSION || APUNTES_VERSION.indexOf('__') === 0) return;
+    var last = Number(lsGet('apuntes_ver_chk') || 0);
+    if (Date.now() - last < 30 * 60 * 1000) return;   /* máx. un chequeo cada 30 min */
+    lsSet('apuntes_ver_chk', String(Date.now()));
+    try {
+      fetch(location.pathname + '?vchk=' + Date.now(),
+            { headers: { 'Range': 'bytes=0-4095' }, cache: 'no-store' })
+        .then(function (r) { return r.text(); })
+        .then(function (txt) {
+          var m = txt.match(/name="apuntes-version" content="([^"]+)"/);
+          if (m && m[1] && m[1] !== APUNTES_VERSION) mostrarBannerVersion(m[1]);
+        })
+        .catch(function () {});
+    } catch (e) {}
+  }
+
+  setTimeout(chequearVersion, 4000);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') chequearVersion();
+  });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
      Los catálogos [
