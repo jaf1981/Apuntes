@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="10/08 21:02">
+<meta name="apuntes-version" content="11/08 08:18">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1507,6 +1507,21 @@ body {
   padding: 0 2px;
   border-radius: 2px;
 }
+/* filtro por capítulo + ver en contexto (11/08) */
+.gloss-chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
+.gloss-chip { padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(127,127,127,.4);
+  background: transparent; font-size: 13px; cursor: pointer; color: inherit; font-family: inherit; }
+.gloss-chip.active { background: #3d5a3d; color: #fff; border-color: transparent; }
+.gloss-ctx-btn { display: none; margin-top: 8px; padding: 6px 10px; border-radius: 9px;
+  border: 1px dashed rgba(127,127,127,.5); background: transparent; font-size: 13px;
+  cursor: pointer; color: inherit; font-family: inherit; }
+.gloss-item.expanded .gloss-ctx-btn { display: inline-block; }
+.gloss-ctx { display: none; margin-top: 8px; padding: 10px 12px; border-left: 3px solid #3d5a3d;
+  background: rgba(127,127,127,.12); border-radius: 8px; font-size: 14px; line-height: 1.5; }
+.gloss-ctx.abierta { display: block; animation: slideUp 0.25s ease; }
+.gloss-ctx-titulo { font-size: 12px; opacity: .65; margin-bottom: 4px; }
+.gloss-ctx-go { margin-top: 8px; display: inline-block; padding: 6px 10px; border-radius: 9px;
+  border: none; background: #3d5a3d; color: #fff; font-size: 13px; cursor: pointer; font-family: inherit; }
 
 /* === CONFETTI === */
 .confetti-piece {
@@ -2185,6 +2200,7 @@ body {
         <svg class="gloss-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="search" id="glossInput" placeholder="Buscar término..." enterkeyhint="search">
       </div>
+      <div id="glossChips" class="gloss-chips"></div>
       <div id="glossList"></div>
     </div>
 
@@ -7299,9 +7315,59 @@ body {
   // ============================================================
   // GLOSSARY
   // ============================================================
+  let glossChapFilter = 0;   // 0 = todos los capítulos
+
+  function renderGlossChips() {
+    const wrap = $("glossChips");
+    if (!wrap) return;
+    let html = `<button class="gloss-chip ${glossChapFilter === 0 ? "active" : ""}" data-chap="0">Todos</button>`;
+    for (const c of TOC) {
+      const n = GLOSSARY.filter(g => g.c === c.num).length;
+      if (n === 0) continue;
+      html += `<button class="gloss-chip ${glossChapFilter === c.num ? "active" : ""}" data-chap="${c.num}" title="${escapeHtml(c.name)}">${c.icon} Cap. ${c.num} (${n})</button>`;
+    }
+    wrap.innerHTML = html;
+    wrap.querySelectorAll(".gloss-chip").forEach(el => {
+      el.addEventListener("click", () => {
+        glossChapFilter = parseInt(el.dataset.chap, 10) || 0;
+        renderGlossary($("glossInput").value);
+      });
+    });
+  }
+
+  // Busca el pasaje más relevante del contenido donde el término se define/usa.
+  function buscarContexto(term, chapNum) {
+    const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const tLow = term.toLowerCase(), tNorm = norm(term);
+    const chapTocIdx = TOC.findIndex(t => t.num === chapNum);
+    // primero las páginas del capítulo del término, después el resto
+    const orden = PAGES.map((p, i) => i).sort((a, b) =>
+      ((PAGES[a].chap_idx === chapTocIdx ? 0 : 1) - (PAGES[b].chap_idx === chapTocIdx ? 0 : 1)) || a - b);
+    let mejor = null;
+    for (const i of orden) {
+      const raw = PAGE_TEXTS_RAW[i];
+      let pos = raw.toLowerCase().indexOf(tLow);
+      if (pos === -1 && norm(raw).indexOf(tNorm) === -1) continue;
+      if (pos === -1) pos = 0;
+      const negrita = PAGES[i].html.toLowerCase().includes("<strong>" + tLow);
+      if (negrita) { mejor = {idx: i, pos}; break; }   // definición en negrita = el mejor lugar
+      if (!mejor) mejor = {idx: i, pos};
+    }
+    if (!mejor) return null;
+    const raw = PAGE_TEXTS_RAW[mejor.idx];
+    let ini = Math.max(0, mejor.pos - 110);
+    let fin = Math.min(raw.length, mejor.pos + term.length + 220);
+    if (ini > 0) { const sp = raw.indexOf(" ", ini); if (sp !== -1 && sp < mejor.pos) ini = sp + 1; }
+    if (fin < raw.length) { const sp = raw.lastIndexOf(" ", fin); if (sp > mejor.pos) fin = sp; }
+    const extracto = (ini > 0 ? "… " : "") + raw.slice(ini, fin).trim() + (fin < raw.length ? " …" : "");
+    return { idx: mejor.idx, titulo: PAGES[mejor.idx].title, extracto };
+  }
+
   function renderGlossary(query) {
     query = (query || "").trim().toLowerCase();
+    renderGlossChips();
     let items = GLOSSARY;
+    if (glossChapFilter) items = items.filter(g => g.c === glossChapFilter);
     if (query) {
       items = items.filter(g =>
         g.t.toLowerCase().includes(query) ||
@@ -7309,7 +7375,7 @@ body {
       );
     }
     if (items.length === 0) {
-      $("glossList").innerHTML = `<div class="empty-state">Sin resultados para "${escapeHtml(query)}"</div>`;
+      $("glossList").innerHTML = `<div class="empty-state">Sin resultados${query ? ` para "${escapeHtml(query)}"` : ""}${glossChapFilter ? " en este capítulo" : ""}</div>`;
       return;
     }
     // Agrupar por letra inicial (sin tilde)
@@ -7336,9 +7402,9 @@ body {
       for (const g of groups[l]) {
         const chapInfo = (TOC.find(c => c.num === g.c) || {icon: "📖", name: ""});
         const id = "gloss_" + g.t.replace(/\s/g, "_");
-        html += `<div class="gloss-item" data-term="${escapeHtml(g.t)}">
+        html += `<div class="gloss-item" data-term="${escapeHtml(g.t)}" data-chap="${g.c}">
           <div class="gloss-item-term">${highlight(g.t)} <span class="chap-tag">${chapInfo.icon} Cap. ${g.c}</span></div>
-          <div class="gloss-item-def">${highlight(g.d)}</div>
+          <div class="gloss-item-def">${highlight(g.d)}<button class="gloss-ctx-btn" type="button">📄 Ver en el capítulo</button><div class="gloss-ctx"></div></div>
         </div>`;
       }
     }
@@ -7354,6 +7420,29 @@ body {
             if (state.glossSeenIds.length >= 20) checkBadge("gloss_20");
           }
         }
+      });
+      // "Ver en el capítulo": muestra el pasaje donde el término se define/usa
+      const ctxBtn = el.querySelector(".gloss-ctx-btn");
+      const ctxBox = el.querySelector(".gloss-ctx");
+      if (ctxBtn) ctxBtn.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        if (ctxBox.classList.contains("abierta")) { ctxBox.classList.remove("abierta"); return; }
+        const term = el.dataset.term;
+        const ctx = buscarContexto(term, parseInt(el.dataset.chap, 10));
+        if (!ctx) {
+          ctxBox.innerHTML = `<div class="gloss-ctx-titulo">No encontré este término en el texto de los capítulos.</div>`;
+        } else {
+          const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+          const resaltado = escapeHtml(ctx.extracto).replace(re, "<mark>$1</mark>");
+          ctxBox.innerHTML = `<div class="gloss-ctx-titulo">📖 ${escapeHtml(ctx.titulo)}</div>${resaltado}
+            <br><button class="gloss-ctx-go" type="button">Ir a la página →</button>`;
+          ctxBox.querySelector(".gloss-ctx-go").addEventListener("click", (e2) => {
+            e2.stopPropagation();
+            if (typeof closeAll === "function") closeAll();
+            startReading(ctx.idx);
+          });
+        }
+        ctxBox.classList.add("abierta");
       });
     });
   }
@@ -7431,6 +7520,7 @@ body {
     QUIZ_BANK = subj.quiz;
     FC_BANK = subj.flashcards;
     GLOSSARY = subj.glossary;
+    glossChapFilter = 0;   // el filtro del glosario no arrastra entre materias
     STORAGE_KEY = subj.storage_key;
     
     // Recalcular PAGE_TEXTS
@@ -7700,7 +7790,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "10/08 21:02";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "11/08 08:18";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
