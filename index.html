@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="11/08 08:18">
+<meta name="apuntes-version" content="11/08 08:38">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1491,7 +1491,7 @@ body {
 }
 .gloss-item-def {
   font-family: "Crimson Pro", serif;
-  font-size: 15px;
+  font-size: var(--reader-fontsize, 15px);
   color: var(--text-soft);
   line-height: 1.5;
   margin-top: 4px;
@@ -1517,7 +1517,8 @@ body {
   cursor: pointer; color: inherit; font-family: inherit; }
 .gloss-item.expanded .gloss-ctx-btn { display: inline-block; }
 .gloss-ctx { display: none; margin-top: 8px; padding: 10px 12px; border-left: 3px solid #3d5a3d;
-  background: rgba(127,127,127,.12); border-radius: 8px; font-size: 14px; line-height: 1.5; }
+  background: rgba(127,127,127,.12); border-radius: 8px; line-height: 1.5;
+  font-family: "Crimson Pro", serif; font-size: var(--reader-fontsize, 15px); }
 .gloss-ctx.abierta { display: block; animation: slideUp 0.25s ease; }
 .gloss-ctx-titulo { font-size: 12px; opacity: .65; margin-bottom: 4px; }
 .gloss-ctx-go { margin-top: 8px; display: inline-block; padding: 6px 10px; border-radius: 9px;
@@ -7438,7 +7439,7 @@ body {
             <br><button class="gloss-ctx-go" type="button">Ir a la página →</button>`;
           ctxBox.querySelector(".gloss-ctx-go").addEventListener("click", (e2) => {
             e2.stopPropagation();
-            if (typeof closeAll === "function") closeAll();
+            closePractice();   // cerrar el panel de práctica que tapa el lector
             startReading(ctx.idx);
           });
         }
@@ -7790,7 +7791,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "11/08 08:18";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "11/08 08:38";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
