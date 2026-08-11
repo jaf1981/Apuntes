@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="11/08 08:38">
+<meta name="apuntes-version" content="11/08 19:57">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1129,6 +1129,22 @@ body {
   transition: all 0.15s;
   font-family: "Manrope", sans-serif;
 }
+/* subtemas del cuestionario (11/08) */
+.chap-exp {
+  margin-left: auto; padding: 4px 10px; border-radius: 8px; font-size: 15px;
+  opacity: .6; border: 1px solid var(--border);
+}
+.chap-exp:active { transform: scale(.92); }
+.chap-sub { display: none; margin: -4px 0 8px 26px; padding: 4px 0; }
+.chap-sub.open { display: block; animation: slideUp 0.2s ease; }
+.chap-sub-row {
+  display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px;
+  cursor: pointer; font-family: "Manrope", sans-serif; font-size: 14px; color: var(--text);
+}
+.chap-sub-row:active { background: var(--bg-elev); }
+.chap-sub-row input { width: 17px; height: 17px; accent-color: #3d5a3d; flex-shrink: 0; }
+.chap-sub-row .sub-name { flex: 1; }
+.chap-sub-row .count { font-size: 12px; opacity: .55; }
 .chap-pick-opt:active { transform: scale(0.98); }
 .chap-pick-opt.selected { border-color: var(--accent); background: var(--bg); }
 .chap-pick-opt .ico { font-size: 20px; }
@@ -2259,7 +2275,7 @@ body {
         <span class="sp-card-emoji">🌍</span>
         <div class="sp-card-body">
           <div class="sp-card-title">Geografía</div>
-          <div class="sp-card-stats" id="geoStats">13 páginas · 40 preguntas · examen 14/05</div>
+          <div class="sp-card-stats" id="geoStats">24 páginas · 99 preguntas · examen 13/08</div>
           <div class="sp-card-progress">
             <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="geoProgressFill" style="width:0%"></div></div>
             <div class="sp-card-progress-text" id="geoProgressText">0 XP</div>
@@ -5157,7 +5173,7 @@ body {
   "name": "Geografía",
   "emoji": "🌍",
   "storage_key": "biologia_ebook_v4_geo",
-  "exam_date": "14/05",
+  "exam_date": "13/08",
   "pages": [
    {
     "title": "Actividad introductoria: el mapa planisferio político",
@@ -5236,6 +5252,72 @@ body {
     "html": "<p>Para ubicarnos con mayor facilidad en el espacio geográfico es necesario <strong>orientarse</strong>.</p>\n<p>Se llama <strong>orientación</strong> a la acción de ubicarse en el espacio buscando el <strong>oriente</strong> o lugar por donde sale el Sol. Para hacerlo es necesario tener en cuenta los <strong>puntos cardinales</strong>.</p>",
     "image_keys": [],
     "chap_idx": 4
+   },
+   {
+    "title": "Latitud y longitud",
+    "html": "<p class=\"meta-date\">📅 14/05/2026</p>\n<p>Las líneas imaginarias que forman el sistema de coordenadas geográficas se llaman:</p>\n<ul><li><strong>Paralelos:</strong> son <strong>círculos concéntricos</strong> que corren de <strong>E a O</strong>. <strong>El mayor es el Ecuador.</strong> A partir de él, los demás forman anillos que reducen su extensión hacia los polos. El <strong>Ecuador</strong> divide a la Tierra en 2 partes iguales: <strong>HN y HS</strong>.</li><li><strong>Meridianos:</strong> son <strong>semicírculos no concéntricos</strong> y corren de <strong>N a S</strong>. Son todos iguales. Se considera al <strong>Meridiano de Greenwich</strong> como punto de referencia y el mismo divide a la Tierra en 2 partes iguales: <strong>HO y HE</strong>.</li></ul>\n<p>Para ubicar con exactitud un punto en la superficie terrestre, es necesario conocer su <strong>latitud</strong> y su <strong>longitud</strong>, es decir, determinar el paralelo y el meridiano que pasan por él.</p>\n<ul><li><strong>Latitud:</strong> es la distancia que existe entre un punto cualquiera y el <strong>paralelo del Ecuador (latitud 0°)</strong>. Puede ser <strong>N o S</strong>. A medida que nos alejamos del Ecuador aumenta hacia el N o el S hasta llegar a los valores <strong>máximos en ambos polos (latitud 90°)</strong>.</li><li><strong>Longitud:</strong> es la distancia que existe entre un punto cualquiera y el <strong>Meridiano de Greenwich (longitud 0°)</strong>. Puede ser <strong>E u O</strong>. A medida que nos alejamos del Meridiano de Greenwich aumenta hacia el E u O hasta llegar a los valores máximos a ambos lados (longitud 180° + 180° = 360°).</li></ul>\n<div class=\"callout\">📅 21/05/2026 — <strong>Ejemplo:</strong> Buenos Aires se ubica a latitud <strong>S 35° (HS)</strong> y longitud <strong>O 59° (HO)</strong>.</div>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "América en las coordenadas",
+    "html": "<h3>Ejercicio del cuaderno (corregido por el profesor ✓)</h3>\n<div class=\"tbl-wrap\"><table><thead><tr><th>Lugar</th><th>Latitud</th></tr></thead><tbody><tr><td>Canadá</td><td>N ✓</td></tr><tr><td>Polo N</td><td>N ✓</td></tr><tr><td>Brasil</td><td>N-S ✓</td></tr><tr><td>Perú</td><td>S ✓</td></tr><tr><td>Paraguay</td><td>S ✓</td></tr><tr><td>Atlántico</td><td>N-S ✓</td></tr><tr><td>Caribe</td><td>N ✓</td></tr><tr><td>Trópico de Capricornio</td><td>S ✓</td></tr></tbody></table></div>\n<h3>América en las coordenadas</h3>\n<div class=\"callout\">En el caso de <strong>América</strong>, se extiende mayormente en sentido <strong>N-S</strong>, por lo tanto presenta <strong>latitud N y S</strong>. Por ubicarse en el <strong>hemisferio O</strong>, cualquier lugar ubicado en él tiene <strong>longitud O</strong>.</div>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "Subcontinentes: la división física",
+    "html": "<p class=\"meta-date\">📅 04/06/2026</p>\n<p>Existen diversos criterios o formas de diferenciar los <strong>subcontinentes</strong> (partes en que se divide el territorio americano) de nuestro gran continente (<strong>segundo en superficie después de Asia</strong>).</p>\n<h3>Se subdivide desde el punto de vista físico o natural en:</h3>\n<ul><li>🟧 <strong>América del Norte:</strong> desde la zona Ártica hasta el S de México. Incluye a <strong>Groenlandia</strong>, que es un territorio dependiente del país europeo <strong>Dinamarca</strong>, y a <strong>Alaska</strong>, que es un estado de Estados Unidos.</li><li>🟩 <strong>América Central:</strong> formada por la parte <strong>Continental o Ístmica</strong> (considerada como un puente terrestre entre América del N y América del S) e <strong>Insular</strong> (formada por las islas del mar Caribe), que a su vez se divide en <strong>Antillas Mayores</strong> y <strong>Antillas Menores</strong>.</li><li>🟥 <strong>América del Sur:</strong> desde Colombia hasta el sur de Argentina y Chile. Aquí se encuentra la <strong>Guayana Francesa</strong>, que no es independiente ya que pertenece a Francia.</li></ul>\n<div class=\"callout\"><strong>Aclaración:</strong> los principales países que forman las <strong>Antillas Mayores</strong> son: Cuba, Jamaica, Bahamas (archipiélago), Haití y República Dominicana. Haití y República Dominicana comparten la isla <strong>La Española</strong>.</div>",
+    "image_keys": [],
+    "chap_idx": 5
+   },
+   {
+    "title": "América Latina y América Anglosajona",
+    "html": "<h3>Se subdivide desde el punto de vista humano o socioeconómico:</h3>\n<ul><li><strong>América Anglosajona o Desarrollada:</strong> Canadá + Estados Unidos.</li><li><strong>América Latina o Subdesarrollada:</strong> desde México (en el límite con Estados Unidos, donde se ubica el <strong>río Grande o Bravo del Norte</strong>) hacia el S.</li></ul>\n<p>En esta segunda subdivisión se tienen en cuenta: <strong>idioma, historia, cultura, costumbres, población, religión predominante, ubicación, situación económica y proceso colonizador</strong>.</p>\n<h3>Cuadro comparativo</h3>\n<div class=\"tbl-wrap\"><table><thead><tr><th>América Latina</th><th>América Anglosajona</th></tr></thead><tbody><tr><td>Comprende México hacia el S</td><td>Abarca 2 países de Am. del N</td></tr><tr><td>Ex colonias de España y Portugal</td><td>Antiguas colonias de Inglaterra</td></tr><tr><td>Formada por muchos países con desigual distribución de la población</td><td>Colonizada y organizada desde el N de Europa</td></tr><tr><td>Grandes desigualdades y desempleo</td><td>Gran parte de la población tiene una adecuada calidad de vida</td></tr><tr><td>Llegaron inmigrantes del S de Europa</td><td></td></tr><tr><td>Religión mayormente católica</td><td></td></tr><tr><td>Países pobres o en vías de desarrollo</td><td></td></tr></tbody></table></div>",
+    "image_keys": [],
+    "chap_idx": 5
+   },
+   {
+    "title": "Países y capitales de América",
+    "html": "<p><strong>5) Completar el cuadro con países y capitales:</strong></p>\n<div class=\"callout\">✍️ Las capitales que faltaban en el cuaderno (la actividad quedó con la nota &quot;faltan capitales&quot;) se completaron acá para poder estudiarlas.</div>\n<h3>América del Norte 🟧</h3>\n<ol><li>Canadá (Ottawa)</li><li>Estados Unidos (Washington D.C.)</li><li>México (Ciudad de México)</li></ol>\n<h3>América Central continental 🟩</h3>\n<ol><li>Belice (Belmopán)</li><li>Costa Rica (San José)</li><li>El Salvador (San Salvador)</li><li>Guatemala (Ciudad de Guatemala)</li><li>Honduras (Tegucigalpa)</li><li>Nicaragua (Managua)</li><li>Panamá (Ciudad de Panamá)</li></ol>\n<h3>América Central — Antillas Mayores 🟩</h3>\n<ol><li>Bahamas (Nasáu)</li><li>Cuba (La Habana)</li><li>Haití (Puerto Príncipe)</li><li>Jamaica (Kingston)</li><li>República Dominicana (Santo Domingo)</li></ol>\n<h3>América del Sur 🟥</h3>\n<ol><li>Argentina (Buenos Aires)</li><li>Bolivia (La Paz y Sucre)</li><li>Brasil (Brasilia)</li><li>Chile (Santiago)</li><li>Colombia (Bogotá)</li><li>Ecuador (Quito)</li><li>Guyana (Georgetown)</li><li>Paraguay (Asunción)</li><li>Perú (Lima)</li><li>Surinam (Paramaribo)</li><li>Uruguay (Montevideo)</li><li>Venezuela (Caracas)</li></ol>",
+    "image_keys": [],
+    "chap_idx": 5
+   },
+   {
+    "title": "El mapa físico y sus elementos",
+    "html": "<p class=\"meta-date\">📅 25/06/2026</p>\n<p>Tanto en los planos como en los mapas, los diferentes elementos se representan con:</p>\n<ul><li><strong>Trazos</strong> (cuadriculados, punteados)</li><li><strong>Dibujos</strong> (símbolos)</li><li><strong>Colores</strong></li></ul>\n<p>Se pueden representar en un <strong>cuadro de referencias</strong>, en el que se indica el significado de cada uno de ellos.</p>\n<h3>El mapa físico de América brinda información en relación con:</h3>\n<ul><li>la <strong>altura de los relieves</strong>, que se representan en la <strong>escala cromática</strong>;</li><li>las <strong>aguas continentales</strong>, principalmente de ríos y lagos;</li><li>los <strong>signos cartográficos</strong>, que muestran elementos <strong>naturales (N)</strong>, <strong>artificiales o humanizados (A)</strong> y <strong>mixtos (M)</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 6
+   },
+   {
+    "title": "Componentes de los paisajes naturales",
+    "html": "<p>Los paisajes naturales presentan diferentes componentes de la naturaleza, entre los que se destacan:</p>\n<ul><li><strong>Principales formas de relieve:</strong> llanura / meseta / sierra / montaña.</li><li><strong>Tipos de climas:</strong> cálido / frío / templado / árido o desértico / de altura o montaña.</li><li><strong>Cuerpos y cursos de agua:</strong> lagos / laguna / arroyos / ríos.</li><li><strong>Principales biomas:</strong> bosque / desierto / selva / tundra / pradera o pastizal.</li></ul>\n<div class=\"callout\">📅 23/07/2026 — Actividad del cuaderno: subrayar las palabras con los siguientes colores: amarillo, azul, celeste, marrón, rojo, verde, verde claro y verde oscuro.</div>",
+    "image_keys": [],
+    "chap_idx": 6
+   },
+   {
+    "title": "Escala cromática",
+    "html": "<p>Es un gráfico que muestra las alturas de la <strong>superficie terrestre</strong> y las profundidades en los mares y océanos. Así, se consideran relieves <strong>positivos o emergidos</strong> y <strong>negativos o sumergidos</strong>. El valor de referencia para considerarlos es el <strong>0 m sobre el nivel del mar (MSNM)</strong>.</p>\n<h3>Ejemplo de escala cromática</h3>\n<div class=\"tbl-wrap\"><table><thead><tr><th>Relieve</th><th>Altura</th></tr></thead><tbody><tr><td>Montañas altas</td><td>Más de 2.000 m</td></tr><tr><td>Montañas bajas / mesetas / sierras</td><td>De 500 a 2.000 m</td></tr><tr><td>Llanuras</td><td>De 0 a 500 m</td></tr><tr><td>Depresiones relativas (valles) o absolutas</td><td>Ej: -300 m</td></tr><tr><td>Aguas poco profundas / mar</td><td>De 0 a -2.000 m</td></tr><tr><td>Aguas muy profundas / océano</td><td>Más de -2.000 m</td></tr></tbody></table></div>\n<div class=\"callout\">Consigna del cuaderno: dibujar o buscar un modelo de escala cromática.</div>",
+    "image_keys": [],
+    "chap_idx": 6
+   },
+   {
+    "title": "Signos cartográficos",
+    "html": "<p>Son los gráficos o dibujos que aparecen en los mapas y en los planos.</p>\n<p><strong>Su clasificación:</strong> de acuerdo a su significado o lo que representan, se pueden clasificar en: <strong>N → natural · A → artificial · M → mixto</strong>.</p>\n<h3>Algunos ejemplos que aparecen en el mapa de América</h3>\n<div class=\"tbl-wrap\"><table><thead><tr><th>Signo</th><th>Clase</th></tr></thead><tbody><tr><td>Ruinas / batalla / lugar histórico</td><td>A</td></tr><tr><td>Playa / balneario</td><td>M</td></tr><tr><td>Vías del FC</td><td>A</td></tr><tr><td>Caída de agua</td><td>M</td></tr><tr><td>Puente</td><td>A</td></tr><tr><td>Montaña / altura máxima</td><td>N</td></tr><tr><td>Comedor / restaurante</td><td>A</td></tr><tr><td>Río / arroyo</td><td>M</td></tr><tr><td>Aeropuerto / aeródromo</td><td>A</td></tr><tr><td>Ruta nacional</td><td>A</td></tr><tr><td>Lago / laguna / bañado</td><td>M</td></tr><tr><td>Bosque / área protegida</td><td>M</td></tr><tr><td>Ciudad / capital</td><td>A</td></tr><tr><td>Viñedo / vinoteca / bodega / verdulería</td><td>A</td></tr></tbody></table></div>",
+    "image_keys": [],
+    "chap_idx": 6
+   },
+   {
+    "title": "Formación de los relieves",
+    "html": "<p>Si consideramos la formación de los principales relieves de América podemos diferenciar:</p>\n<ul><li><strong>Procesos endógenos, vinculados con movimientos de placas de la corteza terrestre:</strong> se producen en la capa exterior, donde se encuentran los continentes, océanos y mares. Las zonas de contacto tienen gran actividad y se forman relieves elevados (la <strong>cordillera de los Andes</strong>) y bajos (la <strong>llanura costera del golfo de México</strong>).</li><li><strong>Procesos exógenos, asociados a la acción de elementos naturales:</strong> como el <strong>agua, el hielo y el viento</strong>.</li></ul>\n<p>Ambos procesos pueden ser:</p>\n<ul><li>de <strong>desgaste y erosión</strong> de zonas altas;</li><li>de <strong>depósito y acumulación</strong> en zonas bajas.</li></ul>\n<p>De la combinación de ambos procesos surgen los relieves:</p>\n<ul><li><strong>emergidos / positivos / continentales</strong></li><li><strong>sumergidos / negativos / oceánicos o marítimos</strong></li></ul>",
+    "image_keys": [],
+    "chap_idx": 6
+   },
+   {
+    "title": "Formas de relieve: definiciones",
+    "html": "<p>Ejemplos de formas relacionadas:</p>\n<div class=\"tbl-wrap\"><table><thead><tr><th>Forma</th><th>Definición</th></tr></thead><tbody><tr><td><strong>Montaña</strong></td><td>Relieve elevado con cumbre y laderas</td></tr><tr><td><strong>Llanura</strong></td><td>Zona plana relativamente baja</td></tr><tr><td><strong>Valle</strong></td><td>Zona baja entre montañas</td></tr><tr><td><strong>Cerro / Monte</strong></td><td>Zona elevada aislada del resto</td></tr><tr><td><strong>Cordillera</strong></td><td>Conjunto de montañas</td></tr><tr><td><strong>Meseta / Macizo</strong></td><td>Zona plana elevada</td></tr></tbody></table></div>",
+    "image_keys": [],
+    "chap_idx": 6
    }
   ],
   "toc": [
@@ -5323,6 +5405,64 @@ body {
      {
       "idx": 12,
       "title": "Orientación"
+     },
+     {
+      "idx": 13,
+      "title": "Latitud y longitud"
+     },
+     {
+      "idx": 14,
+      "title": "América en las coordenadas"
+     }
+    ]
+   },
+   {
+    "num": 6,
+    "name": "División de América y sus países",
+    "icon": "🌎",
+    "pages": [
+     {
+      "idx": 15,
+      "title": "Subcontinentes: la división física"
+     },
+     {
+      "idx": 16,
+      "title": "América Latina y América Anglosajona"
+     },
+     {
+      "idx": 17,
+      "title": "Países y capitales de América"
+     }
+    ]
+   },
+   {
+    "num": 7,
+    "name": "El mapa físico de América",
+    "icon": "🏔️",
+    "pages": [
+     {
+      "idx": 18,
+      "title": "El mapa físico y sus elementos"
+     },
+     {
+      "idx": 19,
+      "title": "Componentes de los paisajes naturales"
+     },
+     {
+      "idx": 20,
+      "title": "Escala cromática"
+     },
+     {
+      "idx": 21,
+      "title": "Signos cartográficos"
+     },
+     {
+      "idx": 22,
+      "title": "Formación de los relieves"
+     },
+     {
+      "idx": 23,
+      "title": "Formas de relieve: definiciones"
      }
     ]
    }
@@ -5888,6 +6028,832 @@ body {
     "exp": "Al orientarse se busca el 'oriente' porque es el lugar por donde sale el Sol; de allí viene la palabra 'orientación'.",
     "page": "Orientación",
     "id": 39
+   },
+   {
+    "c": 5,
+    "q": "¿Qué son los PARALELOS?",
+    "opts": [
+     "Semicírculos que corren de N a S",
+     "Círculos concéntricos que corren de E a O",
+     "Líneas que miden la longitud",
+     "Círculos todos del mismo tamaño"
+    ],
+    "ans": 1,
+    "exp": "Los paralelos son círculos concéntricos que corren de E a O. El mayor es el Ecuador y los demás reducen su extensión hacia los polos.",
+    "page": "Latitud y longitud",
+    "id": 40
+   },
+   {
+    "c": 5,
+    "q": "¿Cuál es el paralelo MAYOR?",
+    "opts": [
+     "El Trópico de Cáncer",
+     "El Meridiano de Greenwich",
+     "El Ecuador",
+     "El Círculo Polar Ártico"
+    ],
+    "ans": 2,
+    "exp": "El mayor de los paralelos es el Ecuador; a partir de él los demás forman anillos cada vez más chicos hacia los polos.",
+    "page": "Latitud y longitud",
+    "id": 41
+   },
+   {
+    "c": 5,
+    "q": "¿En qué divide el ECUADOR a la Tierra?",
+    "opts": [
+     "En hemisferio Norte (HN) y hemisferio Sur (HS)",
+     "En hemisferio Este y Oeste",
+     "En 4 cuadrantes",
+     "En zonas climáticas"
+    ],
+    "ans": 0,
+    "exp": "El Ecuador divide a la Tierra en 2 partes iguales: el hemisferio Norte (HN) y el hemisferio Sur (HS).",
+    "page": "Latitud y longitud",
+    "id": 42
+   },
+   {
+    "c": 5,
+    "q": "¿Qué son los MERIDIANOS?",
+    "opts": [
+     "Círculos concéntricos de distinto tamaño",
+     "Semicírculos no concéntricos que corren de N a S, todos iguales",
+     "Líneas que corren de E a O",
+     "Anillos paralelos al Ecuador"
+    ],
+    "ans": 1,
+    "exp": "Los meridianos son semicírculos no concéntricos que corren de N a S y son todos iguales.",
+    "page": "Latitud y longitud",
+    "id": 43
+   },
+   {
+    "c": 5,
+    "q": "¿Qué meridiano se toma como punto de referencia?",
+    "opts": [
+     "El Antemeridiano",
+     "El meridiano de Buenos Aires",
+     "El Ecuador",
+     "El Meridiano de Greenwich"
+    ],
+    "ans": 3,
+    "exp": "Se considera al Meridiano de Greenwich como punto de referencia: divide a la Tierra en hemisferio Oeste (HO) y hemisferio Este (HE).",
+    "page": "Latitud y longitud",
+    "id": 44
+   },
+   {
+    "c": 5,
+    "q": "¿Qué es la LATITUD?",
+    "opts": [
+     "La distancia entre un punto y el paralelo del Ecuador (0°); puede ser N o S",
+     "La distancia entre un punto y Greenwich",
+     "La altura sobre el nivel del mar",
+     "La distancia entre dos meridianos"
+    ],
+    "ans": 0,
+    "exp": "La latitud es la distancia entre un punto cualquiera y el paralelo del Ecuador (latitud 0°). Puede ser N o S y llega a 90° en los polos.",
+    "page": "Latitud y longitud",
+    "id": 45
+   },
+   {
+    "c": 5,
+    "q": "¿Qué es la LONGITUD?",
+    "opts": [
+     "La distancia entre un punto y el Ecuador",
+     "La distancia entre un punto y el Meridiano de Greenwich (0°); puede ser E u O",
+     "La profundidad de los océanos",
+     "La distancia entre dos paralelos"
+    ],
+    "ans": 1,
+    "exp": "La longitud es la distancia entre un punto cualquiera y el Meridiano de Greenwich (longitud 0°). Puede ser E u O, hasta 180° a cada lado.",
+    "page": "Latitud y longitud",
+    "id": 46
+   },
+   {
+    "c": 5,
+    "q": "¿Cuál es el valor MÁXIMO de latitud y dónde se alcanza?",
+    "opts": [
+     "180° en Greenwich",
+     "360° en el Antemeridiano",
+     "90° en los polos",
+     "45° en los trópicos"
+    ],
+    "ans": 2,
+    "exp": "La latitud aumenta desde el Ecuador hacia el N o el S hasta llegar al máximo de 90° en ambos polos.",
+    "page": "Latitud y longitud",
+    "id": 47
+   },
+   {
+    "c": 5,
+    "q": "¿Dónde se ubica BUENOS AIRES según el ejemplo del cuaderno?",
+    "opts": [
+     "Latitud N 35°, longitud E 59°",
+     "Latitud S 35° (HS), longitud O 59° (HO)",
+     "Latitud S 59°, longitud O 35°",
+     "Latitud 0°, longitud 0°"
+    ],
+    "ans": 1,
+    "exp": "Buenos Aires se ubica a latitud S 35° (hemisferio Sur) y longitud O 59° (hemisferio Oeste).",
+    "page": "Latitud y longitud",
+    "id": 48
+   },
+   {
+    "c": 5,
+    "q": "¿Qué LATITUD presenta América?",
+    "opts": [
+     "Solo latitud N",
+     "Solo latitud S",
+     "Latitud N y S, porque se extiende mayormente en sentido N-S",
+     "No tiene latitud"
+    ],
+    "ans": 2,
+    "exp": "América se extiende mayormente en sentido N-S, por lo tanto presenta latitud N y S.",
+    "page": "América en las coordenadas",
+    "id": 49
+   },
+   {
+    "c": 5,
+    "q": "¿Qué LONGITUD tiene cualquier lugar de América?",
+    "opts": [
+     "Longitud O, por ubicarse en el hemisferio Oeste",
+     "Longitud E",
+     "Longitud N",
+     "Depende del país"
+    ],
+    "ans": 0,
+    "exp": "Por ubicarse todo el continente en el hemisferio O, cualquier lugar de América tiene longitud O.",
+    "page": "América en las coordenadas",
+    "id": 50
+   },
+   {
+    "c": 5,
+    "q": "Según el ejercicio corregido del cuaderno, ¿qué latitud tiene BRASIL?",
+    "opts": [
+     "Solo N",
+     "Solo S",
+     "N-S (lo cruza el Ecuador)",
+     "O"
+    ],
+    "ans": 2,
+    "exp": "En el ejercicio corregido, Brasil figura con latitud N-S: el Ecuador lo atraviesa, así que tiene tierras en ambos hemisferios.",
+    "page": "América en las coordenadas",
+    "id": 51
+   },
+   {
+    "c": 6,
+    "q": "¿Cómo se subdivide América desde el punto de vista FÍSICO o natural?",
+    "opts": [
+     "América rica y América pobre",
+     "América del Norte, América Central y América del Sur",
+     "América Latina y América Anglosajona",
+     "América continental e insular"
+    ],
+    "ans": 1,
+    "exp": "Desde el punto de vista físico o natural, América se subdivide en América del Norte, América Central y América del Sur.",
+    "page": "Subcontinentes: la división física",
+    "id": 52
+   },
+   {
+    "c": 6,
+    "q": "¿Qué abarca AMÉRICA DEL NORTE?",
+    "opts": [
+     "Desde la zona Ártica hasta el S de México",
+     "Desde Alaska hasta Panamá",
+     "Desde Canadá hasta Colombia",
+     "Solo Canadá y Estados Unidos"
+    ],
+    "ans": 0,
+    "exp": "América del Norte va desde la zona Ártica hasta el sur de México, e incluye a Groenlandia y Alaska.",
+    "page": "Subcontinentes: la división física",
+    "id": 53
+   },
+   {
+    "c": 6,
+    "q": "¿Qué es GROENLANDIA?",
+    "opts": [
+     "Un país independiente",
+     "Un estado de Estados Unidos",
+     "Un territorio dependiente de Dinamarca",
+     "Una isla de las Antillas"
+    ],
+    "ans": 2,
+    "exp": "Groenlandia es un territorio dependiente del país europeo Dinamarca.",
+    "page": "Subcontinentes: la división física",
+    "id": 54
+   },
+   {
+    "c": 6,
+    "q": "¿Qué es ALASKA?",
+    "opts": [
+     "Un territorio de Canadá",
+     "Un estado de Estados Unidos",
+     "Un país independiente",
+     "Una dependencia de Rusia"
+    ],
+    "ans": 1,
+    "exp": "Alaska es un estado de Estados Unidos, aunque esté separado del resto del país.",
+    "page": "Subcontinentes: la división física",
+    "id": 55
+   },
+   {
+    "c": 6,
+    "q": "¿Qué partes forman AMÉRICA CENTRAL?",
+    "opts": [
+     "La parte Continental o Ístmica y la Insular (islas del mar Caribe)",
+     "Solo las Antillas",
+     "Solo el istmo de Panamá",
+     "América Latina y Anglosajona"
+    ],
+    "ans": 0,
+    "exp": "América Central está formada por la parte Continental o Ístmica (puente terrestre entre América del N y del S) y la Insular (islas del mar Caribe).",
+    "page": "Subcontinentes: la división física",
+    "id": 56
+   },
+   {
+    "c": 6,
+    "q": "Según el cuaderno, ¿qué países forman las ANTILLAS MAYORES?",
+    "opts": [
+     "Belice, Costa Rica y Panamá",
+     "Cuba, Jamaica, Bahamas, Haití y República Dominicana",
+     "Guyana, Surinam y Guayana Francesa",
+     "Trinidad, Barbados y Granada"
+    ],
+    "ans": 1,
+    "exp": "Los principales países de las Antillas Mayores son Cuba, Jamaica, Bahamas (archipiélago), Haití y República Dominicana.",
+    "page": "Subcontinentes: la división física",
+    "id": 57
+   },
+   {
+    "c": 6,
+    "q": "¿Qué dos países comparten la isla LA ESPAÑOLA?",
+    "opts": [
+     "Cuba y Jamaica",
+     "Haití y República Dominicana",
+     "República Dominicana y Puerto Rico",
+     "Haití y Bahamas"
+    ],
+    "ans": 1,
+    "exp": "Haití y República Dominicana comparten la isla La Española.",
+    "page": "Subcontinentes: la división física",
+    "id": 58
+   },
+   {
+    "c": 6,
+    "q": "¿Qué territorio de AMÉRICA DEL SUR no es independiente?",
+    "opts": [
+     "Guyana",
+     "Surinam",
+     "La Guayana Francesa, que pertenece a Francia",
+     "Las Islas Malvinas"
+    ],
+    "ans": 2,
+    "exp": "En América del Sur se encuentra la Guayana Francesa, que no es independiente ya que pertenece a Francia.",
+    "page": "Subcontinentes: la división física",
+    "id": 59
+   },
+   {
+    "c": 6,
+    "q": "¿Qué países forman AMÉRICA ANGLOSAJONA?",
+    "opts": [
+     "Canadá y Estados Unidos",
+     "Estados Unidos y México",
+     "Canadá, Estados Unidos y México",
+     "Todos los de habla inglesa del Caribe"
+    ],
+    "ans": 0,
+    "exp": "América Anglosajona (o Desarrollada) está formada por Canadá y Estados Unidos.",
+    "page": "América Latina y América Anglosajona",
+    "id": 60
+   },
+   {
+    "c": 6,
+    "q": "¿Desde dónde se extiende AMÉRICA LATINA?",
+    "opts": [
+     "Desde Colombia hacia el S",
+     "Desde México (límite con EE.UU., donde está el río Grande o Bravo del Norte) hacia el S",
+     "Desde Panamá hacia el S",
+     "Desde la zona Ártica hacia el S"
+    ],
+    "ans": 1,
+    "exp": "América Latina se extiende desde México hacia el S. El límite con Estados Unidos está marcado por el río Grande o Bravo del Norte.",
+    "page": "América Latina y América Anglosajona",
+    "id": 61
+   },
+   {
+    "c": 6,
+    "q": "¿De qué países fueron colonias los territorios de AMÉRICA LATINA?",
+    "opts": [
+     "De Inglaterra y Francia",
+     "De España y Portugal",
+     "De Holanda y Dinamarca",
+     "De Italia y Grecia"
+    ],
+    "ans": 1,
+    "exp": "América Latina está formada por ex colonias de España y Portugal.",
+    "page": "América Latina y América Anglosajona",
+    "id": 62
+   },
+   {
+    "c": 6,
+    "q": "¿De qué país fueron colonias los territorios de AMÉRICA ANGLOSAJONA?",
+    "opts": [
+     "De España",
+     "De Portugal",
+     "De Francia",
+     "De Inglaterra"
+    ],
+    "ans": 3,
+    "exp": "América Anglosajona abarca antiguas colonias de Inglaterra, colonizadas y organizadas desde el N de Europa.",
+    "page": "América Latina y América Anglosajona",
+    "id": 63
+   },
+   {
+    "c": 6,
+    "q": "¿Cuál es la religión mayoritaria en AMÉRICA LATINA según el cuadro?",
+    "opts": [
+     "Protestante",
+     "Católica",
+     "Anglicana",
+     "Ortodoxa"
+    ],
+    "ans": 1,
+    "exp": "Según el cuadro comparativo, en América Latina la religión es mayormente católica.",
+    "page": "América Latina y América Anglosajona",
+    "id": 64
+   },
+   {
+    "c": 6,
+    "q": "¿Cuáles son criterios de la subdivisión SOCIOECONÓMICA?",
+    "opts": [
+     "Solo el idioma",
+     "El relieve y el clima",
+     "Idioma, historia, cultura, costumbres, población, religión, ubicación, situación económica y proceso colonizador",
+     "La cantidad de ríos y lagos"
+    ],
+    "ans": 2,
+    "exp": "En la subdivisión humana o socioeconómica se tienen en cuenta: idioma, historia, cultura, costumbres, población, religión predominante, ubicación, situación económica y proceso colonizador.",
+    "page": "América Latina y América Anglosajona",
+    "id": 65
+   },
+   {
+    "c": 6,
+    "q": "Según el cuadro, ¿qué caracteriza a la población de AMÉRICA ANGLOSAJONA?",
+    "opts": [
+     "Gran parte tiene una adecuada calidad de vida",
+     "Grandes desigualdades y desempleo",
+     "Desigual distribución de la población",
+     "Países en vías de desarrollo"
+    ],
+    "ans": 0,
+    "exp": "Según el cuadro comparativo, gran parte de la población de América Anglosajona tiene una adecuada calidad de vida.",
+    "page": "América Latina y América Anglosajona",
+    "id": 66
+   },
+   {
+    "c": 6,
+    "q": "¿Cuál es la capital de CANADÁ?",
+    "opts": [
+     "Toronto",
+     "Montreal",
+     "Ottawa",
+     "Vancouver"
+    ],
+    "ans": 2,
+    "exp": "La capital de Canadá es Ottawa.",
+    "page": "Países y capitales de América",
+    "id": 67
+   },
+   {
+    "c": 6,
+    "q": "¿Cuál es la capital de ESTADOS UNIDOS?",
+    "opts": [
+     "Nueva York",
+     "Washington D.C.",
+     "Los Ángeles",
+     "Chicago"
+    ],
+    "ans": 1,
+    "exp": "La capital de Estados Unidos es Washington D.C.",
+    "page": "Países y capitales de América",
+    "id": 68
+   },
+   {
+    "c": 6,
+    "q": "¿Cuál es la capital de MÉXICO?",
+    "opts": [
+     "Guadalajara",
+     "Monterrey",
+     "Cancún",
+     "Ciudad de México"
+    ],
+    "ans": 3,
+    "exp": "La capital de México es Ciudad de México.",
+    "page": "Países y capitales de América",
+    "id": 69
+   },
+   {
+    "c": 6,
+    "q": "¿Qué país tiene DOS capitales según el cuadro?",
+    "opts": [
+     "Brasil",
+     "Bolivia (La Paz y Sucre)",
+     "Perú",
+     "Chile"
+    ],
+    "ans": 1,
+    "exp": "Bolivia figura con dos capitales: La Paz y Sucre.",
+    "page": "Países y capitales de América",
+    "id": 70
+   },
+   {
+    "c": 6,
+    "q": "¿Cuál es la capital de BRASIL?",
+    "opts": [
+     "Río de Janeiro",
+     "San Pablo",
+     "Brasilia",
+     "Salvador de Bahía"
+    ],
+    "ans": 2,
+    "exp": "La capital de Brasil es Brasilia.",
+    "page": "Países y capitales de América",
+    "id": 71
+   },
+   {
+    "c": 6,
+    "q": "¿Cuál es la capital de PERÚ?",
+    "opts": [
+     "Lima",
+     "Cusco",
+     "Quito",
+     "Bogotá"
+    ],
+    "ans": 0,
+    "exp": "La capital de Perú es Lima.",
+    "page": "Países y capitales de América",
+    "id": 72
+   },
+   {
+    "c": 6,
+    "q": "¿Cuántos países en total tiene el cuadro de América?",
+    "opts": [
+     "21",
+     "25",
+     "27",
+     "30"
+    ],
+    "ans": 2,
+    "exp": "El cuadro del cuaderno enumera 27 países: 3 de América del N, 7 de América Central continental, 5 de las Antillas Mayores y 12 de América del S.",
+    "page": "Países y capitales de América",
+    "id": 73
+   },
+   {
+    "c": 7,
+    "q": "¿Con qué se representan los elementos en planos y mapas?",
+    "opts": [
+     "Solo con colores",
+     "Con trazos, dibujos y colores",
+     "Solo con fotografías",
+     "Con letras y números"
+    ],
+    "ans": 1,
+    "exp": "Tanto en los planos como en los mapas, los diferentes elementos se representan con trazos, dibujos y colores.",
+    "page": "El mapa físico y sus elementos",
+    "id": 74
+   },
+   {
+    "c": 7,
+    "q": "¿Dónde se indica el significado de los símbolos de un mapa?",
+    "opts": [
+     "En el cuadro de referencias",
+     "En el título",
+     "En la escala numérica",
+     "En el índice"
+    ],
+    "ans": 0,
+    "exp": "Los símbolos se representan en un cuadro de referencias, donde se indica el significado de cada uno.",
+    "page": "El mapa físico y sus elementos",
+    "id": 75
+   },
+   {
+    "c": 7,
+    "q": "¿Qué información brinda el MAPA FÍSICO de América?",
+    "opts": [
+     "Los límites entre países y sus capitales",
+     "La altura de los relieves, las aguas continentales y los signos cartográficos",
+     "La cantidad de habitantes",
+     "Las rutas y ciudades solamente"
+    ],
+    "ans": 1,
+    "exp": "El mapa físico brinda información sobre la altura de los relieves (escala cromática), las aguas continentales (ríos y lagos) y los signos cartográficos.",
+    "page": "El mapa físico y sus elementos",
+    "id": 76
+   },
+   {
+    "c": 7,
+    "q": "¿Cuáles son las principales FORMAS DE RELIEVE?",
+    "opts": [
+     "Llanura, meseta, sierra y montaña",
+     "Lago, laguna, arroyo y río",
+     "Bosque, selva y desierto",
+     "Valle, playa y acantilado"
+    ],
+    "ans": 0,
+    "exp": "Las principales formas de relieve de los paisajes naturales son: llanura, meseta, sierra y montaña.",
+    "page": "Componentes de los paisajes naturales",
+    "id": 77
+   },
+   {
+    "c": 7,
+    "q": "¿Cuáles son los TIPOS DE CLIMAS del cuaderno?",
+    "opts": [
+     "Húmedo y seco",
+     "Cálido, frío, templado, árido o desértico, y de altura o montaña",
+     "Tropical y polar",
+     "Continental y marítimo"
+    ],
+    "ans": 1,
+    "exp": "Los tipos de climas son: cálido, frío, templado, árido o desértico, y de altura o montaña.",
+    "page": "Componentes de los paisajes naturales",
+    "id": 78
+   },
+   {
+    "c": 7,
+    "q": "¿Cuáles son los principales BIOMAS?",
+    "opts": [
+     "Ciudad, campo y montaña",
+     "Norte, centro y sur",
+     "Bosque, desierto, selva, tundra y pradera o pastizal",
+     "Llanura, meseta y cordillera"
+    ],
+    "ans": 2,
+    "exp": "Los principales biomas son: bosque, desierto, selva, tundra y pradera o pastizal.",
+    "page": "Componentes de los paisajes naturales",
+    "id": 79
+   },
+   {
+    "c": 7,
+    "q": "¿Qué es la ESCALA CROMÁTICA?",
+    "opts": [
+     "Una regla para medir distancias en el mapa",
+     "Un gráfico que muestra las alturas de la superficie terrestre y las profundidades de mares y océanos",
+     "Una lista de colores de banderas",
+     "El índice del mapa"
+    ],
+    "ans": 1,
+    "exp": "La escala cromática es un gráfico que muestra con colores las alturas de la superficie terrestre y las profundidades en los mares y océanos.",
+    "page": "Escala cromática",
+    "id": 80
+   },
+   {
+    "c": 7,
+    "q": "¿Cuál es el valor de referencia de la escala cromática?",
+    "opts": [
+     "El 0 m sobre el nivel del mar (MSNM)",
+     "La cima del Aconcagua",
+     "El centro de la Tierra",
+     "Los 100 m de profundidad"
+    ],
+    "ans": 0,
+    "exp": "El valor de referencia es el 0 m sobre el nivel del mar (MSNM): por encima, relieves positivos o emergidos; por debajo, negativos o sumergidos.",
+    "page": "Escala cromática",
+    "id": 81
+   },
+   {
+    "c": 7,
+    "q": "¿Qué altura tienen las MONTAÑAS ALTAS en la escala cromática?",
+    "opts": [
+     "De 0 a 500 m",
+     "De 500 a 2.000 m",
+     "Más de 2.000 m",
+     "Menos de 0 m"
+    ],
+    "ans": 2,
+    "exp": "Las montañas altas tienen más de 2.000 m. Entre 500 y 2.000 m están las montañas bajas, mesetas y sierras.",
+    "page": "Escala cromática",
+    "id": 82
+   },
+   {
+    "c": 7,
+    "q": "¿Qué altura tienen las LLANURAS en la escala cromática?",
+    "opts": [
+     "De 0 a 500 m",
+     "De 500 a 2.000 m",
+     "Más de 2.000 m",
+     "De 0 a -2.000 m"
+    ],
+    "ans": 0,
+    "exp": "Las llanuras van de 0 a 500 m de altura.",
+    "page": "Escala cromática",
+    "id": 83
+   },
+   {
+    "c": 7,
+    "q": "¿Cómo se llaman los relieves que están POR DEBAJO del nivel del mar?",
+    "opts": [
+     "Positivos o emergidos",
+     "Negativos o sumergidos",
+     "Continentales",
+     "Elevados"
+    ],
+    "ans": 1,
+    "exp": "Los relieves por debajo del 0 m son negativos o sumergidos; los que están por encima son positivos o emergidos.",
+    "page": "Escala cromática",
+    "id": 84
+   },
+   {
+    "c": 7,
+    "q": "¿Qué son los SIGNOS CARTOGRÁFICOS?",
+    "opts": [
+     "Los gráficos o dibujos que aparecen en los mapas y planos",
+     "Las líneas imaginarias de la Tierra",
+     "Los nombres de los países",
+     "Los colores de la escala cromática"
+    ],
+    "ans": 0,
+    "exp": "Los signos cartográficos son los gráficos o dibujos que aparecen en los mapas y en los planos.",
+    "page": "Signos cartográficos",
+    "id": 85
+   },
+   {
+    "c": 7,
+    "q": "¿Cómo se clasifican los signos cartográficos?",
+    "opts": [
+     "Grandes, medianos y chicos",
+     "N (natural), A (artificial) y M (mixto)",
+     "Físicos y políticos",
+     "Primarios y secundarios"
+    ],
+    "ans": 1,
+    "exp": "De acuerdo a su significado o lo que representan, se clasifican en: N → natural, A → artificial y M → mixto.",
+    "page": "Signos cartográficos",
+    "id": 86
+   },
+   {
+    "c": 7,
+    "q": "Según el cuaderno, un PUENTE es un signo de clase...",
+    "opts": [
+     "N (natural)",
+     "M (mixto)",
+     "A (artificial)",
+     "No es un signo"
+    ],
+    "ans": 2,
+    "exp": "El puente figura como signo artificial (A), igual que las vías del FC, la ruta nacional o el aeropuerto.",
+    "page": "Signos cartográficos",
+    "id": 87
+   },
+   {
+    "c": 7,
+    "q": "¿Qué son los PROCESOS ENDÓGENOS?",
+    "opts": [
+     "Los vinculados con movimientos de placas de la corteza terrestre",
+     "Los provocados por el agua, el hielo y el viento",
+     "Los que ocurren en la atmósfera",
+     "Los provocados por los seres humanos"
+    ],
+    "ans": 0,
+    "exp": "Los procesos endógenos están vinculados con los movimientos de placas de la corteza terrestre; en las zonas de contacto se forman relieves elevados y bajos.",
+    "page": "Formación de los relieves",
+    "id": 88
+   },
+   {
+    "c": 7,
+    "q": "¿Qué son los PROCESOS EXÓGENOS?",
+    "opts": [
+     "Los movimientos de placas",
+     "Los asociados a la acción de elementos naturales como el agua, el hielo y el viento",
+     "Los terremotos y volcanes",
+     "Los cambios de clima"
+    ],
+    "ans": 1,
+    "exp": "Los procesos exógenos están asociados a la acción de elementos naturales: el agua, el hielo y el viento.",
+    "page": "Formación de los relieves",
+    "id": 89
+   },
+   {
+    "c": 7,
+    "q": "¿Qué relieve elevado se formó por el contacto de placas en América?",
+    "opts": [
+     "La llanura pampeana",
+     "La cordillera de los Andes",
+     "El desierto de Atacama",
+     "La meseta patagónica"
+    ],
+    "ans": 1,
+    "exp": "En las zonas de contacto de placas se forman relieves elevados como la cordillera de los Andes (y bajos como la llanura costera del golfo de México).",
+    "page": "Formación de los relieves",
+    "id": 90
+   },
+   {
+    "c": 7,
+    "q": "¿Dónde se produce el DESGASTE y dónde el DEPÓSITO de material?",
+    "opts": [
+     "Desgaste y erosión en zonas altas; depósito y acumulación en zonas bajas",
+     "Desgaste en zonas bajas; depósito en zonas altas",
+     "Ambos solo en la costa",
+     "Ambos solo en las montañas"
+    ],
+    "ans": 0,
+    "exp": "Los procesos pueden ser de desgaste y erosión de zonas altas, y de depósito y acumulación en zonas bajas.",
+    "page": "Formación de los relieves",
+    "id": 91
+   },
+   {
+    "c": 7,
+    "q": "¿Cómo se llaman los relieves que surgen SOBRE el nivel del mar?",
+    "opts": [
+     "Sumergidos, negativos u oceánicos",
+     "Emergidos, positivos o continentales",
+     "Insulares",
+     "Marítimos"
+    ],
+    "ans": 1,
+    "exp": "De la combinación de ambos procesos surgen los relieves emergidos/positivos/continentales y los sumergidos/negativos/oceánicos o marítimos.",
+    "page": "Formación de los relieves",
+    "id": 92
+   },
+   {
+    "c": 7,
+    "q": "¿Qué es una MONTAÑA?",
+    "opts": [
+     "Una zona plana relativamente baja",
+     "Un relieve elevado con cumbre y laderas",
+     "Una zona baja entre montañas",
+     "Una zona plana elevada"
+    ],
+    "ans": 1,
+    "exp": "Montaña: relieve elevado con cumbre y laderas.",
+    "page": "Formas de relieve: definiciones",
+    "id": 93
+   },
+   {
+    "c": 7,
+    "q": "¿Qué es una LLANURA?",
+    "opts": [
+     "Una zona plana relativamente baja",
+     "Un conjunto de montañas",
+     "Una zona elevada aislada",
+     "Una zona baja entre montañas"
+    ],
+    "ans": 0,
+    "exp": "Llanura: zona plana relativamente baja.",
+    "page": "Formas de relieve: definiciones",
+    "id": 94
+   },
+   {
+    "c": 7,
+    "q": "¿Qué es un VALLE?",
+    "opts": [
+     "Una zona plana elevada",
+     "Un relieve con cumbre y laderas",
+     "Una zona baja entre montañas",
+     "Un conjunto de montañas"
+    ],
+    "ans": 2,
+    "exp": "Valle: zona baja entre montañas.",
+    "page": "Formas de relieve: definiciones",
+    "id": 95
+   },
+   {
+    "c": 7,
+    "q": "¿Qué es un CERRO o MONTE?",
+    "opts": [
+     "Una zona elevada aislada del resto",
+     "Un conjunto de montañas",
+     "Una zona plana baja",
+     "Una depresión"
+    ],
+    "ans": 0,
+    "exp": "Cerro o monte: zona elevada aislada del resto.",
+    "page": "Formas de relieve: definiciones",
+    "id": 96
+   },
+   {
+    "c": 7,
+    "q": "¿Qué es una CORDILLERA?",
+    "opts": [
+     "Una montaña aislada",
+     "Un conjunto de montañas",
+     "Una zona plana elevada",
+     "Un valle muy largo"
+    ],
+    "ans": 1,
+    "exp": "Cordillera: conjunto de montañas.",
+    "page": "Formas de relieve: definiciones",
+    "id": 97
+   },
+   {
+    "c": 7,
+    "q": "¿Qué es una MESETA o MACIZO?",
+    "opts": [
+     "Una zona plana elevada",
+     "Una zona plana baja",
+     "Una zona baja entre montañas",
+     "Un relieve sumergido"
+    ],
+    "ans": 0,
+    "exp": "Meseta o macizo: zona plana elevada.",
+    "page": "Formas de relieve: definiciones",
+    "id": 98
    }
   ],
   "flashcards": [
@@ -6130,9 +7096,284 @@ body {
     "t": "Oriente",
     "d": "Lugar por donde sale el Sol. De allí viene la palabra 'orientación'.",
     "id": 39
+   },
+   {
+    "c": 5,
+    "t": "Paralelos",
+    "d": "Círculos concéntricos que corren de E a O. El mayor es el Ecuador; los demás reducen su extensión hacia los polos.",
+    "id": 40
+   },
+   {
+    "c": 5,
+    "t": "Meridianos",
+    "d": "Semicírculos no concéntricos que corren de N a S. Son todos iguales; el de referencia es el de Greenwich.",
+    "id": 41
+   },
+   {
+    "c": 5,
+    "t": "Latitud",
+    "d": "Distancia entre un punto y el paralelo del Ecuador (0°). Puede ser N o S; máximo 90° en los polos.",
+    "id": 42
+   },
+   {
+    "c": 5,
+    "t": "Longitud",
+    "d": "Distancia entre un punto y el Meridiano de Greenwich (0°). Puede ser E u O; máximo 180° a cada lado.",
+    "id": 43
+   },
+   {
+    "c": 5,
+    "t": "Coordenadas de Buenos Aires",
+    "d": "Latitud S 35° (HS) y longitud O 59° (HO).",
+    "id": 44
+   },
+   {
+    "c": 5,
+    "t": "Latitud y longitud de América",
+    "d": "Latitud N y S (se extiende en sentido N-S) y longitud O (está toda en el hemisferio Oeste).",
+    "id": 45
+   },
+   {
+    "c": 6,
+    "t": "División física de América",
+    "d": "América del Norte, América Central y América del Sur.",
+    "id": 46
+   },
+   {
+    "c": 6,
+    "t": "América del Norte",
+    "d": "Desde la zona Ártica hasta el S de México. Incluye Groenlandia (dependiente de Dinamarca) y Alaska (estado de EE.UU.).",
+    "id": 47
+   },
+   {
+    "c": 6,
+    "t": "América Central",
+    "d": "Parte Continental o Ístmica (puente entre Am. del N y del S) + parte Insular (islas del Caribe: Antillas Mayores y Menores).",
+    "id": 48
+   },
+   {
+    "c": 6,
+    "t": "América del Sur",
+    "d": "Desde Colombia hasta el sur de Argentina y Chile. Incluye la Guayana Francesa (pertenece a Francia).",
+    "id": 49
+   },
+   {
+    "c": 6,
+    "t": "Antillas Mayores",
+    "d": "Cuba, Jamaica, Bahamas (archipiélago), Haití y República Dominicana.",
+    "id": 50
+   },
+   {
+    "c": 6,
+    "t": "La Española",
+    "d": "Isla que comparten Haití y República Dominicana.",
+    "id": 51
+   },
+   {
+    "c": 6,
+    "t": "América Anglosajona",
+    "d": "Canadá + Estados Unidos. Ex colonias de Inglaterra; gran parte de la población con adecuada calidad de vida.",
+    "id": 52
+   },
+   {
+    "c": 6,
+    "t": "América Latina",
+    "d": "Desde México hacia el S. Ex colonias de España y Portugal; religión mayormente católica; grandes desigualdades.",
+    "id": 53
+   },
+   {
+    "c": 6,
+    "t": "Río Grande o Bravo del Norte",
+    "d": "Río que marca el límite entre México y Estados Unidos (frontera de América Latina).",
+    "id": 54
+   },
+   {
+    "c": 6,
+    "t": "Criterios socioeconómicos",
+    "d": "Idioma, historia, cultura, costumbres, población, religión, ubicación, situación económica y proceso colonizador.",
+    "id": 55
+   },
+   {
+    "c": 6,
+    "t": "Capital de Canadá",
+    "d": "Ottawa.",
+    "id": 56
+   },
+   {
+    "c": 6,
+    "t": "Capital de Estados Unidos",
+    "d": "Washington D.C.",
+    "id": 57
+   },
+   {
+    "c": 6,
+    "t": "Capital de México",
+    "d": "Ciudad de México.",
+    "id": 58
+   },
+   {
+    "c": 6,
+    "t": "Capitales de Bolivia",
+    "d": "La Paz y Sucre (es el país del cuadro con dos capitales).",
+    "id": 59
+   },
+   {
+    "c": 6,
+    "t": "Capital de Brasil",
+    "d": "Brasilia.",
+    "id": 60
+   },
+   {
+    "c": 6,
+    "t": "Capital de Argentina",
+    "d": "Buenos Aires.",
+    "id": 61
+   },
+   {
+    "c": 6,
+    "t": "Capital de Perú",
+    "d": "Lima.",
+    "id": 62
+   },
+   {
+    "c": 6,
+    "t": "Capital de Chile",
+    "d": "Santiago.",
+    "id": 63
+   },
+   {
+    "c": 6,
+    "t": "Capital de Colombia",
+    "d": "Bogotá.",
+    "id": 64
+   },
+   {
+    "c": 6,
+    "t": "Capital de Paraguay",
+    "d": "Asunción.",
+    "id": 65
+   },
+   {
+    "c": 6,
+    "t": "Capital de Uruguay",
+    "d": "Montevideo.",
+    "id": 66
+   },
+   {
+    "c": 6,
+    "t": "Capital de Venezuela",
+    "d": "Caracas.",
+    "id": 67
+   },
+   {
+    "c": 7,
+    "t": "Mapa físico",
+    "d": "Brinda información sobre la altura de los relieves (escala cromática), las aguas continentales y los signos cartográficos.",
+    "id": 68
+   },
+   {
+    "c": 7,
+    "t": "Cuadro de referencias",
+    "d": "Donde se indica el significado de los trazos, dibujos y colores usados en el mapa o plano.",
+    "id": 69
+   },
+   {
+    "c": 7,
+    "t": "Formas de relieve (paisajes)",
+    "d": "Llanura, meseta, sierra y montaña.",
+    "id": 70
+   },
+   {
+    "c": 7,
+    "t": "Tipos de climas",
+    "d": "Cálido, frío, templado, árido o desértico, y de altura o montaña.",
+    "id": 71
+   },
+   {
+    "c": 7,
+    "t": "Biomas principales",
+    "d": "Bosque, desierto, selva, tundra y pradera o pastizal.",
+    "id": 72
+   },
+   {
+    "c": 7,
+    "t": "Escala cromática",
+    "d": "Gráfico que muestra con colores las alturas de la superficie terrestre y las profundidades de mares y océanos.",
+    "id": 73
+   },
+   {
+    "c": 7,
+    "t": "MSNM",
+    "d": "Metros sobre el nivel del mar: el 0 m es el valor de referencia de la escala cromática.",
+    "id": 74
+   },
+   {
+    "c": 7,
+    "t": "Alturas de la escala cromática",
+    "d": "Montañas altas: +2.000 m · montañas bajas/mesetas/sierras: 500-2.000 m · llanuras: 0-500 m.",
+    "id": 75
+   },
+   {
+    "c": 7,
+    "t": "Signos cartográficos",
+    "d": "Gráficos o dibujos que aparecen en mapas y planos. Se clasifican en N (natural), A (artificial) y M (mixto).",
+    "id": 76
+   },
+   {
+    "c": 7,
+    "t": "Procesos endógenos",
+    "d": "Vinculados con movimientos de placas de la corteza terrestre. Forman relieves elevados (Andes) y bajos.",
+    "id": 77
+   },
+   {
+    "c": 7,
+    "t": "Procesos exógenos",
+    "d": "Asociados a la acción de elementos naturales: agua, hielo y viento.",
+    "id": 78
+   },
+   {
+    "c": 7,
+    "t": "Desgaste y depósito",
+    "d": "Desgaste y erosión en zonas altas; depósito y acumulación en zonas bajas.",
+    "id": 79
+   },
+   {
+    "c": 7,
+    "t": "Relieves emergidos y sumergidos",
+    "d": "Emergidos: positivos/continentales. Sumergidos: negativos/oceánicos o marítimos.",
+    "id": 80
+   },
+   {
+    "c": 7,
+    "t": "Montaña",
+    "d": "Relieve elevado con cumbre y laderas.",
+    "id": 81
+   },
+   {
+    "c": 7,
+    "t": "Valle",
+    "d": "Zona baja entre montañas.",
+    "id": 82
+   },
+   {
+    "c": 7,
+    "t": "Cordillera",
+    "d": "Conjunto de montañas.",
+    "id": 83
+   },
+   {
+    "c": 7,
+    "t": "Meseta o Macizo",
+    "d": "Zona plana elevada.",
+    "id": 84
    }
   ],
   "glossary": [
+   {
+    "c": 6,
+    "t": "Alaska",
+    "d": "Estado de Estados Unidos ubicado en el extremo NO de América."
+   },
    {
     "t": "Ambiente",
     "d": "Naturaleza socializada por parte del hombre para aprovecharla. Ej: de montañas, de bosques.",
@@ -6154,6 +7395,41 @@ body {
     "c": 2
    },
    {
+    "c": 6,
+    "t": "América Anglosajona",
+    "d": "Canadá y Estados Unidos. También llamada América Desarrollada. Ex colonias de Inglaterra."
+   },
+   {
+    "c": 6,
+    "t": "América Central",
+    "d": "Subcontinente formado por la parte Continental o Ístmica y la Insular (islas del mar Caribe)."
+   },
+   {
+    "c": 6,
+    "t": "América del Norte",
+    "d": "Subcontinente que va desde la zona Ártica hasta el S de México. Incluye Groenlandia y Alaska."
+   },
+   {
+    "c": 6,
+    "t": "América del Sur",
+    "d": "Subcontinente que va desde Colombia hasta el sur de Argentina y Chile."
+   },
+   {
+    "c": 6,
+    "t": "América Insular",
+    "d": "Parte de América Central formada por las islas del mar Caribe (Antillas Mayores y Menores)."
+   },
+   {
+    "c": 6,
+    "t": "América Ístmica",
+    "d": "Parte continental de América Central: un puente terrestre entre América del N y América del S."
+   },
+   {
+    "c": 6,
+    "t": "América Latina",
+    "d": "Desde México hacia el S. También llamada Subdesarrollada. Ex colonias de España y Portugal."
+   },
+   {
     "t": "Antártico (océano)",
     "d": "Océano del extremo sur. También llamado Océano Austral. Se considera la unión de los océanos Pacífico y Atlántico al sur del Antártico.",
     "c": 1
@@ -6164,6 +7440,16 @@ body {
     "c": 1
    },
    {
+    "c": 6,
+    "t": "Antillas Mayores",
+    "d": "Cuba, Jamaica, Bahamas, Haití y República Dominicana."
+   },
+   {
+    "c": 6,
+    "t": "Antillas Menores",
+    "d": "Las islas más pequeñas del mar Caribe."
+   },
+   {
     "t": "Atlántico",
     "d": "Océano que separa a América de África y Europa. Es el 2° más grande (23 %).",
     "c": 1
@@ -6172,6 +7458,11 @@ body {
     "t": "Atmósfera",
     "d": "Capa de aire del planeta.",
     "c": 2
+   },
+   {
+    "c": 7,
+    "t": "Bioma",
+    "d": "Gran conjunto de vida natural: bosque, desierto, selva, tundra, pradera o pastizal."
    },
    {
     "t": "Biósfera",
@@ -6194,6 +7485,11 @@ body {
     "c": 3
    },
    {
+    "c": 7,
+    "t": "Cerro o Monte",
+    "d": "Zona elevada aislada del resto."
+   },
+   {
     "t": "Círculo Polar Antártico",
     "d": "Línea imaginaria a 66° Sur. No pasa por América (queda al sur de Tierra del Fuego, en el océano).",
     "c": 1
@@ -6214,9 +7510,24 @@ body {
     "c": 5
    },
    {
+    "c": 7,
+    "t": "Cordillera",
+    "d": "Conjunto de montañas."
+   },
+   {
+    "c": 7,
+    "t": "Cordillera de los Andes",
+    "d": "Relieve elevado de América formado por el contacto de placas."
+   },
+   {
     "t": "Cuadrantes",
     "d": "Las 4 divisiones del planisferio que resultan de cruzar los hemisferios: NO (Noroeste), NE (Noreste), SO (Suroeste), SE (Sureste).",
     "c": 1
+   },
+   {
+    "c": 7,
+    "t": "Cuadro de referencias",
+    "d": "Recuadro del mapa donde se indica el significado de cada trazo, dibujo o color."
    },
    {
     "t": "Desastres naturales",
@@ -6227,6 +7538,16 @@ body {
     "t": "Ecuador",
     "d": "Línea imaginaria a 0° de latitud. Separa el Hemisferio Norte del Sur.",
     "c": 1
+   },
+   {
+    "c": 7,
+    "t": "Erosión",
+    "d": "Desgaste de las zonas altas cuyo material se deposita y acumula en las zonas bajas."
+   },
+   {
+    "c": 7,
+    "t": "Escala cromática",
+    "d": "Gráfico que muestra con colores las alturas de la superficie terrestre y las profundidades de mares y océanos."
    },
    {
     "t": "Espacio geográfico (E.G.)",
@@ -6262,6 +7583,16 @@ body {
     "t": "Glaciar Ártico",
     "d": "Océano del extremo norte. Es el más pequeño (4 %).",
     "c": 1
+   },
+   {
+    "c": 6,
+    "t": "Groenlandia",
+    "d": "Territorio de América del N dependiente de Dinamarca."
+   },
+   {
+    "c": 6,
+    "t": "Guayana Francesa",
+    "d": "Territorio de América del S que no es independiente: pertenece a Francia."
    },
    {
     "t": "Hemisferio Austral (HS)",
@@ -6309,6 +7640,16 @@ body {
     "c": 3
    },
    {
+    "c": 6,
+    "t": "La Española",
+    "d": "Isla de las Antillas Mayores compartida por Haití y República Dominicana."
+   },
+   {
+    "c": 5,
+    "t": "Latitud",
+    "d": "Distancia entre un punto cualquiera y el paralelo del Ecuador (0°). Puede ser N o S; máximo 90° en los polos."
+   },
+   {
     "t": "Latitudinal",
     "d": "Sentido N-S de la extensión de un territorio.",
     "c": 3
@@ -6324,14 +7665,49 @@ body {
     "c": 2
    },
    {
+    "c": 7,
+    "t": "Llanura",
+    "d": "Zona plana relativamente baja."
+   },
+   {
+    "c": 5,
+    "t": "Longitud",
+    "d": "Distancia entre un punto cualquiera y el Meridiano de Greenwich (0°). Puede ser E u O; máximo 180°."
+   },
+   {
     "t": "Longitudinal",
     "d": "Sentido O-E de la extensión de un territorio.",
     "c": 3
    },
    {
+    "c": 7,
+    "t": "Mapa físico",
+    "d": "Mapa que informa la altura de los relieves, las aguas continentales y los signos cartográficos."
+   },
+   {
     "t": "Meridiano de Greenwich",
     "d": "Meridiano de origen, a 0°. Separa el Hemisferio Occidental del Oriental.",
     "c": 1
+   },
+   {
+    "c": 5,
+    "t": "Meridianos",
+    "d": "Semicírculos no concéntricos que corren de N a S, todos iguales. El de referencia es el de Greenwich."
+   },
+   {
+    "c": 7,
+    "t": "Meseta o Macizo",
+    "d": "Zona plana elevada."
+   },
+   {
+    "c": 7,
+    "t": "Montaña",
+    "d": "Relieve elevado con cumbre y laderas."
+   },
+   {
+    "c": 7,
+    "t": "MSNM",
+    "d": "Metros sobre el nivel del mar. El 0 m es la referencia para relieves positivos y negativos."
    },
    {
     "t": "Océanos",
@@ -6359,9 +7735,24 @@ body {
     "c": 1
    },
    {
+    "c": 5,
+    "t": "Paralelos",
+    "d": "Círculos concéntricos que corren de E a O. El mayor es el Ecuador."
+   },
+   {
     "t": "Planisferio",
     "d": "Mapa del planeta entero proyectado en un plano.",
     "c": 1
+   },
+   {
+    "c": 7,
+    "t": "Procesos endógenos",
+    "d": "Procesos de formación del relieve vinculados con los movimientos de placas de la corteza terrestre."
+   },
+   {
+    "c": 7,
+    "t": "Procesos exógenos",
+    "d": "Procesos asociados a la acción del agua, el hielo y el viento."
    },
    {
     "t": "Puntos cardinales",
@@ -6374,9 +7765,34 @@ body {
     "c": 3
    },
    {
+    "c": 7,
+    "t": "Relieves emergidos",
+    "d": "Relieves positivos o continentales: están por encima del nivel del mar."
+   },
+   {
+    "c": 7,
+    "t": "Relieves sumergidos",
+    "d": "Relieves negativos, oceánicos o marítimos: están por debajo del nivel del mar."
+   },
+   {
+    "c": 6,
+    "t": "Río Grande o Bravo del Norte",
+    "d": "Río del límite entre México y Estados Unidos: frontera N de América Latina."
+   },
+   {
+    "c": 7,
+    "t": "Signos cartográficos",
+    "d": "Gráficos o dibujos de mapas y planos. Se clasifican en naturales (N), artificiales (A) y mixtos (M)."
+   },
+   {
     "t": "Sociedad",
     "d": "Conjunto de personas con intereses y vida en común que permiten identificarla.",
     "c": 2
+   },
+   {
+    "c": 6,
+    "t": "Subcontinentes",
+    "d": "Partes en que se divide el territorio americano (América del N, Central y del S en la división física)."
    },
    {
     "t": "Territorio",
@@ -6392,6 +7808,11 @@ body {
     "t": "Trópico de Capricornio",
     "d": "Línea imaginaria a 23° Sur.",
     "c": 1
+   },
+   {
+    "c": 7,
+    "t": "Valle",
+    "d": "Zona baja entre montañas."
    },
    {
     "t": "Zona cálida o intertropical",
@@ -6530,6 +7951,7 @@ body {
        <div class="page-end">· · ·</div>`;
     
     reader.scrollTop = 0;
+    window.scrollTo(0, 0);   // en iPhone el scroll real es el de la ventana
     pageInd.textContent = `${idx + 1} / ${PAGES.length}`;
     progress.style.width = (((idx + 1) / PAGES.length) * 100) + "%";
     chapLabel.textContent = `Cap. ${chap.num} · ${chap.name}`;
@@ -7025,20 +8447,60 @@ body {
   // ============================================================
   let quizSession = null;  // {questions:[], answered:[], currentIdx, chapter}
   let selectedQuizChap = "all";
+  let selectedQuizPages = null;   // null = capítulo entero; array = subtemas elegidos
 
   function renderQuizSetup() {
     selectedQuizChap = "all";
+    selectedQuizPages = null;
     let h = '<button class="chap-pick-opt selected" data-c="all"><span class="ico">✨</span><span class="name">Todos los capítulos</span><span class="count">' + QUIZ_BANK.length + ' preg.</span></button>';
     for (const chap of TOC) {
-      const n = QUIZ_BANK.filter(q => q.c === chap.num).length;
-      h += `<button class="chap-pick-opt" data-c="${chap.num}"><span class="ico">${chap.icon}</span><span class="name">${escapeHtml(chap.name)}</span><span class="count">${n} preg.</span></button>`;
+      const chapQs = QUIZ_BANK.filter(q => q.c === chap.num);
+      if (chapQs.length === 0) continue;
+      // subtemas = secciones con preguntas (campo page), en el orden del capítulo
+      const pages = [];
+      for (const q of chapQs) if (q.page && !pages.includes(q.page)) pages.push(q.page);
+      const expandible = pages.length > 1;
+      h += `<button class="chap-pick-opt" data-c="${chap.num}"><span class="ico">${chap.icon}</span><span class="name">${escapeHtml(chap.name)}</span><span class="count">${chapQs.length} preg.</span>${expandible ? `<span class="chap-exp" data-exp="${chap.num}" role="button" aria-label="Elegir subtemas">▸</span>` : ""}</button>`;
+      if (expandible) {
+        h += `<div class="chap-sub" data-sub="${chap.num}">`;
+        for (const p of pages) {
+          const k = chapQs.filter(q => q.page === p).length;
+          h += `<label class="chap-sub-row"><input type="checkbox" data-chap="${chap.num}" data-page="${escapeHtml(p)}"><span class="sub-name">${escapeHtml(p)}</span><span class="count">${k}</span></label>`;
+        }
+        h += `</div>`;
+      }
     }
     $("quizChapPick").innerHTML = h;
+
+    const marcarSeleccion = (c) => {
+      $("quizChapPick").querySelectorAll(".chap-pick-opt").forEach(x => x.classList.toggle("selected", x.dataset.c === String(c)));
+      selectedQuizChap = String(c);
+    };
+
     $("quizChapPick").querySelectorAll(".chap-pick-opt").forEach(el => {
       el.addEventListener("click", () => {
-        $("quizChapPick").querySelectorAll(".chap-pick-opt").forEach(x => x.classList.remove("selected"));
-        el.classList.add("selected");
-        selectedQuizChap = el.dataset.c;
+        marcarSeleccion(el.dataset.c);
+        // capítulo entero: limpiar subtemas tildados
+        selectedQuizPages = null;
+        $("quizChapPick").querySelectorAll(".chap-sub input").forEach(cb => { cb.checked = false; });
+      });
+    });
+    $("quizChapPick").querySelectorAll(".chap-exp").forEach(el => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        const sub = $("quizChapPick").querySelector(`.chap-sub[data-sub="${el.dataset.exp}"]`);
+        const abierto = sub.classList.toggle("open");
+        el.textContent = abierto ? "▾" : "▸";
+      });
+    });
+    $("quizChapPick").querySelectorAll(".chap-sub input").forEach(cb => {
+      cb.addEventListener("change", () => {
+        const c = cb.dataset.chap;
+        // tildar un subtema selecciona su capítulo y destilda los de otros capítulos
+        $("quizChapPick").querySelectorAll(`.chap-sub input`).forEach(x => { if (x.dataset.chap !== c) x.checked = false; });
+        marcarSeleccion(c);
+        const marcados = [...$("quizChapPick").querySelectorAll(`.chap-sub input[data-chap="${c}"]:checked`)].map(x => x.dataset.page);
+        selectedQuizPages = marcados.length ? marcados : null;
       });
     });
   }
@@ -7056,8 +8518,11 @@ body {
     let pool = selectedQuizChap === "all"
       ? QUIZ_BANK.slice()
       : QUIZ_BANK.filter(q => q.c === parseInt(selectedQuizChap, 10));
+    if (selectedQuizPages && selectedQuizPages.length) {
+      pool = pool.filter(q => selectedQuizPages.includes(q.page));
+    }
     pool = shuffleArray(pool).slice(0, 10);
-    if (pool.length === 0) { showToast("⚠️", "No hay preguntas para este capítulo"); return; }
+    if (pool.length === 0) { showToast("⚠️", "No hay preguntas para esta selección"); return; }
     quizSession = {
       questions: pool,
       answered: [],
@@ -7791,7 +9256,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "11/08 08:38";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "11/08 19:57";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -8004,7 +9469,7 @@ body {
     {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
     {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
     {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
-  ]/{"Biología": {"emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"emoji": "🌍", "pag": 13, "quiz": 40, "fc": 40}} se inyectan al compilar,
+  ]/{"Biología": {"emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
   var ST_LEVELS = [
     {xp: 0,    name: "Aprendiz",    icon: "🌱"},
@@ -8028,7 +9493,7 @@ body {
     {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
     {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
   ];
-  var ST_TOTALS = {"Biología": {"emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"emoji": "🌍", "pag": 13, "quiz": 40, "fc": 40}};
+  var ST_TOTALS = {"Biología": {"emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
