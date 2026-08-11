@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="10/08 20:42">
+<meta name="apuntes-version" content="10/08 21:02">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -6862,6 +6862,7 @@ body {
     state.unlockedBadges.push(id);
     persist();
     setTimeout(() => showToast(b.em, `¡Logro: ${b.name}!`), 200);
+    if (window.apuntesFX) try { window.apuntesFX.logro(); } catch (e) {}
     return true;
   }
 
@@ -7114,6 +7115,8 @@ body {
       state.streak = 0;
       addXp(2, btn);  // consolación
     }
+    // Festejo sonoro/visual (módulo aditivo; si no está, no pasa nada)
+    if (window.apuntesFX) try { window.apuntesFX.answer(isCorrect, state.streak, btn); } catch (e) {}
     persist();
     quizSession.answered.push({q, correct: isCorrect});
 
@@ -7153,7 +7156,7 @@ body {
     $("qrScore").textContent = correct;
     $("qrTotal").textContent = "/ " + total;
     let em, title, sub;
-    if (pct === 1) { em = "🏆"; title = "¡Perfecto!"; sub = "Todas correctas. Imparable."; }
+    if (pct === 1) { em = "🏆"; title = "¡Perfecto!"; sub = "Todas correctas. Imparable."; if (window.apuntesFX) try { window.apuntesFX.perfect(); } catch (e) {} }
     else if (pct >= 0.8) { em = "🎉"; title = "¡Excelente!"; sub = "Casi todas."; }
     else if (pct >= 0.6) { em = "👍"; title = "¡Bien!"; sub = "Buen trabajo, seguí practicando."; }
     else if (pct >= 0.4) { em = "💪"; title = "A repasar un poco"; sub = "Mirá las explicaciones y volvé a intentar."; }
@@ -7697,7 +7700,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "10/08 20:42";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "10/08 21:02";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -8066,6 +8069,144 @@ body {
       if (pickerEl.classList.contains('open')) { renderStrip(); renderCardStats(); }
     }).observe(pickerEl, { attributes: true, attributeFilter: ['class'] });
   }
+
+  /* ---- FX: festejos de sonido y confetti (sonidos elegidos por el hijo de Javier, 11/08) ---- */
+  var audioCtx = null;
+  function fxCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function sonidoActivado() { return lsGet('apuntes_sonido') !== '0'; }
+
+  function fxNota(freq, t0, dur, tipo, vol, bend) {
+    try {
+      var c = fxCtx(), o = c.createOscillator(), g = c.createGain();
+      o.type = tipo || 'sine';
+      var t = c.currentTime + (t0 || 0);
+      o.frequency.setValueAtTime(freq, t);
+      if (bend) o.frequency.exponentialRampToValueAtTime(bend, t + dur);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(vol || 0.18, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(t); o.stop(t + dur + 0.05);
+    } catch (e) {}
+  }
+  function fxAcorde(freqs, t0, dur, tipo, vol) {
+    for (var i = 0; i < freqs.length; i++) fxNota(freqs[i], t0, dur, tipo, vol);
+  }
+  /* Acierto 2 — arpegio ganador */
+  function sndAcierto() {
+    if (!sonidoActivado()) return;
+    fxNota(523.25, 0, .12, 'triangle', .2); fxNota(659.25, .07, .12, 'triangle', .2);
+    fxNota(783.99, .14, .12, 'triangle', .2); fxNota(1046.5, .21, .3, 'triangle', .22);
+  }
+  /* Error 4 — trombón triste */
+  function sndError() {
+    if (!sonidoActivado()) return;
+    fxNota(233.08, 0, .28, 'sawtooth', .09); fxNota(220, .28, .28, 'sawtooth', .09);
+    fxNota(207.65, .56, .3, 'sawtooth', .09); fxNota(196, .86, .7, 'sawtooth', .1, 175);
+  }
+  /* Racha A — fanfarria de trompetas */
+  function sndRacha() {
+    if (!sonidoActivado()) return;
+    fxNota(392, 0, .13, 'sawtooth', .10); fxNota(392, .17, .13, 'sawtooth', .10);
+    fxNota(392, .34, .13, 'sawtooth', .10);
+    fxAcorde([523.25, 659.25, 783.99], .52, .85, 'sawtooth', .07);
+    fxNota(1046.5, .52, .85, 'triangle', .12);
+  }
+
+  /* Logro A — arpa mágica ascendente */
+  var ARPA = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1318.5, 1568];
+  function sndLogro() {
+    if (!sonidoActivado()) return;
+    for (var i = 0; i < ARPA.length; i++) fxNota(ARPA[i], i * .05, .35, 'sine', .09);
+    fxNota(2093, .4, .8, 'sine', .05);
+  }
+
+  /* confetti y sacudida */
+  var FX_COLORES = ['#3d5a3d', '#8a6d3b', '#e0b64f', '#c46a4a', '#5a7ea3', '#fffdf6'];
+  (function () {
+    var st = document.createElement('style');
+    st.textContent = '@keyframes apShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}' +
+                     '.ap-shake{animation:apShake .45s ease;}';
+    document.head.appendChild(st);
+  })();
+
+  function confetti(x, y, cantidad, spread) {
+    for (var i = 0; i < cantidad; i++) {
+      var p = document.createElement('span');
+      var sz = 5 + Math.random() * 5;
+      p.style.cssText = 'position:fixed;z-index:99995;pointer-events:none;left:' + x + 'px;top:' + y + 'px;' +
+        'width:' + sz + 'px;height:' + (sz * 0.6) + 'px;border-radius:2px;' +
+        'background:' + FX_COLORES[i % FX_COLORES.length] + ';opacity:1;transition:transform .9s cubic-bezier(.15,.6,.4,1),opacity .9s ease;';
+      document.body.appendChild(p);
+      (function (el) {
+        var dx = (Math.random() - 0.5) * 2 * spread;
+        var dy = -30 - Math.random() * 60;
+        var caida = 120 + Math.random() * 160;
+        var rot = (Math.random() - 0.5) * 540;
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            el.style.transform = 'translate(' + dx + 'px,' + (dy + caida) + 'px) rotate(' + rot + 'deg)';
+            el.style.opacity = '0';
+          });
+        });
+        setTimeout(function () { el.remove(); }, 1000);
+      })(p);
+    }
+  }
+
+  function confettiEn(el, cantidad, spread) {
+    var r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+    var x = r ? r.left + r.width / 2 : window.innerWidth / 2;
+    var y = r ? r.top + r.height / 2 : window.innerHeight / 3;
+    confetti(x, y, cantidad || 14, spread || 90);
+  }
+
+  window.apuntesFX = {
+    answer: function (ok, streak, btn) {
+      if (ok) {
+        if (streak === 5 || streak === 10) { sndRacha(); confettiEn(btn, 26, 140); }
+        else { sndAcierto(); confettiEn(btn, 14, 90); }
+      } else {
+        sndError();
+        if (btn && btn.classList) { btn.classList.add('ap-shake'); setTimeout(function () { btn.classList.remove('ap-shake'); }, 500); }
+      }
+    },
+    logro: function () {
+      sndLogro();
+    },
+    perfect: function () {
+      sndRacha();
+      var w = window.innerWidth;
+      for (var i = 0; i < 4; i++) {
+        (function (i) {
+          setTimeout(function () { confetti(w * (0.2 + 0.2 * i), 40, 16, 160); }, i * 160);
+        })(i);
+      }
+    }
+  };
+
+  /* toggle de sonido en el panel de Ajustes */
+  (function () {
+    var settings = document.getElementById('settings');
+    if (!settings) return;
+    var row = document.createElement('div');
+    row.style.cssText = 'margin-top:14px;';
+    row.innerHTML = '<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-bottom:8px;">Sonidos</div>' +
+      '<button id="apSoundToggle" type="button" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,.15);background:transparent;color:inherit;font-family:inherit;font-size:15px;cursor:pointer;text-align:left;"></button>';
+    settings.appendChild(row);
+    var btn = row.querySelector('#apSoundToggle');
+    function pintar() { btn.textContent = sonidoActivado() ? '🔊 Activados — tocá para silenciar' : '🔇 Silenciados — tocá para activar'; }
+    btn.addEventListener('click', function () {
+      lsSet('apuntes_sonido', sonidoActivado() ? '0' : '1');
+      pintar();
+      if (sonidoActivado()) sndAcierto();   /* mini-preview al reactivar */
+    });
+    pintar();
+  })();
 
   /* ---- botón "¿Viste un error?" + formulario ---- */
   if (!APUNTES_EVENTS_URL) return;
