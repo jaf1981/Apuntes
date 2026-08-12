@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="12/08 12:57">
+<meta name="apuntes-version" content="12/08 13:30">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -9290,7 +9290,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "12/08 12:57";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "12/08 13:30";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -9657,6 +9657,7 @@ body {
 
   function abrirPanelStats() {
     if (document.getElementById('apStatsOverlay')) return;
+    sendDiario('stats', 'abre_stats', {});
     var ov = document.createElement('div');
     ov.id = 'apStatsOverlay';
     ov.style.cssText = 'position:fixed;inset:0;z-index:99992;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;';
