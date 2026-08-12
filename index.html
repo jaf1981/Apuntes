@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="12/08 11:32">
+<meta name="apuntes-version" content="12/08 12:23">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -9290,7 +9290,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "12/08 11:32";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "12/08 12:23";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -9721,7 +9721,11 @@ body {
     document.getElementById('apApodoCancelar').addEventListener('click', function () { ov.remove(); });
     document.getElementById('apApodoGuardar').addEventListener('click', function () {
       var v = (document.getElementById('apApodoInput').value || '').trim().slice(0, 30);
-      if (v) lsSet('apuntes_apodo', v);
+      var anterior = apodoActual();
+      if (v && v !== anterior) {
+        lsSet('apuntes_apodo', v);
+        send('cambia_apodo', { detalle: anterior + ' → ' + v });
+      }
       ov.remove();
       renderApodoChip();
     });
@@ -9910,7 +9914,7 @@ body {
         '<option value="sugerencia">Tengo una sugerencia</option>' +
       '</select>' +
       '<textarea id="apRepTexto" rows="4" maxlength="500" placeholder="Contanos qué viste y cómo debería ser..." style="width:100%;box-sizing:border-box;padding:9px;border-radius:9px;border:1px solid #ccc;background:#fff;font-size:15px;margin-bottom:8px;resize:vertical;"></textarea>' +
-      '<input id="apRepApodo" maxlength="30" placeholder="Tu apodo (opcional)" style="width:100%;box-sizing:border-box;padding:9px;border-radius:9px;border:1px solid #ccc;background:#fff;font-size:15px;margin-bottom:12px;" value="' + (lsGet('apuntes_apodo') || '') + '">' +
+      '<div style="font-size:13px;opacity:.7;margin-bottom:12px;">Reportando como 👤 <strong>' + apodoActual().replace(/</g, '&lt;') + '</strong> <span style="opacity:.7;">(se cambia desde el inicio)</span></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
         '<button id="apRepCancelar" type="button" style="padding:9px 14px;border-radius:9px;border:1px solid #ccc;background:#fff;font-size:15px;cursor:pointer;">Cancelar</button>' +
         '<button id="apRepEnviar" type="button" style="padding:9px 16px;border-radius:9px;border:none;background:#3d5a3d;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">Enviar</button>' +
@@ -9922,8 +9926,6 @@ body {
     document.getElementById('apRepEnviar').addEventListener('click', function () {
       var texto = (document.getElementById('apRepTexto').value || '').trim();
       var tipo = document.getElementById('apRepTipo').value;
-      var apodo = (document.getElementById('apRepApodo').value || '').trim();
-      if (apodo) lsSet('apuntes_apodo', apodo);
       if (!texto) { document.getElementById('apRepTexto').style.borderColor = '#c0392b'; return; }
       send('reporte', { tipo: tipo, texto: texto, materia: c.materia, capitulo: c.capitulo, pagina: c.pagina });
       box.innerHTML = '<div style="text-align:center;padding:14px 6px;"><div style="font-size:30px;">✅</div>' +
