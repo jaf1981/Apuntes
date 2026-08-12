@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="12/08 15:10">
+<meta name="apuntes-version" content="12/08 17:35">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -9290,7 +9290,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "12/08 15:10";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "12/08 17:35";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10048,11 +10048,15 @@ body {
         (onInstalar ? '<button id="apInstSi" type="button" style="padding:8px 14px;border-radius:9px;border:none;background:#fffdf6;color:#3d5a3d;font-size:14px;font-weight:700;cursor:pointer;">Instalar</button>' : '') +
       '</div>';
     document.body.appendChild(bar);
+    sendDiario('ip_mostrado', 'instala_paso',
+      { detalle: onInstalar ? 'cartel mostrado' : 'cartel guía iPhone mostrado' });
     document.getElementById('apInstNo').addEventListener('click', function () {
       marcarDescartado(); bar.remove();
+      sendDiario('ip_ahorano', 'instala_paso', { detalle: 'ahora no' });
     });
     if (onInstalar) {
       document.getElementById('apInstSi').addEventListener('click', function () {
+        sendDiario('ip_toco', 'instala_paso', { detalle: 'tocó instalar' });
         bar.remove(); onInstalar();
       });
     }
@@ -10080,7 +10084,10 @@ body {
           if (!deferredPrompt) return;
           deferredPrompt.prompt();
           deferredPrompt.userChoice.then(function (r) {
-            if (!r || r.outcome !== 'accepted') marcarDescartado();
+            if (!r || r.outcome !== 'accepted') {
+              marcarDescartado();
+              sendDiario('ip_rechazo', 'instala_paso', { detalle: 'rechazó el diálogo de Chrome' });
+            }
             deferredPrompt = null;
           });
         });
