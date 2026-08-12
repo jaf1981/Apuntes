@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="12/08 13:30">
+<meta name="apuntes-version" content="12/08 15:10">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -9290,7 +9290,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "12/08 13:30";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "12/08 15:10";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -9396,7 +9396,7 @@ body {
     var fab = e.target && e.target.closest ? e.target.closest('#fabPractice') : null;
     if (fab) {
       var c = contexto();
-      sendDiario('practica', 'abre_practica', { materia: c.materia });
+      sendDiario('practica_' + c.materia, 'abre_practica', { materia: c.materia });
     }
   }, true);
 
@@ -9427,16 +9427,78 @@ body {
     return out;
   }
 
+  /* ---- red de seguridad ante cierres bruscos (iOS puede matar la app sin dejar
+     salir el reporte): rastro persistente = foto del progreso al inicio + latido
+     cada 30 s. Si queda un rastro huérfano con actividad, se despacha en la
+     PRÓXIMA apertura como sesión recuperada (materia marcada con "· rec"). ---- */
+  var PEND_KEY = 'apuntes_pend';
+
+  function guardarPend(base, ini, last) {
+    try { lsSet(PEND_KEY, JSON.stringify({ b: base, i: ini, l: last })); } catch (e) {}
+  }
+
+  /* envío con confirmación de entrega: solo cuando la respuesta llega, se limpia
+     la red de seguridad. keepalive deja que el mensaje viaje aunque la app cierre. */
+  function sendConfirm(ev, extra, alConfirmar) {
+    if (!APUNTES_EVENTS_URL) return;
+    var data = { ev: ev, device: deviceId(), apodo: lsGet('apuntes_apodo') || '', ver: APUNTES_VERSION };
+    if (extra) { for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) data[k] = extra[k]; } }
+    var body = JSON.stringify(data);
+    try {
+      fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors', keepalive: true,
+                                  headers: { 'Content-Type': 'text/plain' }, body: body })
+        .then(function () { if (alConfirmar) alConfirmar(); })
+        .catch(function () {
+          try { if (navigator.sendBeacon) navigator.sendBeacon(APUNTES_EVENTS_URL, body); } catch (e) {}
+        });
+      return;
+    } catch (e) {}
+    try { if (navigator.sendBeacon) navigator.sendBeacon(APUNTES_EVENTS_URL, body); } catch (e2) {}
+  }
+
+  function dosD(n) { return (n < 10 ? '0' : '') + n; }
+
+  (function recuperarSesionPerdida() {
+    var pend = null;
+    try { pend = JSON.parse(lsGet(PEND_KEY) || 'null'); } catch (e) {}
+    if (!pend || !pend.b || !pend.i || !pend.l) return;
+    var ahora = fotoProgreso();
+    var dur = Math.max(1, Math.round((pend.l - pend.i) / 1000));
+    var f = new Date(pend.l);
+    var marca = ' · rec ' + dosD(f.getDate()) + '/' + dosD(f.getMonth() + 1) + ' ' +
+                dosD(f.getHours()) + ':' + dosD(f.getMinutes());
+    for (var mat in PROG_KEYS) {
+      var a = pend.b[mat] || {}, b = ahora[mat];
+      var d = { preg: b.preg - (a.preg || 0), ok: b.ok - (a.ok || 0), fc: b.fc - (a.fc || 0),
+                pag: b.pag - (a.pag || 0), xp: b.xp - (a.xp || 0), logros: b.logros - (a.logros || 0) };
+      if (d.preg > 0 || d.fc > 0 || d.pag > 0 || d.xp > 0 || d.logros > 0) {
+        send('sesion_fin', { materia: mat + marca, dur: dur, preg: d.preg, ok: d.ok,
+                             fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros });
+      }
+    }
+  })();
+
   var sesionBase = fotoProgreso();
   var sesionInicio = Date.now();
   var sesionEnviada = false;
+
+  guardarPend(sesionBase, sesionInicio, Date.now());
+  setInterval(function () {
+    if (document.visibilityState === 'visible') guardarPend(sesionBase, sesionInicio, Date.now());
+  }, 30000);
 
   function cerrarSesion() {
     if (sesionEnviada) return;
     var dur = Math.round((Date.now() - sesionInicio) / 1000);
     var ahora = fotoProgreso();
+    guardarPend(sesionBase, sesionInicio, Date.now());  /* latido final: hora de cierre exacta para una eventual recuperación */
     var huboActividad = false;
     var ultimaMateria = '';
+    var pendientes = 0;
+    var alConfirmar = function () {
+      pendientes--;
+      if (pendientes <= 0) guardarPend(ahora, Date.now(), Date.now());  /* entregado: red de seguridad en cero */
+    };
     for (var mat in PROG_KEYS) {
       var a = sesionBase[mat], b = ahora[mat];
       var d = { preg: b.preg - a.preg, ok: b.ok - a.ok, fc: b.fc - a.fc,
@@ -9444,8 +9506,9 @@ body {
       if (d.preg > 0 || d.fc > 0 || d.pag > 0 || d.xp > 0 || d.logros > 0) {
         huboActividad = true;
         ultimaMateria = mat;
-        send('sesion_fin', { materia: mat, dur: dur, preg: d.preg, ok: d.ok,
-                             fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros });
+        pendientes++;
+        sendConfirm('sesion_fin', { materia: mat, dur: dur, preg: d.preg, ok: d.ok,
+                                    fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros }, alConfirmar);
       }
     }
     if (huboActividad) {
@@ -9462,6 +9525,7 @@ body {
     sesionEnviada = false;
     sesionBase = fotoProgreso();
     sesionInicio = Date.now();
+    guardarPend(sesionBase, sesionInicio, Date.now());
   }
 
   document.addEventListener('visibilitychange', function () {
