@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="11/08 20:17">
+<meta name="apuntes-version" content="11/08 21:51">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -8224,31 +8224,60 @@ body {
   // QUIZ_BANK, FC_BANK, GLOSSARY, TOC
   // ============================================================
 
-  // --- Niveles ---
-  const LEVELS = [
-    {xp: 0,    name: "Aprendiz",    icon: "🌱"},
-    {xp: 50,   name: "Estudiante",  icon: "🪴"},
-    {xp: 150,  name: "Avanzado",    icon: "🌿"},
-    {xp: 350,  name: "Experto",     icon: "🌳"},
-    {xp: 700,  name: "Maestro",     icon: "🏆"},
-    {xp: 1200, name: "Biólogo Pro", icon: "🧬"},
-  ];
+  // --- Niveles y logros POR MATERIA (mismos IDs y umbrales; cambian nombres/íconos) ---
+  const CATALOGOS = {
+    bio: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",    icon: "🌱"},
+        {xp: 50,   name: "Estudiante",  icon: "🪴"},
+        {xp: 150,  name: "Avanzado",    icon: "🌿"},
+        {xp: 350,  name: "Experto",     icon: "🌳"},
+        {xp: 700,  name: "Maestro",     icon: "🏆"},
+        {xp: 1200, name: "Biólogo Pro", icon: "🧬"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🦠", name:"Maestro procariota",   desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"🧫", name:"Maestro eucariota",    desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"🧬", name:"Maestro biomolecular", desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    },
+    geo: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",     icon: "🌱"},
+        {xp: 50,   name: "Estudiante",   icon: "🪴"},
+        {xp: 150,  name: "Avanzado",     icon: "🌿"},
+        {xp: 350,  name: "Experto",      icon: "🌳"},
+        {xp: 700,  name: "Maestro",      icon: "🏆"},
+        {xp: 1200, name: "Geógrafo Pro", icon: "🌎"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🌍", name:"Maestro geógrafo",     desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"🧭", name:"Maestro de América",   desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"📊", name:"Maestro de superficies", desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    }
+  }; // FIN_CATALOGOS
 
-  // --- Logros ---
-  const BADGES = [
-    {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
-    {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
-    {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
-    {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
-    {id:"master_proc",   em:"🦠", name:"Maestro procariota",   desc:"Todas del cap. 2 acertadas"},
-    {id:"master_euk",    em:"🧫", name:"Maestro eucariota",    desc:"Todas del cap. 3 acertadas"},
-    {id:"master_biom",   em:"🧬", name:"Maestro biomolecular", desc:"Todas del cap. 4 acertadas"},
-    {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
-    {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
-    {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
-    {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
-    {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
-  ];
+  let LEVELS = CATALOGOS.bio.levels;
+  let BADGES = CATALOGOS.bio.badges;
 
   // ============================================================
   // LEVELING / BADGES helpers
@@ -8978,7 +9007,12 @@ body {
     const subj = SUBJECTS[subjectKey];
     if (!subj) { console.error('Subject not found:', subjectKey); return; }
     CURRENT_SUBJECT = subjectKey;
-    
+
+    // Catálogo de niveles/logros de la materia (los IDs no cambian: el progreso se conserva)
+    const cat = CATALOGOS[subjectKey] || CATALOGOS.bio;
+    LEVELS = cat.levels;
+    BADGES = cat.badges;
+
     // Cargar datos en las variables globales
     PAGES = subj.pages;
     TOC = subj.toc;
@@ -9256,7 +9290,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "11/08 20:17";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "11/08 21:51";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -9450,58 +9484,71 @@ body {
   });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
-     Los catálogos [
-    {xp: 0,    name: "Aprendiz",    icon: "🌱"},
-    {xp: 50,   name: "Estudiante",  icon: "🪴"},
-    {xp: 150,  name: "Avanzado",    icon: "🌿"},
-    {xp: 350,  name: "Experto",     icon: "🌳"},
-    {xp: 700,  name: "Maestro",     icon: "🏆"},
-    {xp: 1200, name: "Biólogo Pro", icon: "🧬"},
-  ]/[
-    {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
-    {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
-    {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
-    {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
-    {id:"master_proc",   em:"🦠", name:"Maestro procariota",   desc:"Todas del cap. 2 acertadas"},
-    {id:"master_euk",    em:"🧫", name:"Maestro eucariota",    desc:"Todas del cap. 3 acertadas"},
-    {id:"master_biom",   em:"🧬", name:"Maestro biomolecular", desc:"Todas del cap. 4 acertadas"},
-    {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
-    {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
-    {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
-    {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
-    {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
-  ]/{"Biología": {"emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}} se inyectan al compilar,
+     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
-  var ST_LEVELS = [
-    {xp: 0,    name: "Aprendiz",    icon: "🌱"},
-    {xp: 50,   name: "Estudiante",  icon: "🪴"},
-    {xp: 150,  name: "Avanzado",    icon: "🌿"},
-    {xp: 350,  name: "Experto",     icon: "🌳"},
-    {xp: 700,  name: "Maestro",     icon: "🏆"},
-    {xp: 1200, name: "Biólogo Pro", icon: "🧬"},
-  ];
-  var ST_BADGES = [
-    {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
-    {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
-    {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
-    {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
-    {id:"master_proc",   em:"🦠", name:"Maestro procariota",   desc:"Todas del cap. 2 acertadas"},
-    {id:"master_euk",    em:"🧫", name:"Maestro eucariota",    desc:"Todas del cap. 3 acertadas"},
-    {id:"master_biom",   em:"🧬", name:"Maestro biomolecular", desc:"Todas del cap. 4 acertadas"},
-    {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
-    {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
-    {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
-    {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
-    {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
-  ];
-  var ST_TOTALS = {"Biología": {"emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}};
+  var ST_CAT = {
+    bio: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",    icon: "🌱"},
+        {xp: 50,   name: "Estudiante",  icon: "🪴"},
+        {xp: 150,  name: "Avanzado",    icon: "🌿"},
+        {xp: 350,  name: "Experto",     icon: "🌳"},
+        {xp: 700,  name: "Maestro",     icon: "🏆"},
+        {xp: 1200, name: "Biólogo Pro", icon: "🧬"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🦠", name:"Maestro procariota",   desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"🧫", name:"Maestro eucariota",    desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"🧬", name:"Maestro biomolecular", desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    },
+    geo: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",     icon: "🌱"},
+        {xp: 50,   name: "Estudiante",   icon: "🪴"},
+        {xp: 150,  name: "Avanzado",     icon: "🌿"},
+        {xp: 350,  name: "Experto",      icon: "🌳"},
+        {xp: 700,  name: "Maestro",      icon: "🏆"},
+        {xp: 1200, name: "Geógrafo Pro", icon: "🌎"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🌍", name:"Maestro geógrafo",     desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"🧭", name:"Maestro de América",   desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"📊", name:"Maestro de superficies", desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    }
+  };          /* niveles y logros POR MATERIA */
+  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
   }
-  function nivelDe(xp) {
-    var lv = ST_LEVELS[0];
-    for (var i = 0; i < ST_LEVELS.length; i++) if (xp >= ST_LEVELS[i].xp) lv = ST_LEVELS[i];
+  function catDe(mat) {
+    var key = (ST_TOTALS[mat] || {}).key;
+    return ST_CAT[key] || ST_CAT.bio;
+  }
+  function nivelDe(xp, mat) {
+    var niveles = catDe(mat).levels;
+    var lv = niveles[0];
+    for (var i = 0; i < niveles.length; i++) if (xp >= niveles[i].xp) lv = niveles[i];
     return lv;
   }
   function hayProgreso() {
@@ -9531,7 +9578,7 @@ body {
       if (!s) continue;
       xpTotal += s.xp || 0;
       mejorRacha = Math.max(mejorRacha, s.bestStreak || 0);
-      var lv = nivelDe(s.xp || 0);
+      var lv = nivelDe(s.xp || 0, m);
       if (!top || lv.xp > top.xp) top = lv;
     }
     if (!top) return;
@@ -9587,10 +9634,11 @@ body {
       var s = leerMat(mat);
       var t = ST_TOTALS[mat] || {};
       if (!s) s = {};
-      var xp = s.xp || 0, lv = nivelDe(xp);
+      var xp = s.xp || 0, lv = nivelDe(xp, mat);
       var ta = s.totalAnswered || 0, tc = s.totalCorrect || 0;
       var prec = ta > 0 ? Math.round(tc * 100 / ta) + '%' : '—';
       var unlocked = s.unlockedBadges || [];
+      var badgesMat = catDe(mat).badges;
       html += '<div style="margin-top:14px;padding:14px;border-radius:14px;background:rgba(0,0,0,.035);">' +
         '<div style="font-weight:700;font-size:16px;margin-bottom:6px;">' + (t.emoji || '') + ' ' + mat + '</div>' +
         filaStat('Nivel', lv.icon + ' ' + lv.name + ' (' + xp + ' XP)') +
@@ -9599,10 +9647,10 @@ body {
         filaStat('Páginas leídas', ((s.pagesVisited || []).length) + ' / ' + (t.pag || '—')) +
         filaStat('Preguntas dominadas', ((s.quizCorrectIds || []).length) + ' / ' + (t.quiz || '—')) +
         filaStat('Flashcards repasadas', (Object.keys(s.fcReviewed || {}).length) + ' / ' + (t.fc || '—')) +
-        '<div style="font-size:13px;opacity:.75;margin:10px 0 6px;">Medallero (' + unlocked.length + '/' + ST_BADGES.length + ')</div>' +
+        '<div style="font-size:13px;opacity:.75;margin:10px 0 6px;">Medallero (' + unlocked.length + '/' + badgesMat.length + ')</div>' +
         '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">';
-      for (var i = 0; i < ST_BADGES.length; i++) {
-        var bg = ST_BADGES[i];
+      for (var i = 0; i < badgesMat.length; i++) {
+        var bg = badgesMat[i];
         var tiene = unlocked.indexOf(bg.id) !== -1;
         html += '<div title="' + bg.name + ': ' + bg.desc + '" style="text-align:center;padding:6px 2px;border-radius:10px;background:rgba(255,255,255,.6);' +
                 (tiene ? '' : 'opacity:.3;filter:grayscale(1);') + '">' +
