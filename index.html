@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 13:44">
+<meta name="apuntes-version" content="13/08 14:01">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1601,7 +1601,9 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* flex-start y NO center: con contenido más alto que la pantalla, el centrado
+     desborda hacia ARRIBA (título bajo la cámara, inalcanzable con scroll) */
+  justify-content: flex-start;
   align-items: center;
   padding: max(env(safe-area-inset-top), 32px) 28px max(env(safe-area-inset-bottom), 32px);
   text-align: center;
@@ -10161,7 +10163,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 13:44";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 14:01";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
