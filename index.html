@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 10:15">
+<meta name="apuntes-version" content="13/08 11:07">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -7988,6 +7988,9 @@ body {
         if (!state.repasoDia.p[pagIdx]) {   // XP de repaso: 1 vez por página por día
           state.repasoDia.p[pagIdx] = 1;
           state.xp += 2;
+          if (document.visibilityState === "visible" && typeof showToast === "function") {
+            showToast("🔁", "+2 XP por repasar la página");
+          }
         }
       }
     } else {
@@ -8534,9 +8537,9 @@ body {
       if (nl >= 3) h += `<button class="sug-btn" id="sugLeido">📖 Preguntas de lo que leíste hoy <span class="sug-n">${Math.min(15, nl)} preg.</span></button>`;
       sug.innerHTML = h;
       const bd = $("sugDebiles");
-      if (bd) bd.addEventListener("click", () => startQuizEspecial(poolDebiles(), false));
+      if (bd) bd.addEventListener("click", () => startQuizEspecial(poolDebiles(), false, "debiles"));
       const bl = $("sugLeido");
-      if (bl) bl.addEventListener("click", () => startQuizEspecial(poolLeidoHoy(), false));
+      if (bl) bl.addEventListener("click", () => startQuizEspecial(poolLeidoHoy(), false, "leido"));
     }
     const {level, next} = currentLevel();
     $("lvlIcon").textContent = level.icon;
@@ -8676,8 +8679,8 @@ body {
     const fails = state.failCount || {};
     const correctas = state.quizCorrectIds || [];
     let pool = QUIZ_BANK.filter(q => fails[q.id] > 0 && !correctas.includes(q.id));
-    if (pool.length < 5) {
-      // completar con las que falló alguna vez aunque después las haya acertado
+    if (pool.length >= 1 && pool.length < 5) {
+      // hay dudas reales: completar con las que falló alguna vez aunque después las haya acertado
       const ids = pool.map(q => q.id);
       pool = pool.concat(QUIZ_BANK.filter(q => fails[q.id] > 0 && !ids.includes(q.id)));
     }
@@ -8689,7 +8692,7 @@ body {
     return QUIZ_BANK.filter(q => q.page && state.lectRec.p.includes(q.page));
   }
 
-  function startQuizEspecial(pool, esDesafio) {
+  function startQuizEspecial(pool, esDesafio, tipo) {
     pool = shuffleArray(pool).slice(0, Math.min(15, pool.length));
     if (pool.length === 0) { showToast("💪", "No tenés preguntas pendientes por acá"); return; }
     quizSession = {
@@ -8699,6 +8702,7 @@ body {
       chapter: "repaso",
       startTime: Date.now(),
       desafio: !!esDesafio,
+      tipo: tipo || "debiles",
     };
     goScreen("quiz-session");
     renderQuizQ();
@@ -8777,6 +8781,10 @@ body {
 
     // Stats
     state.totalAnswered++;
+    if (quizSession && quizSession.chapter === "repaso") {
+      state.repasoPreg = (state.repasoPreg || 0) + 1;      // práctica de repaso dirigido
+      if (isCorrect) state.repasoOk = (state.repasoOk || 0) + 1;
+    }
     if (!isCorrect) {
       state.failCount = state.failCount || {};
       state.failCount[q.id] = (state.failCount[q.id] || 0) + 1;
@@ -8860,6 +8868,13 @@ body {
     if (pct === 1) {
       checkBadge("perfect");
       setTimeout(celebrate, 400);
+    }
+
+    // "Lo que leíste hoy" respondido: se consume la lista de lecturas — el botón
+    // desaparece y solo vuelve si hay páginas leídas/repasadas nuevas
+    if (quizSession.tipo === "leido") {
+      state.lectRec = { f: lectHoyStr(), p: [] };
+      persist();
     }
 
     // Desafío de repaso completado: bonus y registro (una vez por día)
@@ -9569,7 +9584,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 10:15";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 11:07";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -9706,6 +9721,8 @@ body {
         phoj: (s && s.hojeadas) || 0,
         segl: (s && s.lectSeg) || 0,
         pal: (s && s.lectPalabras) || 0,
+        rpreg: (s && s.repasoPreg) || 0,
+        rok: (s && s.repasoOk) || 0,
         fails: (s && s.failCount) || {}
       };
     }
@@ -9759,7 +9776,8 @@ body {
     var d = { preg: b.preg - (a.preg || 0), ok: b.ok - (a.ok || 0), fc: b.fc - (a.fc || 0),
               pag: b.pag - (a.pag || 0), xp: b.xp - (a.xp || 0), logros: b.logros - (a.logros || 0),
               rel: (b.rel || 0) - (a.rel || 0), plei: (b.plei || 0) - (a.plei || 0),
-              phoj: (b.phoj || 0) - (a.phoj || 0), segl: (b.segl || 0) - (a.segl || 0) };
+              phoj: (b.phoj || 0) - (a.phoj || 0), segl: (b.segl || 0) - (a.segl || 0),
+              rpreg: (b.rpreg || 0) - (a.rpreg || 0), rok: (b.rok || 0) - (a.rok || 0) };
     var dPal = (b.pal || 0) - (a.pal || 0);
     d.vel = (dPal > 0 && d.segl > 0) ? Math.round(d.segl / dPal * 100) : '';
     d.fallos = fallosNuevos(a.fails, b.fails || {});
@@ -9782,7 +9800,8 @@ body {
       if (d.hubo) {
         send('sesion_fin', { materia: mat + marca, dur: dur, sid: sidDe(pend.i, mat),
                              preg: d.preg, ok: d.ok, fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros,
-                             rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel, fallos: d.fallos });
+                             rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel,
+                             rpreg: d.rpreg, rok: d.rok, fallos: d.fallos });
       }
     }
   })();
@@ -9816,7 +9835,8 @@ body {
         pendientes++;
         sendConfirm('sesion_fin', { materia: mat, dur: dur, sid: sidDe(sesionInicio, mat),
                                     preg: d.preg, ok: d.ok, fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros,
-                                    rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel, fallos: d.fallos },
+                                    rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel,
+                                    rpreg: d.rpreg, rok: d.rok, fallos: d.fallos },
                     alConfirmar);
       }
     }
