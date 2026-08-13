@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 12:22">
+<meta name="apuntes-version" content="13/08 12:49">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1551,9 +1551,9 @@ body {
 /* === TOAST === */
 .toast {
   position: fixed;
-  top: max(env(safe-area-inset-top), 16px);
+  bottom: 108px;   /* abajo: sin cámara/isla en ningún modelo; por encima del botón de práctica */
   left: 50%;
-  transform: translateX(-50%) translateY(-120%);
+  transform: translateX(-50%) translateY(250%);
   z-index: 300;
   background: var(--accent);
   color: #fff;
@@ -7962,7 +7962,6 @@ body {
       document.documentElement.style.setProperty("--safe-top", "54px");
       const stFix = document.createElement("style");
       stFix.textContent =
-        ".toast{top:54px !important}" +
         ".sp-content{padding-top:54px !important}" +
         ".tienda-overlay{padding-top:54px !important}";
       document.head.appendChild(stFix);
@@ -10083,7 +10082,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 12:22";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 12:49";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
