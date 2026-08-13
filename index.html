@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 14:21">
+<meta name="apuntes-version" content="13/08 17:56">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1647,6 +1647,10 @@ body {
   gap: 16px;
   width: 100%;
   max-width: 420px;
+  /* frame fijo: hasta ~2 tarjetas y media; con más materias, scroll interno */
+  max-height: 470px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   margin-bottom: 24px;
 }
 
@@ -1727,6 +1731,11 @@ body {
   background: #3d5a3d; color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
 .tienda-ident-tit { text-align: center; font-size: 12.5px; font-weight: 800; text-transform: uppercase;
   letter-spacing: 0.4px; opacity: 0.6; margin: 4px 0 2px; }
+
+/* el botón de reportes (⚠️) solo vive donde hay contenido reportable:
+   lectura y ejercicios — en el inicio y la bienvenida se oculta */
+#subjectPicker.open ~ #apuntesReportBtn,
+#welcome.show-welcome ~ #apuntesReportBtn { display: none; }
 .tienda-gen { display: flex; gap: 8px; justify-content: center; margin: -6px 0 4px; }
 .tienda-gen button { padding: 7px 14px; border-radius: 10px; border: 1.5px solid rgba(128,128,128,0.35);
   background: transparent; color: inherit; font-family: inherit; font-size: 13.5px; cursor: pointer; }
@@ -2065,6 +2074,11 @@ body {
     <button class="toc-practice-btn" id="tocPracticeBtn">
       <span class="ico">🎮</span>
       <span>Práctica y ejercicios</span>
+      <span class="arrow">→</span>
+    </button>
+    <button class="toc-practice-btn" id="tocHomeBtn">
+      <span class="ico">🏠</span>
+      <span>Volver al inicio</span>
       <span class="arrow">→</span>
     </button>
     <div class="toc-search">
@@ -9455,6 +9469,7 @@ body {
 
     // Botón del sumario
     $("tocPracticeBtn").addEventListener("click", () => { closeDrawer(); openPractice(); });
+    $("tocHomeBtn").addEventListener("click", () => { closeDrawer(); showSubjectPicker(); });
 
     // Quiz
     $("quizStartBtn").addEventListener("click", startQuiz);
@@ -9502,6 +9517,13 @@ body {
     const subj = SUBJECTS[subjectKey];
     if (!subj) { console.error('Subject not found:', subjectKey); return; }
     CURRENT_SUBJECT = subjectKey;
+
+    // orden MRU: la materia usada pasa al frente del selector
+    try {
+      let mru = JSON.parse(localStorage.getItem('apuntes_mru') || '[]');
+      mru = [subjectKey].concat(mru.filter(k => k !== subjectKey)).slice(0, 10);
+      localStorage.setItem('apuntes_mru', JSON.stringify(mru));
+    } catch (e) {}
 
     // Catálogo de niveles/logros de la materia (los IDs no cambian: el progreso se conserva)
     const cat = CATALOGOS[subjectKey] || CATALOGOS.bio;
@@ -9897,10 +9919,24 @@ body {
     renderAvatarInicio();
   }
 
+  /* cara redonda tipo foto de perfil: la cabeza del avatar recortada en círculo */
+  function svgCara(px) {
+    var cuerpo = svgAvatar(1, true).replace(/^<svg[^>]*>/, "").replace("</svg>", "");
+    var boost = (typeof multFactor === "function" && multFactor() > 1);
+    var borde = boost ? "#d4a017" : "rgba(128,128,128,0.55)";
+    return '<svg viewBox="0 0 76 76" width="' + px + '" height="' + px + '">' +
+      '<defs><clipPath id="apCaraClip"><circle cx="38" cy="38" r="34"/></clipPath></defs>' +
+      '<circle cx="38" cy="38" r="34" fill="rgba(128,128,128,0.14)"/>' +
+      '<g clip-path="url(#apCaraClip)" transform="translate(38,46) scale(1.2) translate(-60,-36)">' + cuerpo + '</g>' +
+      '<circle cx="38" cy="38" r="34" fill="none" stroke="' + borde + '" stroke-width="' + (boost ? 4 : 2.5) + '"/></svg>';
+  }
+
   /* el panel de estadísticas (módulo de medición) también muestra el avatar,
      y el editor de apodo puede cambiar la apariencia (niño/niña) */
   try {
     window.apuntesAvatarSVG = svgAvatar;
+    window.apuntesAvatarCara = svgCara;
+    window.apuntesBoostActivo = function () { return multFactor() > 1; };
     window.apuntesAbrirTienda = abrirTienda;
     window.apuntesAvatarGen = function (g) {
       var aG = avatarData();
@@ -10032,6 +10068,20 @@ body {
 
     // Actualizar stats de cada materia en las tarjetas
     updatePickerStats();
+
+    // Orden MRU: la última materia usada arriba
+    try {
+      const mru = JSON.parse(localStorage.getItem('apuntes_mru') || '[]');
+      const cont = document.querySelector('#subjectPicker .sp-cards');
+      if (cont && mru.length) {
+        for (let i = mru.length - 1; i >= 0; i--) {
+          const card = cont.querySelector('.sp-card[data-subject="' + mru[i] + '"]');
+          if (card) cont.prepend(card);
+        }
+      }
+      // frame scrolleable solo si hay más materias de las que entran
+      if (cont) cont.classList.toggle('con-scroll', cont.scrollHeight > cont.clientHeight + 8);
+    } catch (e) {}
 
     // Avatar + monedas, slot de novedades (desafío REPASO) y aviso de repaso
     renderAvatarInicio();
@@ -10237,7 +10287,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 14:21";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 17:56";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10663,6 +10713,11 @@ body {
   }
 
   function renderStrip() {
+    /* el strip del inicio se retiró (pedido 13/08): lo esencial vive en la tarjeta
+       de estadísticas; el nivel por materia, dentro del panel */
+    var viejoStrip = document.getElementById('apStatsStrip');
+    if (viejoStrip) viejoStrip.remove();
+    return;
     var host = document.querySelector('#subjectPicker .sp-subtitle');
     if (!host || !hayProgreso()) return;
     var xpTotal = 0, mejorRacha = 0, top = null;
@@ -10691,19 +10746,35 @@ body {
   }
 
   function renderCardStats() {
-    if (!hayProgreso() || document.getElementById('apStatsCard')) return;
+    if (!hayProgreso()) return;
+    /* subtítulo dinámico: XP total y mejor racha (lo que antes mostraba el strip) */
+    var xpTotal = 0, mejorRacha = 0;
+    for (var m in PROG_KEYS) {
+      var s = leerMat(m);
+      if (!s) continue;
+      xpTotal += s.xp || 0;
+      mejorRacha = Math.max(mejorRacha, s.bestStreak || 0);
+    }
+    var sub = '✨ ' + xpTotal + ' XP totales · 🔥 mejor racha ' + mejorRacha;
+    var b = document.getElementById('apStatsCard');
+    if (b) {
+      var subEl = document.getElementById('apStatsCardSub');
+      if (subEl) subEl.textContent = sub;
+      return;
+    }
     var cards = document.querySelector('#subjectPicker .sp-cards');
     if (!cards) return;
-    var b = document.createElement('button');
+    b = document.createElement('button');
     b.id = 'apStatsCard';
     b.type = 'button';
     b.style.cssText = 'display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:14px 16px;border-radius:16px;border:1px dashed rgba(110,110,90,.55);background:transparent;color:inherit;font-family:inherit;cursor:pointer;text-align:left;';
     b.innerHTML = '<span style="font-size:26px;">🏅</span>' +
       '<span><span style="display:block;font-weight:700;font-size:17px;">Tus estadísticas</span>' +
-      '<span style="display:block;font-size:13px;opacity:.7;">Accedé a tu medallero y tus números</span></span>' +
+      '<span id="apStatsCardSub" style="display:block;font-size:13px;opacity:.7;">' + sub + '</span></span>' +
       '<span style="margin-left:auto;opacity:.5;font-size:20px;">›</span>';
     b.addEventListener('click', abrirPanelStats);
-    cards.appendChild(b);
+    /* HERMANA de .sp-cards, no adentro: el frame de materias scrollea solo */
+    cards.parentNode.insertBefore(b, cards.nextSibling);
   }
 
   function filaStat(label, valor) {
@@ -10770,28 +10841,32 @@ body {
 
   /* chip de apodo en el inicio (siempre visible, editable con un toque) */
   function renderApodoChip() {
-    var host = document.querySelector('#subjectPicker .sp-subtitle');
-    if (!host) return;
-    var chip = document.getElementById('apApodoChip');
-    if (!chip) {
-      chip = document.createElement('button');
-      chip.id = 'apApodoChip';
-      chip.type = 'button';
-      chip.style.cssText = 'display:block;margin:2px auto 10px;padding:6px 14px;border-radius:20px;border:1px dashed rgba(127,127,127,.5);background:transparent;color:inherit;font-family:inherit;font-size:14px;cursor:pointer;';
-      host.parentNode.insertBefore(chip, host.nextSibling);
-      chip.addEventListener('click', function () {
-        /* un solo lugar para toda la identidad: la tienda (apodo + avatar + compras) */
+    /* foto de perfil redonda al lado del título "Tus apuntes" → abre el hub (apodo+avatar+tienda) */
+    var viejo = document.getElementById('apApodoChip');
+    if (viejo) viejo.remove();
+    var titulo = document.querySelector('#subjectPicker .sp-title');
+    if (!titulo || typeof window.apuntesAvatarCara !== 'function') return;
+    titulo.style.position = 'relative';
+    titulo.style.paddingLeft = '72px';   /* lugar para la cara (a la IZQUIERDA): que no pise el texto */
+    titulo.style.boxSizing = 'border-box';
+    titulo.style.width = '100%';
+    var cara = document.getElementById('apCaraPerfil');
+    if (!cara) {
+      cara = document.createElement('button');
+      cara.id = 'apCaraPerfil';
+      cara.type = 'button';
+      cara.setAttribute('aria-label', 'Tu avatar: apodo y tienda');
+      cara.style.cssText = 'position:absolute;left:0;top:50%;transform:translateY(-50%);padding:0;border:none;background:transparent;cursor:pointer;line-height:0;border-radius:50%;';
+      titulo.appendChild(cara);
+      cara.addEventListener('click', function (e) {
+        e.stopPropagation();
         if (typeof window.apuntesAbrirTienda === 'function') window.apuntesAbrirTienda();
         else abrirEditorApodo();
       });
-      chip.style.display = 'flex';
-      chip.style.alignItems = 'center';
-      chip.style.gap = '8px';
-      chip.style.width = 'max-content';
     }
-    var mini = (typeof window.apuntesAvatarSVG === 'function')
-      ? '<span style="display:flex;">' + window.apuntesAvatarSVG(0.22, true) + '</span>' : '👤 ';
-    chip.innerHTML = mini + '<strong>' + apodoActual().replace(/</g, '&lt;') + '</strong> <span style="opacity:.55;">✏️</span>';
+    cara.innerHTML = window.apuntesAvatarCara(60);
+    var boost = (typeof window.apuntesBoostActivo === 'function' && window.apuntesBoostActivo());
+    cara.style.animation = boost ? 'spGlow 2.2s ease-in-out infinite' : 'none';
   }
   /* la tienda repinta el chip cuando cambian apodo/avatar */
   try { window.apuntesRefrescarChip = renderApodoChip; } catch (e) {}
