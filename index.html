@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 18:10">
+<meta name="apuntes-version" content="13/08 18:33">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -10161,20 +10161,37 @@ body {
       'biologia_ebook_v4_geo',
       'biologia_ebook_v3',
       'biologia_ebook_v2',
+      'apuntes_avatar',      // monedas gastadas, compras y look
+      'apuntes_racha',
+      'apuntes_ledger',
     ];
+
+    /* Firma del export: si el texto se edita a mano, la firma no coincide y el
+       import se rechaza. No es criptografía seria — es un candado contra la
+       edición casual del JSON (inflar XP/monedas). */
+    function firmaDe(str) {
+      const SAL = "apuntes-salvia-2026";
+      const s = SAL + str + SAL;
+      let h = 0x811c9dc5;
+      for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+      let h2 = (0x811c9dc5 ^ 0x5bd1e995) >>> 0;
+      for (let j = s.length - 1; j >= 0; j--) { h2 ^= s.charCodeAt(j); h2 = Math.imul(h2, 0x01000193) >>> 0; }
+      return h.toString(36) + "-" + h2.toString(36);
+    }
     const KEY_MIGRATION = {
       'biologia_ebook_v3': 'biologia_ebook_v4_bio',
       'biologia_ebook_v2': 'biologia_ebook_v4_bio',
     };
 
     function exportProgress() {
-      const data = { app: 'apuntes-cuaderno', version: 4, exportedAt: new Date().toISOString(), data: {} };
+      const data = { app: 'apuntes-cuaderno', version: 5, exportedAt: new Date().toISOString(), data: {} };
       for (const k of PROGRESS_KEYS) {
         try {
           const v = localStorage.getItem(k);
           if (v) data.data[k] = JSON.parse(v);
         } catch (e) {}
       }
+      data.firma = firmaDe(JSON.stringify(data.data));
       return JSON.stringify(data, null, 2);
     }
 
@@ -10183,6 +10200,14 @@ body {
       try { parsed = JSON.parse(jsonText); }
       catch (e) { return { ok: false, error: 'El texto no es un JSON válido.' }; }
       if (!parsed || typeof parsed !== 'object') return { ok: false, error: 'Formato inválido.' };
+      // Verificación de firma: exports nuevos vienen firmados; texto editado o
+      // archivos de versiones viejas se rechazan (generá un export nuevo).
+      if (!parsed.firma || !parsed.data) {
+        return { ok: false, error: 'Este texto no tiene firma de verificación. Generá un export nuevo desde la app y usalo tal cual, sin editarlo.' };
+      }
+      if (firmaDe(JSON.stringify(parsed.data)) !== parsed.firma) {
+        return { ok: false, error: 'La verificación falló: el texto fue modificado después de exportarse. Usá el export original sin editar.' };
+      }
       let payload = parsed.data || parsed;
       if (!payload || typeof payload !== 'object') return { ok: false, error: 'No se encontraron datos para importar.' };
       let importedCount = 0;
@@ -10288,7 +10313,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 18:10";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 18:33";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10464,6 +10489,19 @@ body {
 
   function dosD(n) { return (n < 10 ? '0' : '') + n; }
 
+  /* XP total actual del dispositivo (todas las materias): viaja en cada sesión
+     para poder AUDITAR — total reportado vs suma histórica de deltas en el Sheet */
+  function xpTotalDisp() {
+    var t = 0;
+    for (var mX in PROG_KEYS) {
+      try {
+        var sX = JSON.parse(lsGet(PROG_KEYS[mX]) || 'null');
+        if (sX && sX.xp) t += sX.xp;
+      } catch (e) {}
+    }
+    return t;
+  }
+
   /* identificador único de sesión+materia: la recuperación usa el mismo, y el
      buzón descarta el duplicado si el envío del cierre ya había llegado */
   function sidDe(iniMs, mat) { return Number(iniMs).toString(36) + '-' + String(mat || 's').slice(0, 3); }
@@ -10505,7 +10543,7 @@ body {
         send('sesion_fin', { materia: mat + marca, dur: dur, sid: sidDe(pend.i, mat),
                              preg: d.preg, ok: d.ok, fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros,
                              rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel,
-                             rpreg: d.rpreg, rok: d.rok, fallos: d.fallos });
+                             rpreg: d.rpreg, rok: d.rok, fallos: d.fallos, xpt: xpTotalDisp() });
       }
     }
   })();
@@ -10540,7 +10578,7 @@ body {
         sendConfirm('sesion_fin', { materia: mat, dur: dur, sid: sidDe(sesionInicio, mat),
                                     preg: d.preg, ok: d.ok, fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros,
                                     rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel,
-                                    rpreg: d.rpreg, rok: d.rok, fallos: d.fallos },
+                                    rpreg: d.rpreg, rok: d.rok, fallos: d.fallos, xpt: xpTotalDisp() },
                     alConfirmar);
       }
     }
@@ -10567,6 +10605,30 @@ body {
   });
   window.addEventListener('pagehide', cerrarSesion);
   window.addEventListener('pageshow', reabrirSesion);
+
+  /* ---- backup diario del progreso (1 vez por día por dispositivo) ----
+     Respaldo compacto para poder RESTAURARLE el progreso a un alumno que pierda
+     su storage (iOS lo borra en Safari a los 7 días) o cambie de teléfono. */
+  setTimeout(function () {
+    try {
+      var datos = {};
+      for (var mB in PROG_KEYS) {
+        var crudo = lsGet(PROG_KEYS[mB]);
+        if (crudo) datos[PROG_KEYS[mB]] = JSON.parse(crudo);
+      }
+      ['apuntes_avatar', 'apuntes_racha', 'apuntes_ledger'].forEach(function (k) {
+        var v = lsGet(k);
+        if (v) { try { datos[k] = JSON.parse(v); } catch (e) {} }
+      });
+      var texto = JSON.stringify(datos);
+      if (texto.length > 44000) {
+        /* recorte de emergencia: lo más pesado son las flashcards repasadas */
+        for (var mR in PROG_KEYS) { if (datos[PROG_KEYS[mR]]) delete datos[PROG_KEYS[mR]].fcReviewed; }
+        texto = JSON.stringify(datos);
+      }
+      if (texto.length > 4) sendDiario('backup', 'backup', { datos: texto });
+    } catch (e) {}
+  }, 12000);
 
   /* la app avisa cuando se completa un desafío (repaso dirigido, +200 XP) */
   window.addEventListener('apuntes:desafio', function (e) {
