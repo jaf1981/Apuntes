@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 14:10">
+<meta name="apuntes-version" content="13/08 14:21">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -8659,7 +8659,8 @@ body {
       }
       if (filas) h += '<div style="margin-top:8px;"><div style="font-size:12.5px;font-weight:800;opacity:.65;">' + titulo + ' · +' + tot + ' XP</div>' + filas + '</div>';
     }
-    return h ? '<div style="margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.035);"><div style="font-weight:700;font-size:15px;">📒 Tus últimos XP</div>' + h + '</div>' : "";
+    if (!h) h = '<div style="font-size:13px;opacity:.65;margin-top:6px;">Todavía no hay movimientos anotados. Desde ahora, cada XP que ganes (leer, repasar, practicar) se asienta acá con su detalle.</div>';
+    return '<div style="margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.035);"><div style="font-weight:700;font-size:15px;">📒 Tus últimos XP</div>' + h + '</div>';
   }
   try { window.apuntesLedgerHTML = ledgerHTML; } catch (e) {}
 
@@ -10236,7 +10237,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 14:10";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 14:21";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
