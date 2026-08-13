@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 18:33">
+<meta name="apuntes-version" content="13/08 19:58">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1686,6 +1686,8 @@ body {
 }
 [data-theme="dark"] .sp-card.bio { --card-tint: #9bb87f; }
 [data-theme="dark"] .sp-card.geo { --card-tint: #7fb3d4; }
+.sp-card.his { --card-tint: #b08d57; }
+[data-theme="dark"] .sp-card.his { --card-tint: #c9a877; }
 
 /* ---- Slot de novedades del inicio (REPASO / desafíos) ---- */
 .sp-slot {
@@ -2384,6 +2386,19 @@ body {
           <div class="sp-card-progress">
             <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="geoProgressFill" style="width:0%"></div></div>
             <div class="sp-card-progress-text" id="geoProgressText">0 XP</div>
+          </div>
+        </div>
+        <span class="sp-card-arrow">›</span>
+      </button>
+
+      <button class="sp-card his" data-subject="his">
+        <span class="sp-card-emoji">🏛️</span>
+        <div class="sp-card-body">
+          <div class="sp-card-title">Historia</div>
+          <div class="sp-card-stats" id="hisStats">15 páginas · 36 preguntas · examen 19/08</div>
+          <div class="sp-card-progress">
+            <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="hisProgressFill" style="width:0%"></div></div>
+            <div class="sp-card-progress-text" id="hisProgressText">0 XP</div>
           </div>
         </div>
         <span class="sp-card-arrow">›</span>
@@ -7940,6 +7955,1092 @@ body {
     "c": 1
    }
   ]
+ },
+ "his": {
+  "name": "Historia",
+  "emoji": "🏛️",
+  "storage_key": "biologia_ebook_v4_his",
+  "exam_date": "19/08",
+  "pages": [
+   {
+    "title": "Las tres etapas de Roma",
+    "html": "<p class=\"meta-date\">📅 25/06/2026</p>\n<p>Antes de entrar en la Edad Media, el cuaderno repasa cómo llegó Roma hasta acá. Roma pasó por <strong>3 etapas</strong>:</p>\n<ul><li><strong>Monarquía:</strong> la sociedad se organizaba alrededor del <strong>rey</strong>, que concentraba los poderes, y solo algunos tenían derechos.</li><li><strong>República:</strong> los ciudadanos lograron conseguir ciertos derechos. Aparecieron funcionarios llamados <strong>magistrados</strong>, que controlaron algunos de los aspectos que antes manejaba el rey. En esta etapa el territorio se <strong>expandió considerablemente con las guerras</strong>, dando lugar a la última etapa.</li><li><strong>Imperio:</strong> Roma logró conseguir territorios <strong>hasta en África</strong>; hubo importante crecimiento económico y numerosos desafíos.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "Un mundo que se divide en tres",
+    "html": "<p>A pesar de los intentos por mantener el control político sobre la <strong>parte occidental del Imperio</strong>, sus territorios se dividieron dando lugar a <strong>nuevos espacios</strong>:</p>\n<ul><li>los <strong>reinos romano-germanos</strong>,</li><li>el <strong>Imperio bizantino</strong>,</li><li>y el <strong>islam</strong>.</li></ul>\n<div class=\"callout\">📌 Esta división es el punto de partida de toda la unidad: la <strong>fragmentación del mundo mediterráneo</strong>. Cada uno de estos tres espacios tiene sus propios capítulos más adelante.</div>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "Las tres etapas de la Edad Media",
+    "html": "<p><strong>Comienza la Edad Media.</strong> Se divide en:</p>\n<ul><li><strong>Temprana Edad Media (476-843):</strong> se conformaron <strong>3 grandes centros de poder</strong>: los reinos romano-germánicos, el imperio bizantino y los califatos musulmanes. Abarca desde el <strong>derrocamiento del último emperador romano de occidente</strong> hasta la <strong>división del imperio de Carlomagno</strong>.</li><li><strong>Alta Edad Media (843-1100):</strong> cobró forma el <strong>feudalismo</strong>, un sistema político y socioeconómico basado en <strong>relaciones de fidelidad personal</strong>.</li><li><strong>Baja Edad Media (1100-1492):</strong> <strong>resurgen las ciudades</strong> y aparece un nuevo grupo social: la <strong>burguesía</strong>. Comienza con las <strong>Cruzadas</strong> y concluye con la <strong>llegada de los europeos a América</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "Los reinos romano-germánicos",
+    "html": "<p>En el <strong>siglo V</strong>, varios pueblos <strong>germanos</strong> establecieron sus dominios sobre <strong>Europa occidental</strong>.</p>\n<p>A pesar de que <strong>sometieron por la fuerza</strong> a la población romana, <strong>adoptaron valores y costumbres de los vencidos</strong>.</p>\n<p><strong>Por eso se los llama reinos romano-germánicos:</strong> pueblos germanos gobernando, pero con mucho de la cultura romana adentro.</p>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "La ruralización de Europa",
+    "html": "<p>Que la Europa de la temprana Edad Media <strong>se ruralizó</strong> significa que muchas ciudades <strong>se despoblaron</strong> y otras fueron <strong>abandonadas</strong>: la gente dejó las ciudades y <strong>se fue al campo</strong>.</p>\n<ul><li>Los reyes germanos <strong>repartieron tierras entre sus guerreros</strong>, creando una <strong>aristocracia terrateniente</strong>.</li><li>Esas tierras las trabajaban <strong>colonos y campesinos</strong> a cambio de <strong>parte de la producción</strong>.</li><li>Con <strong>poca moneda y menos comercio</strong>, la economía se volvió <strong>autosuficiente</strong> y se usó el <strong>trueque</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "El papel de la Iglesia",
+    "html": "<p class=\"meta-date\">📅 22/07/2026</p>\n<p>En los reinos romano-germánicos, la <strong>iglesia unió a los pueblos divididos</strong> porque todos compartían la <strong>fe cristiana</strong> y reconocían al <strong>Papa</strong>.</p>\n<ul><li>Los reyes germanos la adoptaron como <strong>religión oficial</strong>.</li><li>La iglesia <strong>organizó el territorio</strong>.</li><li>Y <strong>preservó la cultura</strong> a través de los <strong>monjes copistas</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 2
+   },
+   {
+    "title": "El reino franco: de los merovingios a los carolingios",
+    "html": "<p><strong>El reino franco fue el que más se destacó</strong> entre todos los reinos romano-germánicos.</p>\n<p>Los <strong>mayordomos del palacio</strong> gobernaban porque los <strong>reyes merovingios habían perdido poder</strong>.</p>\n<p>Con <strong>Carlos Martel</strong> y luego <strong>Pipino el Breve</strong>, los mayordomos <strong>derrotaron a los musulmanes</strong> y, con <strong>apoyo del Papa</strong>, fundaron la <strong>dinastía carolingia</strong>. Así transformaron el reino franco en una <strong>gran potencia</strong>.</p>",
+    "image_keys": [],
+    "chap_idx": 2
+   },
+   {
+    "title": "Un imperio en 300 provincias",
+    "html": "<p>Para tener mayor control, <strong>Carlomagno dividió su imperio en unas 300 provincias</strong>:</p>\n<ul><li><strong>Condados y ducados</strong>, gobernados por <strong>condes y duques</strong>.</li><li>En las <strong>fronteras</strong> creó <strong>marcas</strong>, al mando de <strong>marqueses</strong> con tropas para defenderlas.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 3
+   },
+   {
+    "title": "Los missi dominici",
+    "html": "<p>Los condes, duques y marqueses le <strong>temían a los missi dominici</strong> porque eran los <strong>enviados especiales del emperador</strong> que:</p>\n<ul><li><strong>supervisaban todos los años</strong> la administración,</li><li><strong>escuchaban las quejas</strong> de los pobladores,</li><li>y <strong>podían denunciar</strong> si los gobernantes locales no cumplían.</li></ul>\n<div class=\"callout\">📌 <em>Missi dominici</em> significa &quot;enviados del señor&quot;. Eran los ojos y oídos de Carlomagno en todo el imperio.</div>",
+    "image_keys": [],
+    "chap_idx": 3
+   },
+   {
+    "title": "La caída y el reparto del imperio",
+    "html": "<h3>Causas de la caída del imperio de Carlomagno</h3>\n<p><strong>1- Falta de autoridad de su sucesor:</strong> Carlomagno murió en <strong>814</strong>. Su hijo <strong>Ludovico Pío</strong> no tuvo la misma autoridad que su padre.</p>\n<p><strong>2- Luchas internas:</strong> cuando murió Ludovico Pío, el imperio se desgarró:</p>\n<ul><li>Los <strong>duques y condes</strong> empezaron a reclamar <strong>más poder y autonomía</strong>.</li><li>Los <strong>nietos de Carlomagno</strong> se enfrentaron <strong>entre sí por el trono</strong>.</li></ul>\n<h3>El imperio quedó dividido en:</h3>\n<ul><li><strong>Germania:</strong> territorios al <strong>este del río Rin</strong>. Quedó a cargo de <strong>Luis el germánico</strong>.</li><li><strong>Francia:</strong> territorios de la <strong>antigua Galia</strong>, pero más reducida. Quedó a cargo de <strong>Carlos el calvo</strong>.</li><li><strong>Lotaringia:</strong> una <strong>franja en el medio</strong> entre Francia y Germania. Quedó a cargo de <strong>Lotario</strong>, y a él le correspondió el <strong>título de emperador</strong>. Después este reino fue <strong>absorbido por Francia y Germania</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 3
+   },
+   {
+    "title": "Mil años de resistencia: Constantinopla",
+    "html": "<p>El <strong>imperio Bizantino</strong> logró <strong>resistir durante 1000 años</strong> mientras el imperio romano de occidente caía.</p>\n<p>Su capital, <strong>Constantinopla</strong>, fue un <strong>gran centro comercial</strong> porque <strong>conectaba las rutas marítimas y terrestres de Europa, Asia y África</strong>.</p>\n<h3>¿De dónde obtuvo su riqueza?</h3>\n<ul><li>Del <strong>comercio</strong>.</li><li>De los <strong>recursos de los territorios que controlaba</strong>.</li><li>De actividades como la <strong>agricultura</strong>, la <strong>cerámica</strong>, la <strong>orfebrería</strong> y la <strong>construcción</strong>.</li></ul>\n<p>Con eso pudo <strong>financiar su ejército</strong> y resistir los ataques de <strong>germanos, persas y eslavos</strong>.</p>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "Cisma de Oriente y el sueño de Justiniano (no entra al examen)",
+    "html": "<div class=\"callout\">🔒 <strong>Este tema NO entra en el examen del 19/08.</strong> Queda como lectura del cuaderno: no tiene preguntas ni flashcards.</div>\n<h3>El Cisma de Oriente</h3>\n<p>El <strong>Cisma de Oriente</strong> fue un conflicto importante: a partir de <strong>1054</strong> dividió la iglesia cristiana en <strong>2 ramas</strong>:</p>\n<ul><li>la <strong>católica</strong>, encabezada por el <strong>Papa</strong>,</li><li>y la <strong>ortodoxa</strong>, liderada por el <strong>patriarca de Constantinopla</strong>, aunque subordinado al emperador bizantino.</li></ul>\n<h3>El sueño de Justiniano</h3>\n<p>El sueño de <strong>Justiniano</strong> fue <strong>reconstruir el Imperio Romano</strong>. Sí se cumplió: durante su gobierno se cumplió en gran parte.</p>\n<ul><li><strong>Destruyó el reino vándalo</strong> del norte de África en 537.</li><li><strong>Conquistó el reino ostrogodo</strong> de Italia en 553, después de 20 años de lucha.</li><li><strong>Desalojó a los visigodos</strong> del sur de España en 554.</li></ul>\n<p>Cuando murió, no pudieron sostener el imperio y volvieron a ser invadidos por los pueblos germanos.</p>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "El origen del Islam",
+    "html": "<p class=\"meta-date\">📅 12/08/2026</p>\n<p>El Islam <strong>surgió con la prédica del profeta Mahoma</strong> a principios del <strong>siglo VII</strong>, en la <strong>península arábiga</strong>: primero en <strong>la Meca</strong> y luego se consolidó en <strong>Medina</strong>.</p>\n<ul><li>El Islam significa <strong>&quot;obediencia a un único Dios: Alá&quot;</strong> — es una religión <strong>monoteísta</strong>.</li><li>Sus seguidores son los <strong>musulmanes</strong>.</li><li>En el año <strong>622</strong> comienza el <strong>calendario musulmán</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 5
+   },
+   {
+    "title": "El Corán",
+    "html": "<p>El <strong>Corán</strong> es el <strong>libro sagrado del Islam</strong>.</p>\n<ul><li>Contiene las <strong>revelaciones de Alá a Mahoma</strong>.</li><li>Dice que <strong>hay un solo Dios</strong>.</li><li>Para los musulmanes es <strong>obligatorio seguirlo al pie de la letra</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 5
+   },
+   {
+    "title": "Las cinco obligaciones básicas",
+    "html": "<h3>Las 5 obligaciones básicas del Islam</h3>\n<ol><li><strong>La profesión de fe:</strong> rezar diario <em>&quot;no hay más dios que Alá, y Mahoma es su profeta&quot;</em>.</li><li><strong>La oración ritual:</strong> orar <strong>5 veces al día</strong> en dirección a <strong>la Meca</strong>.</li><li><strong>El impuesto para los necesitados:</strong> impuesto que <strong>pagan los ricos</strong> para ayudar a los necesitados.</li><li><strong>El ayuno en el mes de Ramadán:</strong> no comer, beber, fumar ni tener relaciones <strong>desde el amanecer hasta que se vaya el sol</strong>. Excepto <strong>embarazadas, enfermos y viajeros</strong>.</li><li><strong>La peregrinación a la Meca:</strong> viajar <strong>al menos una vez en la vida</strong> al santuario de la <strong>Kaaba</strong>, en la Meca.</li></ol>",
+    "image_keys": [],
+    "chap_idx": 5
+   }
+  ],
+  "toc": [
+   {
+    "num": 1,
+    "name": "De Roma a la fragmentación",
+    "icon": "🏺",
+    "pages": [
+     {
+      "idx": 0,
+      "title": "Las tres etapas de Roma"
+     },
+     {
+      "idx": 1,
+      "title": "Un mundo que se divide en tres"
+     }
+    ]
+   },
+   {
+    "num": 2,
+    "name": "La Edad Media y sus etapas",
+    "icon": "🏰",
+    "pages": [
+     {
+      "idx": 2,
+      "title": "Las tres etapas de la Edad Media"
+     },
+     {
+      "idx": 3,
+      "title": "Los reinos romano-germánicos"
+     },
+     {
+      "idx": 4,
+      "title": "La ruralización de Europa"
+     }
+    ]
+   },
+   {
+    "num": 3,
+    "name": "La Iglesia y el reino franco",
+    "icon": "⛪",
+    "pages": [
+     {
+      "idx": 5,
+      "title": "El papel de la Iglesia"
+     },
+     {
+      "idx": 6,
+      "title": "El reino franco: de los merovingios a los carolingios"
+     }
+    ]
+   },
+   {
+    "num": 4,
+    "name": "Carlomagno: imperio y caída",
+    "icon": "👑",
+    "pages": [
+     {
+      "idx": 7,
+      "title": "Un imperio en 300 provincias"
+     },
+     {
+      "idx": 8,
+      "title": "Los missi dominici"
+     },
+     {
+      "idx": 9,
+      "title": "La caída y el reparto del imperio"
+     }
+    ]
+   },
+   {
+    "num": 5,
+    "name": "El Imperio bizantino",
+    "icon": "🏛️",
+    "pages": [
+     {
+      "idx": 10,
+      "title": "Mil años de resistencia: Constantinopla"
+     },
+     {
+      "idx": 11,
+      "title": "Cisma de Oriente y el sueño de Justiniano (no entra al examen)"
+     }
+    ]
+   },
+   {
+    "num": 6,
+    "name": "El Islam",
+    "icon": "☪️",
+    "pages": [
+     {
+      "idx": 12,
+      "title": "El origen del Islam"
+     },
+     {
+      "idx": 13,
+      "title": "El Corán"
+     },
+     {
+      "idx": 14,
+      "title": "Las cinco obligaciones básicas"
+     }
+    ]
+   }
+  ],
+  "imgs": {},
+  "quiz": [
+   {
+    "c": 1,
+    "page": "Las tres etapas de Roma",
+    "q": "¿Cuáles fueron las 3 etapas de Roma, en orden?",
+    "opts": [
+     "Imperio → República → Monarquía",
+     "Monarquía → Imperio → República",
+     "República → Monarquía → Imperio",
+     "Monarquía → República → Imperio"
+    ],
+    "ans": 3,
+    "exp": "Primero la Monarquía (el rey concentraba los poderes), después la República (magistrados) y por último el Imperio.",
+    "id": 0
+   },
+   {
+    "c": 1,
+    "page": "Las tres etapas de Roma",
+    "q": "En la etapa republicana de Roma, ¿quiénes controlaron algunos aspectos que antes manejaba el rey?",
+    "opts": [
+     "Los magistrados",
+     "Los mayordomos del palacio",
+     "Los missi dominici",
+     "Los patriarcas"
+    ],
+    "ans": 0,
+    "exp": "En la República aparecieron funcionarios llamados magistrados y los ciudadanos lograron ciertos derechos.",
+    "id": 1
+   },
+   {
+    "c": 1,
+    "page": "Las tres etapas de Roma",
+    "q": "¿En qué etapa el territorio romano se expandió considerablemente con las guerras?",
+    "opts": [
+     "En la Monarquía",
+     "En la República",
+     "Nunca se expandió",
+     "En la Edad Media"
+    ],
+    "ans": 1,
+    "exp": "La expansión con las guerras se dio en la etapa republicana, y dio lugar a la última etapa: el Imperio.",
+    "id": 2
+   },
+   {
+    "c": 1,
+    "page": "Un mundo que se divide en tres",
+    "q": "Al fragmentarse el mundo mediterráneo, ¿qué 3 nuevos espacios surgieron?",
+    "opts": [
+     "La Meca, Medina y Constantinopla",
+     "Francia, Germania y Lotaringia",
+     "Reinos romano-germanos, Imperio bizantino y el islam",
+     "Monarquía, República e Imperio"
+    ],
+    "ans": 2,
+    "exp": "Los territorios del imperio se dividieron en los reinos romano-germanos, el Imperio bizantino y el islam.",
+    "id": 3
+   },
+   {
+    "c": 2,
+    "page": "Las tres etapas de la Edad Media",
+    "q": "¿Entre qué años va la Temprana Edad Media?",
+    "opts": [
+     "476-843",
+     "1100-1492",
+     "843-1100",
+     "622-1054"
+    ],
+    "ans": 0,
+    "exp": "Desde el derrocamiento del último emperador romano de occidente (476) hasta la división del imperio de Carlomagno (843).",
+    "id": 4
+   },
+   {
+    "c": 2,
+    "page": "Las tres etapas de la Edad Media",
+    "q": "¿Cuáles fueron los 3 grandes centros de poder de la Temprana Edad Media?",
+    "opts": [
+     "El Papa, el rey y los condes",
+     "Roma, Atenas y Constantinopla",
+     "Francia, Germania y Lotaringia",
+     "Reinos romano-germánicos, imperio bizantino y califatos musulmanes"
+    ],
+    "ans": 3,
+    "exp": "En la Temprana Edad Media (476-843) se conformaron esos 3 grandes centros de poder.",
+    "id": 5
+   },
+   {
+    "c": 2,
+    "page": "Las tres etapas de la Edad Media",
+    "q": "¿Qué cobró forma en la Alta Edad Media (843-1100)?",
+    "opts": [
+     "La burguesía",
+     "El Imperio romano",
+     "El calendario musulmán",
+     "El feudalismo"
+    ],
+    "ans": 3,
+    "exp": "El feudalismo: un sistema político y socioeconómico basado en relaciones de fidelidad personal.",
+    "id": 6
+   },
+   {
+    "c": 2,
+    "page": "Las tres etapas de la Edad Media",
+    "q": "La Baja Edad Media (1100-1492) comienza y termina con...",
+    "opts": [
+     "La caída de Roma y la muerte de Carlomagno",
+     "El Cisma y las invasiones germanas",
+     "La prédica de Mahoma y el año 622",
+     "Las Cruzadas y la llegada de los europeos a América"
+    ],
+    "ans": 3,
+    "exp": "Comienza con las Cruzadas y concluye con la llegada de los europeos a América. Además resurgen las ciudades y aparece la burguesía.",
+    "id": 7
+   },
+   {
+    "c": 2,
+    "page": "Las tres etapas de la Edad Media",
+    "q": "¿Qué nuevo grupo social aparece en la Baja Edad Media?",
+    "opts": [
+     "Los monjes copistas",
+     "La burguesía",
+     "La aristocracia terrateniente",
+     "Los magistrados"
+    ],
+    "ans": 1,
+    "exp": "Con el resurgimiento de las ciudades aparece la burguesía.",
+    "id": 8
+   },
+   {
+    "c": 2,
+    "page": "Los reinos romano-germánicos",
+    "q": "¿Por qué a los reinos del siglo V se los llamó \"romano-germánicos\"?",
+    "opts": [
+     "Porque los romanos conquistaron Germania",
+     "Porque hablaban las dos lenguas por ley",
+     "Porque romanos y germanos gobernaban juntos por acuerdo",
+     "Porque los germanos vencedores adoptaron valores y costumbres de los romanos vencidos"
+    ],
+    "ans": 3,
+    "exp": "Aunque sometieron por la fuerza a la población romana, los germanos adoptaron valores y costumbres de los vencidos.",
+    "id": 9
+   },
+   {
+    "c": 2,
+    "page": "La ruralización de Europa",
+    "q": "¿Qué significa que la Europa de la temprana Edad Media \"se ruralizó\"?",
+    "opts": [
+     "Los campesinos se mudaron a las ciudades",
+     "Se construyeron más ciudades",
+     "Creció el comercio con moneda",
+     "La gente dejó las ciudades y se fue al campo"
+    ],
+    "ans": 3,
+    "exp": "Muchas ciudades se despoblaron o fueron abandonadas: la gente se fue al campo y la economía se volvió autosuficiente, con trueque.",
+    "id": 10
+   },
+   {
+    "c": 3,
+    "page": "El papel de la Iglesia",
+    "q": "¿Por qué la iglesia pudo unir a los pueblos de los reinos romano-germánicos?",
+    "opts": [
+     "Porque todos compartían la fe cristiana y reconocían al Papa",
+     "Porque cobraba menos impuestos",
+     "Porque tenía el ejército más grande",
+     "Porque dividió los territorios en condados"
+    ],
+    "ans": 0,
+    "exp": "La fe cristiana compartida y el reconocimiento del Papa unieron a los pueblos divididos.",
+    "id": 11
+   },
+   {
+    "c": 3,
+    "page": "El papel de la Iglesia",
+    "q": "¿A través de quiénes preservó la cultura la iglesia?",
+    "opts": [
+     "De los monjes copistas",
+     "De los marqueses",
+     "De los magistrados",
+     "De los missi dominici"
+    ],
+    "ans": 0,
+    "exp": "Los monjes copistas copiaban los textos y así la iglesia preservó la cultura.",
+    "id": 12
+   },
+   {
+    "c": 3,
+    "page": "El reino franco: de los merovingios a los carolingios",
+    "q": "¿Cuál fue el reino romano-germánico que más se destacó?",
+    "opts": [
+     "El reino visigodo",
+     "El reino franco",
+     "El reino ostrogodo",
+     "El reino vándalo"
+    ],
+    "ans": 1,
+    "exp": "El reino franco fue el que más se destacó y terminó transformándose en una gran potencia.",
+    "id": 13
+   },
+   {
+    "c": 3,
+    "page": "El reino franco: de los merovingios a los carolingios",
+    "q": "¿Por qué gobernaban los mayordomos del palacio en el reino franco?",
+    "opts": [
+     "Porque ganaron una guerra civil",
+     "Porque los reyes merovingios habían perdido poder",
+     "Porque eran los dueños de las tierras",
+     "Porque el Papa los nombró reyes"
+    ],
+    "ans": 1,
+    "exp": "Los reyes merovingios habían perdido poder, y los mayordomos del palacio gobernaban en su lugar.",
+    "id": 14
+   },
+   {
+    "c": 3,
+    "page": "El reino franco: de los merovingios a los carolingios",
+    "q": "¿Qué mayordomos derrotaron a los musulmanes y fundaron la dinastía carolingia?",
+    "opts": [
+     "Justiniano y Ludovico Pío",
+     "Carlomagno y Carlos el calvo",
+     "Carlos Martel y Pipino el Breve",
+     "Lotario y Luis el germánico"
+    ],
+    "ans": 2,
+    "exp": "Carlos Martel y luego Pipino el Breve, con apoyo del Papa, fundaron la dinastía carolingia.",
+    "id": 15
+   },
+   {
+    "c": 3,
+    "page": "El reino franco: de los merovingios a los carolingios",
+    "q": "¿Con apoyo de quién se fundó la dinastía carolingia?",
+    "opts": [
+     "De los califas musulmanes",
+     "Del emperador bizantino",
+     "De los reyes merovingios",
+     "Del Papa"
+    ],
+    "ans": 3,
+    "exp": "Con apoyo del Papa: así el reino franco se transformó en una gran potencia.",
+    "id": 16
+   },
+   {
+    "c": 4,
+    "page": "Un imperio en 300 provincias",
+    "q": "¿En cuántas provincias dividió Carlomagno su imperio para tener mayor control?",
+    "opts": [
+     "Unas 12",
+     "Unas 1000",
+     "Unas 30",
+     "Unas 300"
+    ],
+    "ans": 3,
+    "exp": "Carlomagno dividió su imperio en unas 300 provincias: condados y ducados.",
+    "id": 17
+   },
+   {
+    "c": 4,
+    "page": "Un imperio en 300 provincias",
+    "q": "¿Qué creó Carlomagno en las fronteras del imperio?",
+    "opts": [
+     "Murallas como la de Constantinopla",
+     "Puertos comerciales",
+     "Monasterios copistas",
+     "Marcas al mando de marqueses con tropas"
+    ],
+    "ans": 3,
+    "exp": "En las fronteras creó marcas, al mando de marqueses con tropas para defenderlas.",
+    "id": 18
+   },
+   {
+    "c": 4,
+    "page": "Los missi dominici",
+    "q": "¿Quiénes eran los missi dominici?",
+    "opts": [
+     "Los enviados especiales del emperador que supervisaban la administración",
+     "Los monjes que copiaban textos",
+     "Los guerreros de las marcas fronterizas",
+     "Los recaudadores del impuesto musulmán"
+    ],
+    "ans": 0,
+    "exp": "Supervisaban todos los años la administración, escuchaban quejas y podían denunciar a los gobernantes locales.",
+    "id": 19
+   },
+   {
+    "c": 4,
+    "page": "Los missi dominici",
+    "q": "¿Por qué condes, duques y marqueses les temían a los missi dominici?",
+    "opts": [
+     "Porque elegían a los sucesores del trono",
+     "Porque cobraban los impuestos",
+     "Porque podían denunciarlos ante el emperador si no cumplían",
+     "Porque comandaban las tropas de las marcas"
+    ],
+    "ans": 2,
+    "exp": "Escuchaban las quejas de los pobladores y podían denunciar si los gobernantes locales no cumplían.",
+    "id": 20
+   },
+   {
+    "c": 4,
+    "page": "La caída y el reparto del imperio",
+    "q": "¿Cuál fue una de las causas de la caída del imperio de Carlomagno?",
+    "opts": [
+     "El Cisma de Oriente",
+     "La invasión de los persas",
+     "La llegada de los europeos a América",
+     "La falta de autoridad de su sucesor Ludovico Pío"
+    ],
+    "ans": 3,
+    "exp": "Carlomagno murió en 814 y su hijo Ludovico Pío no tuvo la misma autoridad. A eso se sumaron las luchas internas.",
+    "id": 21
+   },
+   {
+    "c": 4,
+    "page": "La caída y el reparto del imperio",
+    "q": "A la muerte de Ludovico Pío, ¿quiénes se enfrentaron entre sí por el trono?",
+    "opts": [
+     "Los reyes merovingios",
+     "Los nietos de Carlomagno",
+     "Los mayordomos del palacio",
+     "Los patriarcas de Constantinopla"
+    ],
+    "ans": 1,
+    "exp": "Los nietos de Carlomagno se enfrentaron por el trono, y duques y condes reclamaron más poder y autonomía.",
+    "id": 22
+   },
+   {
+    "c": 4,
+    "page": "La caída y el reparto del imperio",
+    "q": "Al dividirse el imperio, ¿a quién le correspondió el título de emperador?",
+    "opts": [
+     "A Ludovico Pío",
+     "A Carlos el calvo, a cargo de Francia",
+     "A Lotario, a cargo de Lotaringia",
+     "A Luis el germánico, a cargo de Germania"
+    ],
+    "ans": 2,
+    "exp": "Lotaringia (la franja del medio) quedó a cargo de Lotario, que recibió el título de emperador. Luego fue absorbida por Francia y Germania.",
+    "id": 23
+   },
+   {
+    "c": 5,
+    "page": "Mil años de resistencia: Constantinopla",
+    "q": "¿Cuánto tiempo logró resistir el imperio Bizantino mientras el de occidente caía?",
+    "opts": [
+     "1000 años",
+     "50 años",
+     "100 años",
+     "300 años"
+    ],
+    "ans": 0,
+    "exp": "El imperio Bizantino resistió durante 1000 años.",
+    "id": 24
+   },
+   {
+    "c": 5,
+    "page": "Mil años de resistencia: Constantinopla",
+    "q": "¿Por qué Constantinopla fue un gran centro comercial?",
+    "opts": [
+     "Porque tenía las minas de oro más grandes",
+     "Porque conectaba las rutas marítimas y terrestres de Europa, Asia y África",
+     "Porque el Papa vivía allí",
+     "Porque era la ciudad más poblada de América"
+    ],
+    "ans": 1,
+    "exp": "Su ubicación conectaba las rutas de tres continentes: Europa, Asia y África.",
+    "id": 25
+   },
+   {
+    "c": 5,
+    "page": "Mil años de resistencia: Constantinopla",
+    "q": "¿Cuál de estas fue una fuente de riqueza del imperio Bizantino?",
+    "opts": [
+     "El comercio y los recursos de sus territorios",
+     "El impuesto del Ramadán",
+     "El oro de América",
+     "El botín de las Cruzadas"
+    ],
+    "ans": 0,
+    "exp": "Su riqueza vino del comercio, de los recursos de los territorios que controlaba y de actividades como agricultura, cerámica, orfebrería y construcción.",
+    "id": 26
+   },
+   {
+    "c": 5,
+    "page": "Mil años de resistencia: Constantinopla",
+    "q": "¿Qué actividades le dieron riqueza a Bizancio, además del comercio?",
+    "opts": [
+     "Pesca, caza, minería y ganadería",
+     "Agricultura, cerámica, orfebrería y construcción",
+     "Imprenta y navegación a vapor",
+     "Solo la guerra"
+    ],
+    "ans": 1,
+    "exp": "La agricultura, la cerámica, la orfebrería y la construcción, junto con el comercio y los recursos de sus territorios.",
+    "id": 27
+   },
+   {
+    "c": 5,
+    "page": "Mil años de resistencia: Constantinopla",
+    "q": "¿Los ataques de qué pueblos resistió el imperio Bizantino?",
+    "opts": [
+     "Francos, sajones y vikingos",
+     "Aztecas, incas y mayas",
+     "Cruzados, mongoles y turcos",
+     "Germanos, persas y eslavos"
+    ],
+    "ans": 3,
+    "exp": "Con su riqueza pudo financiar su ejército y resistir los ataques de germanos, persas y eslavos.",
+    "id": 28
+   },
+   {
+    "c": 6,
+    "page": "El origen del Islam",
+    "q": "¿Con la prédica de quién y cuándo surgió el Islam?",
+    "opts": [
+     "De Justiniano, en el año 553",
+     "De Alá, en el siglo V",
+     "De Mahoma, a principios del siglo VII",
+     "De Lotario, en el año 843"
+    ],
+    "ans": 2,
+    "exp": "El Islam surgió con la prédica del profeta Mahoma a principios del siglo VII.",
+    "id": 29
+   },
+   {
+    "c": 6,
+    "page": "El origen del Islam",
+    "q": "¿Dónde tuvo su origen el Islam?",
+    "opts": [
+     "En la antigua Galia",
+     "En el norte de África",
+     "En Constantinopla",
+     "En la península arábiga: primero en la Meca y luego en Medina"
+    ],
+    "ans": 3,
+    "exp": "En la península arábiga: primero en la Meca y luego se consolidó en Medina.",
+    "id": 30
+   },
+   {
+    "c": 6,
+    "page": "El origen del Islam",
+    "q": "¿La religión del Islam es politeísta o monoteísta?",
+    "opts": [
+     "Politeísta primero y monoteísta después del año 622",
+     "Politeísta: adora a varios dioses",
+     "Ninguna de las dos",
+     "Monoteísta: obediencia a un único Dios, Alá"
+    ],
+    "ans": 3,
+    "exp": "El Islam significa \"obediencia a un único Dios: Alá\" — es monoteísta.",
+    "id": 31
+   },
+   {
+    "c": 6,
+    "page": "El origen del Islam",
+    "q": "¿Qué pasó en el año 622?",
+    "opts": [
+     "Murió Carlomagno",
+     "Cayó Constantinopla",
+     "Comienza el calendario musulmán",
+     "Se dividió la iglesia cristiana"
+    ],
+    "ans": 2,
+    "exp": "En el año 622 comienza el calendario musulmán.",
+    "id": 32
+   },
+   {
+    "c": 6,
+    "page": "El Corán",
+    "q": "¿Qué es el Corán?",
+    "opts": [
+     "El calendario musulmán",
+     "El impuesto que pagan los ricos",
+     "El libro sagrado del Islam, con las revelaciones de Alá a Mahoma",
+     "El templo principal de la Meca"
+    ],
+    "ans": 2,
+    "exp": "El Corán es el libro sagrado del Islam: contiene las revelaciones de Alá a Mahoma y es obligatorio seguirlo al pie de la letra.",
+    "id": 33
+   },
+   {
+    "c": 6,
+    "page": "Las cinco obligaciones básicas",
+    "q": "¿Cuál de estas es una de las 5 obligaciones básicas del Islam?",
+    "opts": [
+     "Pagar impuesto al Papa",
+     "Orar 5 veces al día en dirección a la Meca",
+     "Peregrinar a Constantinopla",
+     "Ayunar todo el año"
+    ],
+    "ans": 1,
+    "exp": "La oración ritual: orar 5 veces al día en dirección a la Meca.",
+    "id": 34
+   },
+   {
+    "c": 6,
+    "page": "Las cinco obligaciones básicas",
+    "q": "¿Quiénes están exceptuados del ayuno en el mes de Ramadán?",
+    "opts": [
+     "Embarazadas, enfermos y viajeros",
+     "Nadie está exceptuado",
+     "Los que ya peregrinaron a la Meca",
+     "Los ricos que pagan el impuesto"
+    ],
+    "ans": 0,
+    "exp": "El ayuno va del amanecer hasta que se vaya el sol, excepto embarazadas, enfermos y viajeros.",
+    "id": 35
+   }
+  ],
+  "flashcards": [
+   {
+    "c": 1,
+    "t": "Las 3 etapas de Roma",
+    "d": "Monarquía → República → Imperio. En la República aparecen los magistrados; en el Imperio, territorios hasta en África.",
+    "id": 0
+   },
+   {
+    "c": 1,
+    "t": "Fragmentación del mundo mediterráneo",
+    "d": "División de los territorios del imperio en 3 espacios: reinos romano-germanos, Imperio bizantino y el islam.",
+    "id": 1
+   },
+   {
+    "c": 2,
+    "t": "Temprana Edad Media (476-843)",
+    "d": "3 centros de poder: reinos romano-germánicos, imperio bizantino y califatos musulmanes. De la caída de Roma a la división del imperio de Carlomagno.",
+    "id": 2
+   },
+   {
+    "c": 2,
+    "t": "Alta Edad Media (843-1100)",
+    "d": "Cobra forma el feudalismo: sistema político y socioeconómico basado en relaciones de fidelidad personal.",
+    "id": 3
+   },
+   {
+    "c": 2,
+    "t": "Baja Edad Media (1100-1492)",
+    "d": "Resurgen las ciudades y aparece la burguesía. De las Cruzadas a la llegada de los europeos a América.",
+    "id": 4
+   },
+   {
+    "c": 2,
+    "t": "Reinos romano-germánicos",
+    "d": "Pueblos germanos que dominaron Europa occidental en el siglo V pero adoptaron valores y costumbres de los romanos vencidos.",
+    "id": 5
+   },
+   {
+    "c": 2,
+    "t": "Ruralización",
+    "d": "Las ciudades se despoblaron y la gente se fue al campo. Economía autosuficiente y trueque.",
+    "id": 6
+   },
+   {
+    "c": 2,
+    "t": "Aristocracia terrateniente",
+    "d": "Guerreros entre los que los reyes germanos repartieron tierras.",
+    "id": 7
+   },
+   {
+    "c": 3,
+    "t": "Papel de la Iglesia",
+    "d": "Unió a los pueblos por la fe cristiana y el Papa, fue religión oficial, organizó el territorio y preservó la cultura con los monjes copistas.",
+    "id": 8
+   },
+   {
+    "c": 3,
+    "t": "Monjes copistas",
+    "d": "A través de ellos la iglesia preservó la cultura.",
+    "id": 9
+   },
+   {
+    "c": 3,
+    "t": "Mayordomos del palacio",
+    "d": "Gobernaban el reino franco porque los reyes merovingios habían perdido poder.",
+    "id": 10
+   },
+   {
+    "c": 3,
+    "t": "Carlos Martel y Pipino el Breve",
+    "d": "Mayordomos que derrotaron a los musulmanes y, con apoyo del Papa, fundaron la dinastía carolingia.",
+    "id": 11
+   },
+   {
+    "c": 3,
+    "t": "Dinastía carolingia",
+    "d": "Fundada por Pipino el Breve con apoyo del Papa. Transformó el reino franco en una gran potencia.",
+    "id": 12
+   },
+   {
+    "c": 4,
+    "t": "Las 300 provincias",
+    "d": "División del imperio de Carlomagno: condados y ducados gobernados por condes y duques.",
+    "id": 13
+   },
+   {
+    "c": 4,
+    "t": "Marcas",
+    "d": "Territorios de frontera al mando de marqueses con tropas para defenderlas.",
+    "id": 14
+   },
+   {
+    "c": 4,
+    "t": "Missi dominici",
+    "d": "Enviados especiales del emperador: supervisaban la administración cada año, escuchaban quejas y podían denunciar a los gobernantes.",
+    "id": 15
+   },
+   {
+    "c": 4,
+    "t": "Causas de la caída del imperio de Carlomagno",
+    "d": "1) Falta de autoridad de Ludovico Pío (Carlomagno murió en 814). 2) Luchas internas: condes con más autonomía y nietos enfrentados por el trono.",
+    "id": 16
+   },
+   {
+    "c": 4,
+    "t": "División del imperio carolingio",
+    "d": "Germania (Luis el germánico), Francia (Carlos el calvo) y Lotaringia (Lotario, con el título de emperador).",
+    "id": 17
+   },
+   {
+    "c": 4,
+    "t": "Lotaringia",
+    "d": "Franja entre Francia y Germania a cargo de Lotario. Después fue absorbida por sus vecinos.",
+    "id": 18
+   },
+   {
+    "c": 5,
+    "t": "Imperio bizantino",
+    "d": "Resistió 1000 años mientras caía el imperio romano de occidente.",
+    "id": 19
+   },
+   {
+    "c": 5,
+    "t": "Constantinopla",
+    "d": "Capital bizantina y gran centro comercial: conectaba las rutas marítimas y terrestres de Europa, Asia y África.",
+    "id": 20
+   },
+   {
+    "c": 5,
+    "t": "Riquezas de Bizancio",
+    "d": "Comercio, recursos de sus territorios, agricultura, cerámica, orfebrería y construcción. Financiaron el ejército contra germanos, persas y eslavos.",
+    "id": 21
+   },
+   {
+    "c": 6,
+    "t": "Origen del Islam",
+    "d": "Prédica de Mahoma a principios del siglo VII, en la península arábiga: la Meca y luego Medina.",
+    "id": 22
+   },
+   {
+    "c": 6,
+    "t": "Islam",
+    "d": "Significa \"obediencia a un único Dios: Alá\". Religión monoteísta. Sus seguidores son los musulmanes.",
+    "id": 23
+   },
+   {
+    "c": 6,
+    "t": "Año 622",
+    "d": "Comienza el calendario musulmán.",
+    "id": 24
+   },
+   {
+    "c": 6,
+    "t": "Corán",
+    "d": "Libro sagrado del Islam con las revelaciones de Alá a Mahoma. Obligatorio seguirlo al pie de la letra.",
+    "id": 25
+   },
+   {
+    "c": 6,
+    "t": "Las 5 obligaciones del Islam",
+    "d": "Profesión de fe, oración 5 veces al día hacia la Meca, impuesto para los necesitados, ayuno en Ramadán y peregrinación a la Meca.",
+    "id": 26
+   },
+   {
+    "c": 6,
+    "t": "Ramadán",
+    "d": "Mes de ayuno: sin comer, beber, fumar ni relaciones del amanecer a que se vaya el sol. Excepto embarazadas, enfermos y viajeros.",
+    "id": 27
+   }
+  ],
+  "glossary": [
+   {
+    "c": 6,
+    "t": "Alá",
+    "d": "El único Dios del Islam. \"Islam\" significa obediencia a él."
+   },
+   {
+    "c": 2,
+    "t": "Aristocracia terrateniente",
+    "d": "Guerreros con tierras repartidas por los reyes germanos, trabajadas por colonos y campesinos."
+   },
+   {
+    "c": 2,
+    "t": "Burguesía",
+    "d": "Nuevo grupo social que aparece en la Baja Edad Media con el resurgimiento de las ciudades."
+   },
+   {
+    "c": 4,
+    "t": "Carlomagno",
+    "d": "Emperador que dividió su imperio en unas 300 provincias y creó las marcas fronterizas. Murió en 814."
+   },
+   {
+    "c": 3,
+    "t": "Carlos Martel",
+    "d": "Mayordomo del palacio que derrotó a los musulmanes."
+   },
+   {
+    "c": 2,
+    "t": "Colonos",
+    "d": "Junto a los campesinos, trabajaban las tierras a cambio de parte de la producción."
+   },
+   {
+    "c": 4,
+    "t": "Condados y ducados",
+    "d": "Provincias del imperio de Carlomagno gobernadas por condes y duques."
+   },
+   {
+    "c": 5,
+    "t": "Constantinopla",
+    "d": "Capital bizantina: gran centro comercial que conectaba Europa, Asia y África."
+   },
+   {
+    "c": 6,
+    "t": "Corán",
+    "d": "Libro sagrado del Islam: las revelaciones de Alá a Mahoma."
+   },
+   {
+    "c": 2,
+    "t": "Cruzadas",
+    "d": "Con ellas comienza la Baja Edad Media (1100-1492)."
+   },
+   {
+    "c": 3,
+    "t": "Dinastía carolingia",
+    "d": "Dinastía fundada por Pipino el Breve con apoyo del Papa."
+   },
+   {
+    "c": 2,
+    "t": "Edad Media",
+    "d": "Época que comienza tras la caída de Roma. Se divide en Temprana (476-843), Alta (843-1100) y Baja (1100-1492)."
+   },
+   {
+    "c": 2,
+    "t": "Feudalismo",
+    "d": "Sistema político y socioeconómico basado en relaciones de fidelidad personal. Cobró forma en la Alta Edad Media."
+   },
+   {
+    "c": 4,
+    "t": "Francia (reparto carolingio)",
+    "d": "Territorios de la antigua Galia, más reducida. A cargo de Carlos el calvo."
+   },
+   {
+    "c": 4,
+    "t": "Germania",
+    "d": "Territorios al este del río Rin. Quedó a cargo de Luis el germánico."
+   },
+   {
+    "c": 5,
+    "t": "Imperio bizantino",
+    "d": "Imperio que resistió 1000 años mientras caía el de occidente."
+   },
+   {
+    "c": 1,
+    "t": "Imperio romano",
+    "d": "Última etapa de Roma: territorios hasta en África, crecimiento económico y numerosos desafíos."
+   },
+   {
+    "c": 6,
+    "t": "Kaaba",
+    "d": "Santuario de la Meca al que se peregrina al menos una vez en la vida."
+   },
+   {
+    "c": 6,
+    "t": "La Meca",
+    "d": "Ciudad de la península arábiga donde surgió el Islam y destino de la peregrinación a la Kaaba."
+   },
+   {
+    "c": 4,
+    "t": "Lotaringia",
+    "d": "Franja entre Francia y Germania, a cargo de Lotario (título de emperador). Luego absorbida por sus vecinos."
+   },
+   {
+    "c": 4,
+    "t": "Ludovico Pío",
+    "d": "Hijo y sucesor de Carlomagno. No tuvo la misma autoridad que su padre."
+   },
+   {
+    "c": 1,
+    "t": "Magistrados",
+    "d": "Funcionarios de la República romana que controlaron algunos aspectos que antes manejaba el rey."
+   },
+   {
+    "c": 6,
+    "t": "Mahoma",
+    "d": "Profeta cuya prédica dio origen al Islam a principios del siglo VII."
+   },
+   {
+    "c": 4,
+    "t": "Marcas",
+    "d": "Zonas de frontera del imperio carolingio al mando de marqueses con tropas."
+   },
+   {
+    "c": 3,
+    "t": "Mayordomos del palacio",
+    "d": "Funcionarios que gobernaban el reino franco por la pérdida de poder de los reyes merovingios."
+   },
+   {
+    "c": 6,
+    "t": "Medina",
+    "d": "Ciudad donde se consolidó el Islam."
+   },
+   {
+    "c": 4,
+    "t": "Missi dominici",
+    "d": "Enviados especiales del emperador que supervisaban cada año la administración y podían denunciar a los gobernantes locales."
+   },
+   {
+    "c": 1,
+    "t": "Monarquía romana",
+    "d": "Primera etapa de Roma: el rey concentraba los poderes y solo algunos tenían derechos."
+   },
+   {
+    "c": 3,
+    "t": "Monjes copistas",
+    "d": "A través de ellos la iglesia preservó la cultura."
+   },
+   {
+    "c": 6,
+    "t": "Musulmanes",
+    "d": "Los seguidores del Islam."
+   },
+   {
+    "c": 5,
+    "t": "Orfebrería",
+    "d": "Una de las actividades que dieron riqueza a Bizancio, junto a agricultura, cerámica y construcción."
+   },
+   {
+    "c": 3,
+    "t": "Papa",
+    "d": "Cabeza de la iglesia. Todos los pueblos romano-germánicos lo reconocían; apoyó la fundación de la dinastía carolingia."
+   },
+   {
+    "c": 3,
+    "t": "Pipino el Breve",
+    "d": "Mayordomo que, con apoyo del Papa, fundó la dinastía carolingia."
+   },
+   {
+    "c": 6,
+    "t": "Ramadán",
+    "d": "Mes de ayuno del Islam, del amanecer a que se vaya el sol."
+   },
+   {
+    "c": 3,
+    "t": "Reino franco",
+    "d": "El reino romano-germánico que más se destacó: se transformó en una gran potencia."
+   },
+   {
+    "c": 2,
+    "t": "Reinos romano-germánicos",
+    "d": "Dominios de pueblos germanos en Europa occidental (siglo V) que adoptaron valores y costumbres de los romanos vencidos."
+   },
+   {
+    "c": 1,
+    "t": "República romana",
+    "d": "Segunda etapa: los ciudadanos consiguieron derechos y los magistrados controlaron aspectos que antes manejaba el rey."
+   },
+   {
+    "c": 3,
+    "t": "Reyes merovingios",
+    "d": "Reyes del reino franco que habían perdido poder frente a los mayordomos del palacio."
+   },
+   {
+    "c": 4,
+    "t": "Río Rin",
+    "d": "Límite oeste de Germania en el reparto del imperio carolingio."
+   },
+   {
+    "c": 2,
+    "t": "Ruralización",
+    "d": "Despoblamiento de las ciudades: la gente se fue al campo y la economía se volvió autosuficiente."
+   },
+   {
+    "c": 2,
+    "t": "Trueque",
+    "d": "Intercambio sin moneda. Se usó cuando la economía medieval se volvió autosuficiente."
+   }
+  ]
  }
 };
   let CURRENT_SUBJECT = null;
@@ -8477,6 +9578,30 @@ body {
         {id:"master_proc",   em:"🌍", name:"Maestro geógrafo",     desc:"Todas del cap. 2 acertadas"},
         {id:"master_euk",    em:"🧭", name:"Maestro de América",   desc:"Todas del cap. 3 acertadas"},
         {id:"master_biom",   em:"📊", name:"Maestro de superficies", desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    },
+    his: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",       icon: "🌱"},
+        {xp: 50,   name: "Estudiante",     icon: "🪴"},
+        {xp: 150,  name: "Avanzado",       icon: "🌿"},
+        {xp: 350,  name: "Experto",        icon: "🌳"},
+        {xp: 700,  name: "Maestro",        icon: "🏆"},
+        {xp: 1200, name: "Historiador Pro", icon: "🏛️"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🏰", name:"Maestro medieval",     desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"👑", name:"Maestro carolingio",   desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"☪️", name:"Maestro de imperios",  desc:"Todas del cap. 4 acertadas"},
         {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
         {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
         {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
@@ -10159,6 +11284,7 @@ body {
     const PROGRESS_KEYS = [
       'biologia_ebook_v4_bio',
       'biologia_ebook_v4_geo',
+      'biologia_ebook_v4_his',
       'biologia_ebook_v3',
       'biologia_ebook_v2',
       'apuntes_avatar',      // monedas gastadas, compras y look
@@ -10313,7 +11439,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 18:33";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 19:58";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10413,7 +11539,9 @@ body {
   document.addEventListener('click', function (e) {
     var card = e.target && e.target.closest ? e.target.closest('.sp-card') : null;
     if (card) {
-      var m = card.classList.contains('bio') ? 'Biología' : (card.classList.contains('geo') ? 'Geografía' : 'otra');
+      var m = card.classList.contains('bio') ? 'Biología'
+            : (card.classList.contains('geo') ? 'Geografía'
+            : (card.classList.contains('his') ? 'Historia' : 'otra'));
       sendDiario('materia_' + m, 'abre_materia', { materia: m });
     }
     var fab = e.target && e.target.closest ? e.target.closest('#fabPractice') : null;
@@ -10424,7 +11552,7 @@ body {
   }, true);
 
   /* ---- resumen de sesión (sesion_fin): foto del progreso al entrar, delta al salir ---- */
-  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo' };
+  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his' };
 
   function fotoProgreso() {
     var out = {};
@@ -10690,7 +11818,7 @@ body {
   });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
-     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}} se inyectan al compilar,
+     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 36, "fc": 28}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
   var ST_CAT = {
     bio: {
@@ -10740,9 +11868,33 @@ body {
         {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
         {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
       ]
+    },
+    his: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",       icon: "🌱"},
+        {xp: 50,   name: "Estudiante",     icon: "🪴"},
+        {xp: 150,  name: "Avanzado",       icon: "🌿"},
+        {xp: 350,  name: "Experto",        icon: "🌳"},
+        {xp: 700,  name: "Maestro",        icon: "🏆"},
+        {xp: 1200, name: "Historiador Pro", icon: "🏛️"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🏰", name:"Maestro medieval",     desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"👑", name:"Maestro carolingio",   desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"☪️", name:"Maestro de imperios",  desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
     }
   };          /* niveles y logros POR MATERIA */
-  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}};
+  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 36, "fc": 28}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
