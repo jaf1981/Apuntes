@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 18:04">
+<meta name="apuntes-version" content="13/08 18:10">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -9803,8 +9803,8 @@ body {
     var h = top +
       '<div class="tienda-probador">' + svgAvatar(0.85) + '</div>' +
       '<div class="tienda-gen">' +
-        '<button data-gen="nino" class="' + (a.gen !== "nina" ? "activo" : "") + '">👦 Niño</button>' +
-        '<button data-gen="nina" class="' + (a.gen === "nina" ? "activo" : "") + '">👧 Niña</button>' +
+        '<button data-gen="nino" class="' + (a.gen !== "nina" ? "activo" : "") + '">👨 Hombre</button>' +
+        '<button data-gen="nina" class="' + (a.gen === "nina" ? "activo" : "") + '">👩 Mujer</button>' +
       '</div>' +
       '<div class="tienda-ident-tit">Tu apodo</div>' +
       '<div class="tienda-apodo-row">' +
@@ -10288,7 +10288,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 18:04";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 18:10";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10899,8 +10899,8 @@ body {
       (typeof window.apuntesAvatarGen === 'function'
         ? '<div style="font-size:13px;opacity:.75;margin-bottom:6px;">Tu avatar:</div>' +
           '<div style="display:flex;gap:8px;margin-bottom:12px;">' +
-            '<button id="apGenNino" type="button" style="flex:1;padding:9px;border-radius:9px;border:1.5px solid #ccc;background:#fff;font-size:14px;cursor:pointer;">👦 Niño</button>' +
-            '<button id="apGenNina" type="button" style="flex:1;padding:9px;border-radius:9px;border:1.5px solid #ccc;background:#fff;font-size:14px;cursor:pointer;">👧 Niña</button>' +
+            '<button id="apGenNino" type="button" style="flex:1;padding:9px;border-radius:9px;border:1.5px solid #ccc;background:#fff;font-size:14px;cursor:pointer;">👨 Hombre</button>' +
+            '<button id="apGenNina" type="button" style="flex:1;padding:9px;border-radius:9px;border:1.5px solid #ccc;background:#fff;font-size:14px;cursor:pointer;">👩 Mujer</button>' +
           '</div>'
         : '') +
       '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
