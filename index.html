@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 13:11">
+<meta name="apuntes-version" content="13/08 13:21">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1716,16 +1716,18 @@ body {
 .sug-n { font-size: 12.5px; font-weight: 700; opacity: 0.75; white-space: nowrap; }
 
 /* ---- Avatar + monedas + tienda ---- */
-.av-zona { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; padding: 10px 14px;
-  border-radius: 16px; background: rgba(128, 128, 128, 0.08); }
-.av-mini svg { display: block; }
-.av-datos { flex: 1; min-width: 0; }
-.av-monedas { font-size: 15px; font-weight: 700; }
-.av-sub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
-.av-btn-tienda { padding: 9px 14px; border-radius: 11px; border: 1.5px solid #d4a017;
-  background: rgba(212, 160, 23, 0.1); color: inherit; font-family: inherit;
-  font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.av-btn-tienda:active { transform: scale(0.97); }
+.sp-fila { display: flex; align-items: flex-start; gap: 8px; width: 100%; }
+.sp-fila .sp-cards { flex: 1; min-width: 0; }
+.sp-rail { display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; width: 72px; flex-shrink: 0; cursor: pointer; border-radius: 14px;
+  background: rgba(128, 128, 128, 0.08); padding: 12px 2px; margin-top: 2px; }
+.sp-rail:active { transform: scale(0.96); }
+.sp-rail .rail-monedas { font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.sp-rail .rail-tienda { font-size: 10.5px; opacity: 0.7; }
+.tienda-gen { display: flex; gap: 8px; justify-content: center; margin: -6px 0 4px; }
+.tienda-gen button { padding: 7px 14px; border-radius: 10px; border: 1.5px solid rgba(128,128,128,0.35);
+  background: transparent; color: inherit; font-family: inherit; font-size: 13.5px; cursor: pointer; }
+.tienda-gen button.activo { border-color: #3d8a3d; background: rgba(61, 138, 61, 0.12); font-weight: 700; }
 .tienda-overlay { position: fixed; inset: 0; z-index: 99994; background: var(--bg, #f4ecd8);
   overflow-y: auto; -webkit-overflow-scrolling: touch;
   padding: max(env(safe-area-inset-top), 16px) 14px 40px; }
@@ -2176,6 +2178,11 @@ body {
           <div class="name">Examen final</div>
           <div class="sub">Todas las preguntas</div>
         </button>
+        <button class="dash-action" id="dashTienda">
+          <span class="ico">🛍️</span>
+          <div class="name">Tienda</div>
+          <div class="sub" id="dashTiendaSub">Gastá tus monedas</div>
+        </button>
       </div>
 
       <div class="dash-section-title">🏆 Logros</div>
@@ -2336,10 +2343,9 @@ body {
     <h1 class="sp-title" id="spTitleGreeting">Tus apuntes</h1>
     <p class="sp-subtitle">Elegí qué materia querés estudiar hoy.</p>
 
-    <div id="spAvatarZona"></div>
-
     <div id="spSlot"></div>
 
+    <div class="sp-fila">
     <div class="sp-cards">
       <button class="sp-card bio" data-subject="bio">
         <span class="sp-card-emoji">🦠</span>
@@ -2366,6 +2372,8 @@ body {
         </div>
         <span class="sp-card-arrow">›</span>
       </button>
+      </div>
+      <div id="spAvatarZona" class="sp-rail" role="button" aria-label="Tu avatar y la tienda"></div>
     </div>
 
     <div class="sp-deco">·  ·  ·</div>
@@ -8737,6 +8745,16 @@ body {
   // DASHBOARD
   // ============================================================
   function renderDashboard() {
+    // Tienda desde Actividades (saldo al día; listener una sola vez)
+    const dt = $("dashTienda");
+    if (dt) {
+      const sb = $("dashTiendaSub");
+      if (sb && typeof monedasSaldo === "function") sb.textContent = "🪙 " + monedasSaldo() + " monedas";
+      if (!dt.dataset.listo) {
+        dt.dataset.listo = "1";
+        dt.addEventListener("click", () => { if (typeof abrirTienda === "function") abrirTienda(); });
+      }
+    }
     // Sugerencias dinámicas: practicar lo flojo / lo leído hoy
     const sug = $("dashSug");
     if (sug) {
@@ -9557,6 +9575,7 @@ body {
     var a = null;
     try { a = JSON.parse(localStorage.getItem(AV_KEY) || "null"); } catch (e) {}
     if (!a) a = { gastadas: 0, comprados: ["p_clasico", "r_basica"], eq: { peinado: "p_clasico", ropa: "r_basica" } };
+    if (!a.gen) a.gen = "nino";   // apariencia del avatar: "nino" | "nina" (elección libre)
     return a;
   }
   function guardarAvatar(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} }
@@ -9576,9 +9595,11 @@ body {
   function itemDe(id) { for (var i = 0; i < CATALOGO.length; i++) if (CATALOGO[i].id === id) return CATALOGO[i]; return null; }
 
   /* ---- Avatar SVG por capas (según lo equipado) ---- */
-  function svgAvatar(escala) {
-    var eq = avatarData().eq || {};
-    var conVehiculo = !!eq.vehiculo;
+  function svgAvatar(escala, soloPersona) {
+    var av = avatarData();
+    var eq = av.eq || {};
+    var nina = av.gen === "nina";
+    var conVehiculo = !!eq.vehiculo && !soloPersona;
     var W = conVehiculo ? 235 : 120;
     var s = escala || 1;
     var ropaCol = { r_basica: "#9aa5ad", r_buzo: "#3d5a3d", r_hawaiana: "#e07b39", r_futbol: "#7ec8e3",
@@ -9607,9 +9628,13 @@ body {
       if (eq.bufanda === "b_arcoiris") h += '<defs><linearGradient id="apArco" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e04040"/><stop offset=".33" stop-color="#e0a020"/><stop offset=".66" stop-color="#3d8a3d"/><stop offset="1" stop-color="#2a6fb0"/></linearGradient></defs>';
       h += '<rect x="43" y="54" width="34" height="9" rx="4.5" fill="' + bufCol + '"/><rect x="66" y="58" width="8" height="22" rx="4" fill="' + bufCol + '"/>';
     }
+    /* melena (niña): por detrás de la cabeza, cae a los costados */
+    if (nina) h += '<path d="M42 28 q-4 22 2 34 l10 -4 q-6 -14 -4 -26 z" fill="#4a3426"/>' +
+                   '<path d="M78 28 q4 22 -2 34 l-10 -4 q6 -14 4 -26 z" fill="#4a3426"/>';
     /* cabeza */
     h += '<circle cx="60" cy="36" r="20" fill="#e8b88a"/>';
     h += '<circle cx="53" cy="33" r="2.2" fill="#2c2c34"/><circle cx="67" cy="33" r="2.2" fill="#2c2c34"/>';
+    if (nina) h += '<path d="M50 29 l4 -2 M70 29 l-4 -2" stroke="#2c2c34" stroke-width="1.4" stroke-linecap="round"/>';
     h += '<path d="M52 43 q8 7 16 0" stroke="#2c2c34" stroke-width="2" fill="none" stroke-linecap="round"/>';
     /* peinado */
     var pelo = "#4a3426";
@@ -9660,20 +9685,17 @@ body {
     return h + "</svg>";
   }
 
-  /* ---- fila del inicio: avatar + saldo + botón Tienda ---- */
+  /* ---- rail del inicio: avatar compacto al costado de las materias + monedas ---- */
   function renderAvatarInicio() {
     var zona = document.getElementById("spAvatarZona");
     if (!zona || !CATALOGO) return;   // el arranque llama antes de que el catálogo exista; se repinta al final del módulo
-    var saldo = monedasSaldo();
-    var ganadas = monedasGanadas();
-    var sub = ganadas < TIENDA_PISO
-      ? "Te faltan " + (TIENDA_PISO - ganadas) + " monedas para la tienda"
-      : (diaHoy().seg < 300 ? "Estudiá 5 min hoy y la tienda se abre" : "Tienda abierta 🛍️");
-    zona.innerHTML = '<div class="av-zona"><div class="av-mini">' + svgAvatar(0.55) + '</div>' +
-      '<div class="av-datos"><div class="av-monedas">🪙 ' + saldo + ' monedas</div>' +
-      '<div class="av-sub">' + sub + '</div></div>' +
-      '<button class="av-btn-tienda" id="avBtnTienda">Tienda</button></div>';
-    document.getElementById("avBtnTienda").addEventListener("click", abrirTienda);
+    zona.innerHTML = svgAvatar(0.42, true) +
+      '<div class="rail-monedas">🪙 ' + monedasSaldo() + '</div>' +
+      '<div class="rail-tienda">Tienda ›</div>';
+    if (!zona.dataset.listo) {
+      zona.dataset.listo = "1";
+      zona.addEventListener("click", abrirTienda);
+    }
   }
 
   /* ---- tienda ---- */
@@ -9718,7 +9740,11 @@ body {
     }
     var a = avatarData();
     var h = top + '<div class="tienda-saldo">🪙 Tenés ' + saldo + ' monedas</div>' +
-            '<div class="tienda-probador">' + svgAvatar(0.85) + '</div>';
+            '<div class="tienda-probador">' + svgAvatar(0.85) + '</div>' +
+            '<div class="tienda-gen">' +
+              '<button data-gen="nino" class="' + (a.gen !== "nina" ? "activo" : "") + '">👦 Niño</button>' +
+              '<button data-gen="nina" class="' + (a.gen === "nina" ? "activo" : "") + '">👧 Niña</button>' +
+            '</div>';
     for (var ci = 0; ci < TIENDA_CATS.length; ci++) {
       var cat = TIENDA_CATS[ci];
       var items = CATALOGO.filter(function (x) { return x.slot === cat[0]; });
@@ -9739,6 +9765,16 @@ body {
     document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
     t.querySelectorAll(".tienda-item").forEach(function (btn) {
       btn.addEventListener("click", function () { tocarItem(btn.dataset.item); });
+    });
+    t.querySelectorAll(".tienda-gen button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var a2 = avatarData();
+        a2.gen = btn.dataset.gen;
+        guardarAvatar(a2);
+        var sc = t.scrollTop;
+        pintarTienda();
+        t.scrollTop = sc;
+      });
     });
   }
   function tocarItem(id) {
@@ -9777,8 +9813,18 @@ body {
     if (t2) t2.scrollTop = scrollAntes;
   }
 
-  /* el panel de estadísticas (módulo de medición) también muestra el avatar */
-  try { window.apuntesAvatarSVG = svgAvatar; } catch (e) {}
+  /* el panel de estadísticas (módulo de medición) también muestra el avatar,
+     y el editor de apodo puede cambiar la apariencia (niño/niña) */
+  try {
+    window.apuntesAvatarSVG = svgAvatar;
+    window.apuntesAvatarGen = function (g) {
+      var aG = avatarData();
+      aG.gen = g === "nina" ? "nina" : "nino";
+      guardarAvatar(aG);
+      renderAvatarInicio();
+    };
+    window.apuntesAvatarGenActual = function () { return avatarData().gen; };
+  } catch (e) {}
 
   /* el arranque pintó el selector ANTES de que este módulo tuviera sus datos: repintar */
   try {
@@ -10092,7 +10138,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 13:11";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 13:21";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10647,6 +10693,13 @@ body {
       '<div style="font-weight:700;font-size:17px;margin-bottom:2px;">👤 Tu apodo</div>' +
       '<div style="font-size:13px;opacity:.7;margin-bottom:10px;">Es como te vamos a reconocer. No hace falta tu nombre real.</div>' +
       '<input id="apApodoInput" maxlength="30" style="width:100%;box-sizing:border-box;padding:10px;border-radius:9px;border:1px solid #ccc;background:#fff;font-size:16px;margin-bottom:12px;" value="' + apodoActual().replace(/"/g, '&quot;') + '">' +
+      (typeof window.apuntesAvatarGen === 'function'
+        ? '<div style="font-size:13px;opacity:.75;margin-bottom:6px;">Tu avatar:</div>' +
+          '<div style="display:flex;gap:8px;margin-bottom:12px;">' +
+            '<button id="apGenNino" type="button" style="flex:1;padding:9px;border-radius:9px;border:1.5px solid #ccc;background:#fff;font-size:14px;cursor:pointer;">👦 Niño</button>' +
+            '<button id="apGenNina" type="button" style="flex:1;padding:9px;border-radius:9px;border:1.5px solid #ccc;background:#fff;font-size:14px;cursor:pointer;">👧 Niña</button>' +
+          '</div>'
+        : '') +
       '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
         '<button id="apApodoCancelar" type="button" style="padding:9px 14px;border-radius:9px;border:1px solid #ccc;background:#fff;font-size:15px;cursor:pointer;">Cancelar</button>' +
         '<button id="apApodoGuardar" type="button" style="padding:9px 16px;border-radius:9px;border:none;background:#3d5a3d;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">Guardar</button>' +
@@ -10654,6 +10707,19 @@ body {
     ov.appendChild(box);
     document.body.appendChild(ov);
     ov.addEventListener('click', function (e) { if (e.target === ov) ov.remove(); });
+    /* elección de apariencia del avatar (si el módulo del avatar está presente) */
+    function marcarGen() {
+      var g = typeof window.apuntesAvatarGenActual === 'function' ? window.apuntesAvatarGenActual() : 'nino';
+      var bN = document.getElementById('apGenNino'), bA = document.getElementById('apGenNina');
+      if (bN) bN.style.cssText = bN.style.cssText.replace(/border:[^;]+;/, '') +
+        'border:1.5px solid ' + (g !== 'nina' ? '#3d8a3d' : '#ccc') + ';' + (g !== 'nina' ? 'font-weight:700;' : '');
+      if (bA) bA.style.cssText = bA.style.cssText.replace(/border:[^;]+;/, '') +
+        'border:1.5px solid ' + (g === 'nina' ? '#3d8a3d' : '#ccc') + ';' + (g === 'nina' ? 'font-weight:700;' : '');
+    }
+    var bGN = document.getElementById('apGenNino'), bGA = document.getElementById('apGenNina');
+    if (bGN) bGN.addEventListener('click', function () { window.apuntesAvatarGen('nino'); marcarGen(); });
+    if (bGA) bGA.addEventListener('click', function () { window.apuntesAvatarGen('nina'); marcarGen(); });
+    marcarGen();
     document.getElementById('apApodoCancelar').addEventListener('click', function () { ov.remove(); });
     document.getElementById('apApodoGuardar').addEventListener('click', function () {
       var v = (document.getElementById('apApodoInput').value || '').trim().slice(0, 30);
