@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="12/08 17:35">
+<meta name="apuntes-version" content="13/08 09:48">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -7912,9 +7912,66 @@ body {
     persist();
   }
 
+  // ---- Medición de lectura por página (permanencia real vs hojeo + XP de repaso) ----
+  const LECT_CAP_SEG = 600;   // tope por página: más de 10 min = "quedó abierta"
+  let lect = { idx: null, ini: 0, oculto: 0, tOculto: 0, palabras: 0, yaVisitada: false };
+
+  function lectPalabras() {
+    try { return (pageContent.innerText || "").split(/\s+/).filter(Boolean).length; } catch (e) { return 0; }
+  }
+  function lectHoyStr() { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+
+  function lectCerrar() {
+    if (lect.idx === null) return;
+    let seg = (Date.now() - lect.ini - lect.oculto) / 1000;
+    const pagIdx = lect.idx;
+    const yaVisitada = lect.yaVisitada;
+    const palabras = lect.palabras;
+    lect.idx = null;
+    if (seg < 1) return;
+    seg = Math.min(seg, LECT_CAP_SEG);
+    const umbral = Math.max(8, palabras / 4);   // más rápido que 4 palabras/seg = hojeo
+    if (seg >= umbral && palabras >= 20) {
+      state.lectSeg = (state.lectSeg || 0) + Math.round(seg);
+      state.lectPalabras = (state.lectPalabras || 0) + palabras;
+      state.lectValidas = (state.lectValidas || 0) + 1;
+      if (yaVisitada) {
+        state.relecturas = (state.relecturas || 0) + 1;
+        const hoyS = lectHoyStr();
+        if (!state.repasoDia || state.repasoDia.f !== hoyS) state.repasoDia = { f: hoyS, p: {} };
+        if (!state.repasoDia.p[pagIdx]) {   // XP de repaso: 1 vez por página por día
+          state.repasoDia.p[pagIdx] = 1;
+          state.xp += 2;
+        }
+      }
+    } else {
+      state.hojeadas = (state.hojeadas || 0) + 1;
+    }
+    persist();
+  }
+
+  function lectAbrir(idx, yaVisitada) {
+    if (welcome && welcome.offsetParent !== null) return;   // pantalla de inicio tapando: no contar
+    lect = { idx: idx, ini: Date.now(), oculto: 0, tOculto: 0, palabras: lectPalabras(), yaVisitada: yaVisitada };
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") {
+      lectCerrar();   // clasifica y persiste lo acumulado: si matan la app, ya quedó guardado
+    } else if (lect.idx === null && typeof state.idx === "number" &&
+               pageContent && pageContent.offsetParent !== null) {
+      lectAbrir(state.idx, true);   // volvió a la misma página: cuenta como repaso potencial
+    }
+  });
+
   // render pagina
   function renderPage(idx) {
     idx = Math.max(0, Math.min(PAGES.length - 1, idx));
+    const lectYaVisitada = state.pagesVisited.includes(idx);
+    if (lect.idx !== null && lect.idx !== idx) lectCerrar();
+    if (lect.idx === null) {
+      setTimeout(function () { if (lect.idx === null && state.idx === idx) lectAbrir(idx, lectYaVisitada); }, 0);
+    }
     state.idx = idx;
     if (!state.pagesVisited.includes(idx)) {
       state.pagesVisited.push(idx);
@@ -8405,6 +8462,7 @@ body {
   }
 
   function openPractice() {
+    if (typeof lectCerrar === "function") lectCerrar();   // el tiempo en práctica no cuenta como lectura
     $("practice").classList.add("open");
     screenStack = [];
     goScreen("dashboard", false);
@@ -8413,6 +8471,7 @@ body {
   function closePractice() {
     $("practice").classList.remove("open");
     document.body.style.overflow = "";
+    if (typeof lectAbrir === "function" && typeof state.idx === "number") lectAbrir(state.idx, true);
   }
 
   // ============================================================
@@ -8607,6 +8666,10 @@ body {
 
     // Stats
     state.totalAnswered++;
+    if (!isCorrect) {
+      state.failCount = state.failCount || {};
+      state.failCount[q.id] = (state.failCount[q.id] || 0) + 1;
+    }
     state.chapStats[q.c] = state.chapStats[q.c] || {a:0, c:0};
     state.chapStats[q.c].a++;
     if (isCorrect) {
@@ -9079,6 +9142,7 @@ body {
   
   function showSubjectPicker() {
     // Cerrar todo lo abierto
+    if (typeof lectCerrar === 'function') lectCerrar();   // cambiar de materia corta la lectura en curso
     if (typeof closeAll === 'function') closeAll();
     document.getElementById('welcome').classList.add('welcome-hidden');
     document.getElementById('welcome').classList.remove('show-welcome');
@@ -9290,7 +9354,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "12/08 17:35";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 09:48";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -9421,7 +9485,13 @@ body {
         ok: (s && s.totalCorrect) || 0,
         pag: (s && s.pagesVisited && s.pagesVisited.length) || 0,
         fc: fcRev,
-        logros: (s && s.unlockedBadges && s.unlockedBadges.length) || 0
+        logros: (s && s.unlockedBadges && s.unlockedBadges.length) || 0,
+        rel: (s && s.relecturas) || 0,
+        plei: (s && s.lectValidas) || 0,
+        phoj: (s && s.hojeadas) || 0,
+        segl: (s && s.lectSeg) || 0,
+        pal: (s && s.lectPalabras) || 0,
+        fails: (s && s.failCount) || {}
       };
     }
     return out;
@@ -9458,6 +9528,31 @@ body {
 
   function dosD(n) { return (n < 10 ? '0' : '') + n; }
 
+  /* identificador único de sesión+materia: la recuperación usa el mismo, y el
+     buzón descarta el duplicado si el envío del cierre ya había llegado */
+  function sidDe(iniMs, mat) { return Number(iniMs).toString(36) + '-' + String(mat || 's').slice(0, 3); }
+
+  /* preguntas cuyo contador de errores creció entre dos fotos */
+  function fallosNuevos(aF, bF) {
+    var out = [];
+    for (var k in bF) { if ((bF[k] || 0) > ((aF && aF[k]) || 0)) out.push(k); }
+    return out.join(',').slice(0, 120);
+  }
+
+  /* arma los campos de una fila de sesión a partir de dos fotos de una materia */
+  function deltaSesion(a, b) {
+    var d = { preg: b.preg - (a.preg || 0), ok: b.ok - (a.ok || 0), fc: b.fc - (a.fc || 0),
+              pag: b.pag - (a.pag || 0), xp: b.xp - (a.xp || 0), logros: b.logros - (a.logros || 0),
+              rel: (b.rel || 0) - (a.rel || 0), plei: (b.plei || 0) - (a.plei || 0),
+              phoj: (b.phoj || 0) - (a.phoj || 0), segl: (b.segl || 0) - (a.segl || 0) };
+    var dPal = (b.pal || 0) - (a.pal || 0);
+    d.vel = (dPal > 0 && d.segl > 0) ? Math.round(d.segl / dPal * 100) : '';
+    d.fallos = fallosNuevos(a.fails, b.fails || {});
+    d.hubo = d.preg > 0 || d.fc > 0 || d.pag > 0 || d.xp > 0 || d.logros > 0 ||
+             d.rel > 0 || d.plei > 0 || d.phoj > 0 || d.segl > 0;
+    return d;
+  }
+
   (function recuperarSesionPerdida() {
     var pend = null;
     try { pend = JSON.parse(lsGet(PEND_KEY) || 'null'); } catch (e) {}
@@ -9468,12 +9563,11 @@ body {
     var marca = ' · rec ' + dosD(f.getDate()) + '/' + dosD(f.getMonth() + 1) + ' ' +
                 dosD(f.getHours()) + ':' + dosD(f.getMinutes());
     for (var mat in PROG_KEYS) {
-      var a = pend.b[mat] || {}, b = ahora[mat];
-      var d = { preg: b.preg - (a.preg || 0), ok: b.ok - (a.ok || 0), fc: b.fc - (a.fc || 0),
-                pag: b.pag - (a.pag || 0), xp: b.xp - (a.xp || 0), logros: b.logros - (a.logros || 0) };
-      if (d.preg > 0 || d.fc > 0 || d.pag > 0 || d.xp > 0 || d.logros > 0) {
-        send('sesion_fin', { materia: mat + marca, dur: dur, preg: d.preg, ok: d.ok,
-                             fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros });
+      var d = deltaSesion(pend.b[mat] || {}, ahora[mat]);
+      if (d.hubo) {
+        send('sesion_fin', { materia: mat + marca, dur: dur, sid: sidDe(pend.i, mat),
+                             preg: d.preg, ok: d.ok, fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros,
+                             rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel, fallos: d.fallos });
       }
     }
   })();
@@ -9500,22 +9594,22 @@ body {
       if (pendientes <= 0) guardarPend(ahora, Date.now(), Date.now());  /* entregado: red de seguridad en cero */
     };
     for (var mat in PROG_KEYS) {
-      var a = sesionBase[mat], b = ahora[mat];
-      var d = { preg: b.preg - a.preg, ok: b.ok - a.ok, fc: b.fc - a.fc,
-                pag: b.pag - a.pag, xp: b.xp - a.xp, logros: b.logros - a.logros };
-      if (d.preg > 0 || d.fc > 0 || d.pag > 0 || d.xp > 0 || d.logros > 0) {
+      var d = deltaSesion(sesionBase[mat], ahora[mat]);
+      if (d.hubo) {
         huboActividad = true;
         ultimaMateria = mat;
         pendientes++;
-        sendConfirm('sesion_fin', { materia: mat, dur: dur, preg: d.preg, ok: d.ok,
-                                    fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros }, alConfirmar);
+        sendConfirm('sesion_fin', { materia: mat, dur: dur, sid: sidDe(sesionInicio, mat),
+                                    preg: d.preg, ok: d.ok, fc: d.fc, pag: d.pag, xp: d.xp, logros: d.logros,
+                                    rel: d.rel, plei: d.plei, phoj: d.phoj, segl: d.segl, vel: d.vel, fallos: d.fallos },
+                    alConfirmar);
       }
     }
     if (huboActividad) {
       lsSet('apuntes_last_study', JSON.stringify({ t: Date.now(), m: ultimaMateria }));
     }
     if (!huboActividad && dur >= 15) {
-      send('sesion_fin', { materia: '', dur: dur, preg: 0, ok: 0, fc: 0, pag: 0, xp: 0, logros: 0 });
+      send('sesion_fin', { materia: '', dur: dur, sid: sidDe(sesionInicio, ''), preg: 0, ok: 0, fc: 0, pag: 0, xp: 0, logros: 0 });
     }
     if (huboActividad || dur >= 15) sesionEnviada = true;
   }
