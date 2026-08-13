@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 14:01">
+<meta name="apuntes-version" content="13/08 14:10">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -8047,6 +8047,16 @@ body {
     const umbral = Math.max(8, palabras / 4);   // más rápido que 4 palabras/seg = hojeo
     if (seg >= umbral && palabras >= 20) {
       sumarEfectivo(seg);   // lectura real: suma al contador global del día (boost/racha/tienda)
+      if (!yaVisitada) {
+        // página NUEVA leída de verdad: también paga (antes solo pagaba el repaso)
+        const gNueva = Math.round(3 * multFactor());
+        state.xp += gNueva;
+        ledgerAdd("pagNueva", 3);
+        if (gNueva > 3) ledgerAdd("mult", gNueva - 3);
+        if (document.visibilityState === "visible" && typeof showToast === "function") {
+          showToast("📖", "+" + gNueva + " XP por leer una página nueva" + (multFactor() > 1 ? " ⚡x" + multFactor() : ""));
+        }
+      }
       state.lectSeg = (state.lectSeg || 0) + Math.round(seg);
       state.lectPalabras = (state.lectPalabras || 0) + palabras;
       state.lectValidas = (state.lectValidas || 0) + 1;
@@ -8066,6 +8076,8 @@ body {
           state.repasoDia.p[pagIdx] = 1;
           const gRep = Math.round(2 * multFactor());
           state.xp += gRep;
+          ledgerAdd("releida", 2);
+          if (gRep > 2) ledgerAdd("mult", gRep - 2);
           if (document.visibilityState === "visible" && typeof showToast === "function") {
             showToast("🔁", "+" + gRep + " XP por repasar la página" + (multFactor() > 1 ? " ⚡x" + multFactor() : ""));
           }
@@ -8613,9 +8625,50 @@ body {
     document.getElementById("apPausaOk").addEventListener("click", () => div.remove());
   }
 
-  function addXp(amount, anchor) {
+  // ---- Cuenta corriente de XP: movimientos por categoría, últimos 2 días (global) ----
+  const LEDGER_KEY = "apuntes_ledger";
+  const LEDGER_CATS = {
+    pagNueva: "📖 Páginas nuevas leídas", releida: "🔁 Páginas repasadas",
+    quiz: "🎯 Cuestionarios", quizRepaso: "🧠 Cuestionarios de repaso",
+    fc: "🎴 Flashcards", desafio: "🏆 Desafíos", mult: "⚡ Efecto multiplicador", otros: "✨ Otros"
+  };
+  function ledgerAdd(cat, monto) {
+    if (!monto || monto <= 0) return;
+    try {
+      const L = JSON.parse(localStorage.getItem(LEDGER_KEY) || "{}");
+      const hoyL = lectHoyStr();
+      const ayerL = ayerGlobal();
+      for (const f in L) if (f !== hoyL && f !== ayerL) delete L[f];   // solo 2 días
+      if (!L[hoyL]) L[hoyL] = {};
+      L[hoyL][cat] = (L[hoyL][cat] || 0) + Math.round(monto);
+      localStorage.setItem(LEDGER_KEY, JSON.stringify(L));
+    } catch (e) {}
+  }
+  function ledgerHTML() {
+    let L = {};
+    try { L = JSON.parse(localStorage.getItem(LEDGER_KEY) || "{}"); } catch (e) {}
+    const dias = [[lectHoyStr(), "Hoy"], [ayerGlobal(), "Ayer"]];
+    let h = "";
+    for (const [f, titulo] of dias) {
+      const d = L[f];
+      if (!d) continue;
+      let tot = 0;
+      let filas = "";
+      for (const c in LEDGER_CATS) {
+        if (d[c]) { tot += d[c]; filas += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0;"><span>' + LEDGER_CATS[c] + '</span><strong>+' + d[c] + ' XP</strong></div>'; }
+      }
+      if (filas) h += '<div style="margin-top:8px;"><div style="font-size:12.5px;font-weight:800;opacity:.65;">' + titulo + ' · +' + tot + ' XP</div>' + filas + '</div>';
+    }
+    return h ? '<div style="margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.035);"><div style="font-weight:700;font-size:15px;">📒 Tus últimos XP</div>' + h + '</div>' : "";
+  }
+  try { window.apuntesLedgerHTML = ledgerHTML; } catch (e) {}
+
+  function addXp(amount, anchor, cat) {
+    const base = amount;
     amount = Math.round(amount * multFactor());   // multiplicador activo: x2 / x3
     if (amount <= 0) return;
+    ledgerAdd(cat || "otros", base);
+    if (amount > base) ledgerAdd("mult", amount - base);
     const prev = currentLevel().idx;
     state.xp += amount;
     persist();
@@ -9026,7 +9079,7 @@ body {
       state.streak++;
       if (state.streak > state.bestStreak) state.bestStreak = state.streak;
       const xp = 10;
-      addXp(xp, btn);
+      addXp(xp, btn, quizSession && quizSession.chapter === "repaso" ? "quizRepaso" : "quiz");
       if (!state.quizCorrectIds.includes(q.id)) state.quizCorrectIds.push(q.id);
       checkBadge("first_correct");
       if (state.streak >= 5) checkBadge("streak5");
@@ -9035,7 +9088,7 @@ body {
       checkChapterMastery(q.c);
     } else {
       state.streak = 0;
-      addXp(2, btn);  // consolación
+      addXp(2, btn, quizSession && quizSession.chapter === "repaso" ? "quizRepaso" : "quiz");  // consolación
     }
     // Festejo sonoro/visual (módulo aditivo; si no está, no pasa nada)
     if (window.apuntesFX) try { window.apuntesFX.answer(isCorrect, state.streak, btn); } catch (e) {}
@@ -9090,7 +9143,10 @@ body {
     // Bonus XP
     let bonus = 15;  // por completar
     if (pct === 1) bonus += 25;
+    const bonusBase = bonus;
     bonus = Math.round(bonus * multFactor());
+    ledgerAdd(quizSession.chapter === "repaso" ? "quizRepaso" : "quiz", bonusBase);
+    if (bonus > bonusBase) ledgerAdd("mult", bonus - bonusBase);
     state.xp += bonus;
     persist();
     $("qrXp").textContent = `+${10 * correct + 2 * (total - correct) + bonus} XP totales (incluye +${bonus} bonus)`;
@@ -9110,7 +9166,8 @@ body {
     // Desafío de repaso completado: bonus y registro (una vez por día)
     if (quizSession.desafio) {
       state.xp += 200;
-      state.desafioRepaso = { f: lectHoyStr() };
+      ledgerAdd("desafio", 200);
+      state.desafioRepaso = { f: lectHoyStr(), t: Date.now(), v: 0 };   // t + v: el cartel ✅ vence a las 2 h o 2 aperturas
       persist();
       $("qrXp").textContent += " · 🏆 +200 XP del desafío";
       setTimeout(() => showToast("🏆", "¡Desafío de repaso completado! +200 XP"), 600);
@@ -9209,7 +9266,7 @@ body {
     // XP por rating
     sumarEfectivo(10);   // evaluar una flashcard ≈ 10 s de estudio efectivo
     const xp = rating === 2 ? 5 : (rating === 1 ? 3 : 2);
-    addXp(xp, $("fcRating").querySelector(`[data-rate="${rating}"]`));
+    addXp(xp, $("fcRating").querySelector(`[data-rate="${rating}"]`), "fc");
     persist();
 
     // Logros de flashcards
@@ -9234,6 +9291,8 @@ body {
     $("fcrUnknown").textContent = unknown;
     $("fcrSub").textContent = `Repasaste ${total} concepto${total !== 1 ? "s" : ""}.`;
     const bonus = Math.round(10 * multFactor());
+    ledgerAdd("fc", 10);
+    if (bonus > 10) ledgerAdd("mult", bonus - 10);
     state.xp += bonus;
     persist();
     const xpEarned = fcSession.ratings.reduce((s, r) => s + (r === 2 ? 5 : r === 1 ? 3 : 2), 0) + bonus;
@@ -9851,6 +9910,17 @@ body {
     window.apuntesAvatarGenActual = function () { return avatarData().gen; };
   } catch (e) {}
 
+  /* cada apertura de la app cuenta una "vista" del cartel ✅ del desafío (vence a las 2) */
+  try {
+    for (const kD in SUBJECTS) {
+      const sD = JSON.parse(localStorage.getItem(SUBJECTS[kD].storage_key) || "null");
+      if (sD && sD.desafioRepaso && sD.desafioRepaso.f === lectHoyStr()) {
+        sD.desafioRepaso.v = (sD.desafioRepaso.v || 0) + 1;
+        localStorage.setItem(SUBJECTS[kD].storage_key, JSON.stringify(sD));
+      }
+    }
+  } catch (e) {}
+
   /* el arranque pintó el selector ANTES de que este módulo tuviera sus datos: repintar */
   try {
     var spAbierto = document.getElementById("subjectPicker");
@@ -9869,6 +9939,7 @@ body {
     let n = 0;
     for (const q of subj.quiz) if (fails[q.id] > 0 && !correctas.includes(q.id)) n++;
     const hechoHoy = !!(s.desafioRepaso && s.desafioRepaso.f === lectHoyStr());
+    const dr = s.desafioRepaso || {};
     let dias = null;
     if (subj.exam_date) {
       const m = String(subj.exam_date).match(/(\d{1,2})\/(\d{1,2})/);
@@ -9878,7 +9949,8 @@ body {
         dias = Math.round((ex - new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) / 86400000);
       }
     }
-    return { k, nombre: subj.name, debiles: n, hechoHoy, dias, examen: subj.exam_date };
+    return { k, nombre: subj.name, debiles: n, hechoHoy, dias, examen: subj.exam_date,
+             drT: dr.t || 0, drV: dr.v || 0 };
   }
 
   function renderSpSlot() {
@@ -9904,7 +9976,8 @@ body {
         openPractice();
         startQuizEspecial(poolDebiles(), true);
       });
-    } else if (hecho) {
+    } else if (hecho && hecho.drT && (Date.now() - hecho.drT < 2 * 60 * 60 * 1000) && hecho.drV <= 2) {
+      /* el cartel ✅ vence a las 2 horas o a la 2ª apertura (lo que ocurra primero) */
       slot.innerHTML = `<div class="sp-slot done">✅ Repaso completado hoy en ${escapeHtml(hecho.nombre)} · +200 XP</div>`;
     }
   }
@@ -10163,7 +10236,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 14:01";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 14:10";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10653,6 +10726,9 @@ body {
     try {
       if (typeof window.apuntesAvatarSVG === 'function') {
         html += '<div style="display:flex;justify-content:center;margin:4px 0 6px;">' + window.apuntesAvatarSVG(0.6) + '</div>';
+      }
+      if (typeof window.apuntesLedgerHTML === 'function') {
+        html += window.apuntesLedgerHTML();   /* 📒 cuenta corriente de XP (últimos 2 días) */
       }
     } catch (e) {}
     for (var mat in PROG_KEYS) {
