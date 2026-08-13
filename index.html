@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 12:49">
+<meta name="apuntes-version" content="13/08 13:11">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1553,7 +1553,11 @@ body {
   position: fixed;
   bottom: 108px;   /* abajo: sin cámara/isla en ningún modelo; por encima del botón de práctica */
   left: 50%;
-  transform: translateX(-50%) translateY(250%);
+  /* oculto = corrido bien abajo Y ADEMÁS invisible: el corrimiento porcentual
+     solo nunca alcanzaba y el toast "escondido" quedaba a la vista (bug iPhone) */
+  transform: translateX(-50%) translateY(calc(100% + 140px));
+  opacity: 0;
+  pointer-events: none;
   z-index: 300;
   background: var(--accent);
   color: #fff;
@@ -1564,11 +1568,11 @@ body {
   font-weight: 600;
   display: flex; align-items: center; gap: 8px;
   box-shadow: 0 6px 24px rgba(0,0,0,0.2);
-  transition: transform 0.4s cubic-bezier(.3,1.4,.5,1);
+  transition: transform 0.4s cubic-bezier(.3,1.4,.5,1), opacity 0.3s ease;
   max-width: calc(100vw - 32px);
 }
 [data-theme="dark"] .toast { color: #15171a; }
-.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 .toast .em { font-size: 20px; }
 
 @media (min-width: 720px) {
@@ -7965,6 +7969,12 @@ body {
         ".sp-content{padding-top:54px !important}" +
         ".tienda-overlay{padding-top:54px !important}";
       document.head.appendChild(stFix);
+      // Franja del color del tema detrás del reloj/cámara: el contenido que
+      // scrollea hacia arriba desaparece bajo ella en vez de chocar con la hora.
+      const scrim = document.createElement("div");
+      scrim.id = "apStatusScrim";
+      scrim.style.cssText = "position:fixed;top:0;left:0;right:0;height:54px;z-index:250;pointer-events:none;background:var(--bg,#f4ecd8);opacity:.94;";
+      document.body.appendChild(scrim);
     }
   } catch (e) {}
 
@@ -10082,7 +10092,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 12:49";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 13:11";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
