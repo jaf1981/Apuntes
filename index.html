@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 11:07">
+<meta name="apuntes-version" content="13/08 11:49">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -7970,6 +7970,7 @@ body {
     seg = Math.min(seg, LECT_CAP_SEG);
     const umbral = Math.max(8, palabras / 4);   // más rápido que 4 palabras/seg = hojeo
     if (seg >= umbral && palabras >= 20) {
+      sumarEfectivo(seg);   // lectura real: suma al contador global del día (boost/racha/tienda)
       state.lectSeg = (state.lectSeg || 0) + Math.round(seg);
       state.lectPalabras = (state.lectPalabras || 0) + palabras;
       state.lectValidas = (state.lectValidas || 0) + 1;
@@ -7987,9 +7988,10 @@ body {
         if (!state.repasoDia || state.repasoDia.f !== hoyS) state.repasoDia = { f: hoyS, p: {} };
         if (!state.repasoDia.p[pagIdx]) {   // XP de repaso: 1 vez por página por día
           state.repasoDia.p[pagIdx] = 1;
-          state.xp += 2;
+          const gRep = Math.round(2 * multFactor());
+          state.xp += gRep;
           if (document.visibilityState === "visible" && typeof showToast === "function") {
-            showToast("🔁", "+2 XP por repasar la página");
+            showToast("🔁", "+" + gRep + " XP por repasar la página" + (multFactor() > 1 ? " ⚡x" + multFactor() : ""));
           }
         }
       }
@@ -8396,7 +8398,147 @@ body {
     return {level: lv, idx, next: LEVELS[idx + 1]};
   }
 
+  // ==================== MULTIPLICADORES DE XP + DÍA EFECTIVO + RACHA ====================
+  // Claves GLOBALES (compartidas entre materias): minutos efectivos del día y racha.
+  const DIA_KEY = "apuntes_dia";      // { f: fecha, seg: efectivos, boost: ya-activado, bh: boost-hasta, bf: factor }
+  const RACHA_KEY = "apuntes_racha";  // { fecha: último día que contó, dias: consecutivos }
+
+  function hoyGlobal() { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function ayerGlobal() { const d = new Date(Date.now() - 86400000); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+
+  function diaHoy() {
+    let x = null;
+    try { x = JSON.parse(localStorage.getItem(DIA_KEY) || "null"); } catch (e) {}
+    if (!x || x.f !== hoyGlobal()) x = { f: hoyGlobal(), seg: 0, boost: false, bh: 0, bf: 1 };
+    return x;
+  }
+  function guardarDia(d) { try { localStorage.setItem(DIA_KEY, JSON.stringify(d)); } catch (e) {} }
+  function rachaActual() {
+    let r = null;
+    try { r = JSON.parse(localStorage.getItem(RACHA_KEY) || "null"); } catch (e) {}
+    return r || { fecha: "", dias: 0 };
+  }
+
+  var MULT = { factor: 1, hasta: 0 };
+  function multFactor() { return (MULT.factor > 1 && Date.now() < MULT.hasta) ? MULT.factor : 1; }
+
+  /* suma segundos de estudio efectivo al contador global del día; al cruzar los
+     5 minutos: cuenta el día para la racha y enciende el boost (x3 con racha ≥3, x2 sin) */
+  function sumarEfectivo(seg) {
+    if (!seg || seg <= 0) return;
+    const d = diaHoy();
+    const antes = d.seg;
+    d.seg += Math.round(seg);
+    if (antes < 300 && d.seg >= 300) {
+      const r = rachaActual();
+      if (r.fecha === ayerGlobal()) r.dias += 1;
+      else if (r.fecha !== hoyGlobal()) r.dias = 1;
+      r.fecha = hoyGlobal();
+      try { localStorage.setItem(RACHA_KEY, JSON.stringify(r)); } catch (e) {}
+      if (!d.boost) {
+        d.boost = true;
+        const f = r.dias >= 3 ? 3 : 2;
+        MULT = { factor: f, hasta: Date.now() + 5 * 60 * 1000 };
+        d.bh = MULT.hasta; d.bf = f;
+        if (typeof showToast === "function") {
+          showToast("⚡", f === 3 ? "¡Racha de " + r.dias + " días! Multiplicador x3 por 5 minutos"
+                                  : "¡5 minutos de estudio! Multiplicador x2 por 5 minutos");
+        }
+        renderPocima();
+      }
+    }
+    guardarDia(d);
+  }
+
+  /* pócima de la esquina: se va vaciando con la cuenta regresiva del boost */
+  var pocimaTimer = null;
+  function renderPocima() {
+    if (multFactor() === 1) return;
+    let el = document.getElementById("apPocima");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "apPocima";
+      el.style.cssText = "position:fixed;left:10px;bottom:74px;z-index:99988;width:44px;height:56px;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3));";
+      document.body.appendChild(el);
+    }
+    const color = MULT.factor >= 3 ? "#9b59d0" : "#f0a020";
+    el.innerHTML = `<svg viewBox="0 0 44 56" width="44" height="56">
+      <rect x="18" y="2" width="8" height="9" rx="2" fill="#8a6d3b"/>
+      <path d="M15 10 h14 v9 c6 4 10 10 10 17 a17 17 0 0 1 -34 0 c0-7 4-13 10-17 z"
+            fill="rgba(128,128,128,.18)" stroke="#5a4a20" stroke-width="2"/>
+      <clipPath id="apPocClip"><path d="M15 10 h14 v9 c6 4 10 10 10 17 a17 17 0 0 1 -34 0 c0-7 4-13 10-17 z"/></clipPath>
+      <rect id="apPocFill" x="5" y="10" width="34" height="46" fill="${color}" clip-path="url(#apPocClip)"/>
+      <text x="22" y="42" text-anchor="middle" font-size="13" font-weight="800" fill="#fff"
+            stroke="rgba(0,0,0,.35)" stroke-width="0.6">x${MULT.factor}</text>
+    </svg>`;
+    if (pocimaTimer) clearInterval(pocimaTimer);
+    pocimaTimer = setInterval(() => {
+      const resta = MULT.hasta - Date.now();
+      const nodo = document.getElementById("apPocima");
+      if (resta <= 0 || !nodo) {
+        clearInterval(pocimaTimer); pocimaTimer = null;
+        if (nodo) nodo.remove();
+        if (typeof showToast === "function") showToast("⌛", "Se terminó el multiplicador");
+        return;
+      }
+      const frac = resta / (5 * 60 * 1000);
+      const fill = document.getElementById("apPocFill");
+      if (fill) { fill.setAttribute("y", String(10 + (1 - frac) * 46)); fill.setAttribute("height", String(Math.max(0, frac * 46))); }
+    }, 1000);
+  }
+
+  /* si la app se recarga con un boost vivo, se restaura */
+  (function restaurarBoost() {
+    const d = diaHoy();
+    if (d.bh && d.bh > Date.now()) {
+      MULT = { factor: d.bf || 2, hasta: d.bh };
+      setTimeout(renderPocima, 800);
+    }
+  })();
+
+  // ==================== PAUSA ACTIVA (25 minutos continuos de uso) ====================
+  var pausaSeg = 0, pausaAvisos = 0, pausaUltimoHidden = 0;
+  var PAUSA_TIPS = [
+    "levantate, caminá un poco y tomá agua 💧",
+    "estirá brazos, cuello y piernas 🙆",
+    "¿unas sentadillas o flexiones? Pausa activa 💪",
+    "mirá algo lejano 20 segundos y descansá la vista 👀",
+    "respirá hondo 5 veces y aflojá los hombros 🌬️"
+  ];
+  setInterval(() => {
+    if (document.visibilityState !== "visible") return;
+    pausaSeg += 5;
+    if (pausaSeg >= 1500 && pausaAvisos === 0) mostrarPausa(25);
+    else if (pausaSeg >= 2400 && pausaAvisos === 1) mostrarPausa(40);
+  }, 5000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") { pausaUltimoHidden = Date.now(); return; }
+    if (pausaUltimoHidden && Date.now() - pausaUltimoHidden > 5 * 60 * 1000) {
+      if (pausaSeg >= 1500 && typeof showToast === "function") {
+        setTimeout(() => showToast("💪", "¡Bien ese descanso! A seguir"), 1200);
+      }
+      pausaSeg = 0; pausaAvisos = 0;
+    }
+  });
+  function mostrarPausa(min) {
+    pausaAvisos += 1;
+    if (document.getElementById("apPausa")) return;
+    const div = document.createElement("div");
+    div.id = "apPausa";
+    div.style.cssText = "position:fixed;left:12px;right:12px;bottom:20px;z-index:99993;background:#2e4a5a;color:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 24px rgba(0,0,0,.35);font-size:14px;line-height:1.5;";
+    const tip = PAUSA_TIPS[Math.floor(Math.random() * PAUSA_TIPS.length)];
+    div.innerHTML = `<div>⏸️ Llevás ${min} minutos estudiando, ¡muy bien! Tomate 10 de descanso: ${tip}</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px;">
+        <button id="apPausaSeguir" type="button" style="padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;font-size:14px;cursor:pointer;">Sigo un rato más</button>
+        <button id="apPausaOk" type="button" style="padding:8px 14px;border-radius:9px;border:none;background:#fffdf6;color:#2e4a5a;font-size:14px;font-weight:700;cursor:pointer;">Dale, vuelvo en 10 ✔</button>
+      </div>`;
+    document.body.appendChild(div);
+    document.getElementById("apPausaSeguir").addEventListener("click", () => div.remove());
+    document.getElementById("apPausaOk").addEventListener("click", () => div.remove());
+  }
+
   function addXp(amount, anchor) {
+    amount = Math.round(amount * multFactor());   // multiplicador activo: x2 / x3
     if (amount <= 0) return;
     const prev = currentLevel().idx;
     state.xp += amount;
@@ -8781,6 +8923,7 @@ body {
 
     // Stats
     state.totalAnswered++;
+    sumarEfectivo(20);   // responder una pregunta ≈ 20 s de estudio efectivo
     if (quizSession && quizSession.chapter === "repaso") {
       state.repasoPreg = (state.repasoPreg || 0) + 1;      // práctica de repaso dirigido
       if (isCorrect) state.repasoOk = (state.repasoOk || 0) + 1;
@@ -8861,6 +9004,7 @@ body {
     // Bonus XP
     let bonus = 15;  // por completar
     if (pct === 1) bonus += 25;
+    bonus = Math.round(bonus * multFactor());
     state.xp += bonus;
     persist();
     $("qrXp").textContent = `+${10 * correct + 2 * (total - correct) + bonus} XP totales (incluye +${bonus} bonus)`;
@@ -8975,6 +9119,7 @@ body {
     else if (rating === 0) state.fcReviewed[key].unknown++;
 
     // XP por rating
+    sumarEfectivo(10);   // evaluar una flashcard ≈ 10 s de estudio efectivo
     const xp = rating === 2 ? 5 : (rating === 1 ? 3 : 2);
     addXp(xp, $("fcRating").querySelector(`[data-rate="${rating}"]`));
     persist();
@@ -9000,7 +9145,7 @@ body {
     $("fcrKnown").textContent = known;
     $("fcrUnknown").textContent = unknown;
     $("fcrSub").textContent = `Repasaste ${total} concepto${total !== 1 ? "s" : ""}.`;
-    const bonus = 10;
+    const bonus = Math.round(10 * multFactor());
     state.xp += bonus;
     persist();
     const xpEarned = fcSession.ratings.reduce((s, r) => s + (r === 2 ? 5 : r === 1 ? 3 : 2), 0) + bonus;
@@ -9584,7 +9729,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 11:07";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 11:49";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
