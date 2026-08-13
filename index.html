@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 09:48">
+<meta name="apuntes-version" content="13/08 10:15">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1677,6 +1677,40 @@ body {
 [data-theme="dark"] .sp-card.bio { --card-tint: #9bb87f; }
 [data-theme="dark"] .sp-card.geo { --card-tint: #7fb3d4; }
 
+/* ---- Slot de novedades del inicio (REPASO / desafíos) ---- */
+.sp-slot {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  margin: 0 0 16px; padding: 14px 16px; border-radius: 16px; cursor: pointer;
+  border: 1.5px solid #d4a017; background: linear-gradient(135deg, #fff7e0, #ffe9b8);
+  color: #4a3a10; font-size: 14px; line-height: 1.45; font-family: inherit;
+  animation: spGlow 2.2s ease-in-out infinite;
+}
+.sp-slot-ico { font-size: 26px; flex-shrink: 0; }
+.sp-slot:active { transform: scale(0.98); }
+.sp-slot.done {
+  background: #eef3ea; border-color: #b9c9b0; color: #4c5a45;
+  animation: none; cursor: default; justify-content: center; font-weight: 600;
+}
+[data-theme="dark"] .sp-slot { background: linear-gradient(135deg, #3a3420, #4a4028); color: #f0e0b0; border-color: #8a7420; }
+[data-theme="dark"] .sp-slot.done { background: #232a20; border-color: #3a4534; color: #a8b8a0; }
+@keyframes spGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(212, 160, 23, 0); }
+  50% { box-shadow: 0 0 18px rgba(212, 160, 23, 0.55); }
+}
+@media (prefers-reduced-motion: reduce) { .sp-slot { animation: none; } }
+
+/* ---- Sugerencias dinámicas del panel de práctica ---- */
+.dash-sug { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.dash-sug:empty { display: none; }
+.sug-btn {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;
+  padding: 13px 14px; border-radius: 13px; border: 1.5px solid #d4a017;
+  background: rgba(212, 160, 23, 0.08); color: inherit; font-family: inherit;
+  font-size: 14.5px; font-weight: 600; cursor: pointer; text-align: left; line-height: 1.35;
+}
+.sug-btn:active { transform: scale(0.98); }
+.sug-n { font-size: 12.5px; font-weight: 700; opacity: 0.75; white-space: nowrap; }
+
 .sp-card::before {
   content: "";
   position: absolute;
@@ -2077,11 +2111,13 @@ body {
         </div>
       </div>
 
+      <div class="dash-sug" id="dashSug"></div>
+
       <div class="dash-actions">
         <button class="dash-action" data-go="quiz-setup">
           <span class="ico">🎯</span>
           <div class="name">Cuestionario</div>
-          <div class="sub">10 preguntas</div>
+          <div class="sub">Ponete a prueba</div>
         </button>
         <button class="dash-action" data-go="fc-setup">
           <span class="ico">🎴</span>
@@ -2256,6 +2292,8 @@ body {
     <div class="sp-eyebrow">Apuntes de clase</div>
     <h1 class="sp-title" id="spTitleGreeting">Tus apuntes</h1>
     <p class="sp-subtitle">Elegí qué materia querés estudiar hoy.</p>
+
+    <div id="spSlot"></div>
 
     <div class="sp-cards">
       <button class="sp-card bio" data-subject="bio">
@@ -7935,6 +7973,14 @@ body {
       state.lectSeg = (state.lectSeg || 0) + Math.round(seg);
       state.lectPalabras = (state.lectPalabras || 0) + palabras;
       state.lectValidas = (state.lectValidas || 0) + 1;
+      // páginas leídas hoy (nuevas o repasadas): alimentan "preguntas de lo leído"
+      const hoyLec = lectHoyStr();
+      if (!state.lectRec || state.lectRec.f !== hoyLec) state.lectRec = { f: hoyLec, p: [] };
+      const titLec = (PAGES[pagIdx] || {}).title;
+      if (titLec && !state.lectRec.p.includes(titLec)) {
+        state.lectRec.p.push(titLec);
+        if (state.lectRec.p.length > 25) state.lectRec.p.shift();
+      }
       if (yaVisitada) {
         state.relecturas = (state.relecturas || 0) + 1;
         const hoyS = lectHoyStr();
@@ -8478,6 +8524,20 @@ body {
   // DASHBOARD
   // ============================================================
   function renderDashboard() {
+    // Sugerencias dinámicas: practicar lo flojo / lo leído hoy
+    const sug = $("dashSug");
+    if (sug) {
+      let h = "";
+      const nd = poolDebiles().length;
+      const nl = poolLeidoHoy().length;
+      if (nd >= 3) h += `<button class="sug-btn" id="sugDebiles">🔁 Practicar lo que te cuesta <span class="sug-n">${Math.min(15, nd)} preg.</span></button>`;
+      if (nl >= 3) h += `<button class="sug-btn" id="sugLeido">📖 Preguntas de lo que leíste hoy <span class="sug-n">${Math.min(15, nl)} preg.</span></button>`;
+      sug.innerHTML = h;
+      const bd = $("sugDebiles");
+      if (bd) bd.addEventListener("click", () => startQuizEspecial(poolDebiles(), false));
+      const bl = $("sugLeido");
+      if (bl) bl.addEventListener("click", () => startQuizEspecial(poolLeidoHoy(), false));
+    }
     const {level, next} = currentLevel();
     $("lvlIcon").textContent = level.icon;
     $("lvlName").textContent = level.name;
@@ -8537,6 +8597,21 @@ body {
   let selectedQuizChap = "all";
   let selectedQuizPages = null;   // null = capítulo entero; array = subtemas elegidos
 
+  // El botón de inicio muestra la cantidad REAL según capítulo/subtemas elegidos
+  function actualizarQuizStartBtn() {
+    let pool = selectedQuizChap === "all"
+      ? QUIZ_BANK
+      : QUIZ_BANK.filter(q => q.c === parseInt(selectedQuizChap, 10));
+    if (selectedQuizPages && selectedQuizPages.length) {
+      pool = pool.filter(q => selectedQuizPages.includes(q.page));
+    }
+    const n = Math.min(10, pool.length);
+    const btn = $("quizStartBtn");
+    if (!btn) return;
+    btn.textContent = n === 0 ? "🎯 Sin preguntas en esta selección"
+      : "🎯 Empezar (" + n + (n === 1 ? " pregunta)" : " preguntas)");
+  }
+
   function renderQuizSetup() {
     selectedQuizChap = "all";
     selectedQuizPages = null;
@@ -8571,6 +8646,7 @@ body {
         // capítulo entero: limpiar subtemas tildados
         selectedQuizPages = null;
         $("quizChapPick").querySelectorAll(".chap-sub input").forEach(cb => { cb.checked = false; });
+        actualizarQuizStartBtn();
       });
     });
     $("quizChapPick").querySelectorAll(".chap-exp").forEach(el => {
@@ -8589,8 +8665,43 @@ body {
         marcarSeleccion(c);
         const marcados = [...$("quizChapPick").querySelectorAll(`.chap-sub input[data-chap="${c}"]:checked`)].map(x => x.dataset.page);
         selectedQuizPages = marcados.length ? marcados : null;
+        actualizarQuizStartBtn();
       });
     });
+    actualizarQuizStartBtn();
+  }
+
+  // ---- Repaso dirigido: pools de preguntas según lo que le costó / lo que leyó ----
+  function poolDebiles() {
+    const fails = state.failCount || {};
+    const correctas = state.quizCorrectIds || [];
+    let pool = QUIZ_BANK.filter(q => fails[q.id] > 0 && !correctas.includes(q.id));
+    if (pool.length < 5) {
+      // completar con las que falló alguna vez aunque después las haya acertado
+      const ids = pool.map(q => q.id);
+      pool = pool.concat(QUIZ_BANK.filter(q => fails[q.id] > 0 && !ids.includes(q.id)));
+    }
+    return pool;
+  }
+
+  function poolLeidoHoy() {
+    if (!state.lectRec || state.lectRec.f !== lectHoyStr() || !state.lectRec.p.length) return [];
+    return QUIZ_BANK.filter(q => q.page && state.lectRec.p.includes(q.page));
+  }
+
+  function startQuizEspecial(pool, esDesafio) {
+    pool = shuffleArray(pool).slice(0, Math.min(15, pool.length));
+    if (pool.length === 0) { showToast("💪", "No tenés preguntas pendientes por acá"); return; }
+    quizSession = {
+      questions: pool,
+      answered: [],
+      currentIdx: 0,
+      chapter: "repaso",
+      startTime: Date.now(),
+      desafio: !!esDesafio,
+    };
+    goScreen("quiz-session");
+    renderQuizQ();
   }
 
   function shuffleArray(arr) {
@@ -8749,6 +8860,19 @@ body {
     if (pct === 1) {
       checkBadge("perfect");
       setTimeout(celebrate, 400);
+    }
+
+    // Desafío de repaso completado: bonus y registro (una vez por día)
+    if (quizSession.desafio) {
+      state.xp += 200;
+      state.desafioRepaso = { f: lectHoyStr() };
+      persist();
+      $("qrXp").textContent += " · 🏆 +200 XP del desafío";
+      setTimeout(() => showToast("🏆", "¡Desafío de repaso completado! +200 XP"), 600);
+      try {
+        window.dispatchEvent(new CustomEvent("apuntes:desafio",
+          { detail: { materia: (SUBJECTS[CURRENT_SUBJECT] || {}).name || "" } }));
+      } catch (e) {}
     }
     goScreen("quiz-result");
   }
@@ -9140,6 +9264,93 @@ body {
     document.body.style.overflow = '';
   }
   
+  // ---- Slot de novedades del inicio: desafío REPASO (+200 XP al completarlo) ----
+  function infoRepasoMateria(k) {
+    const subj = SUBJECTS[k];
+    if (!subj) return null;
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem(subj.storage_key) || 'null'); } catch (e) {}
+    if (!s) return null;
+    const fails = s.failCount || {};
+    const correctas = s.quizCorrectIds || [];
+    let n = 0;
+    for (const q of subj.quiz) if (fails[q.id] > 0 && !correctas.includes(q.id)) n++;
+    const hechoHoy = !!(s.desafioRepaso && s.desafioRepaso.f === lectHoyStr());
+    let dias = null;
+    if (subj.exam_date) {
+      const m = String(subj.exam_date).match(/(\d{1,2})\/(\d{1,2})/);
+      if (m) {
+        const hoy = new Date();
+        const ex = new Date(hoy.getFullYear(), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+        dias = Math.round((ex - new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) / 86400000);
+      }
+    }
+    return { k, nombre: subj.name, debiles: n, hechoHoy, dias, examen: subj.exam_date };
+  }
+
+  function renderSpSlot() {
+    const slot = document.getElementById('spSlot');
+    if (!slot) return;
+    slot.innerHTML = '';
+    const infos = Object.keys(SUBJECTS).map(infoRepasoMateria).filter(Boolean);
+    const hecho = infos.find(i => i.hechoHoy);
+    const cand = infos
+      .filter(i => i.debiles >= 3 && i.dias !== null && i.dias >= 0 && i.dias <= 7 && !i.hechoHoy)
+      .sort((a, b) => a.dias - b.dias)[0];
+    if (cand) {
+      const cuando = cand.dias === 0 ? '¡el examen es hoy!'
+        : (cand.dias === 1 ? 'el examen es mañana' : 'examen el ' + cand.examen);
+      slot.innerHTML = `<button class="sp-slot" id="spSlotBtn">
+        <span class="sp-slot-ico">🎯</span>
+        <span><strong>REPASO (+200 XP)</strong> · ${escapeHtml(cand.nombre)}<br>
+        Repasá lo que más te cuesta y eliminá tus dudas — ${cuando} ¡Vamos que podés!</span></button>`;
+      document.getElementById('spSlotBtn').addEventListener('click', () => {
+        loadSubject(cand.k);
+        welcome.classList.add('hidden');
+        welcome.classList.remove('show-welcome');
+        openPractice();
+        startQuizEspecial(poolDebiles(), true);
+      });
+    } else if (hecho) {
+      slot.innerHTML = `<div class="sp-slot done">✅ Repaso completado hoy en ${escapeHtml(hecho.nombre)} · +200 XP</div>`;
+    }
+  }
+
+  // ---- Aviso en transiciones: ofrecer repaso al salir de una materia (máx. 1 por sesión) ----
+  // (var y no let: showSubjectPicker corre en el arranque, antes de que esta línea se ejecute)
+  var nudgeOfrecido = false;
+  function ofrecerNudgeRepaso() {
+    if (nudgeOfrecido || !CURRENT_SUBJECT) return;
+    if (document.getElementById('apNudge') || document.getElementById('spSlotBtn')) return;  // el slot ya lo ofrece
+    if (state.nudgeDia === lectHoyStr()) return;   // ya dijo "ahora no" hoy
+    if (state.desafioRepaso && state.desafioRepaso.f === lectHoyStr()) return;
+    const n = poolDebiles().length;
+    if (n < 3) return;
+    nudgeOfrecido = true;
+    const nombre = (SUBJECTS[CURRENT_SUBJECT] || {}).name || 'esta materia';
+    const div = document.createElement('div');
+    div.id = 'apNudge';
+    div.style.cssText = 'position:fixed;left:12px;right:12px;bottom:20px;z-index:99992;background:#3d5a3d;color:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 24px rgba(0,0,0,.35);font-size:14px;line-height:1.45;';
+    div.innerHTML = `<div>🎯 Antes de cambiar: tenés <strong>${Math.min(15, n)} preguntas</strong> que te costaron en ${escapeHtml(nombre)}. ¿Repaso rápido?</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px;">
+        <button id="apNudgeNo" type="button" style="padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;font-size:14px;cursor:pointer;">Ahora no</button>
+        <button id="apNudgeSi" type="button" style="padding:8px 14px;border-radius:9px;border:none;background:#fffdf6;color:#3d5a3d;font-size:14px;font-weight:700;cursor:pointer;">Dale 🎯</button>
+      </div>`;
+    document.body.appendChild(div);
+    document.getElementById('apNudgeNo').addEventListener('click', () => {
+      state.nudgeDia = lectHoyStr(); persist(); div.remove();
+    });
+    document.getElementById('apNudgeSi').addEventListener('click', () => {
+      div.remove();
+      document.getElementById('subjectPicker').classList.remove('open');
+      welcome.classList.add('hidden');
+      welcome.classList.remove('show-welcome');
+      document.body.style.overflow = '';
+      openPractice();
+      startQuizEspecial(poolDebiles(), false);
+    });
+  }
+
   function showSubjectPicker() {
     // Cerrar todo lo abierto
     if (typeof lectCerrar === 'function') lectCerrar();   // cambiar de materia corta la lectura en curso
@@ -9151,9 +9362,13 @@ body {
     
     // Restaurar title genérico
     document.title = 'Apuntes';
-    
+
     // Actualizar stats de cada materia en las tarjetas
     updatePickerStats();
+
+    // Slot de novedades (desafío REPASO) y aviso de repaso al salir de una materia
+    renderSpSlot();
+    ofrecerNudgeRepaso();
   }
   
   function updatePickerStats() {
@@ -9354,7 +9569,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 09:48";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 10:15";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -9628,6 +9843,12 @@ body {
   });
   window.addEventListener('pagehide', cerrarSesion);
   window.addEventListener('pageshow', reabrirSesion);
+
+  /* la app avisa cuando se completa un desafío (repaso dirigido, +200 XP) */
+  window.addEventListener('apuntes:desafio', function (e) {
+    var m = e && e.detail && e.detail.materia ? e.detail.materia : '';
+    send('desafio', { materia: m, detalle: 'repaso completado (+200 XP)' });
+  });
 
   /* ---- aviso de versión nueva (chequeo liviano contra el servidor) ---- */
   function mostrarBannerVersion(nueva) {
