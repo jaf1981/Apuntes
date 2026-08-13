@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 19:58">
+<meta name="apuntes-version" content="13/08 20:35">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1688,6 +1688,8 @@ body {
 [data-theme="dark"] .sp-card.geo { --card-tint: #7fb3d4; }
 .sp-card.his { --card-tint: #b08d57; }
 [data-theme="dark"] .sp-card.his { --card-tint: #c9a877; }
+.sp-card.tec { --card-tint: #8a8f98; }
+[data-theme="dark"] .sp-card.tec { --card-tint: #a8b0bc; }
 
 /* ---- Slot de novedades del inicio (REPASO / desafíos) ---- */
 .sp-slot {
@@ -2399,6 +2401,19 @@ body {
           <div class="sp-card-progress">
             <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="hisProgressFill" style="width:0%"></div></div>
             <div class="sp-card-progress-text" id="hisProgressText">0 XP</div>
+          </div>
+        </div>
+        <span class="sp-card-arrow">›</span>
+      </button>
+
+      <button class="sp-card tec" data-subject="tec">
+        <span class="sp-card-emoji">⚙️</span>
+        <div class="sp-card-body">
+          <div class="sp-card-title">Tecnología</div>
+          <div class="sp-card-stats" id="tecStats">19 páginas · 48 preguntas · examen 21/08</div>
+          <div class="sp-card-progress">
+            <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="tecProgressFill" style="width:0%"></div></div>
+            <div class="sp-card-progress-text" id="tecProgressText">0 XP</div>
           </div>
         </div>
         <span class="sp-card-arrow">›</span>
@@ -9041,6 +9056,1365 @@ body {
     "d": "Intercambio sin moneda. Se usó cuando la economía medieval se volvió autosuficiente."
    }
   ]
+ },
+ "tec": {
+  "name": "Tecnología",
+  "emoji": "⚙️",
+  "storage_key": "biologia_ebook_v4_tec",
+  "exam_date": "21/08",
+  "pages": [
+   {
+    "title": "Qué es un material y de dónde proviene",
+    "html": "<p class=\"meta-date\">📅 29/04/2026</p>\n<p><strong>Material:</strong> se puede definir un material como aquella sustancia que puede ser utilizada para <strong>construir un objeto o elaborar algún producto</strong>.</p>\n<h3>Procedencia de los materiales</h3>\n<p>Los primeros materiales que aprendió a usar el hombre fueron los que provenían de la naturaleza o <strong>materiales naturales</strong>. Como los de origen:</p>\n<ul><li><strong>Vegetal:</strong> por ej.: madera, algodón.</li><li><strong>Animal:</strong> por ej.: lana, cuero.</li><li><strong>Mineral:</strong> por ej.: metales.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "Materiales artificiales o sintéticos",
+    "html": "<p>A partir del descubrimiento de nuevas sustancias naturales, el hombre elaboró otros materiales, conocidos como <strong>artificiales o sintéticos</strong>.</p>\n<ul><li>Entre ellos están los que derivan de las <strong>moléculas orgánicas</strong> o materiales <strong>orgánicos</strong>: por ejemplo el <strong>polietileno</strong>.</li><li>Otros derivan de <strong>minerales</strong> y se denominan materiales <strong>inorgánicos</strong>, como el <strong>vidrio</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "Cómo se elige un material",
+    "html": "<p>Siempre que se tiene que elaborar un producto hay que tener presentes diversos factores que van a incidir en el objetivo que se persigue. Para seleccionar de manera adecuada un material es necesario conocer:</p>\n<ul><li>Su <strong>calidad</strong>.</li><li>Sus <strong>propiedades</strong>.</li><li>Las <strong>técnicas, herramientas y máquinas</strong> disponibles para trabajarlo.</li><li>Su <strong>disponibilidad</strong>.</li><li>Su <strong>precio</strong>.</li><li>El <strong>impacto ambiental</strong> que pueda producir su procesamiento.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "Los cerámicos",
+    "html": "<p>Los cerámicos constituyen un conjunto de materiales compuestos principalmente por <strong>óxido de silicio y aluminio</strong>, que tienen las siguientes propiedades:</p>\n<ul><li><strong>No tienen brillo.</strong></li><li><strong>No conducen</strong> la corriente eléctrica.</li><li>Son buenos <strong>aisladores del calor</strong>.</li><li>Son <strong>frágiles</strong>.</li></ul>\n<p>La palabra cerámica se suele aplicar a todo lo relacionado con el arte de trabajar la <strong>arcilla</strong>. Este fue el <strong>primer material natural</strong> utilizado por el hombre para la fabricación de productos tecnológicos de cierta complejidad. Su propiedad más importante es la <strong>plasticidad</strong>: mezclada con agua forma una <strong>pasta moldeable</strong>.</p>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "Los metales y la metalurgia",
+    "html": "<p class=\"meta-date\">📅 27/05/2026</p>\n<p>Los metales se utilizaron en diversas aplicaciones desde la más remota antigüedad. La verdadera <strong>revolución de los materiales</strong> comenzó <strong>3.000 años atrás</strong>, cuando comenzó a utilizarse el <strong>hierro</strong>.</p>\n<ul><li>Los metales se extraen normalmente de ciertos <strong>minerales</strong>. La parte útil del mineral se llama <strong>mena</strong> y lo que se desecha se denomina <strong>ganga</strong>.</li><li>La extracción puede hacerse <strong>superficialmente</strong> o bien en <strong>minas subterráneas</strong>.</li></ul>\n<h3>La metalurgia</h3>\n<p>El conjunto de operaciones y transformaciones químicas a que deben ser sometidos los minerales para obtener los metales se denomina <strong>metalurgia</strong>. Comprende <strong>3 etapas</strong>:</p>\n<ol><li><strong>Obtención del concentrado.</strong></li><li><strong>Extracción del metal.</strong></li><li><strong>Purificación.</strong></li></ol>\n<p>Una de las características más importantes es que <strong>conducen la energía eléctrica</strong>. Además, <strong>no son resistentes a la oxidación</strong>.</p>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "Los plásticos",
+    "html": "<p>Se designa con el nombre <strong>plástico</strong> a aquellos <strong>polímeros sintéticos</strong> que pueden ser <strong>moldeados</strong> en alguna de las fases de su elaboración.</p>\n<ul><li>Son <strong>inertes frente a la oxidación</strong> y al ataque de <strong>ácidos y bases</strong> → aptos para la elaboración de <strong>envases</strong>.</li><li><strong>No conducen la corriente eléctrica</strong> → se utilizan como <strong>aisladores</strong> en artefactos eléctricos.</li><li>Son <strong>livianos</strong> y pueden fabricarse para que sean <strong>resistentes</strong> como madera, vidrio y metal.</li></ul>\n<div class=\"callout\">⚠️ La resistencia a la corrosión, al agua y a la descomposición bacteriana hace que los <strong>residuos plásticos sean de difícil eliminación</strong>, lo cual se está convirtiendo en un <strong>grave problema ambiental</strong>.</div>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "La madera",
+    "html": "<p class=\"meta-date\">📅 03/06/2026</p>\n<p>Constituyen el <strong>armazón de los troncos y las ramas</strong> en los vegetales llamados <strong>leñosos</strong>. Con ella se han construido medios de transporte, viviendas, etc. De la madera se obtiene <strong>pasta para hacer papel</strong> y numerosos productos químicos.</p>",
+    "image_keys": [],
+    "chap_idx": 2
+   },
+   {
+    "title": "Clasificación de la madera",
+    "html": "<h3>Clasificación de la madera</h3>\n<ul><li><strong>Madera blanda:</strong> es fácil de trabajar y de colores generalmente muy claros. Constituye la materia prima para hacer el <strong>papel</strong>. Ejemplo: <strong>álamo, sauce, pino</strong>.</li><li><strong>Madera dura:</strong> se usa en <strong>muebles</strong>, en construcciones resistentes, en suelos de <strong>parqué</strong>. Las antiguas <strong>embarcaciones</strong> se hacían con este tipo de maderas. Ejemplo: <strong>roble</strong>.</li><li><strong>Madera resinosa:</strong> es especialmente <strong>resistente a la humedad</strong>. Se usa en muebles. Ejemplo: <strong>cedro</strong>.</li><li><strong>Madera fina:</strong> se utiliza en aplicaciones <strong>artísticas</strong> (esculturas y arquitecturas), para <strong>instrumentos musicales</strong> y objetos de adorno. Ejemplo: <strong>arce</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 2
+   },
+   {
+    "title": "Fibras vegetales: lino y algodón",
+    "html": "<ul><li><strong>El lino:</strong> era la <strong>fibra natural más usada</strong>, ya que los tejidos confeccionados con este material son <strong>muy ligeros</strong> y permiten <strong>combatir las altas temperaturas</strong>.</li><li><strong>El algodón:</strong> es la <strong>segunda</strong> de las fibras naturales vegetales más usadas. Se obtiene del <strong>capullo de la planta de algodón</strong>; luego va a las industrias, en las cuales mediante los procesos de <strong>hilado y tejido</strong> se obtiene la tela. Características: son <strong>resistentes</strong>, tienden a <strong>arrugarse</strong> y las prendas son <strong>frescas</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 3
+   },
+   {
+    "title": "El corcho",
+    "html": "<p><strong>El corcho</strong> es la capa externa y gruesa de la corteza de una especie de roble llamado <strong>alcornoque</strong>. Es una masa <strong>elástica y homogénea</strong> de células muertas aplanadas e impregnadas de una sustancia grasa que lo hace casi <strong>impermeable al agua y los gases</strong>.</p>\n<ul><li>El alcornoque puede alcanzar <strong>30 m</strong> de altura.</li><li>Los árboles jóvenes son desprovistos de su corteza cuando tienen entre <strong>15 y 20 años</strong>. Este primer corcho es tosco.</li><li>Los siguientes descortezamientos, a intervalos de unos <strong>10 años</strong>, presentan un producto más compacto.</li><li>La vida del árbol puede superar los <strong>150 años</strong>.</li></ul>\n<p>El corcho se usa en la fabricación del interior de la <strong>suela del calzado</strong>, como <strong>salvavidas</strong> y en la elaboración de otros productos.</p>",
+    "image_keys": [],
+    "chap_idx": 3
+   },
+   {
+    "title": "Fibras animales: lana, seda y cuero",
+    "html": "<p class=\"meta-date\">📅 10/06/2026</p>\n<ul><li><strong>La lana:</strong> nombre aplicado a las <strong>fibras suaves y rizadas</strong> que se obtienen de las <strong>ovejas</strong> y se utilizan en la fabricación de textiles. Son adecuadas para vestir por su capacidad para <strong>absorber humedad</strong> y sus propiedades <strong>aislantes</strong>.</li><li><strong>La seda:</strong> una de las fibras <strong>más valiosas y preciadas</strong> para la confección de tejidos. Es producida por un <strong>gusano</strong>, cuya larva crea un <strong>capullo</strong> que la envuelve con esta preciada fibra. Aunque la larva no suele medir más de <strong>7,5 cm</strong>, el hilo de seda de un capullo puede alcanzar hasta <strong>900 m</strong>. Debe ser desenredado con sumo cuidado para evitar que el hilo se rompa.</li><li><strong>El cuero:</strong> <strong>piel de animal preparada químicamente</strong> para producir un material <strong>robusto, flexible y resistente a la putrefacción</strong>. Casi toda la producción mundial procede de pieles de ganado <strong>vacuno, caprino y lanar</strong>; en menor proporción, piel de caballo, cerdo, ciervo y diversos reptiles. La variedad de pieles y sistemas de procesado producen cueros <strong>suaves como telas o duros como suela de zapato</strong>. El proceso de producción a partir de pieles ya curadas, descarnadas y sin pelo se denomina <strong>curtido</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 3
+   },
+   {
+    "title": "Las fibras sintéticas",
+    "html": "<p>En el <strong>siglo XX</strong> comienza la producción de <strong>fibras artificiales o sintéticas</strong>. Para ello se emplea sobre todo el <strong>plástico</strong>, que es un producto <strong>derivado del petróleo</strong>.</p>\n<p>Actualmente existen infinidad de fibras artificiales destinadas a muy distintos usos:</p>\n<ul><li>Los trajes de los <strong>bomberos</strong> están confeccionados con fibras capaces de soportar <strong>altísimas temperaturas</strong>.</li><li>Los de <strong>buceadores</strong> pueden mantener una <strong>temperatura corporal estable</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 3
+   },
+   {
+    "title": "Técnicas de unión: el pegado",
+    "html": "<p class=\"meta-date\">📅 17/06/2026</p>\n<p>Las técnicas usadas para <strong>unir 2 superficies</strong> del mismo material o de distintos materiales son: <strong>pegado, clavado y atornillado</strong>.</p>\n<h3>Pegado</h3>\n<p>Se usa para unir superficies como maderas, cartones, etc. La sustancia capaz de unir 2 o más superficies recibe el nombre de <strong>cola o pegamento</strong>.</p>\n<p>Para una unión adecuada es necesario fijar las superficies con <strong>elementos auxiliares</strong> (hilos, cuerdas u objetos pesados) que permiten mantenerlas juntas <strong>hasta que el pegamento esté completamente seco</strong>.</p>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "Clavado y atornillado",
+    "html": "<h3>Clavado</h3>\n<p>Es la técnica <strong>más antigua</strong> usada para unir 2 piezas. Requiere de <strong>clavos y martillo</strong>.</p>\n<ul><li><strong>Clavos:</strong> piezas de metal, alargadas y con una <strong>punta afilada</strong> en un extremo y una parte más ancha y redondeada llamada <strong>cabeza</strong> en el otro. Una vez clavados <strong>no pueden ser sacados con facilidad</strong>, por lo que se usan para <strong>uniones permanentes</strong>.</li><li><strong>Martillos:</strong> formados por un <strong>mango de madera</strong> y una <strong>pieza de metal</strong> unida al mango, con la que se golpean los clavos.</li></ul>\n<h3>Atornillado</h3>\n<p>Esta unión tiene la ventaja de que es <strong>desmontable</strong>: se pueden separar las partes <strong>sin daño alguno</strong>. Requiere <strong>tornillos y destornilladores</strong>.</p>\n<ul><li><strong>Tornillos:</strong> piezas de metal alargadas, parecidas a los clavos pero con una <strong>rosca</strong> y una cabeza con una <strong>ranura</strong>, en la que se inserta el destornillador para hacerlos girar.</li><li><strong>Destornillador:</strong> herramienta alargada que consta de un <strong>mango</strong> y una pieza metálica que habitualmente remata en una <strong>punta plana</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "Técnicas de corte: el cizallado",
+    "html": "<p>Las técnicas de corte permiten <strong>separar en 2 o más una pieza</strong>.</p>\n<div class=\"callout\">⚠️ Hay que estar siempre seguro de lo que se quiere cortar o separar, ya que una vez efectuada la operación <strong>no hay forma de volver atrás</strong>.</div>\n<p>Las 2 técnicas de corte más comunes son el <strong>cizallado</strong> y el <strong>aserrado</strong>.</p>\n<h3>Corte con tijeras o cizallado</h3>\n<p>Separa un material en 2 partes por medio de una herramienta compuesta de <strong>2 hojas articuladas</strong>: las tijeras o las cizallas.</p>\n<ul><li><strong>Tijeras:</strong> provistas de una <strong>empuñadura</strong> para los dedos. Son de <strong>acero</strong> y la hoja de corte es <strong>afilada</strong>, para separar superficies <strong>rectas o curvas</strong>. Habitualmente se usan para cortar <strong>papel, cartón</strong> u otros materiales que no son demasiado duros.</li><li><strong>Cizallas:</strong> sirven cuando se necesitan cortar <strong>piezas largas</strong> cuyos bordes tengan que quedar <strong>perfectamente rectos y perpendiculares</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "El aserrado",
+    "html": "<h3>Aserrado</h3>\n<p>En el caso de la madera, la forma en que se presenta el material y las características del corte determinan el tipo de herramienta de aserrado: el <strong>serrucho</strong> y la <strong>sierra de marquetería o segueta</strong>.</p>\n<ul><li><strong>Serrucho:</strong> compuesto por un <strong>mango de madera o plástico</strong> y una <strong>lámina de acero flexible con dientes</strong> en toda su longitud, que permite cortar <strong>materiales gruesos</strong>.</li><li><strong>Sierra de marquetería o segueta:</strong> se utiliza para obtener <strong>cortes rectos o curvos</strong> en maderas de diferentes tipos y texturas. Consta de 2 partes: el <strong>mango</strong> de madera torneada, que sirve para tomar la herramienta con fuerza, y el <strong>arco</strong>, que es de metal y cuya <strong>amplitud determina el tamaño de la pieza</strong> que se puede cortar. Los <strong>tornillos de fijación</strong> sirven para sujetar el <strong>elemento cortante</strong>, que permite el corte <strong>en todas las direcciones</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 4
+   },
+   {
+    "title": "Deformación elástica, plástica y rotura",
+    "html": "<p>El comportamiento de un material frente a la aplicación de una fuerza puede resumirse del siguiente modo:</p>\n<ul><li>Si la fuerza aplicada <strong>se mantiene dentro de cierto límite</strong>, la deformación que se produce se denomina <strong>elástica</strong>. Se llama así porque el objeto <strong>vuelve a su forma y tamaño iniciales</strong> cuando la fuerza cesa, <strong>como si fuese un resorte</strong>.</li><li>Si <strong>se supera ese límite</strong> y la fuerza es mayor, el objeto sufrirá una <strong>deformación permanente</strong> y no volverá a ser como era originariamente. Esto se llama <strong>deformación plástica</strong>, y tendrá lugar siempre que no sea superado un nuevo límite.</li><li>Si ese nuevo límite se alcanza, la fuerza habrá crecido tanto que el objeto <strong>se romperá</strong>. Se habrá llegado al <strong>límite de rotura</strong>.</li></ul>",
+    "image_keys": [],
+    "chap_idx": 5
+   },
+   {
+    "title": "Tracción y compresión",
+    "html": "<p class=\"meta-date\">📅 24/07/2026</p>\n<h3>Tracción</h3>\n<p>Los objetos son <strong>estirados</strong> por fuerzas que <strong>tiran hacia afuera</strong> desde sus extremos.</p>\n<div class=\"callout\">✍️ En el cuaderno este esfuerzo está explicado con el dibujo (la pieza estirada por dos flechas opuestas); el diagrama de abajo lo reproduce.</div><div style=\"display:flex;justify-content:center;margin:14px 0;\"><svg viewBox=\"0 0 280 96\" width=\"280\" height=\"96\" style=\"max-width:100%;color:var(--text,currentColor);\"><rect x=\"88\" y=\"34\" width=\"104\" height=\"28\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"76\" y=\"37\" width=\"128\" height=\"22\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-dasharray=\"5 4\" opacity=\"0.5\"/><line x1=\"84\" y1=\"48\" x2=\"34\" y2=\"48\" stroke=\"currentColor\" stroke-width=\"3\"/><polygon points=\"20,48 36,40 36,56\" fill=\"currentColor\"/><line x1=\"196\" y1=\"48\" x2=\"246\" y2=\"48\" stroke=\"currentColor\" stroke-width=\"3\"/><polygon points=\"260,48 244,40 244,56\" fill=\"currentColor\"/><text x=\"140\" y=\"88\" text-anchor=\"middle\" font-size=\"12\" fill=\"currentColor\" opacity=\"0.75\">Tracción: fuerzas que estiran hacia afuera</text></svg></div>\n<h3>Compresión</h3>\n<p>Los objetos están <strong>aplastados por un peso</strong>. Debido a ello los soportes <strong>se acortan</strong> en una pequeñísima longitud. Se dice que están sometidos a un <strong>esfuerzo de compresión</strong>.</p>",
+    "image_keys": [],
+    "chap_idx": 5
+   },
+   {
+    "title": "Flexión, pandeo y torsión",
+    "html": "<h3>Flexión</h3>\n<p>La flexión <strong>combina compresión en la parte superior</strong> del objeto <strong>y tracción en la parte inferior</strong>.</p>\n<h3>Pandeo</h3>\n<p>Si el soporte es <strong>alto y fino</strong>, es posible que <strong>se arquee cuando se lo comprime</strong>. Las fuerzas actúan como en la compresión, pero la deformación es como la de la flexión. A esta deformación se la llama <strong>pandeo</strong>.</p>\n<h3>Torsión</h3>\n<p>La deformación se parece al <strong>retorcimiento de un trapo cuando se lo escurre</strong>, aunque a niveles normales no se percibe fácilmente. Esta deformación se llama <strong>torsión</strong>.</p>",
+    "image_keys": [],
+    "chap_idx": 5
+   }
+  ],
+  "toc": [
+   {
+    "num": 1,
+    "name": "Los materiales y su elección",
+    "icon": "📦",
+    "pages": [
+     {
+      "idx": 0,
+      "title": "Qué es un material y de dónde proviene"
+     },
+     {
+      "idx": 1,
+      "title": "Materiales artificiales o sintéticos"
+     },
+     {
+      "idx": 2,
+      "title": "Cómo se elige un material"
+     }
+    ]
+   },
+   {
+    "num": 2,
+    "name": "Cerámicos, metales y plásticos",
+    "icon": "🧱",
+    "pages": [
+     {
+      "idx": 3,
+      "title": "Los cerámicos"
+     },
+     {
+      "idx": 4,
+      "title": "Los metales y la metalurgia"
+     },
+     {
+      "idx": 5,
+      "title": "Los plásticos"
+     }
+    ]
+   },
+   {
+    "num": 3,
+    "name": "La madera",
+    "icon": "🪵",
+    "pages": [
+     {
+      "idx": 6,
+      "title": "La madera"
+     },
+     {
+      "idx": 7,
+      "title": "Clasificación de la madera"
+     }
+    ]
+   },
+   {
+    "num": 4,
+    "name": "Fibras y cuero",
+    "icon": "🧵",
+    "pages": [
+     {
+      "idx": 8,
+      "title": "Fibras vegetales: lino y algodón"
+     },
+     {
+      "idx": 9,
+      "title": "El corcho"
+     },
+     {
+      "idx": 10,
+      "title": "Fibras animales: lana, seda y cuero"
+     },
+     {
+      "idx": 11,
+      "title": "Las fibras sintéticas"
+     }
+    ]
+   },
+   {
+    "num": 5,
+    "name": "Técnicas de unión y de corte",
+    "icon": "🔧",
+    "pages": [
+     {
+      "idx": 12,
+      "title": "Técnicas de unión: el pegado"
+     },
+     {
+      "idx": 13,
+      "title": "Clavado y atornillado"
+     },
+     {
+      "idx": 14,
+      "title": "Técnicas de corte: el cizallado"
+     },
+     {
+      "idx": 15,
+      "title": "El aserrado"
+     }
+    ]
+   },
+   {
+    "num": 6,
+    "name": "Deformación y esfuerzos",
+    "icon": "💪",
+    "pages": [
+     {
+      "idx": 16,
+      "title": "Deformación elástica, plástica y rotura"
+     },
+     {
+      "idx": 17,
+      "title": "Tracción y compresión"
+     },
+     {
+      "idx": 18,
+      "title": "Flexión, pandeo y torsión"
+     }
+    ]
+   }
+  ],
+  "imgs": {},
+  "quiz": [
+   {
+    "c": 1,
+    "page": "Qué es un material y de dónde proviene",
+    "q": "¿Qué es un material?",
+    "opts": [
+     "Una sustancia que puede usarse para construir un objeto o elaborar un producto",
+     "Solo las sustancias de origen mineral",
+     "Una herramienta de trabajo",
+     "Cualquier objeto ya terminado"
+    ],
+    "ans": 0,
+    "exp": "Material: sustancia que puede ser utilizada para construir un objeto o elaborar algún producto.",
+    "id": 0
+   },
+   {
+    "c": 1,
+    "page": "Qué es un material y de dónde proviene",
+    "q": "¿Cuáles son los 3 orígenes de los materiales naturales?",
+    "opts": [
+     "Natural, artificial y mixto",
+     "Vegetal, animal y mineral",
+     "Orgánico, inorgánico y sintético",
+     "Sólido, líquido y gaseoso"
+    ],
+    "ans": 1,
+    "exp": "Vegetal (madera, algodón), animal (lana, cuero) y mineral (metales).",
+    "id": 1
+   },
+   {
+    "c": 1,
+    "page": "Qué es un material y de dónde proviene",
+    "q": "La lana y el cuero son materiales naturales de origen...",
+    "opts": [
+     "Vegetal",
+     "Animal",
+     "Mineral",
+     "Sintético"
+    ],
+    "ans": 1,
+    "exp": "Animal. Vegetal: madera y algodón. Mineral: metales.",
+    "id": 2
+   },
+   {
+    "c": 1,
+    "page": "Materiales artificiales o sintéticos",
+    "q": "El polietileno es un ejemplo de material...",
+    "opts": [
+     "Cerámico",
+     "Natural de origen vegetal",
+     "Orgánico (deriva de moléculas orgánicas)",
+     "Inorgánico derivado de minerales"
+    ],
+    "ans": 2,
+    "exp": "Entre los artificiales, los que derivan de moléculas orgánicas son orgánicos, como el polietileno. El vidrio es inorgánico.",
+    "id": 3
+   },
+   {
+    "c": 1,
+    "page": "Materiales artificiales o sintéticos",
+    "q": "El vidrio es un material artificial...",
+    "opts": [
+     "Inorgánico: deriva de minerales",
+     "Orgánico: deriva del petróleo",
+     "De origen animal",
+     "Natural de origen mineral"
+    ],
+    "ans": 0,
+    "exp": "Los artificiales que derivan de minerales se denominan inorgánicos, como el vidrio.",
+    "id": 4
+   },
+   {
+    "c": 1,
+    "page": "Cómo se elige un material",
+    "q": "¿Cuál de estos es uno de los factores para elegir un material?",
+    "opts": [
+     "El color favorito del fabricante",
+     "La marca del producto",
+     "El país de origen del vendedor",
+     "El impacto ambiental de su procesamiento"
+    ],
+    "ans": 3,
+    "exp": "Calidad, propiedades, técnicas/herramientas disponibles, disponibilidad, precio e impacto ambiental.",
+    "id": 5
+   },
+   {
+    "c": 2,
+    "page": "Los cerámicos",
+    "q": "¿Por qué compuestos están formados principalmente los cerámicos?",
+    "opts": [
+     "Celulosa y resina",
+     "Óxido de silicio y aluminio",
+     "Polímeros sintéticos",
+     "Hierro y carbono"
+    ],
+    "ans": 1,
+    "exp": "Los cerámicos están compuestos principalmente por óxido de silicio y aluminio.",
+    "id": 6
+   },
+   {
+    "c": 2,
+    "page": "Los cerámicos",
+    "q": "¿Cuál de estas es una propiedad de los cerámicos?",
+    "opts": [
+     "Son buenos aisladores del calor",
+     "Conducen la corriente eléctrica",
+     "Tienen mucho brillo",
+     "Son muy flexibles"
+    ],
+    "ans": 0,
+    "exp": "No tienen brillo, no conducen la corriente, son buenos aisladores del calor y son frágiles.",
+    "id": 7
+   },
+   {
+    "c": 2,
+    "page": "Los cerámicos",
+    "q": "¿Cuál fue el primer material natural usado para fabricar productos tecnológicos de cierta complejidad?",
+    "opts": [
+     "La madera",
+     "El hierro",
+     "La arcilla",
+     "El cuero"
+    ],
+    "ans": 2,
+    "exp": "La arcilla: su propiedad más importante es la plasticidad — con agua forma una pasta moldeable.",
+    "id": 8
+   },
+   {
+    "c": 2,
+    "page": "Los metales y la metalurgia",
+    "q": "¿Cuándo comenzó la verdadera revolución de los materiales?",
+    "opts": [
+     "En el siglo XX, con el plástico",
+     "Hace 3.000 años, con el uso del hierro",
+     "Hace 150 años, con el acero",
+     "En la Edad Media, con el bronce"
+    ],
+    "ans": 1,
+    "exp": "Comenzó 3.000 años atrás, cuando comenzó a utilizarse el hierro.",
+    "id": 9
+   },
+   {
+    "c": 2,
+    "page": "Los metales y la metalurgia",
+    "q": "¿Cómo se llama la parte útil del mineral y cómo la que se desecha?",
+    "opts": [
+     "Ganga la útil, mena la que se desecha",
+     "Veta y escoria",
+     "Mena la útil, ganga la que se desecha",
+     "Concentrado y purificado"
+    ],
+    "ans": 2,
+    "exp": "La parte útil se llama mena; lo que se desecha, ganga.",
+    "id": 10
+   },
+   {
+    "c": 2,
+    "page": "Los metales y la metalurgia",
+    "q": "¿Cuáles son las 3 etapas de la metalurgia, en orden?",
+    "opts": [
+     "Purificación → extracción → concentrado",
+     "Fundición → moldeado → templado",
+     "Extracción → oxidación → refinado",
+     "Obtención del concentrado → extracción del metal → purificación"
+    ],
+    "ans": 3,
+    "exp": "La metalurgia comprende: obtención del concentrado, extracción del metal y purificación.",
+    "id": 11
+   },
+   {
+    "c": 2,
+    "page": "Los metales y la metalurgia",
+    "q": "¿Cuál es una característica importante de los metales?",
+    "opts": [
+     "Son inertes frente a la oxidación",
+     "No conducen la electricidad",
+     "Conducen la energía eléctrica pero no resisten la oxidación",
+     "Son aisladores del calor"
+    ],
+    "ans": 2,
+    "exp": "Conducen la energía eléctrica y no son resistentes a la oxidación.",
+    "id": 12
+   },
+   {
+    "c": 2,
+    "page": "Los plásticos",
+    "q": "¿Qué es un plástico?",
+    "opts": [
+     "Una fibra natural derivada del petróleo",
+     "Un polímero sintético que puede moldearse en alguna fase de su elaboración",
+     "Un mineral moldeable",
+     "Un metal liviano"
+    ],
+    "ans": 1,
+    "exp": "Plástico: polímero sintético que puede ser moldeado en alguna de las fases de su elaboración.",
+    "id": 13
+   },
+   {
+    "c": 2,
+    "page": "Los plásticos",
+    "q": "¿Por qué los plásticos sirven para hacer envases?",
+    "opts": [
+     "Porque son transparentes",
+     "Porque son inertes frente a la oxidación y al ataque de ácidos y bases",
+     "Porque son biodegradables",
+     "Porque conducen la electricidad"
+    ],
+    "ans": 1,
+    "exp": "Su condición de inertes frente a la oxidación, ácidos y bases los hace aptos para envases.",
+    "id": 14
+   },
+   {
+    "c": 2,
+    "page": "Los plásticos",
+    "q": "¿Por qué los residuos plásticos son un grave problema ambiental?",
+    "opts": [
+     "Porque conducen electricidad",
+     "Porque son muy pesados",
+     "Su resistencia a la corrosión, al agua y a las bacterias los hace de difícil eliminación",
+     "Porque atraen insectos"
+    ],
+    "ans": 2,
+    "exp": "La resistencia a la corrosión, al agua y a la descomposición bacteriana hace que sean de difícil eliminación.",
+    "id": 15
+   },
+   {
+    "c": 3,
+    "page": "La madera",
+    "q": "¿Qué constituye la madera en los vegetales leñosos?",
+    "opts": [
+     "Las raíces",
+     "La corteza externa",
+     "El armazón de los troncos y las ramas",
+     "Las hojas y flores"
+    ],
+    "ans": 2,
+    "exp": "La madera constituye el armazón de los troncos y las ramas de los vegetales leñosos.",
+    "id": 16
+   },
+   {
+    "c": 3,
+    "page": "La madera",
+    "q": "¿Qué se obtiene de la madera, además de construcciones?",
+    "opts": [
+     "Cuero curtido",
+     "Fibras sintéticas",
+     "Vidrio y cerámica",
+     "Pasta para hacer papel y productos químicos"
+    ],
+    "ans": 3,
+    "exp": "De la madera se obtiene pasta para hacer papel y numerosos productos químicos.",
+    "id": 17
+   },
+   {
+    "c": 3,
+    "page": "Clasificación de la madera",
+    "q": "¿Qué madera es la materia prima para hacer papel?",
+    "opts": [
+     "La resinosa (cedro)",
+     "La dura (roble)",
+     "La blanda (álamo, sauce, pino)",
+     "La fina (arce)"
+    ],
+    "ans": 2,
+    "exp": "La madera blanda es fácil de trabajar, de colores claros, y es la materia prima del papel.",
+    "id": 18
+   },
+   {
+    "c": 3,
+    "page": "Clasificación de la madera",
+    "q": "¿Con qué tipo de madera se hacían las antiguas embarcaciones?",
+    "opts": [
+     "Madera dura, como el roble",
+     "Madera resinosa, como el cedro",
+     "Madera fina, como el arce",
+     "Madera blanda, como el pino"
+    ],
+    "ans": 0,
+    "exp": "La madera dura se usa en muebles, construcciones resistentes, parqué — y las antiguas embarcaciones.",
+    "id": 19
+   },
+   {
+    "c": 3,
+    "page": "Clasificación de la madera",
+    "q": "¿Cuál es la característica especial de la madera resinosa (ej. cedro)?",
+    "opts": [
+     "Es especialmente resistente a la humedad",
+     "No sirve para muebles",
+     "Es la más barata",
+     "Es la más blanda"
+    ],
+    "ans": 0,
+    "exp": "La madera resinosa es especialmente resistente a la humedad y se usa en muebles.",
+    "id": 20
+   },
+   {
+    "c": 3,
+    "page": "Clasificación de la madera",
+    "q": "¿Para qué se utiliza la madera fina, como el arce?",
+    "opts": [
+     "Aplicaciones artísticas, instrumentos musicales y objetos de adorno",
+     "Suelos de parqué",
+     "Hacer papel",
+     "Embarcaciones"
+    ],
+    "ans": 0,
+    "exp": "La madera fina se usa en esculturas, arquitecturas, instrumentos musicales y adornos.",
+    "id": 21
+   },
+   {
+    "c": 4,
+    "page": "Fibras vegetales: lino y algodón",
+    "q": "¿Cuál era la fibra natural más usada, ideal contra las altas temperaturas?",
+    "opts": [
+     "La lana",
+     "El lino",
+     "El algodón",
+     "La seda"
+    ],
+    "ans": 1,
+    "exp": "El lino: sus tejidos son muy ligeros y permiten combatir las altas temperaturas.",
+    "id": 22
+   },
+   {
+    "c": 4,
+    "page": "Fibras vegetales: lino y algodón",
+    "q": "¿De dónde se obtiene el algodón y con qué procesos se hace tela?",
+    "opts": [
+     "Del gusano de seda, desenredando el capullo",
+     "De la corteza del alcornoque, por descortezado",
+     "De las ovejas, por esquila",
+     "Del capullo de la planta, mediante hilado y tejido"
+    ],
+    "ans": 3,
+    "exp": "Se obtiene del capullo de la planta de algodón y con hilado y tejido se obtiene la tela.",
+    "id": 23
+   },
+   {
+    "c": 4,
+    "page": "El corcho",
+    "q": "¿De qué árbol se obtiene el corcho?",
+    "opts": [
+     "Del cedro",
+     "Del álamo",
+     "Del arce",
+     "Del alcornoque, una especie de roble"
+    ],
+    "ans": 3,
+    "exp": "El corcho es la capa externa y gruesa de la corteza del alcornoque.",
+    "id": 24
+   },
+   {
+    "c": 4,
+    "page": "El corcho",
+    "q": "¿Qué propiedad tiene el corcho por su sustancia grasa?",
+    "opts": [
+     "Es casi impermeable al agua y los gases",
+     "Brilla al pulirlo",
+     "Es muy frágil",
+     "Conduce la electricidad"
+    ],
+    "ans": 0,
+    "exp": "Sus células impregnadas de sustancia grasa lo hacen casi impermeable al agua y los gases.",
+    "id": 25
+   },
+   {
+    "c": 4,
+    "page": "El corcho",
+    "q": "¿Cada cuánto se repiten los descortezamientos del alcornoque después del primero?",
+    "opts": [
+     "Cada año",
+     "Cada 50 años",
+     "Una sola vez en la vida del árbol",
+     "Cada unos 10 años"
+    ],
+    "ans": 3,
+    "exp": "El primer descorche es a los 15-20 años del árbol; los siguientes, a intervalos de unos 10 años.",
+    "id": 26
+   },
+   {
+    "c": 4,
+    "page": "Fibras animales: lana, seda y cuero",
+    "q": "¿Por qué la lana es adecuada para vestir?",
+    "opts": [
+     "Por su capacidad de absorber humedad y sus propiedades aislantes",
+     "Porque no se arruga nunca",
+     "Porque es impermeable como el corcho",
+     "Porque soporta altísimas temperaturas"
+    ],
+    "ans": 0,
+    "exp": "Fibras suaves y rizadas de las ovejas: absorben humedad y son aislantes.",
+    "id": 27
+   },
+   {
+    "c": 4,
+    "page": "Fibras animales: lana, seda y cuero",
+    "q": "¿Cuánto puede alcanzar el hilo de seda de un capullo?",
+    "opts": [
+     "Hasta 7,5 cm",
+     "Hasta 150 m",
+     "Hasta 900 m",
+     "Hasta 30 m"
+    ],
+    "ans": 2,
+    "exp": "La larva no mide más de 7,5 cm, pero el hilo de su capullo puede alcanzar hasta 900 m.",
+    "id": 28
+   },
+   {
+    "c": 4,
+    "page": "Fibras animales: lana, seda y cuero",
+    "q": "¿Cómo se llama el proceso de producción del cuero a partir de pieles curadas, descarnadas y sin pelo?",
+    "opts": [
+     "Descortezado",
+     "Templado",
+     "Curtido",
+     "Hilado"
+    ],
+    "ans": 2,
+    "exp": "Ese proceso se denomina curtido.",
+    "id": 29
+   },
+   {
+    "c": 4,
+    "page": "Las fibras sintéticas",
+    "q": "¿De qué derivan principalmente las fibras sintéticas del siglo XX?",
+    "opts": [
+     "De la lana procesada",
+     "Del plástico, que deriva del petróleo",
+     "De la celulosa de la madera",
+     "Del vidrio hilado"
+    ],
+    "ans": 1,
+    "exp": "Se emplea sobre todo el plástico, un producto derivado del petróleo.",
+    "id": 30
+   },
+   {
+    "c": 5,
+    "page": "Técnicas de unión: el pegado",
+    "q": "En el pegado, ¿para qué sirven los elementos auxiliares (hilos, cuerdas, objetos pesados)?",
+    "opts": [
+     "Para hacer más fuerte la cola",
+     "Para lijar la superficie",
+     "Para decorar la unión",
+     "Para mantener juntas las superficies hasta que el pegamento seque"
+    ],
+    "ans": 3,
+    "exp": "Mantienen las superficies juntas hasta que el pegamento esté completamente seco.",
+    "id": 31
+   },
+   {
+    "c": 5,
+    "page": "Clavado y atornillado",
+    "q": "¿Cuál es la técnica de unión más antigua?",
+    "opts": [
+     "El pegado",
+     "El atornillado",
+     "El clavado",
+     "La soldadura"
+    ],
+    "ans": 2,
+    "exp": "El clavado es la técnica más antigua para unir 2 piezas: requiere clavos y martillo.",
+    "id": 32
+   },
+   {
+    "c": 5,
+    "page": "Clavado y atornillado",
+    "q": "¿Por qué los clavos se usan para uniones permanentes?",
+    "opts": [
+     "Porque una vez clavados no pueden sacarse con facilidad",
+     "Porque se pegan con cola",
+     "Porque son de metal",
+     "Porque tienen rosca"
+    ],
+    "ans": 0,
+    "exp": "Una vez clavados no pueden ser sacados con facilidad.",
+    "id": 33
+   },
+   {
+    "c": 5,
+    "page": "Clavado y atornillado",
+    "q": "¿Cuál es la ventaja del atornillado?",
+    "opts": [
+     "Es invisible",
+     "No requiere herramientas",
+     "Es desmontable: se separan las partes sin daño alguno",
+     "Es la unión más rápida"
+    ],
+    "ans": 2,
+    "exp": "La unión atornillada es desmontable: las partes se separan sin daño.",
+    "id": 34
+   },
+   {
+    "c": 5,
+    "page": "Clavado y atornillado",
+    "q": "¿Qué diferencia a un tornillo de un clavo?",
+    "opts": [
+     "Nada, son iguales",
+     "El tamaño",
+     "El material del que está hecho",
+     "La rosca y la cabeza con ranura para el destornillador"
+    ],
+    "ans": 3,
+    "exp": "El tornillo es parecido al clavo pero con rosca y cabeza con ranura donde se inserta el destornillador.",
+    "id": 35
+   },
+   {
+    "c": 5,
+    "page": "Técnicas de corte: el cizallado",
+    "q": "¿Por qué hay que estar seguro antes de cortar una pieza?",
+    "opts": [
+     "Porque el corte lleva mucho tiempo",
+     "Porque las herramientas son caras",
+     "Porque una vez efectuada la operación no hay forma de volver atrás",
+     "Porque hay que pedir permiso"
+    ],
+    "ans": 2,
+    "exp": "El corte es irreversible: no hay forma de volver atrás.",
+    "id": 36
+   },
+   {
+    "c": 5,
+    "page": "Técnicas de corte: el cizallado",
+    "q": "¿Cuándo se usan las cizallas en lugar de las tijeras?",
+    "opts": [
+     "Para materiales blandos",
+     "Para cortes curvos en madera",
+     "Para cortar papel y cartón",
+     "Para piezas largas con bordes perfectamente rectos y perpendiculares"
+    ],
+    "ans": 3,
+    "exp": "Las cizallas sirven para cortar piezas largas cuyos bordes deban quedar rectos y perpendiculares.",
+    "id": 37
+   },
+   {
+    "c": 5,
+    "page": "El aserrado",
+    "q": "¿Qué permite cortar el serrucho?",
+    "opts": [
+     "Únicamente metales",
+     "Piezas que deban quedar curvas",
+     "Solo papel y cartón",
+     "Materiales gruesos, con su lámina de acero flexible con dientes"
+    ],
+    "ans": 3,
+    "exp": "El serrucho tiene una lámina de acero flexible con dientes en toda su longitud para cortar materiales gruesos.",
+    "id": 38
+   },
+   {
+    "c": 5,
+    "page": "El aserrado",
+    "q": "En la segueta, ¿qué determina la amplitud del arco?",
+    "opts": [
+     "El tipo de madera",
+     "El tamaño de la pieza que se puede cortar",
+     "El filo de la hoja",
+     "La velocidad del corte"
+    ],
+    "ans": 1,
+    "exp": "El arco es de metal y su amplitud determina el tamaño de la pieza que se puede cortar.",
+    "id": 39
+   },
+   {
+    "c": 6,
+    "page": "Deformación elástica, plástica y rotura",
+    "q": "¿Cuándo se produce una deformación elástica?",
+    "opts": [
+     "Cuando el objeto queda deformado para siempre",
+     "Cuando la fuerza queda dentro de cierto límite y el objeto vuelve a su forma al cesar",
+     "Cuando no se aplica ninguna fuerza",
+     "Cuando el objeto se rompe"
+    ],
+    "ans": 1,
+    "exp": "Elástica: el objeto vuelve a su forma y tamaño iniciales cuando la fuerza cesa, como un resorte.",
+    "id": 40
+   },
+   {
+    "c": 6,
+    "page": "Deformación elástica, plástica y rotura",
+    "q": "¿Qué es la deformación plástica?",
+    "opts": [
+     "Una deformación permanente: el objeto no vuelve a ser como era",
+     "La rotura del objeto",
+     "Una deformación que desaparece sola",
+     "La deformación de los plásticos"
+    ],
+    "ans": 0,
+    "exp": "Si se supera el límite elástico, la deformación es permanente: plástica.",
+    "id": 41
+   },
+   {
+    "c": 6,
+    "page": "Deformación elástica, plástica y rotura",
+    "q": "¿Qué pasa al alcanzarse el límite de rotura?",
+    "opts": [
+     "El objeto se vuelve elástico",
+     "No pasa nada",
+     "El objeto vuelve a su forma",
+     "El objeto se rompe"
+    ],
+    "ans": 3,
+    "exp": "La fuerza creció tanto que el objeto se rompe: se llegó al límite de rotura.",
+    "id": 42
+   },
+   {
+    "c": 6,
+    "page": "Tracción y compresión",
+    "q": "¿Qué esfuerzo sufren los objetos estirados por fuerzas que tiran hacia afuera?",
+    "opts": [
+     "Compresión",
+     "Torsión",
+     "Tracción",
+     "Pandeo"
+    ],
+    "ans": 2,
+    "exp": "La tracción estira el objeto desde los extremos (el dibujo de las flechas hacia afuera).",
+    "id": 43
+   },
+   {
+    "c": 6,
+    "page": "Tracción y compresión",
+    "q": "¿Qué les pasa a los soportes sometidos a compresión?",
+    "opts": [
+     "Se arquean hacia un lado",
+     "Se estiran",
+     "Se acortan en una pequeñísima longitud",
+     "Se retuercen"
+    ],
+    "ans": 2,
+    "exp": "Aplastados por un peso, los soportes se acortan una pequeñísima longitud.",
+    "id": 44
+   },
+   {
+    "c": 6,
+    "page": "Flexión, pandeo y torsión",
+    "q": "¿Qué combina la flexión?",
+    "opts": [
+     "Compresión en la parte superior y tracción en la inferior",
+     "Dos tracciones opuestas",
+     "Torsión y pandeo",
+     "Compresión en ambas caras"
+    ],
+    "ans": 0,
+    "exp": "La flexión combina compresión arriba y tracción abajo.",
+    "id": 45
+   },
+   {
+    "c": 6,
+    "page": "Flexión, pandeo y torsión",
+    "q": "¿Cuándo se produce el pandeo?",
+    "opts": [
+     "Cuando el objeto se rompe",
+     "Cuando se estira un cable",
+     "Cuando un soporte alto y fino se arquea al comprimirlo",
+     "Cuando se retuerce una pieza"
+    ],
+    "ans": 2,
+    "exp": "Si el soporte es alto y fino puede arquearse al comprimirse: fuerzas de compresión, deformación como la flexión.",
+    "id": 46
+   },
+   {
+    "c": 6,
+    "page": "Flexión, pandeo y torsión",
+    "q": "¿A qué se parece la deformación por torsión?",
+    "opts": [
+     "Al arqueo de una columna",
+     "Al retorcimiento de un trapo cuando se lo escurre",
+     "Al aplastamiento de una lata",
+     "Al estiramiento de un resorte"
+    ],
+    "ans": 1,
+    "exp": "La torsión se parece al retorcimiento de un trapo al escurrirlo, aunque a niveles normales no se percibe.",
+    "id": 47
+   }
+  ],
+  "flashcards": [
+   {
+    "c": 1,
+    "t": "Material",
+    "d": "Sustancia que puede usarse para construir un objeto o elaborar un producto.",
+    "id": 0
+   },
+   {
+    "c": 1,
+    "t": "Materiales naturales",
+    "d": "De origen vegetal (madera, algodón), animal (lana, cuero) o mineral (metales).",
+    "id": 1
+   },
+   {
+    "c": 1,
+    "t": "Materiales artificiales o sintéticos",
+    "d": "Elaborados por el hombre: orgánicos (polietileno) o inorgánicos derivados de minerales (vidrio).",
+    "id": 2
+   },
+   {
+    "c": 1,
+    "t": "Factores de elección de un material",
+    "d": "Calidad, propiedades, técnicas y herramientas disponibles, disponibilidad, precio e impacto ambiental.",
+    "id": 3
+   },
+   {
+    "c": 2,
+    "t": "Cerámicos",
+    "d": "Óxido de silicio y aluminio. Sin brillo, no conducen electricidad, aislantes del calor, frágiles.",
+    "id": 4
+   },
+   {
+    "c": 2,
+    "t": "Arcilla",
+    "d": "Primer material natural para productos tecnológicos complejos. Propiedad clave: plasticidad.",
+    "id": 5
+   },
+   {
+    "c": 2,
+    "t": "Mena y ganga",
+    "d": "Mena: parte útil del mineral. Ganga: lo que se desecha.",
+    "id": 6
+   },
+   {
+    "c": 2,
+    "t": "Metalurgia",
+    "d": "Operaciones y transformaciones químicas para obtener metales. 3 etapas: concentrado → extracción → purificación.",
+    "id": 7
+   },
+   {
+    "c": 2,
+    "t": "Características de los metales",
+    "d": "Conducen la energía eléctrica; no son resistentes a la oxidación.",
+    "id": 8
+   },
+   {
+    "c": 2,
+    "t": "Plástico",
+    "d": "Polímero sintético moldeable en alguna fase de su elaboración.",
+    "id": 9
+   },
+   {
+    "c": 2,
+    "t": "Propiedades de los plásticos",
+    "d": "Inertes a oxidación/ácidos/bases (envases), no conducen electricidad (aisladores), livianos y resistentes.",
+    "id": 10
+   },
+   {
+    "c": 2,
+    "t": "Problema ambiental del plástico",
+    "d": "Su resistencia a corrosión, agua y bacterias hace los residuos de difícil eliminación.",
+    "id": 11
+   },
+   {
+    "c": 3,
+    "t": "La madera",
+    "d": "Armazón de troncos y ramas de los vegetales leñosos. Da pasta de papel y productos químicos.",
+    "id": 12
+   },
+   {
+    "c": 3,
+    "t": "Madera blanda",
+    "d": "Fácil de trabajar, colores claros, materia prima del papel. Álamo, sauce, pino.",
+    "id": 13
+   },
+   {
+    "c": 3,
+    "t": "Madera dura",
+    "d": "Muebles, construcciones resistentes, parqué, antiguas embarcaciones. Roble.",
+    "id": 14
+   },
+   {
+    "c": 3,
+    "t": "Madera resinosa",
+    "d": "Especialmente resistente a la humedad. Muebles. Cedro.",
+    "id": 15
+   },
+   {
+    "c": 3,
+    "t": "Madera fina",
+    "d": "Aplicaciones artísticas, instrumentos musicales, adornos. Arce.",
+    "id": 16
+   },
+   {
+    "c": 4,
+    "t": "El lino",
+    "d": "La fibra natural más usada: tejidos ligeros que combaten las altas temperaturas.",
+    "id": 17
+   },
+   {
+    "c": 4,
+    "t": "El algodón",
+    "d": "Del capullo de la planta; hilado y tejido dan la tela. Resistente, se arruga, prendas frescas.",
+    "id": 18
+   },
+   {
+    "c": 4,
+    "t": "El corcho",
+    "d": "Corteza del alcornoque: elástico, homogéneo, casi impermeable al agua y los gases.",
+    "id": 19
+   },
+   {
+    "c": 4,
+    "t": "La lana",
+    "d": "Fibras suaves y rizadas de las ovejas. Absorbe humedad y es aislante.",
+    "id": 20
+   },
+   {
+    "c": 4,
+    "t": "La seda",
+    "d": "Producida por un gusano: larva de 7,5 cm, hilo del capullo de hasta 900 m.",
+    "id": 21
+   },
+   {
+    "c": 4,
+    "t": "El cuero y el curtido",
+    "d": "Piel animal preparada químicamente (vacuno, caprino, lanar). Curtido: proceso desde pieles curadas, descarnadas y sin pelo.",
+    "id": 22
+   },
+   {
+    "c": 4,
+    "t": "Fibras sintéticas",
+    "d": "Siglo XX, del plástico (derivado del petróleo). Trajes de bomberos y de buceadores.",
+    "id": 23
+   },
+   {
+    "c": 5,
+    "t": "Pegado",
+    "d": "Une superficies con cola o pegamento; elementos auxiliares las sujetan hasta que seque.",
+    "id": 24
+   },
+   {
+    "c": 5,
+    "t": "Clavado",
+    "d": "La técnica de unión más antigua. Clavos (punta y cabeza) + martillo. Uniones permanentes.",
+    "id": 25
+   },
+   {
+    "c": 5,
+    "t": "Atornillado",
+    "d": "Unión desmontable sin daño. Tornillos con rosca y ranura + destornillador.",
+    "id": 26
+   },
+   {
+    "c": 5,
+    "t": "Cizallado",
+    "d": "Corte con 2 hojas articuladas: tijeras (papel, cartón) o cizallas (bordes rectos y perpendiculares).",
+    "id": 27
+   },
+   {
+    "c": 5,
+    "t": "Aserrado",
+    "d": "Corte de madera con serrucho (materiales gruesos) o segueta (cortes rectos o curvos).",
+    "id": 28
+   },
+   {
+    "c": 6,
+    "t": "Deformación elástica",
+    "d": "Dentro del límite: el objeto vuelve a su forma al cesar la fuerza, como un resorte.",
+    "id": 29
+   },
+   {
+    "c": 6,
+    "t": "Deformación plástica",
+    "d": "Superado el límite: deformación permanente, no vuelve a ser como era.",
+    "id": 30
+   },
+   {
+    "c": 6,
+    "t": "Límite de rotura",
+    "d": "La fuerza creció tanto que el objeto se rompe.",
+    "id": 31
+   },
+   {
+    "c": 6,
+    "t": "Los 5 esfuerzos",
+    "d": "Tracción (estira), compresión (aplasta), flexión (comprime arriba y estira abajo), pandeo (arqueo de soporte alto y fino), torsión (retorcimiento).",
+    "id": 32
+   }
+  ],
+  "glossary": [
+   {
+    "c": 2,
+    "t": "Aisladores",
+    "d": "Uso de los plásticos en artefactos eléctricos, porque no conducen la corriente."
+   },
+   {
+    "c": 4,
+    "t": "Alcornoque",
+    "d": "Especie de roble de cuya corteza se obtiene el corcho. Hasta 30 m y más de 150 años."
+   },
+   {
+    "c": 4,
+    "t": "Algodón",
+    "d": "Fibra vegetal del capullo de su planta; con hilado y tejido se obtiene la tela."
+   },
+   {
+    "c": 2,
+    "t": "Arcilla",
+    "d": "Primer material natural para productos tecnológicos. Su plasticidad da una pasta moldeable con agua."
+   },
+   {
+    "c": 2,
+    "t": "Cerámicos",
+    "d": "Materiales de óxido de silicio y aluminio: sin brillo, aislantes, frágiles."
+   },
+   {
+    "c": 5,
+    "t": "Cizallas",
+    "d": "Para piezas largas con bordes perfectamente rectos y perpendiculares."
+   },
+   {
+    "c": 5,
+    "t": "Clavos",
+    "d": "Piezas de metal con punta afilada y cabeza. Para uniones permanentes."
+   },
+   {
+    "c": 5,
+    "t": "Cola o pegamento",
+    "d": "Sustancia capaz de unir 2 o más superficies."
+   },
+   {
+    "c": 6,
+    "t": "Compresión",
+    "d": "Esfuerzo de aplastamiento: los soportes se acortan una pequeñísima longitud."
+   },
+   {
+    "c": 4,
+    "t": "Corcho",
+    "d": "Capa externa de la corteza del alcornoque: elástico y casi impermeable al agua y los gases."
+   },
+   {
+    "c": 4,
+    "t": "Cuero",
+    "d": "Piel animal preparada químicamente: robusta, flexible, resistente a la putrefacción."
+   },
+   {
+    "c": 4,
+    "t": "Curtido",
+    "d": "Proceso de producción del cuero a partir de pieles curadas, descarnadas y sin pelo."
+   },
+   {
+    "c": 6,
+    "t": "Deformación elástica",
+    "d": "El objeto vuelve a su forma al cesar la fuerza (como un resorte)."
+   },
+   {
+    "c": 6,
+    "t": "Deformación plástica",
+    "d": "Deformación permanente al superar el límite elástico."
+   },
+   {
+    "c": 5,
+    "t": "Destornillador",
+    "d": "Herramienta de mango y pieza metálica de punta habitualmente plana."
+   },
+   {
+    "c": 5,
+    "t": "Elementos auxiliares",
+    "d": "Hilos, cuerdas u objetos pesados que sujetan las superficies hasta que seca el pegamento."
+   },
+   {
+    "c": 4,
+    "t": "Fibras sintéticas",
+    "d": "Fibras del siglo XX hechas sobre todo de plástico (derivado del petróleo)."
+   },
+   {
+    "c": 6,
+    "t": "Flexión",
+    "d": "Combina compresión en la parte superior y tracción en la inferior."
+   },
+   {
+    "c": 2,
+    "t": "Ganga",
+    "d": "Parte del mineral que se desecha."
+   },
+   {
+    "c": 2,
+    "t": "Hierro",
+    "d": "Metal cuyo uso, hace 3.000 años, inició la verdadera revolución de los materiales."
+   },
+   {
+    "c": 4,
+    "t": "Hilado y tejido",
+    "d": "Procesos industriales que convierten la fibra de algodón en tela."
+   },
+   {
+    "c": 4,
+    "t": "Lana",
+    "d": "Fibra suave y rizada de las ovejas: absorbe humedad y aísla."
+   },
+   {
+    "c": 3,
+    "t": "Leñosos",
+    "d": "Vegetales cuyo armazón de troncos y ramas constituye la madera."
+   },
+   {
+    "c": 6,
+    "t": "Límite de rotura",
+    "d": "Punto en que la fuerza rompe el objeto."
+   },
+   {
+    "c": 4,
+    "t": "Lino",
+    "d": "Fibra vegetal de tejidos ligeros contra las altas temperaturas."
+   },
+   {
+    "c": 3,
+    "t": "Madera blanda",
+    "d": "Álamo, sauce, pino. Materia prima del papel."
+   },
+   {
+    "c": 3,
+    "t": "Madera dura",
+    "d": "Roble. Muebles, parqué y antiguas embarcaciones."
+   },
+   {
+    "c": 3,
+    "t": "Madera fina",
+    "d": "Arce. Arte, instrumentos musicales y adornos."
+   },
+   {
+    "c": 3,
+    "t": "Madera resinosa",
+    "d": "Cedro. Resistente a la humedad."
+   },
+   {
+    "c": 5,
+    "t": "Martillo",
+    "d": "Mango de madera + pieza de metal con la que se golpean los clavos."
+   },
+   {
+    "c": 1,
+    "t": "Material",
+    "d": "Sustancia utilizable para construir un objeto o elaborar un producto."
+   },
+   {
+    "c": 1,
+    "t": "Materiales naturales",
+    "d": "Los que provienen de la naturaleza: de origen vegetal, animal o mineral."
+   },
+   {
+    "c": 1,
+    "t": "Materiales sintéticos",
+    "d": "Elaborados por el hombre a partir de nuevas sustancias; también llamados artificiales."
+   },
+   {
+    "c": 2,
+    "t": "Mena",
+    "d": "Parte útil del mineral del que se extrae un metal."
+   },
+   {
+    "c": 2,
+    "t": "Metalurgia",
+    "d": "Conjunto de operaciones y transformaciones químicas para obtener los metales. Tres etapas."
+   },
+   {
+    "c": 6,
+    "t": "Pandeo",
+    "d": "Arqueo de un soporte alto y fino al comprimirlo."
+   },
+   {
+    "c": 3,
+    "t": "Parqué",
+    "d": "Suelo de madera dura."
+   },
+   {
+    "c": 2,
+    "t": "Plasticidad",
+    "d": "Propiedad más importante de la arcilla: mezclada con agua forma una pasta moldeable."
+   },
+   {
+    "c": 1,
+    "t": "Polietileno",
+    "d": "Material artificial orgánico: deriva de las moléculas orgánicas."
+   },
+   {
+    "c": 2,
+    "t": "Polímeros sintéticos",
+    "d": "Los plásticos: moldeables en alguna fase de su elaboración."
+   },
+   {
+    "c": 4,
+    "t": "Seda",
+    "d": "Fibra preciada del capullo de un gusano; hilo de hasta 900 m."
+   },
+   {
+    "c": 5,
+    "t": "Segueta",
+    "d": "Sierra de marquetería: mango torneado y arco de metal. Cortes rectos o curvos."
+   },
+   {
+    "c": 5,
+    "t": "Serrucho",
+    "d": "Mango + lámina de acero flexible con dientes: corta materiales gruesos."
+   },
+   {
+    "c": 5,
+    "t": "Tijeras",
+    "d": "Dos hojas articuladas de acero con empuñadura: papel, cartón y materiales no muy duros."
+   },
+   {
+    "c": 5,
+    "t": "Tornillos",
+    "d": "Como clavos pero con rosca y cabeza con ranura para el destornillador."
+   },
+   {
+    "c": 6,
+    "t": "Torsión",
+    "d": "Deformación parecida al retorcimiento de un trapo al escurrirlo."
+   },
+   {
+    "c": 6,
+    "t": "Tracción",
+    "d": "Esfuerzo que estira un objeto con fuerzas hacia afuera desde los extremos."
+   },
+   {
+    "c": 1,
+    "t": "Vidrio",
+    "d": "Material artificial inorgánico: deriva de minerales."
+   }
+  ]
  }
 };
   let CURRENT_SUBJECT = null;
@@ -9602,6 +10976,30 @@ body {
         {id:"master_proc",   em:"🏰", name:"Maestro medieval",     desc:"Todas del cap. 2 acertadas"},
         {id:"master_euk",    em:"👑", name:"Maestro carolingio",   desc:"Todas del cap. 3 acertadas"},
         {id:"master_biom",   em:"☪️", name:"Maestro de imperios",  desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    },
+    tec: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",       icon: "🌱"},
+        {xp: 50,   name: "Estudiante",     icon: "🪴"},
+        {xp: 150,  name: "Avanzado",       icon: "🌿"},
+        {xp: 350,  name: "Experto",        icon: "🌳"},
+        {xp: 700,  name: "Maestro",        icon: "🏆"},
+        {xp: 1200, name: "Tecnólogo Pro",  icon: "⚙️"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🧱", name:"Maestro de materiales", desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"🪵", name:"Maestro maderero",      desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"🧵", name:"Maestro textil",        desc:"Todas del cap. 4 acertadas"},
         {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
         {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
         {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
@@ -11285,6 +12683,7 @@ body {
       'biologia_ebook_v4_bio',
       'biologia_ebook_v4_geo',
       'biologia_ebook_v4_his',
+      'biologia_ebook_v4_tec',
       'biologia_ebook_v3',
       'biologia_ebook_v2',
       'apuntes_avatar',      // monedas gastadas, compras y look
@@ -11439,7 +12838,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 19:58";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 20:35";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -11541,7 +12940,8 @@ body {
     if (card) {
       var m = card.classList.contains('bio') ? 'Biología'
             : (card.classList.contains('geo') ? 'Geografía'
-            : (card.classList.contains('his') ? 'Historia' : 'otra'));
+            : (card.classList.contains('his') ? 'Historia'
+            : (card.classList.contains('tec') ? 'Tecnología' : 'otra')));
       sendDiario('materia_' + m, 'abre_materia', { materia: m });
     }
     var fab = e.target && e.target.closest ? e.target.closest('#fabPractice') : null;
@@ -11552,7 +12952,7 @@ body {
   }, true);
 
   /* ---- resumen de sesión (sesion_fin): foto del progreso al entrar, delta al salir ---- */
-  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his' };
+  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his', 'Tecnología': 'biologia_ebook_v4_tec' };
 
   function fotoProgreso() {
     var out = {};
@@ -11818,7 +13218,7 @@ body {
   });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
-     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 36, "fc": 28}} se inyectan al compilar,
+     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 36, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 48, "fc": 33}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
   var ST_CAT = {
     bio: {
@@ -11892,9 +13292,33 @@ body {
         {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
         {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
       ]
+    },
+    tec: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",       icon: "🌱"},
+        {xp: 50,   name: "Estudiante",     icon: "🪴"},
+        {xp: 150,  name: "Avanzado",       icon: "🌿"},
+        {xp: 350,  name: "Experto",        icon: "🌳"},
+        {xp: 700,  name: "Maestro",        icon: "🏆"},
+        {xp: 1200, name: "Tecnólogo Pro",  icon: "⚙️"},
+      ],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"🧱", name:"Maestro de materiales", desc:"Todas del cap. 2 acertadas"},
+        {id:"master_euk",    em:"🪵", name:"Maestro maderero",      desc:"Todas del cap. 3 acertadas"},
+        {id:"master_biom",   em:"🧵", name:"Maestro textil",        desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
     }
   };          /* niveles y logros POR MATERIA */
-  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 36, "fc": 28}};
+  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 36, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 48, "fc": 33}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
