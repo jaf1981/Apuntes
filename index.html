@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 13:21">
+<meta name="apuntes-version" content="13/08 13:44">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1716,14 +1716,15 @@ body {
 .sug-n { font-size: 12.5px; font-weight: 700; opacity: 0.75; white-space: nowrap; }
 
 /* ---- Avatar + monedas + tienda ---- */
-.sp-fila { display: flex; align-items: flex-start; gap: 8px; width: 100%; }
-.sp-fila .sp-cards { flex: 1; min-width: 0; }
-.sp-rail { display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 4px; width: 72px; flex-shrink: 0; cursor: pointer; border-radius: 14px;
-  background: rgba(128, 128, 128, 0.08); padding: 12px 2px; margin-top: 2px; }
-.sp-rail:active { transform: scale(0.96); }
-.sp-rail .rail-monedas { font-size: 11.5px; font-weight: 700; white-space: nowrap; }
-.sp-rail .rail-tienda { font-size: 10.5px; opacity: 0.7; }
+.tienda-apodo-row { display: flex; gap: 8px; max-width: 340px; margin: 0 auto 14px; }
+.tienda-apodo-row input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid rgba(128,128,128,0.4); background: rgba(255,255,255,0.6);
+  color: inherit; font-family: inherit; font-size: 15px; }
+[data-theme="dark"] .tienda-apodo-row input { background: rgba(255,255,255,0.08); }
+.tienda-apodo-row button { padding: 10px 14px; border-radius: 10px; border: none;
+  background: #3d5a3d; color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.tienda-ident-tit { text-align: center; font-size: 12.5px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.4px; opacity: 0.6; margin: 4px 0 2px; }
 .tienda-gen { display: flex; gap: 8px; justify-content: center; margin: -6px 0 4px; }
 .tienda-gen button { padding: 7px 14px; border-radius: 10px; border: 1.5px solid rgba(128,128,128,0.35);
   background: transparent; color: inherit; font-family: inherit; font-size: 13.5px; cursor: pointer; }
@@ -2345,7 +2346,6 @@ body {
 
     <div id="spSlot"></div>
 
-    <div class="sp-fila">
     <div class="sp-cards">
       <button class="sp-card bio" data-subject="bio">
         <span class="sp-card-emoji">🦠</span>
@@ -2372,8 +2372,6 @@ body {
         </div>
         <span class="sp-card-arrow">›</span>
       </button>
-      </div>
-      <div id="spAvatarZona" class="sp-rail" role="button" aria-label="Tu avatar y la tienda"></div>
     </div>
 
     <div class="sp-deco">·  ·  ·</div>
@@ -9687,15 +9685,9 @@ body {
 
   /* ---- rail del inicio: avatar compacto al costado de las materias + monedas ---- */
   function renderAvatarInicio() {
-    var zona = document.getElementById("spAvatarZona");
-    if (!zona || !CATALOGO) return;   // el arranque llama antes de que el catálogo exista; se repinta al final del módulo
-    zona.innerHTML = svgAvatar(0.42, true) +
-      '<div class="rail-monedas">🪙 ' + monedasSaldo() + '</div>' +
-      '<div class="rail-tienda">Tienda ›</div>';
-    if (!zona.dataset.listo) {
-      zona.dataset.listo = "1";
-      zona.addEventListener("click", abrirTienda);
-    }
+    if (!CATALOGO) return;   // el arranque llama antes de que el catálogo exista
+    // el avatar vive en el chip del apodo (lo pinta el módulo de medición)
+    if (typeof window.apuntesRefrescarChip === "function") window.apuntesRefrescarChip();
   }
 
   /* ---- tienda ---- */
@@ -9717,34 +9709,43 @@ body {
     if (!t) return;
     var ganadas = monedasGanadas();
     var saldo = monedasSaldo();
-    var top = '<div class="tienda-top"><div class="tienda-titulo">🛍️ Tienda</div>' +
+    var a = avatarData();
+    var top = '<div class="tienda-top"><div class="tienda-titulo">🛍️ Tu avatar y la tienda</div>' +
               '<button class="tienda-cerrar" id="tiendaCerrar">✕</button></div>';
-    /* candado 1: piso histórico de monedas ganadas */
+    /* identidad: SIEMPRE habilitada (apodo + género + probador) */
+    var apodoAct = "";
+    try { apodoAct = localStorage.getItem("apuntes_apodo") || ""; } catch (e) {}
+    var h = top +
+      '<div class="tienda-probador">' + svgAvatar(0.85) + '</div>' +
+      '<div class="tienda-gen">' +
+        '<button data-gen="nino" class="' + (a.gen !== "nina" ? "activo" : "") + '">👦 Niño</button>' +
+        '<button data-gen="nina" class="' + (a.gen === "nina" ? "activo" : "") + '">👧 Niña</button>' +
+      '</div>' +
+      '<div class="tienda-ident-tit">Tu apodo</div>' +
+      '<div class="tienda-apodo-row">' +
+        '<input id="tiendaApodo" maxlength="30" value="' + apodoAct.replace(/"/g, "&quot;") + '">' +
+        '<button id="tiendaApodoBtn">Guardar</button>' +
+      '</div>' +
+      '<div class="tienda-saldo">🪙 Tenés ' + saldo + ' monedas</div>';
+    /* candado 1 de COMPRAS: piso histórico de monedas ganadas */
     if (ganadas < TIENDA_PISO) {
       var pct = Math.min(100, Math.round(100 * ganadas / TIENDA_PISO));
-      t.innerHTML = top + '<div class="tienda-lock"><div class="grande">🔒</div>' +
-        '<p><strong>La tienda se desbloquea al juntar ' + TIENDA_PISO + ' monedas.</strong></p>' +
+      t.innerHTML = h + '<div class="tienda-lock"><div class="grande">🔒</div>' +
+        '<p><strong>Las compras se desbloquean al juntar ' + TIENDA_PISO + ' monedas.</strong></p>' +
         '<div class="tienda-lock-barra"><div class="tienda-lock-fill" style="width:' + pct + '%"></div></div>' +
         '<p>' + ganadas + ' / ' + TIENDA_PISO + ' — ganás 1 moneda cada 10 XP. ¡Seguí estudiando!</p></div>';
-      document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
+      listenersTiendaBase(t);
       return;
     }
-    /* candado 2: 5 minutos efectivos del día */
+    /* candado 2 de COMPRAS: 5 minutos efectivos del día */
     if (diaHoy().seg < 300) {
       var m = Math.floor(diaHoy().seg / 60), sgs = diaHoy().seg % 60;
-      t.innerHTML = top + '<div class="tienda-lock"><div class="grande">📚</div>' +
-        '<p><strong>La tienda abre con 5 minutos de estudio del día.</strong></p>' +
+      t.innerHTML = h + '<div class="tienda-lock"><div class="grande">📚</div>' +
+        '<p><strong>Las compras abren con 5 minutos de estudio del día.</strong></p>' +
         '<p>Llevás ' + m + ':' + (sgs < 10 ? "0" : "") + sgs + ' — leé o practicá un poco y volvé, que tus ' + saldo + ' monedas te esperan.</p></div>';
-      document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
+      listenersTiendaBase(t);
       return;
     }
-    var a = avatarData();
-    var h = top + '<div class="tienda-saldo">🪙 Tenés ' + saldo + ' monedas</div>' +
-            '<div class="tienda-probador">' + svgAvatar(0.85) + '</div>' +
-            '<div class="tienda-gen">' +
-              '<button data-gen="nino" class="' + (a.gen !== "nina" ? "activo" : "") + '">👦 Niño</button>' +
-              '<button data-gen="nina" class="' + (a.gen === "nina" ? "activo" : "") + '">👧 Niña</button>' +
-            '</div>';
     for (var ci = 0; ci < TIENDA_CATS.length; ci++) {
       var cat = TIENDA_CATS[ci];
       var items = CATALOGO.filter(function (x) { return x.slot === cat[0]; });
@@ -9762,10 +9763,15 @@ body {
       h += "</div>";
     }
     t.innerHTML = h;
-    document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
+    listenersTiendaBase(t);
     t.querySelectorAll(".tienda-item").forEach(function (btn) {
       btn.addEventListener("click", function () { tocarItem(btn.dataset.item); });
     });
+  }
+
+  /* listeners comunes: cerrar, género y guardado de apodo (siempre presentes) */
+  function listenersTiendaBase(t) {
+    document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
     t.querySelectorAll(".tienda-gen button").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var a2 = avatarData();
@@ -9774,8 +9780,23 @@ body {
         var sc = t.scrollTop;
         pintarTienda();
         t.scrollTop = sc;
+        renderAvatarInicio();
       });
     });
+    var btnAp = document.getElementById("tiendaApodoBtn");
+    if (btnAp) {
+      btnAp.addEventListener("click", function () {
+        var inp = document.getElementById("tiendaApodo");
+        var v = (inp && inp.value ? inp.value : "").trim().slice(0, 30);
+        var ant = "";
+        try { ant = localStorage.getItem("apuntes_apodo") || ""; } catch (e) {}
+        if (!v || v === ant) return;
+        try { localStorage.setItem("apuntes_apodo", v); } catch (e) {}
+        if (typeof window.apuntesCambioApodo === "function") window.apuntesCambioApodo(ant, v);
+        renderAvatarInicio();
+        showToast("👤", "Apodo actualizado: " + v);
+      });
+    }
   }
   function tocarItem(id) {
     var it = itemDe(id);
@@ -9811,12 +9832,14 @@ body {
     pintarTienda();
     var t2 = document.getElementById("apTienda");
     if (t2) t2.scrollTop = scrollAntes;
+    renderAvatarInicio();
   }
 
   /* el panel de estadísticas (módulo de medición) también muestra el avatar,
      y el editor de apodo puede cambiar la apariencia (niño/niña) */
   try {
     window.apuntesAvatarSVG = svgAvatar;
+    window.apuntesAbrirTienda = abrirTienda;
     window.apuntesAvatarGen = function (g) {
       var aG = avatarData();
       aG.gen = g === "nina" ? "nina" : "nino";
@@ -10138,7 +10161,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 13:21";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 13:44";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10677,10 +10700,29 @@ body {
       chip.type = 'button';
       chip.style.cssText = 'display:block;margin:2px auto 10px;padding:6px 14px;border-radius:20px;border:1px dashed rgba(127,127,127,.5);background:transparent;color:inherit;font-family:inherit;font-size:14px;cursor:pointer;';
       host.parentNode.insertBefore(chip, host.nextSibling);
-      chip.addEventListener('click', abrirEditorApodo);
+      chip.addEventListener('click', function () {
+        /* un solo lugar para toda la identidad: la tienda (apodo + avatar + compras) */
+        if (typeof window.apuntesAbrirTienda === 'function') window.apuntesAbrirTienda();
+        else abrirEditorApodo();
+      });
+      chip.style.display = 'flex';
+      chip.style.alignItems = 'center';
+      chip.style.gap = '8px';
+      chip.style.width = 'max-content';
     }
-    chip.innerHTML = '👤 <strong>' + apodoActual().replace(/</g, '&lt;') + '</strong> <span style="opacity:.55;">✏️</span>';
+    var mini = (typeof window.apuntesAvatarSVG === 'function')
+      ? '<span style="display:flex;">' + window.apuntesAvatarSVG(0.22, true) + '</span>' : '👤 ';
+    chip.innerHTML = mini + '<strong>' + apodoActual().replace(/</g, '&lt;') + '</strong> <span style="opacity:.55;">✏️</span>';
   }
+  /* la tienda repinta el chip cuando cambian apodo/avatar */
+  try { window.apuntesRefrescarChip = renderApodoChip; } catch (e) {}
+  /* la tienda avisa los cambios de apodo por acá (evento cambia_apodo) */
+  try {
+    window.apuntesCambioApodo = function (anterior, nuevo) {
+      send('cambia_apodo', { detalle: anterior + ' → ' + nuevo });
+      renderApodoChip();
+    };
+  } catch (e) {}
 
   function abrirEditorApodo() {
     if (document.getElementById('apApodoOverlay')) return;
