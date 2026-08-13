@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 11:49">
+<meta name="apuntes-version" content="13/08 12:02">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1711,6 +1711,43 @@ body {
 .sug-btn:active { transform: scale(0.98); }
 .sug-n { font-size: 12.5px; font-weight: 700; opacity: 0.75; white-space: nowrap; }
 
+/* ---- Avatar + monedas + tienda ---- */
+.av-zona { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; padding: 10px 14px;
+  border-radius: 16px; background: rgba(128, 128, 128, 0.08); }
+.av-mini svg { display: block; }
+.av-datos { flex: 1; min-width: 0; }
+.av-monedas { font-size: 15px; font-weight: 700; }
+.av-sub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+.av-btn-tienda { padding: 9px 14px; border-radius: 11px; border: 1.5px solid #d4a017;
+  background: rgba(212, 160, 23, 0.1); color: inherit; font-family: inherit;
+  font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.av-btn-tienda:active { transform: scale(0.97); }
+.tienda-overlay { position: fixed; inset: 0; z-index: 99994; background: var(--bg, #f4ecd8);
+  overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 14px 40px; }
+.tienda-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.tienda-titulo { font-size: 20px; font-weight: 800; }
+.tienda-cerrar { border: none; background: rgba(128,128,128,0.15); border-radius: 50%;
+  width: 36px; height: 36px; font-size: 17px; cursor: pointer; color: inherit; }
+.tienda-saldo { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+.tienda-probador { display: flex; justify-content: center; padding: 8px 0 14px; }
+.tienda-cat { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;
+  opacity: 0.65; margin: 14px 0 8px; }
+.tienda-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tienda-item { border: 1.5px solid rgba(128,128,128,0.3); border-radius: 13px; padding: 10px 6px;
+  background: rgba(255,255,255,0.35); text-align: center; cursor: pointer; font-family: inherit; color: inherit; }
+[data-theme="dark"] .tienda-item { background: rgba(255,255,255,0.05); }
+.tienda-item .em { font-size: 26px; display: block; }
+.tienda-item .nom { font-size: 12px; font-weight: 600; display: block; margin-top: 4px; line-height: 1.2; }
+.tienda-item .pre { font-size: 12px; font-weight: 700; display: block; margin-top: 4px; opacity: 0.8; }
+.tienda-item.equipado { border-color: #3d8a3d; background: rgba(61, 138, 61, 0.12); }
+.tienda-item.comprado { border-color: #d4a017; }
+.tienda-item.caro { opacity: 0.55; }
+.tienda-lock { text-align: center; padding: 40px 20px; }
+.tienda-lock .grande { font-size: 44px; }
+.tienda-lock-barra { height: 12px; border-radius: 6px; background: rgba(128,128,128,0.25);
+  overflow: hidden; margin: 14px 0 6px; }
+.tienda-lock-fill { height: 100%; border-radius: 6px; background: #d4a017; }
+
 .sp-card::before {
   content: "";
   position: absolute;
@@ -2178,6 +2215,7 @@ body {
           <span class="quiz-result-total" id="qrTotal">/ 10</span>
         </div>
         <div class="quiz-result-xp" id="qrXp">+0 XP</div>
+        <div id="qrAvatar" style="display:flex;justify-content:center;margin-top:6px;"></div>
       </div>
       <div class="start-btn-row">
         <button class="start-btn" id="quizAgainBtn">🔄 Otro cuestionario</button>
@@ -2292,6 +2330,8 @@ body {
     <div class="sp-eyebrow">Apuntes de clase</div>
     <h1 class="sp-title" id="spTitleGreeting">Tus apuntes</h1>
     <p class="sp-subtitle">Elegí qué materia querés estudiar hoy.</p>
+
+    <div id="spAvatarZona"></div>
 
     <div id="spSlot"></div>
 
@@ -9033,6 +9073,8 @@ body {
           { detail: { materia: (SUBJECTS[CURRENT_SUBJECT] || {}).name || "" } }));
       } catch (e) {}
     }
+    const qa = $("qrAvatar");
+    if (qa && typeof svgAvatar === "function") qa.innerHTML = svgAvatar(0.45);
     goScreen("quiz-result");
   }
 
@@ -9424,6 +9466,298 @@ body {
     document.body.style.overflow = '';
   }
   
+  // ==================== MONEDAS + AVATAR + TIENDA (Fase B) ====================
+  // Doble moneda: el XP nunca baja (niveles); las monedas GANADAS derivan del XP
+  // total de todas las materias (1 cada 10 XP, retroactivo). Saldo = ganadas - gastadas.
+  var AV_KEY = "apuntes_avatar";   // { gastadas, comprados: [ids], eq: {slot: id} }
+
+  var CATALOGO = [
+    { id: "p_clasico", slot: "peinado", n: "Clásico", p: 0, e: "💇" },
+    { id: "p_rapado", slot: "peinado", n: "Rapado", p: 80, e: "🪒" },
+    { id: "p_colita", slot: "peinado", n: "Colita", p: 80, e: "🎀" },
+    { id: "p_rulos", slot: "peinado", n: "Rulos", p: 100, e: "🌀" },
+    { id: "p_cresta", slot: "peinado", n: "Cresta", p: 150, e: "🦖" },
+    { id: "g_visera", slot: "gorra", n: "Gorra con visera", p: 120, e: "🧢" },
+    { id: "g_lana", slot: "gorra", n: "Gorro de lana ❄", p: 150, e: "🥶" },
+    { id: "g_negra", slot: "gorra", n: "Gorra negra", p: 200, e: "🎩" },
+    { id: "r_basica", slot: "ropa", n: "Remera básica", p: 0, e: "👕" },
+    { id: "r_buzo", slot: "ropa", n: "Buzo verde", p: 200, e: "🥬" },
+    { id: "r_hawaiana", slot: "ropa", n: "Camisa hawaiana", p: 250, e: "🌺" },
+    { id: "r_futbol", slot: "ropa", n: "Camiseta de fútbol", p: 300, e: "⚽" },
+    { id: "r_canguro", slot: "ropa", n: "Buzo canguro", p: 300, e: "🖤" },
+    { id: "r_cuero", slot: "ropa", n: "Campera de cuero", p: 350, e: "🏍️" },
+    { id: "r_puffer", slot: "ropa", n: "Campera inflada ❄", p: 400, e: "🧥" },
+    { id: "b_roja", slot: "bufanda", n: "Bufanda roja ❄", p: 120, e: "🧣" },
+    { id: "b_azul", slot: "bufanda", n: "Bufanda azul ❄", p: 120, e: "💙" },
+    { id: "b_arcoiris", slot: "bufanda", n: "Bufanda arcoíris ❄", p: 250, e: "🌈" },
+    { id: "a_inear", slot: "auris", n: "Auriculares in-ear", p: 150, e: "🎧" },
+    { id: "a_vincha", slot: "auris", n: "Auriculares vincha", p: 300, e: "🎼" },
+    { id: "a_gamer", slot: "auris", n: "Auriculares gamer", p: 450, e: "🎮" },
+    { id: "w_digital", slot: "reloj", n: "Reloj digital", p: 100, e: "⌚" },
+    { id: "w_deportivo", slot: "reloj", n: "Reloj deportivo", p: 200, e: "⏱️" },
+    { id: "w_smart", slot: "reloj", n: "Smartwatch", p: 350, e: "📱" },
+    { id: "v_playera", slot: "vehiculo", n: "Bici playera", p: 500, e: "🚲" },
+    { id: "v_bmx", slot: "vehiculo", n: "BMX", p: 800, e: "🤸" },
+    { id: "v_mtb", slot: "vehiculo", n: "Mountain bike", p: 1200, e: "⛰️" },
+    { id: "v_carbono", slot: "vehiculo", n: "Bici de carbono", p: 1500, e: "🚀" },
+    { id: "v_mono", slot: "vehiculo", n: "Monopatín", p: 400, e: "🛴" },
+    { id: "v_electrico", slot: "vehiculo", n: "Monopatín eléctrico", p: 700, e: "🔋" },
+    { id: "v_offroad", slot: "vehiculo", n: "Monopatín todo terreno", p: 900, e: "🏔️" },
+    { id: "c_rojo", slot: "color", n: "Pintura roja", p: 100, e: "🔴", c: "#c0392b" },
+    { id: "c_verde", slot: "color", n: "Pintura verde", p: 100, e: "🟢", c: "#2e7d4f" },
+    { id: "c_azul", slot: "color", n: "Pintura azul", p: 100, e: "🔵", c: "#2a6fb0" },
+    { id: "c_negro", slot: "color", n: "Pintura negra", p: 150, e: "⚫", c: "#2c2c34" },
+    { id: "c_dorado", slot: "color", n: "Pintura dorada", p: 300, e: "🟡", c: "#c9a227" },
+    { id: "s_rayo", slot: "sticker", n: "Sticker rayo", p: 200, e: "⚡" },
+    { id: "s_estrellas", slot: "sticker", n: "Sticker estrellas", p: 200, e: "✨" },
+    { id: "s_llamas", slot: "sticker", n: "Sticker llamas", p: 250, e: "🔥" },
+    { id: "s_calavera", slot: "sticker", n: "Sticker calavera", p: 300, e: "💀" },
+    { id: "x_bocina", slot: "extra", n: "Bocina", p: 100, e: "📢" },
+    { id: "x_casco", slot: "extra", n: "Casco", p: 150, e: "🪖" },
+    { id: "x_canasto", slot: "extra", n: "Canasto", p: 150, e: "🧺" },
+    { id: "x_luces", slot: "extra", n: "Luces LED", p: 200, e: "💡" }
+  ];
+  var TIENDA_CATS = [
+    ["peinado", "Peinados"], ["gorra", "Gorras y gorros"], ["ropa", "Ropa (temporada invierno)"],
+    ["bufanda", "Bufandas"], ["auris", "Auriculares"], ["reloj", "Relojes"],
+    ["vehiculo", "Bicis y monopatines"], ["color", "Pintura del vehículo"],
+    ["sticker", "Stickers del vehículo"], ["extra", "Accesorios del vehículo"]
+  ];
+  var TIENDA_PISO = 500;   // monedas GANADAS históricas para desbloquear (para siempre)
+
+  function avatarData() {
+    var a = null;
+    try { a = JSON.parse(localStorage.getItem(AV_KEY) || "null"); } catch (e) {}
+    if (!a) a = { gastadas: 0, comprados: ["p_clasico", "r_basica"], eq: { peinado: "p_clasico", ropa: "r_basica" } };
+    return a;
+  }
+  function guardarAvatar(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} }
+
+  function xpTotalGlobal() {
+    var total = 0;
+    for (var k in SUBJECTS) {
+      try {
+        var s = JSON.parse(localStorage.getItem(SUBJECTS[k].storage_key) || "null");
+        if (s && s.xp) total += s.xp;
+      } catch (e) {}
+    }
+    return total;
+  }
+  function monedasGanadas() { return Math.floor(xpTotalGlobal() / 10); }
+  function monedasSaldo() { return Math.max(0, monedasGanadas() - (avatarData().gastadas || 0)); }
+  function itemDe(id) { for (var i = 0; i < CATALOGO.length; i++) if (CATALOGO[i].id === id) return CATALOGO[i]; return null; }
+
+  /* ---- Avatar SVG por capas (según lo equipado) ---- */
+  function svgAvatar(escala) {
+    var eq = avatarData().eq || {};
+    var conVehiculo = !!eq.vehiculo;
+    var W = conVehiculo ? 235 : 120;
+    var s = escala || 1;
+    var ropaCol = { r_basica: "#9aa5ad", r_buzo: "#3d5a3d", r_hawaiana: "#e07b39", r_futbol: "#7ec8e3",
+                    r_canguro: "#2c2c34", r_cuero: "#4a3426", r_puffer: "#2a6fb0" }[eq.ropa] || "#9aa5ad";
+    var h = '<svg viewBox="0 0 ' + W + ' 150" width="' + Math.round(W * s) + '" height="' + Math.round(150 * s) + '">';
+    /* piernas + zapas */
+    h += '<rect x="49" y="100" width="9" height="32" rx="4" fill="#3a4a5a"/><rect x="62" y="100" width="9" height="32" rx="4" fill="#3a4a5a"/>';
+    h += '<ellipse cx="53" cy="136" rx="8" ry="4" fill="#2c2c34"/><ellipse cx="67" cy="136" rx="8" ry="4" fill="#2c2c34"/>';
+    /* torso */
+    h += '<rect x="42" y="58" width="36" height="46" rx="10" fill="' + ropaCol + '"/>';
+    /* brazos */
+    h += '<rect x="34" y="62" width="9" height="34" rx="4.5" fill="' + ropaCol + '"/><rect x="77" y="62" width="9" height="34" rx="4.5" fill="' + ropaCol + '"/>';
+    h += '<circle cx="38.5" cy="99" r="4.5" fill="#e8b88a"/><circle cx="81.5" cy="99" r="4.5" fill="#e8b88a"/>';
+    /* detalles de ropa */
+    if (eq.ropa === "r_futbol") h += '<rect x="50" y="58" width="7" height="46" fill="#fff" opacity=".85"/><rect x="63" y="58" width="7" height="46" fill="#fff" opacity=".85"/>';
+    if (eq.ropa === "r_hawaiana") h += '<text x="52" y="80" font-size="9">🌺</text><text x="63" y="94" font-size="9">🌺</text>';
+    if (eq.ropa === "r_canguro") h += '<path d="M48 62 q12 10 24 0" stroke="#4a4a55" stroke-width="3" fill="none"/><rect x="52" y="86" width="16" height="10" rx="3" fill="#4a4a55"/>';
+    if (eq.ropa === "r_cuero") h += '<line x1="60" y1="58" x2="60" y2="104" stroke="#c9a227" stroke-width="2"/>';
+    if (eq.ropa === "r_puffer") h += '<line x1="42" y1="70" x2="78" y2="70" stroke="rgba(0,0,0,.25)" stroke-width="2"/><line x1="42" y1="82" x2="78" y2="82" stroke="rgba(0,0,0,.25)" stroke-width="2"/><line x1="42" y1="94" x2="78" y2="94" stroke="rgba(0,0,0,.25)" stroke-width="2"/>';
+    if (eq.ropa === "r_buzo") h += '<rect x="52" y="88" width="16" height="9" rx="3" fill="rgba(0,0,0,.2)"/>';
+    /* reloj */
+    if (eq.reloj) h += '<rect x="34" y="92" width="9" height="7" rx="2" fill="' + (eq.reloj === "w_smart" ? "#2c2c34" : eq.reloj === "w_deportivo" ? "#c0392b" : "#2a6fb0") + '"/><rect x="36" y="93.5" width="5" height="4" fill="#9fd8ff"/>';
+    /* bufanda */
+    if (eq.bufanda) {
+      var bufCol = eq.bufanda === "b_roja" ? "#c0392b" : eq.bufanda === "b_azul" ? "#2a6fb0" : "url(#apArco)";
+      if (eq.bufanda === "b_arcoiris") h += '<defs><linearGradient id="apArco" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e04040"/><stop offset=".33" stop-color="#e0a020"/><stop offset=".66" stop-color="#3d8a3d"/><stop offset="1" stop-color="#2a6fb0"/></linearGradient></defs>';
+      h += '<rect x="43" y="54" width="34" height="9" rx="4.5" fill="' + bufCol + '"/><rect x="66" y="58" width="8" height="22" rx="4" fill="' + bufCol + '"/>';
+    }
+    /* cabeza */
+    h += '<circle cx="60" cy="36" r="20" fill="#e8b88a"/>';
+    h += '<circle cx="53" cy="33" r="2.2" fill="#2c2c34"/><circle cx="67" cy="33" r="2.2" fill="#2c2c34"/>';
+    h += '<path d="M52 43 q8 7 16 0" stroke="#2c2c34" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    /* peinado */
+    var pelo = "#4a3426";
+    if (!eq.gorra || eq.gorra === "g_visera") {
+      if (eq.peinado === "p_rapado") h += '<path d="M42 32 a20 20 0 0 1 36 0 a24 24 0 0 0 -36 0 z" fill="rgba(44,44,52,.5)"/>';
+      else if (eq.peinado === "p_colita") h += '<path d="M41 33 a20 20 0 0 1 38 -2 q-6 -8 -19 -8 t-19 10 z" fill="' + pelo + '"/><circle cx="79" cy="22" r="6" fill="' + pelo + '"/>';
+      else if (eq.peinado === "p_rulos") h += '<circle cx="46" cy="24" r="7" fill="' + pelo + '"/><circle cx="56" cy="19" r="7" fill="' + pelo + '"/><circle cx="66" cy="19" r="7" fill="' + pelo + '"/><circle cx="75" cy="24" r="7" fill="' + pelo + '"/>';
+      else if (eq.peinado === "p_cresta") h += '<path d="M52 20 l4 -12 l4 10 l4 -12 l4 10 l4 -10 l2 14 q-11 -8 -22 0 z" fill="#7a3db0"/>';
+      else h += '<path d="M41 33 a20 20 0 0 1 38 0 q-4 -12 -19 -12 t-19 12 z" fill="' + pelo + '"/>';
+    }
+    /* gorra / gorro */
+    if (eq.gorra === "g_visera") h += '<path d="M42 28 a19 19 0 0 1 36 0 z" fill="#c0392b"/><rect x="58" y="24" width="30" height="5" rx="2.5" fill="#c0392b"/>';
+    if (eq.gorra === "g_lana") h += '<path d="M41 32 a20 20 0 0 1 38 0 l0 -6 a20 15 0 0 0 -38 0 z" fill="#2a6fb0"/><path d="M41 32 a20 20 0 0 1 38 0" stroke="#1d4f80" stroke-width="4" fill="none"/><circle cx="60" cy="12" r="5" fill="#fff"/>';
+    if (eq.gorra === "g_negra") h += '<path d="M42 28 a19 19 0 0 1 36 0 z" fill="#2c2c34"/><rect x="40" y="26" width="40" height="4" rx="2" fill="#2c2c34"/>';
+    /* auriculares */
+    if (eq.auris === "a_inear") h += '<circle cx="41" cy="37" r="3" fill="#fff"/><circle cx="79" cy="37" r="3" fill="#fff"/>';
+    if (eq.auris === "a_vincha" || eq.auris === "a_gamer") {
+      var aCol = eq.auris === "a_gamer" ? "#7a3db0" : "#2c2c34";
+      h += '<path d="M42 30 a19 19 0 0 1 36 0" stroke="' + aCol + '" stroke-width="4" fill="none"/>';
+      h += '<rect x="37" y="31" width="8" height="13" rx="4" fill="' + aCol + '"/><rect x="75" y="31" width="8" height="13" rx="4" fill="' + aCol + '"/>';
+      if (eq.auris === "a_gamer") h += '<circle cx="41" cy="37" r="1.8" fill="#4be04b"/><circle cx="79" cy="37" r="1.8" fill="#e04b4b"/><path d="M42 43 q4 8 12 8" stroke="#7a3db0" stroke-width="2" fill="none"/>';
+    }
+    /* casco (accesorio, va sobre todo) */
+    if (eq.extra === "x_casco" && conVehiculo) h += '<path d="M40 30 a20 20 0 0 1 40 0 l-3 4 l-34 0 z" fill="#e07b39" opacity=".95"/><line x1="45" y1="34" x2="49" y2="24" stroke="rgba(0,0,0,.2)" stroke-width="2"/><line x1="60" y1="34" x2="60" y2="21" stroke="rgba(0,0,0,.2)" stroke-width="2"/><line x1="75" y1="34" x2="71" y2="24" stroke="rgba(0,0,0,.2)" stroke-width="2"/>';
+    /* vehículo */
+    if (conVehiculo) {
+      var vCol = (itemDe(eq.color) || {}).c || "#5a6a75";
+      var esMono = eq.vehiculo.indexOf("v_mono") === 0 || eq.vehiculo === "v_electrico" || eq.vehiculo === "v_offroad";
+      if (!esMono) {
+        var rW = eq.vehiculo === "v_bmx" ? 12 : eq.vehiculo === "v_mtb" ? 17 : 15;
+        var grosor = eq.vehiculo === "v_mtb" ? 5 : eq.vehiculo === "v_carbono" ? 2 : 3;
+        h += '<circle cx="140" cy="118" r="' + rW + '" fill="none" stroke="#2c2c34" stroke-width="' + grosor + '"/>';
+        h += '<circle cx="205" cy="118" r="' + rW + '" fill="none" stroke="#2c2c34" stroke-width="' + grosor + '"/>';
+        h += '<path d="M140 118 L163 90 L192 90 L205 118 M163 90 L172 118 L140 118 M192 90 L188 76 M140 118 L152 76" stroke="' + vCol + '" stroke-width="4" fill="none" stroke-linecap="round"/>';
+        h += '<rect x="146" y="72" width="12" height="4" rx="2" fill="#2c2c34"/><path d="M184 76 l10 -4" stroke="#2c2c34" stroke-width="3"/>';
+      } else {
+        h += '<rect x="140" y="112" width="55" height="6" rx="3" fill="' + vCol + '"/>';
+        var rM = eq.vehiculo === "v_offroad" ? 9 : 6;
+        h += '<circle cx="146" cy="124" r="' + rM + '" fill="#2c2c34"/><circle cx="189" cy="124" r="' + rM + '" fill="#2c2c34"/>';
+        h += '<path d="M191 112 L198 70" stroke="' + vCol + '" stroke-width="4" stroke-linecap="round"/><rect x="190" y="66" width="16" height="4" rx="2" fill="#2c2c34"/>';
+        if (eq.vehiculo === "v_electrico") h += '<rect x="152" y="103" width="20" height="8" rx="2" fill="#2e7d4f"/><text x="156" y="110" font-size="7" fill="#fff">⚡</text>';
+      }
+      if (eq.sticker) h += '<text x="160" y="106" font-size="13">' + ({ s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" }[eq.sticker] || "") + '</text>';
+      if (eq.extra === "x_luces") h += '<circle cx="203" cy="98" r="4" fill="#ffe95e"/><path d="M207 94 l6 -5 M208 99 l7 0" stroke="#ffe95e" stroke-width="2"/>';
+      if (eq.extra === "x_bocina") h += '<circle cx="196" cy="70" r="4" fill="#c0392b"/>';
+      if (eq.extra === "x_canasto" && !esMono) h += '<rect x="196" y="82" width="16" height="11" rx="2" fill="#b08d57"/><line x1="196" y1="86" x2="212" y2="86" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/>';
+    }
+    return h + "</svg>";
+  }
+
+  /* ---- fila del inicio: avatar + saldo + botón Tienda ---- */
+  function renderAvatarInicio() {
+    var zona = document.getElementById("spAvatarZona");
+    if (!zona || !CATALOGO) return;   // el arranque llama antes de que el catálogo exista; se repinta al final del módulo
+    var saldo = monedasSaldo();
+    var ganadas = monedasGanadas();
+    var sub = ganadas < TIENDA_PISO
+      ? "Te faltan " + (TIENDA_PISO - ganadas) + " monedas para la tienda"
+      : (diaHoy().seg < 300 ? "Estudiá 5 min hoy y la tienda se abre" : "Tienda abierta 🛍️");
+    zona.innerHTML = '<div class="av-zona"><div class="av-mini">' + svgAvatar(0.55) + '</div>' +
+      '<div class="av-datos"><div class="av-monedas">🪙 ' + saldo + ' monedas</div>' +
+      '<div class="av-sub">' + sub + '</div></div>' +
+      '<button class="av-btn-tienda" id="avBtnTienda">Tienda</button></div>';
+    document.getElementById("avBtnTienda").addEventListener("click", abrirTienda);
+  }
+
+  /* ---- tienda ---- */
+  function abrirTienda() {
+    if (document.getElementById("apTienda")) return;
+    var div = document.createElement("div");
+    div.id = "apTienda";
+    div.className = "tienda-overlay";
+    document.body.appendChild(div);
+    pintarTienda();
+  }
+  function cerrarTienda() {
+    var t = document.getElementById("apTienda");
+    if (t) t.remove();
+    renderAvatarInicio();
+  }
+  function pintarTienda() {
+    var t = document.getElementById("apTienda");
+    if (!t) return;
+    var ganadas = monedasGanadas();
+    var saldo = monedasSaldo();
+    var top = '<div class="tienda-top"><div class="tienda-titulo">🛍️ Tienda</div>' +
+              '<button class="tienda-cerrar" id="tiendaCerrar">✕</button></div>';
+    /* candado 1: piso histórico de monedas ganadas */
+    if (ganadas < TIENDA_PISO) {
+      var pct = Math.min(100, Math.round(100 * ganadas / TIENDA_PISO));
+      t.innerHTML = top + '<div class="tienda-lock"><div class="grande">🔒</div>' +
+        '<p><strong>La tienda se desbloquea al juntar ' + TIENDA_PISO + ' monedas.</strong></p>' +
+        '<div class="tienda-lock-barra"><div class="tienda-lock-fill" style="width:' + pct + '%"></div></div>' +
+        '<p>' + ganadas + ' / ' + TIENDA_PISO + ' — ganás 1 moneda cada 10 XP. ¡Seguí estudiando!</p></div>';
+      document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
+      return;
+    }
+    /* candado 2: 5 minutos efectivos del día */
+    if (diaHoy().seg < 300) {
+      var m = Math.floor(diaHoy().seg / 60), sgs = diaHoy().seg % 60;
+      t.innerHTML = top + '<div class="tienda-lock"><div class="grande">📚</div>' +
+        '<p><strong>La tienda abre con 5 minutos de estudio del día.</strong></p>' +
+        '<p>Llevás ' + m + ':' + (sgs < 10 ? "0" : "") + sgs + ' — leé o practicá un poco y volvé, que tus ' + saldo + ' monedas te esperan.</p></div>';
+      document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
+      return;
+    }
+    var a = avatarData();
+    var h = top + '<div class="tienda-saldo">🪙 Tenés ' + saldo + ' monedas</div>' +
+            '<div class="tienda-probador">' + svgAvatar(0.85) + '</div>';
+    for (var ci = 0; ci < TIENDA_CATS.length; ci++) {
+      var cat = TIENDA_CATS[ci];
+      var items = CATALOGO.filter(function (x) { return x.slot === cat[0]; });
+      h += '<div class="tienda-cat">' + cat[1] + '</div><div class="tienda-grid">';
+      for (var ii = 0; ii < items.length; ii++) {
+        var it = items[ii];
+        var comprado = a.comprados.indexOf(it.id) !== -1;
+        var equipado = a.eq[it.slot] === it.id;
+        var puede = saldo >= it.p;
+        var cls = "tienda-item" + (equipado ? " equipado" : comprado ? " comprado" : (!puede ? " caro" : ""));
+        var pre = equipado ? "✔ puesto" : comprado ? "tocá para poner" : "🪙 " + it.p;
+        h += '<button class="' + cls + '" data-item="' + it.id + '"><span class="em">' + it.e + '</span>' +
+             '<span class="nom">' + it.n + '</span><span class="pre">' + pre + '</span></button>';
+      }
+      h += "</div>";
+    }
+    t.innerHTML = h;
+    document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
+    t.querySelectorAll(".tienda-item").forEach(function (btn) {
+      btn.addEventListener("click", function () { tocarItem(btn.dataset.item); });
+    });
+  }
+  function tocarItem(id) {
+    var it = itemDe(id);
+    if (!it) return;
+    var a = avatarData();
+    var scrollAntes = (document.getElementById("apTienda") || {}).scrollTop || 0;
+    if (a.comprados.indexOf(id) !== -1) {
+      /* ya comprado: poner / sacar */
+      if (a.eq[it.slot] === id) {
+        if (it.slot !== "peinado" && it.slot !== "ropa") delete a.eq[it.slot];   /* base siempre vestida */
+      } else {
+        a.eq[it.slot] = id;
+      }
+      /* color/sticker/extra requieren vehículo */
+      if ((it.slot === "color" || it.slot === "sticker" || it.slot === "extra") && !a.eq.vehiculo) {
+        showToast("🚲", "Primero equipá una bici o monopatín");
+        delete a.eq[it.slot];
+      }
+      guardarAvatar(a);
+    } else {
+      var saldo = monedasSaldo();
+      if (saldo < it.p) { showToast("🪙", "Te faltan " + (it.p - saldo) + " monedas"); return; }
+      a.gastadas = (a.gastadas || 0) + it.p;
+      a.comprados.push(id);
+      a.eq[it.slot] = id;
+      if ((it.slot === "color" || it.slot === "sticker" || it.slot === "extra") && !a.eq.vehiculo) {
+        showToast("🚲", "Comprado — se va a ver cuando equipes una bici o monopatín");
+      } else {
+        showToast("🎉", "¡" + it.n + " comprado!");
+      }
+      guardarAvatar(a);
+    }
+    pintarTienda();
+    var t2 = document.getElementById("apTienda");
+    if (t2) t2.scrollTop = scrollAntes;
+  }
+
+  /* el panel de estadísticas (módulo de medición) también muestra el avatar */
+  try { window.apuntesAvatarSVG = svgAvatar; } catch (e) {}
+
+  /* el arranque pintó el selector ANTES de que este módulo tuviera sus datos: repintar */
+  try {
+    var spAbierto = document.getElementById("subjectPicker");
+    if (spAbierto && spAbierto.classList.contains("open")) renderAvatarInicio();
+  } catch (e) {}
+
   // ---- Slot de novedades del inicio: desafío REPASO (+200 XP al completarlo) ----
   function infoRepasoMateria(k) {
     const subj = SUBJECTS[k];
@@ -9526,7 +9860,8 @@ body {
     // Actualizar stats de cada materia en las tarjetas
     updatePickerStats();
 
-    // Slot de novedades (desafío REPASO) y aviso de repaso al salir de una materia
+    // Avatar + monedas, slot de novedades (desafío REPASO) y aviso de repaso
+    renderAvatarInicio();
     renderSpSlot();
     ofrecerNudgeRepaso();
   }
@@ -9729,7 +10064,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 11:49";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 12:02";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -10212,6 +10547,11 @@ body {
                '<button id="apStatsCerrar" type="button" style="border:none;background:transparent;font-size:22px;cursor:pointer;opacity:.6;">✕</button></div>';
     var ult = fmtUltima();
     if (ult) html += '<div style="font-size:13px;opacity:.65;margin-bottom:10px;">🕓 Última vez que estudiaste: ' + ult + '</div>';
+    try {
+      if (typeof window.apuntesAvatarSVG === 'function') {
+        html += '<div style="display:flex;justify-content:center;margin:4px 0 6px;">' + window.apuntesAvatarSVG(0.6) + '</div>';
+      }
+    } catch (e) {}
     for (var mat in PROG_KEYS) {
       var s = leerMat(mat);
       var t = ST_TOTALS[mat] || {};
