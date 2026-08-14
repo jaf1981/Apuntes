@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 22:18">
+<meta name="apuntes-version" content="13/08 22:26">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12610,8 +12610,11 @@ body {
       }
       // frame scrolleable solo si hay más materias de las que entran
       if (cont) cont.classList.toggle('con-scroll', cont.scrollHeight > cont.clientHeight + 8);
-      // al volver al inicio, el frame arranca arriba (la materia recién usada quedó primera)
+      // al volver al inicio, TODO arranca arriba como en una apertura fresca:
+      // el frame de materias, el overlay del picker (su propio elemento de scroll,
+      // position:fixed + overflow-y:auto) y la ventana (por si acaso).
       if (cont) cont.scrollTop = 0;
+      document.getElementById('subjectPicker').scrollTop = 0;
       window.scrollTo(0, 0);
     } catch (e) {}
 
@@ -12846,7 +12849,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 22:18";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 22:26";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
