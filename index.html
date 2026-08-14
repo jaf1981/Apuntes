@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 20:35">
+<meta name="apuntes-version" content="13/08 21:07">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1651,6 +1651,11 @@ body {
   max-height: 470px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  /* REGLA (13/08): el flex padre NO puede encoger este frame (con 4 materias
+     la grilla repartía la altura encogida entre las filas y recortaba los
+     títulos); y las filas jamás por debajo de su contenido. */
+  flex-shrink: 0;
+  grid-auto-rows: max-content;
   margin-bottom: 24px;
 }
 
@@ -12838,7 +12843,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 20:35";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/08 21:07";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
