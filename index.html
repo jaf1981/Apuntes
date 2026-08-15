@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="15/08 10:46">
+<meta name="apuntes-version" content="15/08 13:16">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12849,7 +12849,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "15/08 10:46";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "15/08 13:16";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -13156,6 +13156,18 @@ body {
     try { send('backup', { datos: 'DIAG ' + String(msg).slice(0, 300) }); } catch (e) {}
   }
 
+  /* FNV-1a 32 bits sobre unidades UTF-16 (charCodeAt), en base36.
+     Replicado tal cual en reensamblar_backup.py para validar que el respaldo
+     reconstruido es IDÉNTICO al que salió del teléfono. */
+  function hashTexto(s) {
+    var h = 0x811c9dc5;
+    /* Math.imul obligatorio: sin él la multiplicación de 32 bits se hace en punto
+       flotante, pierde precisión y el hash deja de ser replicable fuera del browser
+       (mismo patrón que firmaDe del export firmado) */
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h.toString(36);
+  }
+
   function intentarBackup() {
     try {
       if (!APUNTES_EVENTS_URL) return;
@@ -13177,6 +13189,10 @@ body {
         var v = lsGet(k);
         if (v) { try { datos[k] = JSON.parse(v); } catch (e) {} }
       });
+      /* el apodo va DENTRO del respaldo para que sea autosuficiente: si un alumno
+         pierde el almacenamiento, recupera también su identidad sin buscarla en otra hoja */
+      var apo = lsGet('apuntes_apodo');
+      if (apo) datos.apuntes_apodo = apo;
       var texto = JSON.stringify(datos);
       if (texto.length > 44000) {
         for (var mR in PROG_KEYS) { if (datos[PROG_KEYS[mR]]) delete datos[PROG_KEYS[mR]].fcReviewed; }
@@ -13207,8 +13223,17 @@ body {
       var idB = new Date().getTime().toString(36);
       var TROZO = 3000;
       var partes = [];
-      for (var iT = 0; iT < texto.length; iT += TROZO) partes.push(texto.slice(iT, iT + TROZO));
-      diagBackup('intento ' + idB + ': ' + texto.length + ' chars en ' + partes.length + ' partes');
+      for (var iT = 0; iT < texto.length;) {
+        var finT = Math.min(iT + TROZO, texto.length);
+        /* nunca cortar un par sustituto al medio (emojis en títulos/flashcards):
+           media pareja es texto inválido y corrompe el respaldo en silencio */
+        var ccT = texto.charCodeAt(finT - 1);
+        if (finT < texto.length && ccT >= 0xD800 && ccT <= 0xDBFF) finT--;
+        partes.push(texto.slice(iT, finT));
+        iT = finT;
+      }
+      diagBackup('intento ' + idB + ': ' + texto.length + ' chars en ' + partes.length +
+                 ' partes, firma ' + hashTexto(texto));
       /* SECUENCIAL, no en paralelo: el buzón es un Apps Script que hace appendRow
          sobre la misma planilla; N escrituras simultáneas compiten por el mismo
          recurso y se pisan o se descartan. Una por vez, con respiro entre medio. */
@@ -13217,6 +13242,13 @@ body {
         var enviarParte = function () {
           if (ix >= partes.length) {
             lsSet(kBk, hoy());
+            /* limpieza: las marcas de versiones anteriores ya no sirven */
+            try {
+              for (var iL = localStorage.length - 1; iL >= 0; iL--) {
+                var kL = localStorage.key(iL);
+                if (kL && kL.indexOf('apuntes_ev_bk_') === 0 && kL !== kBk) localStorage.removeItem(kL);
+              }
+            } catch (eL) {}
             diagBackup('fin ' + idB + ': ' + partes.length + ' partes enviadas');
             return;
           }
