@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="15/08 10:28">
+<meta name="apuntes-version" content="15/08 10:46">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12849,7 +12849,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "15/08 10:28";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "15/08 10:46";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -13209,17 +13209,27 @@ body {
       var partes = [];
       for (var iT = 0; iT < texto.length; iT += TROZO) partes.push(texto.slice(iT, iT + TROZO));
       diagBackup('intento ' + idB + ': ' + texto.length + ' chars en ' + partes.length + ' partes');
+      /* SECUENCIAL, no en paralelo: el buzón es un Apps Script que hace appendRow
+         sobre la misma planilla; N escrituras simultáneas compiten por el mismo
+         recurso y se pisan o se descartan. Una por vez, con respiro entre medio. */
       try {
-        var envios = partes.map(function (tr, ix) {
+        var ix = 0;
+        var enviarParte = function () {
+          if (ix >= partes.length) {
+            lsSet(kBk, hoy());
+            diagBackup('fin ' + idB + ': ' + partes.length + ' partes enviadas');
+            return;
+          }
+          var iP = ix++;
           var dataP = { ev: 'backup', device: deviceId(), apodo: lsGet('apuntes_apodo') || '',
                         ver: APUNTES_VERSION,
-                        datos: 'PARTE ' + (ix + 1) + '/' + partes.length + ' ' + idB + ' ' + tr };
-          return fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors',
-                       headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataP) });
-        });
-        Promise.all(envios)
-          .then(function () { lsSet(kBk, hoy()); })
-          .catch(function (eF) { diagBackup('parte fallo ' + idB + ': ' + (eF && eF.message)); });
+                        datos: 'PARTE ' + (iP + 1) + '/' + partes.length + ' ' + idB + ' ' + partes[iP] };
+          fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataP) })
+            .then(function () { setTimeout(enviarParte, 250); })
+            .catch(function (eF) { diagBackup('parte ' + (iP + 1) + ' fallo ' + idB + ': ' + (eF && eF.message)); });
+        };
+        enviarParte();
       } catch (eT) { diagBackup('fetch no disparo: ' + eT.message); }
     } catch (e) { diagBackup('error armando respaldo: ' + (e && e.message)); }
   }
