@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="14/08 23:22">
+<meta name="apuntes-version" content="15/08 09:31">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12849,7 +12849,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "14/08 23:22";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "15/08 09:31";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -13150,12 +13150,23 @@ body {
   /* ---- backup diario del progreso (1 vez por día por dispositivo) ----
      Respaldo compacto para poder RESTAURARLE el progreso a un alumno que pierda
      su storage (iOS lo borra en Safari a los 7 días) o cambie de teléfono. */
-  setTimeout(function () {
+  function diagBackup(msg) {
+    /* fila de diagnóstico chiquita en Backups: si el respaldo grande falla,
+       al menos vemos POR QUÉ desde el dispositivo real */
+    try { send('backup', { datos: 'DIAG ' + String(msg).slice(0, 300) }); } catch (e) {}
+  }
+
+  function intentarBackup() {
     try {
+      if (!APUNTES_EVENTS_URL) return;
+      if (lsGet('apuntes_ev_backup2') === hoy()) return;
       var datos = {};
       for (var mB in PROG_KEYS) {
-        var crudo = lsGet(PROG_KEYS[mB]);
-        if (crudo) datos[PROG_KEYS[mB]] = JSON.parse(crudo);
+        /* try por clave: una clave corrupta no debe abortar el respaldo entero */
+        try {
+          var crudo = lsGet(PROG_KEYS[mB]);
+          if (crudo) datos[PROG_KEYS[mB]] = JSON.parse(crudo);
+        } catch (eK) { diagBackup('clave corrupta ' + PROG_KEYS[mB] + ': ' + eK.message); }
       }
       ['apuntes_avatar', 'apuntes_racha', 'apuntes_ledger'].forEach(function (k) {
         var v = lsGet(k);
@@ -13163,14 +13174,13 @@ body {
       });
       var texto = JSON.stringify(datos);
       if (texto.length > 44000) {
-        /* recorte de emergencia: lo más pesado son las flashcards repasadas */
         for (var mR in PROG_KEYS) { if (datos[PROG_KEYS[mR]]) delete datos[PROG_KEYS[mR]].fcReviewed; }
         texto = JSON.stringify(datos);
       }
       if (texto.length > 44000) { delete datos.apuntes_ledger; texto = JSON.stringify(datos); }
       if (texto.length > 44000) {
-        /* último recurso: núcleo esencial, suficiente para restaurar XP/monedas/nivel
-           (el buzón trunca a 45.000 y un backup truncado es JSON inválido = inservible) */
+        /* último recurso: núcleo esencial (el buzón trunca a 45.000 y un backup
+           truncado es JSON inválido = inservible para restaurar) */
         var nucleo = {};
         for (var mN in PROG_KEYS) {
           var sN = datos[PROG_KEYS[mN]];
@@ -13181,23 +13191,27 @@ body {
         if (datos.apuntes_racha) nucleo.apuntes_racha = datos.apuntes_racha;
         texto = JSON.stringify(nucleo);
       }
-      /* transporte: fetch directo (la app está activa a los 12 s, no hace falta beacon
-         y el beacon rechaza payloads grandes en iOS); la marca diaria se pone recién
-         cuando el buzón RESPONDE — si falla, se reintenta en la próxima apertura.
-         Clave "backup2": renombrada a propósito para que todos los dispositivos
-         re-envíen una vez tras esta versión (verificación inmediata del fix). */
-      if (texto.length > 4 && lsGet('apuntes_ev_backup2') !== hoy() && APUNTES_EVENTS_URL) {
-        var dataB = { ev: 'backup', device: deviceId(), apodo: lsGet('apuntes_apodo') || '',
-                      ver: APUNTES_VERSION, datos: texto };
-        try {
-          fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataB) })
-            .then(function () { lsSet('apuntes_ev_backup2', hoy()); })
-            .catch(function () {});
-        } catch (e) {}
-      }
-    } catch (e) {}
-  }, 12000);
+      if (texto.length <= 4) return;
+      var dataB = { ev: 'backup', device: deviceId(), apodo: lsGet('apuntes_apodo') || '',
+                    ver: APUNTES_VERSION, datos: texto };
+      try {
+        fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataB) })
+          .then(function () { lsSet('apuntes_ev_backup2', hoy()); })
+          .catch(function (eF) { diagBackup('fetch rechazado (' + texto.length + ' chars): ' + (eF && eF.message)); });
+      } catch (eT) { diagBackup('fetch no disparó: ' + eT.message); }
+    } catch (e) { diagBackup('error armando respaldo: ' + (e && e.message)); }
+  }
+
+  /* transporte por fetch directo (el beacon rechaza payloads grandes en iOS y su
+     retorno se ignoraba — causa del bug de backups faltantes de iPhone); la marca
+     diaria se pone recién cuando el buzón RESPONDE. Se intenta al cargar (12 s) y
+     también al VOLVER del segundo plano (+3 s): las PWA de iOS muchas veces se
+     reanudan sin recargar, y el timer de carga solo corre una vez por carga. */
+  setTimeout(intentarBackup, 12000);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') setTimeout(intentarBackup, 3000);
+  });
 
   /* la app avisa cuando se completa un desafío (repaso dirigido, +200 XP) */
   window.addEventListener('apuntes:desafio', function (e) {
