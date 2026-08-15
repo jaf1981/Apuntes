@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="15/08 10:04">
+<meta name="apuntes-version" content="15/08 10:28">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12849,7 +12849,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "15/08 10:04";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "15/08 10:28";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -13159,7 +13159,12 @@ body {
   function intentarBackup() {
     try {
       if (!APUNTES_EVENTS_URL) return;
-      if (lsGet('apuntes_ev_backup2') === hoy()) return;
+      /* marca diaria POR VERSIÓN: si el envío de una versión con bug "respondió"
+         sin entregar (fantasma iOS), la versión siguiente reintenta sola en vez
+         de quedar bloqueada hasta mañana por la marca vieja (caso 15/08, visto
+         por Javier: "como ya hizo uno, no hace más") */
+      var kBk = 'apuntes_ev_bk_' + APUNTES_VERSION;
+      if (lsGet(kBk) === hoy()) return;
       var datos = {};
       for (var mB in PROG_KEYS) {
         /* try por clave: una clave corrupta no debe abortar el respaldo entero */
@@ -13213,7 +13218,7 @@ body {
                        headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataP) });
         });
         Promise.all(envios)
-          .then(function () { lsSet('apuntes_ev_backup2', hoy()); })
+          .then(function () { lsSet(kBk, hoy()); })
           .catch(function (eF) { diagBackup('parte fallo ' + idB + ': ' + (eF && eF.message)); });
       } catch (eT) { diagBackup('fetch no disparo: ' + eT.message); }
     } catch (e) { diagBackup('error armando respaldo: ' + (e && e.message)); }
