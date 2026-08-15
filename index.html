@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/08 22:26">
+<meta name="apuntes-version" content="14/08 23:22">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12849,7 +12849,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/08 22:26";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "14/08 23:22";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -12898,7 +12898,9 @@ body {
     if (extra) { for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) data[k] = extra[k]; } }
     var body = JSON.stringify(data);
     try {
-      if (navigator.sendBeacon) { navigator.sendBeacon(APUNTES_EVENTS_URL, body); return; }
+      /* sendBeacon devuelve false si rechaza el envío (p. ej. payload grande en
+         Safari/iOS): en ese caso NO retornar y caer al fetch de abajo */
+      if (navigator.sendBeacon && navigator.sendBeacon(APUNTES_EVENTS_URL, body)) return;
     } catch (e) {}
     try {
       fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: body });
@@ -13165,7 +13167,35 @@ body {
         for (var mR in PROG_KEYS) { if (datos[PROG_KEYS[mR]]) delete datos[PROG_KEYS[mR]].fcReviewed; }
         texto = JSON.stringify(datos);
       }
-      if (texto.length > 4) sendDiario('backup', 'backup', { datos: texto });
+      if (texto.length > 44000) { delete datos.apuntes_ledger; texto = JSON.stringify(datos); }
+      if (texto.length > 44000) {
+        /* último recurso: núcleo esencial, suficiente para restaurar XP/monedas/nivel
+           (el buzón trunca a 45.000 y un backup truncado es JSON inválido = inservible) */
+        var nucleo = {};
+        for (var mN in PROG_KEYS) {
+          var sN = datos[PROG_KEYS[mN]];
+          if (sN) nucleo[PROG_KEYS[mN]] = { xp: sN.xp, totalAnswered: sN.totalAnswered,
+            totalCorrect: sN.totalCorrect, pagesVisited: sN.pagesVisited };
+        }
+        if (datos.apuntes_avatar) nucleo.apuntes_avatar = datos.apuntes_avatar;
+        if (datos.apuntes_racha) nucleo.apuntes_racha = datos.apuntes_racha;
+        texto = JSON.stringify(nucleo);
+      }
+      /* transporte: fetch directo (la app está activa a los 12 s, no hace falta beacon
+         y el beacon rechaza payloads grandes en iOS); la marca diaria se pone recién
+         cuando el buzón RESPONDE — si falla, se reintenta en la próxima apertura.
+         Clave "backup2": renombrada a propósito para que todos los dispositivos
+         re-envíen una vez tras esta versión (verificación inmediata del fix). */
+      if (texto.length > 4 && lsGet('apuntes_ev_backup2') !== hoy() && APUNTES_EVENTS_URL) {
+        var dataB = { ev: 'backup', device: deviceId(), apodo: lsGet('apuntes_apodo') || '',
+                      ver: APUNTES_VERSION, datos: texto };
+        try {
+          fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataB) })
+            .then(function () { lsSet('apuntes_ev_backup2', hoy()); })
+            .catch(function () {});
+        } catch (e) {}
+      }
     } catch (e) {}
   }, 12000);
 
