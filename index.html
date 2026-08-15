@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="15/08 09:31">
+<meta name="apuntes-version" content="15/08 10:04">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12849,7 +12849,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "15/08 09:31";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "15/08 10:04";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -13192,14 +13192,30 @@ body {
         texto = JSON.stringify(nucleo);
       }
       if (texto.length <= 4) return;
-      var dataB = { ev: 'backup', device: deviceId(), apodo: lsGet('apuntes_apodo') || '',
-                    ver: APUNTES_VERSION, datos: texto };
+      /* PLAN B (15/08): el envío en UNA pieza (~40 KB) se pierde en iPhone sin error
+         ni rastro (ni siquiera el DIAG del catch — el fetch "resuelve" sin entregar,
+         o muere sin rechazar). Se trocea en partes de 3.000 chars: el mismo tamaño
+         de mensaje que los eventos que SIEMPRE llegan desde iPhone. La miga de pan
+         "intento" va primero y por send() (chica): si aparece ella sola sin partes,
+         el problema son los fetch de 3 KB y lo vemos. Restaurar = concatenar las
+         partes de un mismo id (quitando el prefijo "PARTE i/n id "). */
+      var idB = new Date().getTime().toString(36);
+      var TROZO = 3000;
+      var partes = [];
+      for (var iT = 0; iT < texto.length; iT += TROZO) partes.push(texto.slice(iT, iT + TROZO));
+      diagBackup('intento ' + idB + ': ' + texto.length + ' chars en ' + partes.length + ' partes');
       try {
-        fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors',
-              headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataB) })
+        var envios = partes.map(function (tr, ix) {
+          var dataP = { ev: 'backup', device: deviceId(), apodo: lsGet('apuntes_apodo') || '',
+                        ver: APUNTES_VERSION,
+                        datos: 'PARTE ' + (ix + 1) + '/' + partes.length + ' ' + idB + ' ' + tr };
+          return fetch(APUNTES_EVENTS_URL, { method: 'POST', mode: 'no-cors',
+                       headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dataP) });
+        });
+        Promise.all(envios)
           .then(function () { lsSet('apuntes_ev_backup2', hoy()); })
-          .catch(function (eF) { diagBackup('fetch rechazado (' + texto.length + ' chars): ' + (eF && eF.message)); });
-      } catch (eT) { diagBackup('fetch no disparó: ' + eT.message); }
+          .catch(function (eF) { diagBackup('parte fallo ' + idB + ': ' + (eF && eF.message)); });
+      } catch (eT) { diagBackup('fetch no disparo: ' + eT.message); }
     } catch (e) { diagBackup('error armando respaldo: ' + (e && e.message)); }
   }
 
