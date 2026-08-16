@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="16/08 12:10">
+<meta name="apuntes-version" content="16/08 12:31">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1497,6 +1497,10 @@ body {
   display: flex; align-items: center; gap: 8px;
   letter-spacing: -0.01em;
 }
+/* El término va en su propio span: .gloss-item-term es flex con gap, y sin este
+   envoltorio cada trozo partido por <mark> se vuelve un ítem flex separado y el
+   gap de 8px parte la palabra al buscar (reporte de Javier, 16/08). */
+.gloss-item-term .gloss-term-txt { min-width: 0; }
 .gloss-item-term .chap-tag {
   font-size: 10px;
   font-family: "Manrope", sans-serif;
@@ -1523,7 +1527,11 @@ body {
 .gloss-item-def mark, .gloss-item-term mark {
   background: var(--highlight);
   color: var(--text);
-  padding: 0 2px;
+  /* SIN padding lateral: en un resaltado dentro de una palabra ("Orfebre|ría")
+     el padding de un inline empuja el resto y parte la palabra en dos (16/08).
+     El aire se logra con box-shadow, que NO ocupa espacio de layout. */
+  padding: 0;
+  box-shadow: 0 0 0 1.5px var(--highlight);
   border-radius: 2px;
 }
 /* filtro por capítulo + ver en contexto (11/08) */
@@ -10711,8 +10719,32 @@ body {
   let PAGE_TEXTS = [];
   let PAGE_TEXTS_RAW = [];
 
+  // Quita tildes conservando el largo (á→a, ü→u) pero RESPETA la ñ, que en
+  // castellano es una letra distinta y no un acento.
+  function sinTildes(s) {
+    return String(s)
+      .replace(/\u00f1/g, "\u0001").replace(/\u00d1/g, "\u0002")
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/\u0001/g, "\u00f1").replace(/\u0002/g, "\u00d1");
+  }
+
+  // Resalta las coincidencias de q ignorando tildes, devolviendo el texto ORIGINAL
+  // (con sus tildes) ya escapado. Usado por el glosario y por la búsqueda de páginas.
+  function resaltarSinTildes(texto, q) {
+    q = sinTildes(String(q || "")).toLowerCase();
+    if (!q) return escapeHtml(texto);
+    const plano = sinTildes(texto).toLowerCase();
+    let out = "", desde = 0, i;
+    while ((i = plano.indexOf(q, desde)) !== -1) {
+      out += escapeHtml(texto.slice(desde, i)) +
+             "<mark>" + escapeHtml(texto.slice(i, i + q.length)) + "</mark>";
+      desde = i + q.length;
+    }
+    return out + escapeHtml(texto.slice(desde));
+  }
+
   function runSearch(q) {
-    q = q.trim().toLowerCase();
+    q = sinTildes(q.trim()).toLowerCase();   // buscar sin tildes (16/08)
     if (!q) { searchResults.hidden = true; tocList.hidden = false; return; }
     tocList.hidden = true;
     searchResults.hidden = false;
@@ -10720,7 +10752,7 @@ body {
     let count = 0;
     for (let i = 0; i < PAGES.length; i++) {
       const txt = PAGE_TEXTS[i];
-      const titleLower = PAGES[i].title.toLowerCase();
+      const titleLower = sinTildes(PAGES[i].title).toLowerCase();
       if (txt.includes(q) || titleLower.includes(q)) {
         count++;
         const raw = PAGE_TEXTS_RAW[i];
@@ -10734,8 +10766,7 @@ body {
         } else {
           snippet = raw.slice(0, 120) + "…";
         }
-        const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
-        snippet = escapeHtml(snippet).replace(re, m => `<mark>${m}</mark>`);
+        snippet = resaltarSinTildes(snippet, q);
         html += `<div class="search-result" data-idx="${i}">
           <div class="search-result-title">${escapeHtml(PAGES[i].title)}</div>
           <div class="search-result-snippet">${snippet}</div>
@@ -11889,15 +11920,18 @@ body {
     return { idx: mejor.idx, titulo: PAGES[mejor.idx].title, extracto };
   }
 
+
   function renderGlossary(query) {
     query = (query || "").trim().toLowerCase();
     renderGlossChips();
     let items = GLOSSARY;
     if (glossChapFilter) items = items.filter(g => g.c === glossChapFilter);
     if (query) {
+      // buscar sin tildes: "orfebreria" tiene que encontrar "Orfebrería" (16/08)
+      const q = sinTildes(query);
       items = items.filter(g =>
-        g.t.toLowerCase().includes(query) ||
-        g.d.toLowerCase().includes(query)
+        sinTildes(g.t).toLowerCase().includes(q) ||
+        sinTildes(g.d).toLowerCase().includes(q)
       );
     }
     if (items.length === 0) {
@@ -11916,11 +11950,7 @@ body {
     }
     const letters = Object.keys(groups).sort();
 
-    function highlight(text) {
-      if (!query) return escapeHtml(text);
-      const re = new RegExp("(" + query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
-      return escapeHtml(text).replace(re, "<mark>$1</mark>");
-    }
+    const highlight = (t) => resaltarSinTildes(t, query);
 
     let html = "";
     for (const l of letters) {
@@ -11929,7 +11959,7 @@ body {
         const chapInfo = (TOC.find(c => c.num === g.c) || {icon: "📖", name: ""});
         const id = "gloss_" + g.t.replace(/\s/g, "_");
         html += `<div class="gloss-item" data-term="${escapeHtml(g.t)}" data-chap="${g.c}">
-          <div class="gloss-item-term">${highlight(g.t)} <span class="chap-tag">${chapInfo.icon} Cap. ${g.c}</span></div>
+          <div class="gloss-item-term"><span class="gloss-term-txt">${highlight(g.t)}</span> <span class="chap-tag">${chapInfo.icon} Cap. ${g.c}</span></div>
           <div class="gloss-item-def">${highlight(g.d)}<button class="gloss-ctx-btn" type="button">📄 Ver en el capítulo</button><div class="gloss-ctx"></div></div>
         </div>`;
       }
@@ -12063,7 +12093,7 @@ body {
     STORAGE_KEY = subj.storage_key;
     
     // Recalcular PAGE_TEXTS
-    PAGE_TEXTS = PAGES.map(p => strip(p.html).toLowerCase());
+    PAGE_TEXTS = PAGES.map(p => sinTildes(strip(p.html)).toLowerCase());
     PAGE_TEXTS_RAW = PAGES.map(p => strip(p.html));
     
     // Cargar state desde su storage key
@@ -12842,7 +12872,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "16/08 12:10";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "16/08 12:31";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
