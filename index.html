@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="15/08 13:16">
+<meta name="apuntes-version" content="16/08 12:10">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1512,6 +1512,9 @@ body {
   line-height: 1.5;
   margin-top: 4px;
   display: none;
+  /* pre-line: la 2ª línea de las definiciones (RAE / "Qué es") queda aparte.
+     El texto se escapa antes de insertarse, así que el salto viene del dato. */
+  white-space: pre-line;
 }
 .gloss-item.expanded .gloss-item-def {
   display: block;
@@ -4684,7 +4687,7 @@ body {
    },
    {
     "t": "Amiloplasto",
-    "d": "Orgánulo exclusivo de la célula vegetal.",
+    "d": "Orgánulo exclusivo de la célula vegetal.\nQué es: leucoplasto vegetal que forma y almacena el almidón.",
     "c": 3
    },
    {
@@ -4734,23 +4737,18 @@ body {
    },
    {
     "c": 7,
-    "t": "Bronquíolos",
-    "d": "Ramas cada vez más finas de los bronquios dentro de los pulmones, de hasta 1 mm de diámetro. Terminan en los alvéolos."
-   },
-   {
-    "c": 7,
     "t": "Bronquios",
     "d": "Dos ramas en las que se abre la tráquea, formadas por cartílagos circulares. Cada una se dirige a un pulmón."
    },
    {
     "c": 7,
-    "t": "Caja torácica",
-    "d": "Cavidad delimitada por las costillas que alberga los pulmones y el corazón, entre otros órganos."
+    "t": "Bronquíolos",
+    "d": "Ramas cada vez más finas de los bronquios dentro de los pulmones, de hasta 1 mm de diámetro. Terminan en los alvéolos."
    },
    {
-    "t": "Cápsula",
-    "d": "Estructura bacteriana que protege frente a la acción de anticuerpos y evita la pérdida de humedad. Las bacterias con cápsula son más virulentas.",
-    "c": 2
+    "c": 7,
+    "t": "Caja torácica",
+    "d": "Cavidad delimitada por las costillas que alberga los pulmones y el corazón, entre otros órganos."
    },
    {
     "t": "Carbohidratos",
@@ -4761,11 +4759,6 @@ body {
     "c": 7,
     "t": "Cardias",
     "d": "Orificio superior del estómago, que lo comunica con el esófago."
-   },
-   {
-    "t": "Célula",
-    "d": "Unidad estructural, funcional y de origen de todo ser vivo.",
-    "c": 1
    },
    {
     "t": "Celulosa",
@@ -4794,7 +4787,7 @@ body {
    },
    {
     "t": "Clorofila",
-    "d": "Pigmento verde presente en los cloroplastos.",
+    "d": "Pigmento verde presente en los cloroplastos.\nRAE: pigmento propio de las plantas verdes y de ciertas bacterias, que interviene activamente en el proceso de la fotosíntesis.",
     "c": 3
    },
    {
@@ -4808,13 +4801,13 @@ body {
     "d": "Aberturas que comunican la faringe con las fosas nasales."
    },
    {
-    "t": "Colágeno",
-    "d": "Proteína estructural presente en la piel y huesos.",
+    "t": "Colesterol",
+    "d": "Lípido insoluble en agua. No se parece a otros lípidos en su estructura pero se agrupa con ellos.",
     "c": 4
    },
    {
-    "t": "Colesterol",
-    "d": "Lípido insoluble en agua. No se parece a otros lípidos en su estructura pero se agrupa con ellos.",
+    "t": "Colágeno",
+    "d": "Proteína estructural presente en la piel y huesos.",
     "c": 4
    },
    {
@@ -4826,6 +4819,16 @@ body {
     "c": 7,
     "t": "Cuerdas vocales",
     "d": "Dos pliegues membranosos y elásticos de unos 2 cm en la laringe. Al pasar el aire espirado, se acercan y vibran produciendo sonidos."
+   },
+   {
+    "t": "Cápsula",
+    "d": "Estructura bacteriana que protege frente a la acción de anticuerpos y evita la pérdida de humedad. Las bacterias con cápsula son más virulentas.",
+    "c": 2
+   },
+   {
+    "t": "Célula",
+    "d": "Unidad estructural, funcional y de origen de todo ser vivo.",
+    "c": 1
    },
    {
     "c": 7,
@@ -4913,8 +4916,8 @@ body {
     "c": 3
    },
    {
-    "t": "Glúcidos",
-    "d": "Otra denominación de los carbohidratos. Significa \"dulce\" en griego.",
+    "t": "Glucosa",
+    "d": "Monosacárido. Principal fuente de energía inmediata para las células.",
     "c": 4
    },
    {
@@ -4923,8 +4926,8 @@ body {
     "c": 4
    },
    {
-    "t": "Glucosa",
-    "d": "Monosacárido. Principal fuente de energía inmediata para las células.",
+    "t": "Glúcidos",
+    "d": "Otra denominación de los carbohidratos. Significa \"dulce\" en griego.",
     "c": 4
    },
    {
@@ -4964,11 +4967,6 @@ body {
    },
    {
     "c": 7,
-    "t": "Íleon",
-    "d": "Última de las tres zonas del intestino delgado."
-   },
-   {
-    "c": 7,
     "t": "Inspiración",
     "d": "Ingreso del aire al organismo: el diafragma y los intercostales se contraen y aumentan el volumen de la caja torácica."
    },
@@ -5003,14 +5001,14 @@ body {
     "d": "Conducto por el que continúa el aire después de la faringe. Contiene la epiglotis y las cuerdas vocales."
    },
    {
-    "c": 7,
     "t": "Lipasa",
-    "d": "Enzima del intestino delgado que convierte los lípidos en ácidos grasos y glicerol."
+    "d": "Enzima que acelera la degradación de los lípidos. En el intestino delgado los convierte en ácidos grasos y glicerol.",
+    "c": 5
    },
    {
-    "t": "Lipasas",
-    "d": "Enzimas que aceleran la degradación de lípidos.",
-    "c": 5
+    "t": "Lisosomas",
+    "d": "Orgánulos que intervienen en la digestión de partículas alimenticias.",
+    "c": 3
    },
    {
     "t": "Lípidos",
@@ -5021,11 +5019,6 @@ body {
     "t": "Lípidos (alimentos)",
     "d": "Carnes grasosas, huevos, cremas, manteca, comidas fritas y fiambres.",
     "c": 6
-   },
-   {
-    "t": "Lisosomas",
-    "d": "Orgánulos que intervienen en la digestión de partículas alimenticias.",
-    "c": 3
    },
    {
     "c": 7,
@@ -5054,7 +5047,7 @@ body {
    },
    {
     "t": "Microtúbulos",
-    "d": "Estructuras exclusivas de la célula animal.",
+    "d": "Estructuras exclusivas de la célula animal.\nRAE (microtúbulo): filamento intracelular y hueco, de naturaleza proteica, que forma parte del citoesqueleto y de otros orgánulos, como centriolos y cilios.",
     "c": 3
    },
    {
@@ -5088,11 +5081,6 @@ body {
     "c": 2
    },
    {
-    "t": "Núcleo",
-    "d": "Compartimento de la célula eucariota delimitado por membrana, que aloja al ADN.",
-    "c": 3
-   },
-   {
     "t": "Nucléolo",
     "d": "Cuerpo esférico dentro del núcleo donde se producen los ribosomas. Puede haber 1 o 2 por célula.",
     "c": 3
@@ -5123,14 +5111,9 @@ body {
     "c": 6
    },
    {
-    "t": "Órgano",
-    "d": "Conjunto de tejidos.",
-    "c": 1
-   },
-   {
-    "c": 7,
-    "t": "Páncreas",
-    "d": "Glándula situada detrás del estómago. Vierte su jugo en el intestino delgado."
+    "t": "Núcleo",
+    "d": "Compartimento de la célula eucariota delimitado por membrana, que aloja al ADN.",
+    "c": 3
    },
    {
     "t": "Pared celular",
@@ -5141,11 +5124,6 @@ body {
     "c": 7,
     "t": "Pepsina",
     "d": "Enzima del estómago que transforma las proteínas en péptidos menores y aminoácidos."
-   },
-   {
-    "c": 7,
-    "t": "Píloro",
-    "d": "Orificio inferior del estómago, que lo comunica con el intestino delgado."
    },
    {
     "t": "Plásmido",
@@ -5181,6 +5159,16 @@ body {
     "c": 7,
     "t": "Pulmones",
     "d": "Dos órganos esponjosos formados cada uno por más de 350 millones de alvéolos."
+   },
+   {
+    "c": 7,
+    "t": "Páncreas",
+    "d": "Glándula situada detrás del estómago. Vierte su jugo en el intestino delgado."
+   },
+   {
+    "c": 7,
+    "t": "Píloro",
+    "d": "Orificio inferior del estómago, que lo comunica con el intestino delgado."
    },
    {
     "t": "Queratina",
@@ -5244,23 +5232,18 @@ body {
    },
    {
     "t": "Sustancias inorgánicas",
-    "d": "Agua y sales minerales.",
+    "d": "Agua y sales minerales.\nRAE (inorgánico): dicho de una sustancia, que no tiene como componente el carbono.",
     "c": 4
    },
    {
     "t": "Sustancias orgánicas",
-    "d": "Carbohidratos, proteínas, lípidos, ácidos nucleicos y vitaminas.",
+    "d": "Carbohidratos, proteínas, lípidos, ácidos nucleicos y vitaminas.\nRAE (orgánico): dicho de una sustancia, que tiene como componente el carbono y que forma parte de los seres vivos.",
     "c": 4
    },
    {
     "t": "Tejido",
     "d": "Conjunto de células especializadas en una función. Por ejemplo: muscular, nervioso.",
     "c": 1
-   },
-   {
-    "c": 7,
-    "t": "Tráquea",
-    "d": "Conducto tubular recubierto por bandas de cartílago semicirculares (no se cierran por completo). Se abre en los dos bronquios."
    },
    {
     "t": "Triglicéridos",
@@ -5271,6 +5254,11 @@ body {
     "c": 7,
     "t": "Tripsina",
     "d": "Enzima que, junto con la quimotripsina, transforma los polipéptidos en aminoácidos."
+   },
+   {
+    "c": 7,
+    "t": "Tráquea",
+    "d": "Conducto tubular recubierto por bandas de cartílago semicirculares (no se cierran por completo). Se abre en los dos bronquios."
    },
    {
     "t": "Tubo digestivo",
@@ -5306,6 +5294,16 @@ body {
     "c": 7,
     "t": "Yeyuno",
     "d": "Zona media del intestino delgado, entre el duodeno y el íleon."
+   },
+   {
+    "c": 7,
+    "t": "Íleon",
+    "d": "Última de las tres zonas del intestino delgado."
+   },
+   {
+    "t": "Órgano",
+    "d": "Conjunto de tejidos.",
+    "c": 1
    }
   ]
  },
@@ -7561,18 +7559,13 @@ body {
    },
    {
     "c": 6,
-    "t": "América Ístmica",
-    "d": "Parte continental de América Central: un puente terrestre entre América del N y América del S."
-   },
-   {
-    "c": 6,
     "t": "América Latina",
     "d": "Desde México hacia el S. También llamada Subdesarrollada. Ex colonias de España y Portugal."
    },
    {
-    "t": "Antártico (océano)",
-    "d": "Océano del extremo sur. También llamado Océano Austral. Se considera la unión de los océanos Pacífico y Atlántico al sur del Antártico.",
-    "c": 1
+    "c": 6,
+    "t": "América Ístmica",
+    "d": "Parte continental de América Central: un puente terrestre entre América del N y América del S."
    },
    {
     "t": "Antemeridiano de Greenwich",
@@ -7588,6 +7581,11 @@ body {
     "c": 6,
     "t": "Antillas Menores",
     "d": "Las islas más pequeñas del mar Caribe."
+   },
+   {
+    "t": "Antártico (océano)",
+    "d": "Océano del extremo sur. También llamado Océano Austral. Se considera la unión de los océanos Pacífico y Atlántico al sur del Antártico.",
+    "c": 1
    },
    {
     "t": "Atlántico",
@@ -7630,16 +7628,6 @@ body {
     "d": "Zona elevada aislada del resto."
    },
    {
-    "t": "Círculo Polar Antártico",
-    "d": "Línea imaginaria a 66° Sur. No pasa por América (queda al sur de Tierra del Fuego, en el océano).",
-    "c": 1
-   },
-   {
-    "t": "Círculo Polar Ártico",
-    "d": "Línea imaginaria a 66° Norte.",
-    "c": 1
-   },
-   {
     "t": "Continentes",
     "d": "Grandes masas de tierra. Son 6: Europa, Asia, América, África, Oceanía y Antártida.",
     "c": 1
@@ -7668,6 +7656,16 @@ body {
     "c": 7,
     "t": "Cuadro de referencias",
     "d": "Recuadro del mapa donde se indica el significado de cada trazo, dibujo o color."
+   },
+   {
+    "t": "Círculo Polar Antártico",
+    "d": "Línea imaginaria a 66° Sur. No pasa por América (queda al sur de Tierra del Fuego, en el océano).",
+    "c": 1
+   },
+   {
+    "t": "Círculo Polar Ártico",
+    "d": "Línea imaginaria a 66° Norte.",
+    "c": 1
    },
    {
     "t": "Desastres naturales",
@@ -7765,11 +7763,6 @@ body {
     "c": 3
    },
    {
-    "t": "Índico",
-    "d": "Océano que NO baña las costas de América.",
-    "c": 3
-   },
-   {
     "t": "Isla Diego Ramírez",
     "d": "Punto extremo SUR de América. Se ubica en Chile.",
     "c": 3
@@ -7795,11 +7788,6 @@ body {
     "c": 3
    },
    {
-    "t": "Líneas imaginarias",
-    "d": "Líneas trazadas sobre los mapas para localizar puntos: paralelos (horizontales) y meridianos (verticales).",
-    "c": 1
-   },
-   {
     "t": "Litósfera",
     "d": "Capa de suelo del planeta.",
     "c": 2
@@ -7818,6 +7806,11 @@ body {
     "t": "Longitudinal",
     "d": "Sentido O-E de la extensión de un territorio.",
     "c": 3
+   },
+   {
+    "t": "Líneas imaginarias",
+    "d": "Líneas trazadas sobre los mapas para localizar puntos: paralelos (horizontales) y meridianos (verticales).",
+    "c": 1
    },
    {
     "c": 7,
@@ -7871,13 +7864,8 @@ body {
    },
    {
     "t": "Paralelo",
-    "d": "Línea imaginaria horizontal (paralela al Ecuador). Indica la latitud.",
+    "d": "Línea imaginaria horizontal, paralela al Ecuador: indica la latitud. Los paralelos son círculos concéntricos que corren de E a O; el mayor es el Ecuador.",
     "c": 1
-   },
-   {
-    "c": 5,
-    "t": "Paralelos",
-    "d": "Círculos concéntricos que corren de E a O. El mayor es el Ecuador."
    },
    {
     "t": "Planisferio",
@@ -7940,13 +7928,13 @@ body {
     "c": 2
    },
    {
-    "t": "Trópico de Cáncer",
-    "d": "Línea imaginaria a 23° Norte.",
+    "t": "Trópico de Capricornio",
+    "d": "Línea imaginaria a 23° Sur.",
     "c": 1
    },
    {
-    "t": "Trópico de Capricornio",
-    "d": "Línea imaginaria a 23° Sur.",
+    "t": "Trópico de Cáncer",
+    "d": "Línea imaginaria a 23° Norte.",
     "c": 1
    },
    {
@@ -7973,6 +7961,11 @@ body {
     "t": "Zonas climáticas",
     "d": "División del planeta según temperaturas, determinada por cómo llegan los rayos del Sol. Son 5: fría N, templada N, cálida (intertropical), templada S y fría S.",
     "c": 1
+   },
+   {
+    "t": "Índico",
+    "d": "Océano que NO baña las costas de América.\nQué es: el océano situado entre África, Asia y Oceanía; es el tercero más grande del planeta.",
+    "c": 3
    }
   ]
  },
@@ -8868,7 +8861,7 @@ body {
    {
     "c": 2,
     "t": "Burguesía",
-    "d": "Nuevo grupo social que aparece en la Baja Edad Media con el resurgimiento de las ciudades."
+    "d": "Nuevo grupo social que aparece en la Baja Edad Media con el resurgimiento de las ciudades.\nRAE: en la Edad Media, clase social formada especialmente por comerciantes, artesanos libres y personas que no estaban sometidas a los señores feudales."
    },
    {
     "c": 4,
@@ -8883,7 +8876,7 @@ body {
    {
     "c": 2,
     "t": "Colonos",
-    "d": "Junto a los campesinos, trabajaban las tierras a cambio de parte de la producción."
+    "d": "Junto a los campesinos, trabajaban las tierras a cambio de parte de la producción.\nRAE (colono): labrador que cultiva y labra una heredad por arrendamiento y suele vivir en ella."
    },
    {
     "c": 4,
@@ -8903,7 +8896,7 @@ body {
    {
     "c": 2,
     "t": "Cruzadas",
-    "d": "Con ellas comienza la Baja Edad Media (1100-1492)."
+    "d": "Con ellas comienza la Baja Edad Media (1100-1492).\nRAE (cruzada): expedición militar contra los infieles, especialmente para recuperar los Santos Lugares, que publicaba el papa concediendo indulgencias."
    },
    {
     "c": 3,
@@ -8933,7 +8926,7 @@ body {
    {
     "c": 5,
     "t": "Imperio bizantino",
-    "d": "Imperio que resistió 1000 años mientras caía el de occidente."
+    "d": "Imperio que resistió 1000 años mientras caía el de occidente.\nQué es: el Imperio romano de Oriente, con capital en Constantinopla, que sobrevivió a la caída del Imperio romano de Occidente."
    },
    {
     "c": 1,
@@ -8998,7 +8991,7 @@ body {
    {
     "c": 3,
     "t": "Monjes copistas",
-    "d": "A través de ellos la iglesia preservó la cultura."
+    "d": "A través de ellos la iglesia preservó la cultura.\nRAE (copista): persona que se dedica a copiar escritos ajenos."
    },
    {
     "c": 6,
@@ -9008,7 +9001,7 @@ body {
    {
     "c": 5,
     "t": "Orfebrería",
-    "d": "Una de las actividades que dieron riqueza a Bizancio, junto a agricultura, cerámica y construcción."
+    "d": "Una de las actividades que dieron riqueza a Bizancio, junto a agricultura, cerámica y construcción.\nRAE: arte del orfebre, la persona que labra objetos artísticos de oro, plata y otros metales preciosos."
    },
    {
     "c": 3,
@@ -9028,7 +9021,7 @@ body {
    {
     "c": 3,
     "t": "Reino franco",
-    "d": "El reino romano-germánico que más se destacó: se transformó en una gran potencia."
+    "d": "El reino romano-germánico que más se destacó: se transformó en una gran potencia.\nQué es: el reino que los francos, un pueblo germano, formaron en la antigua Galia; primero con los reyes merovingios y después con los carolingios."
    },
    {
     "c": 2,
@@ -10182,7 +10175,7 @@ body {
    {
     "c": 2,
     "t": "Aisladores",
-    "d": "Uso de los plásticos en artefactos eléctricos, porque no conducen la corriente."
+    "d": "Uso de los plásticos en artefactos eléctricos, porque no conducen la corriente.\nRAE (aislar): impedir que un agente físico, como la electricidad, el calor, el sonido o la humedad, pase o se transmita a un cuerpo o a un lugar."
    },
    {
     "c": 4,
@@ -10207,7 +10200,7 @@ body {
    {
     "c": 5,
     "t": "Cizallas",
-    "d": "Para piezas largas con bordes perfectamente rectos y perpendiculares."
+    "d": "Para piezas largas con bordes perfectamente rectos y perpendiculares.\nRAE (cizalla): instrumento a modo de tijeras grandes, con el cual se cortan en frío las planchas de metal."
    },
    {
     "c": 5,
@@ -10277,7 +10270,7 @@ body {
    {
     "c": 2,
     "t": "Hierro",
-    "d": "Metal cuyo uso, hace 3.000 años, inició la verdadera revolución de los materiales."
+    "d": "Metal cuyo uso, hace 3.000 años, inició la verdadera revolución de los materiales.\nRAE: elemento químico metálico, de número atómico 26, de color negro lustroso o gris azulado, dúctil, maleable y muy tenaz."
    },
    {
     "c": 4,
@@ -10307,17 +10300,17 @@ body {
    {
     "c": 3,
     "t": "Madera blanda",
-    "d": "Álamo, sauce, pino. Materia prima del papel."
+    "d": "Álamo, sauce, pino. Materia prima del papel.\nQué es: la que dan las coníferas y otros árboles de crecimiento rápido; es menos densa y más fácil de cortar y trabajar."
    },
    {
     "c": 3,
     "t": "Madera dura",
-    "d": "Roble. Muebles, parqué y antiguas embarcaciones."
+    "d": "Roble. Muebles, parqué y antiguas embarcaciones.\nQué es: la que dan los árboles frondosos (de hoja ancha), de crecimiento lento; es más densa y resistente, y cuesta más trabajarla."
    },
    {
     "c": 3,
     "t": "Madera fina",
-    "d": "Arce. Arte, instrumentos musicales y adornos."
+    "d": "Arce. Arte, instrumentos musicales y adornos.\nQué es: madera apreciada por su veta y su terminación más que por su resistencia; por eso se usa en trabajos decorativos y de precisión."
    },
    {
     "c": 3,
@@ -10372,7 +10365,7 @@ body {
    {
     "c": 1,
     "t": "Polietileno",
-    "d": "Material artificial orgánico: deriva de las moléculas orgánicas."
+    "d": "Material artificial orgánico: deriva de las moléculas orgánicas.\nRAE: polímero preparado a partir de etileno, que se emplea en la fabricación de envases, tuberías, recubrimientos de cables, etc."
    },
    {
     "c": 2,
@@ -10417,7 +10410,7 @@ body {
    {
     "c": 1,
     "t": "Vidrio",
-    "d": "Material artificial inorgánico: deriva de minerales."
+    "d": "Material artificial inorgánico: deriva de minerales.\nRAE: material duro, frágil y transparente o traslúcido, sin estructura cristalina, obtenido por la fusión de arena silícea con potasa y moldeable a altas temperaturas."
    }
   ]
  }
@@ -12849,7 +12842,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "15/08 13:16";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "16/08 12:10";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
