@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="16/08 12:31">
+<meta name="apuntes-version" content="17/08 15:40">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -10436,6 +10436,7 @@ body {
     totalAnswered: 0, totalCorrect: 0,
     chapStats: {1:{a:0,c:0}, 2:{a:0,c:0}, 3:{a:0,c:0}, 4:{a:0,c:0}, 5:{a:0,c:0}},
     fcReviewed: {},
+    vecesResp: {},        // veces que se respondió cada pregunta (XP decreciente + ponderación)
     quizCorrectIds: [],
     glossSeenIds: [],
     unlockedBadges: []
@@ -11566,6 +11567,25 @@ body {
     return a;
   }
 
+  /* Elige n preguntas priorizando las que MENOS se respondieron y las de
+     capítulos recientes, sin prohibir nada: es una ponderación con azar, no un
+     filtro. Peso = (1 / (1 + veces respondida)) reforzado si el capítulo es de
+     los últimos, por 1 + un ruido, para que dos cuestionarios seguidos no
+     traigan exactamente las mismas preguntas. */
+  function elegirPonderado(pool, n) {
+    if (pool.length <= n) return shuffleArray(pool);
+    const capMax = Math.max.apply(null, pool.map(q => q.c || 0));
+    const veces = state.vecesResp || {};
+    const conPeso = pool.map(q => {
+      const v = veces[q.id] || 0;
+      const recencia = 1 + 0.5 * (1 - Math.min(3, capMax - (q.c || 0)) / 3); // 1.5 el más reciente → 1.0 los viejos
+      const falla = (state.failCount && state.failCount[q.id]) ? 1.4 : 1;    // lo que falló, un empujón extra
+      return { q, peso: (1 / (1 + v)) * recencia * falla * (0.7 + 0.6 * Math.random()) };
+    });
+    conPeso.sort((a, b) => b.peso - a.peso);
+    return shuffleArray(conPeso.slice(0, n).map(x => x.q));
+  }
+
   function startQuiz() {
     let pool = selectedQuizChap === "all"
       ? QUIZ_BANK.slice()
@@ -11573,7 +11593,7 @@ body {
     if (selectedQuizPages && selectedQuizPages.length) {
       pool = pool.filter(q => selectedQuizPages.includes(q.page));
     }
-    pool = shuffleArray(pool).slice(0, 10);
+    pool = elegirPonderado(pool, 10);
     if (pool.length === 0) { showToast("⚠️", "No hay preguntas para esta selección"); return; }
     quizSession = {
       questions: pool,
@@ -11609,6 +11629,9 @@ body {
     $("quizOpts").querySelectorAll(".quiz-opt").forEach(el => {
       el.addEventListener("click", () => handleQuizAnswer(el, q));
     });
+    // reloj de la pregunta: el tiempo efectivo se acredita por lo que de verdad
+    // tardó, no por un valor fijo (si no, tocar rápido lo ya sabido fabrica racha)
+    quizSession.tPregunta = Date.now();
   }
 
   function handleQuizAnswer(btn, q) {
@@ -11630,7 +11653,18 @@ body {
 
     // Stats
     state.totalAnswered++;
-    sumarEfectivo(20);   // responder una pregunta ≈ 20 s de estudio efectivo
+    // Estudio efectivo: el tiempo REAL en la pregunta, con tope de 20 s (antes eran
+    // 20 s fijos y un cuestionario de 15 tocado rápido acreditaba el día entero).
+    const segPreg = quizSession.tPregunta
+      ? Math.min(20, Math.max(0, Math.round((Date.now() - quizSession.tPregunta) / 1000)))
+      : 20;
+    sumarEfectivo(segPreg);
+    // Veces que se respondió cada pregunta (alimenta el XP decreciente y la
+    // ponderación del armado; se guarda por id de pregunta)
+    state.vecesResp = state.vecesResp || {};
+    const vecesPrevias = state.vecesResp[q.id] || 0;
+    state.vecesResp[q.id] = vecesPrevias + 1;
+    if (vecesPrevias === 0) quizSession.frescas = (quizSession.frescas || 0) + 1;
     if (quizSession && quizSession.chapter === "repaso") {
       state.repasoPreg = (state.repasoPreg || 0) + 1;      // práctica de repaso dirigido
       if (isCorrect) state.repasoOk = (state.repasoOk || 0) + 1;
@@ -11646,7 +11680,11 @@ body {
       state.chapStats[q.c].c++;
       state.streak++;
       if (state.streak > state.bestStreak) state.bestStreak = state.streak;
-      const xp = 10;
+      // XP decreciente por repetición: repetir lo que ya sabés sigue estando
+      // permitido (es buena práctica de recuperación) pero paga cada vez menos,
+      // así el multiplicador no se puede farmear con un cuestionario sabido.
+      const xp = vecesPrevias === 0 ? 10 : (vecesPrevias === 1 ? 5 : 2);
+      quizSession.xpAciertos = (quizSession.xpAciertos || 0) + xp;
       addXp(xp, btn, quizSession && quizSession.chapter === "repaso" ? "quizRepaso" : "quiz");
       if (!state.quizCorrectIds.includes(q.id)) state.quizCorrectIds.push(q.id);
       checkBadge("first_correct");
@@ -11708,16 +11746,28 @@ body {
     $("qrTitle").textContent = title;
     $("qrSub").textContent = sub;
 
-    // Bonus XP
+    // Bonus XP — escalado por la FRESCURA del cuestionario: si todas las preguntas
+    // ya se habían respondido antes, el bonus vale el 20% (si no, repetir un
+    // cuestionario sabido seguiría pagando el bonus completo × multiplicador).
     let bonus = 15;  // por completar
     if (pct === 1) bonus += 25;
+    const frescas = quizSession.frescas || 0;
+    const frescura = total ? (0.2 + 0.8 * (frescas / total)) : 1;
+    bonus = Math.round(bonus * frescura);
+    // Explicarlo cuando pasa: repetir lo sabido paga menos y hay que decirlo,
+    // si no parece un error de la app.
+    if (total >= 4 && frescas / total < 0.5) {
+      $("qrSub").textContent = "Estas preguntas ya las habías respondido, así que suman menos XP. " +
+        "Probá con “Practicar lo que te cuesta” o con un capítulo nuevo.";
+    }
     const bonusBase = bonus;
     bonus = Math.round(bonus * multFactor());
     ledgerAdd(quizSession.chapter === "repaso" ? "quizRepaso" : "quiz", bonusBase);
     if (bonus > bonusBase) ledgerAdd("mult", bonus - bonusBase);
     state.xp += bonus;
     persist();
-    $("qrXp").textContent = `+${10 * correct + 2 * (total - correct) + bonus} XP totales (incluye +${bonus} bonus)`;
+    const xpAciertos = quizSession.xpAciertos || 0;
+    $("qrXp").textContent = `+${xpAciertos + 2 * (total - correct) + bonus} XP totales (incluye +${bonus} bonus)`;
 
     if (pct === 1) {
       checkBadge("perfect");
@@ -12872,7 +12922,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "16/08 12:31";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "17/08 15:40";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
