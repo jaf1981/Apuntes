@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="17/08 15:40">
+<meta name="apuntes-version" content="18/08 16:13">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12922,7 +12922,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "17/08 15:40";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "18/08 16:13";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -13163,6 +13163,10 @@ body {
   })();
 
   var sesionBase = fotoProgreso();
+  /* foto fija del momento de carga: sesionBase se reinicia al volver del segundo
+     plano, y para decidir la auto-actualización hace falta saber si el usuario
+     hizo algo DESDE QUE ABRIÓ */
+  var fotoCarga = fotoProgreso();
   var sesionInicio = Date.now();
   var sesionEnviada = false;
 
@@ -13379,10 +13383,52 @@ body {
     document.getElementById('apVerNo').addEventListener('click', function () {
       lsSet('apuntes_ver_desc', nueva); bar.remove();
     });
-    document.getElementById('apVerSi').addEventListener('click', function () {
-      cerrarSesion();  /* que la sesión en curso no se pierda */
-      location.href = location.pathname + '?upd=' + Date.now();
-    });
+    document.getElementById('apVerSi').addEventListener('click', actualizarYa);
+  }
+
+  /* Momento de carga de la página: sirve para saber si el usuario RECIÉN entró
+     (distinto de sesionInicio, que se reinicia al volver del segundo plano). */
+  var T_CARGA = Date.now();
+
+  function actualizarYa() {
+    cerrarSesion();  /* que la sesión en curso no se pierda */
+    location.href = location.pathname + '?upd=' + Date.now();
+  }
+
+  /* ¿El usuario todavía no hizo nada en esta carga? Compara el progreso actual
+     contra la foto tomada al abrir y descarta que haya un cuestionario o
+     flashcards en curso. */
+  function sinActividadDesdeLaCarga() {
+    try {
+      if (document.querySelector('#screen-quiz-session.active, #screen-flashcards.active')) return false;
+      var ahora = fotoProgreso();
+      for (var m in PROG_KEYS) {
+        if (deltaSesion(fotoCarga[m] || {}, ahora[m]).hubo) return false;
+      }
+      return true;
+    } catch (e) { return false; }
+  }
+
+  /* Al entrar, si hay versión nueva se actualiza SOLA: recargar en los primeros
+     segundos no interrumpe nada y evita que alguien quede clavado en una versión
+     vieja por irse antes de contestar el cartel (caso real: un compañero pasó 5
+     versiones sin actualizar porque entraba y salía en menos de 15 s).
+     Si ya está estudiando, se respeta el cartel de siempre. */
+  function manejarVersionNueva(nueva) {
+    var recienEntro = (Date.now() - T_CARGA) < 25000 && sinActividadDesdeLaCarga();
+    var yaIntentada = lsGet('apuntes_ver_auto') === nueva;  /* corta bucles si el server sirve cacheado */
+    if (recienEntro && !yaIntentada) {
+      lsSet('apuntes_ver_auto', nueva);
+      actualizarYa();
+      return;
+    }
+    mostrarBannerVersion(nueva);
+  }
+
+  /* si ya estamos corriendo la versión que se intentó traer, el intento salió
+     bien y la marca antibucle se limpia */
+  if (lsGet('apuntes_ver_auto') === APUNTES_VERSION) {
+    try { localStorage.removeItem('apuntes_ver_auto'); } catch (e) {}
   }
 
   function chequearVersion(forzar) {
@@ -13397,13 +13443,13 @@ body {
         .then(function (r) { return r.text(); })
         .then(function (txt) {
           var m = txt.match(/name="apuntes-version" content="([^"]+)"/);
-          if (m && m[1] && m[1] !== APUNTES_VERSION) mostrarBannerVersion(m[1]);
+          if (m && m[1] && m[1] !== APUNTES_VERSION) manejarVersionNueva(m[1]);
         })
         .catch(function () {});
     } catch (e) {}
   }
 
-  setTimeout(function () { chequearVersion(true); }, 4000);
+  setTimeout(function () { chequearVersion(true); }, 600);   /* ni bien entra (16/08: era 4000) */
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'visible') chequearVersion(false);
   });
