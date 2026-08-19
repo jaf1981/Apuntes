@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="18/08 21:39">
+<meta name="apuntes-version" content="19/08 10:55">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -8298,13 +8298,13 @@ body {
     "c": 1,
     "titulo": "Ordená estas líneas imaginarias de Norte a Sur",
     "items": [
-     "Círculo Polar Ártico (66° N)",
-     "Trópico de Cáncer (23° N)",
-     "Ecuador (0°)",
-     "Trópico de Capricornio (23° S)",
-     "Círculo Polar Antártico (66° S)"
+     "Círculo Polar Ártico",
+     "Trópico de Cáncer",
+     "Ecuador",
+     "Trópico de Capricornio",
+     "Círculo Polar Antártico"
     ],
-    "nota": "El Ecuador está en el medio, a 0° de latitud, y separa los dos hemisferios."
+    "nota": "De Norte a Sur: 66° N, 23° N, 0°, 23° S y 66° S. El Ecuador está en el medio y separa el Hemisferio Norte del Sur."
    }
   ],
   "clasif": [
@@ -10099,24 +10099,24 @@ body {
     "c": 2,
     "titulo": "Ordená las etapas de la Edad Media",
     "items": [
-     "Temprana Edad Media (476-843)",
-     "Alta Edad Media (843-1100)",
-     "Baja Edad Media (1100-1492)"
+     "Temprana Edad Media",
+     "Alta Edad Media",
+     "Baja Edad Media"
     ],
-    "nota": "Temprana: 3 centros de poder. Alta: feudalismo. Baja: Cruzadas, ciudades y burguesía."
+    "nota": "Temprana (476-843): 3 centros de poder. Alta (843-1100): el feudalismo. Baja (1100-1492): las Cruzadas, las ciudades y la burguesía. Ojo: la Alta va ANTES que la Baja."
    },
    {
     "c": 4,
     "titulo": "Ordená estos hechos del más antiguo al más reciente",
     "items": [
-     "Caída del último emperador romano de occidente (476)",
-     "Comienza el calendario musulmán (622)",
-     "Muere Carlomagno (814)",
-     "Se divide el imperio de Carlomagno (843)",
-     "Comienzan las Cruzadas (1100)",
-     "Llegada de los europeos a América (1492)"
+     "Cae el último emperador romano de occidente",
+     "Comienza el calendario musulmán",
+     "Muere Carlomagno",
+     "Se divide el imperio de Carlomagno",
+     "Comienzan las Cruzadas",
+     "Llegan los europeos a América"
     ],
-    "nota": "Los años que marcan el comienzo y el final de cada etapa de la Edad Media."
+    "nota": "En años: 476, 622, 814, 843, 1100 y 1492. El 476 abre la Edad Media, el 843 cierra la Temprana, el 1100 abre la Baja y el 1492 la termina."
    },
    {
     "c": 3,
@@ -13449,7 +13449,12 @@ body {
     $("orAyuda").textContent = "Tocá los pasos en el orden correcto.";
     $("orProgFill").style.width = "0%";
     $("orProgText").textContent = "0 / " + s.sec.items.length;
-    $("orLista").innerHTML = shuffleArray(s.sec.items).map(it =>
+    // que el azar no las muestre ya ordenadas (con 3 items pasa 1 de cada 6 veces)
+    let mezcla = shuffleArray(s.sec.items);
+    for (let i = 0; i < 8 && mezcla.join("|") === s.sec.items.join("|"); i++) {
+      mezcla = shuffleArray(s.sec.items);
+    }
+    $("orLista").innerHTML = mezcla.map(it =>
       `<button class="ord-item" data-it="${escapeHtml(it)}"><span class="num">•</span><span>${escapeHtml(it)}</span></button>`
     ).join("");
     $("orActions").style.display = "none";
@@ -15205,7 +15210,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "18/08 21:39";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "19/08 10:55";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
