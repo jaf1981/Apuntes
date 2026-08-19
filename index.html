@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="18/08 21:04">
+<meta name="apuntes-version" content="18/08 21:39">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1564,6 +1564,51 @@ body {
 .par-item.ok { border-color: #2e7d32; opacity: .55; pointer-events: none; }
 .par-item.mal { border-color: #c62828; animation: shake .3s; }
 @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.ej-titulo {
+  font-family: "Fraunces", serif; font-size: 19px; font-weight: 600;
+  color: var(--text); margin-bottom: 6px; line-height: 1.25;
+}
+/* Ordenar */
+.ord-lista { display: flex; flex-direction: column; gap: 10px; }
+.ord-item {
+  width: 100%; text-align: left; padding: 13px 14px; border-radius: 12px;
+  border: 1.5px solid var(--border); background: var(--bg-elev); color: var(--text);
+  font-family: "Manrope", sans-serif; font-size: 14px; line-height: 1.35; cursor: pointer;
+  display: flex; align-items: center; gap: 10px; transition: border-color .15s, opacity .2s;
+}
+.ord-item .num {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; background: var(--border); color: var(--text-soft);
+}
+.ord-item.ok { border-color: #2e7d32; opacity: .6; pointer-events: none; }
+.ord-item.ok .num { background: #2e7d32; color: #fff; }
+.ord-item.mal { border-color: #c62828; animation: shake .3s; }
+/* Clasificar */
+.clas-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; min-height: 44px; }
+.clas-chip {
+  padding: 9px 13px; border-radius: 999px; border: 1.5px solid var(--border);
+  background: var(--bg-elev); color: var(--text); font-family: "Manrope", sans-serif;
+  font-size: 13.5px; cursor: pointer; transition: border-color .15s, transform .1s;
+}
+.clas-chip.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+.clas-chip.mal { border-color: #c62828; animation: shake .3s; }
+.clas-cols { display: flex; gap: 10px; align-items: stretch; }
+.clas-col {
+  flex: 1; min-width: 0; border: 1.5px dashed var(--border); border-radius: 14px;
+  padding: 10px 8px; background: var(--bg-elev); cursor: pointer; min-height: 110px;
+  display: flex; flex-direction: column; gap: 7px; transition: border-color .15s;
+}
+.clas-col.activa { border-color: var(--accent); border-style: solid; }
+.clas-col .cab {
+  font-family: "Manrope", sans-serif; font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .04em; color: var(--accent);
+  text-align: center; line-height: 1.2;
+}
+.clas-col .puesto {
+  font-family: "Manrope", sans-serif; font-size: 12.5px; color: var(--text);
+  background: var(--bg); border-radius: 9px; padding: 7px 8px; text-align: center;
+}
 
 /* filtro por capítulo + ver en contexto (11/08) */
 .gloss-chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
@@ -2236,6 +2281,11 @@ body {
           <div class="name">Flashcards</div>
           <div class="sub">Repasar conceptos</div>
         </button>
+        <button class="dash-action" id="examActionBtn">
+          <span class="ico">📝</span>
+          <div class="name">Examen final</div>
+          <div class="sub">Todas las preguntas</div>
+        </button>
         <button class="dash-action" data-go="blancos">
           <span class="ico">✏️</span>
           <div class="name">Completar</div>
@@ -2246,20 +2296,25 @@ body {
           <div class="name">Unir pares</div>
           <div class="sub">Cada término con su definición</div>
         </button>
-        <button class="dash-action" data-go="glossary">
-          <span class="ico">📖</span>
-          <div class="name">Glosario</div>
-          <div class="sub" id="glossCount">— términos</div>
+        <button class="dash-action" data-go="ordenar">
+          <span class="ico">🔢</span>
+          <div class="name">Ordenar</div>
+          <div class="sub">Poné los pasos en orden</div>
         </button>
-        <button class="dash-action" id="examActionBtn">
-          <span class="ico">📝</span>
-          <div class="name">Examen final</div>
-          <div class="sub">Todas las preguntas</div>
+        <button class="dash-action" data-go="clasificar">
+          <span class="ico">🗂️</span>
+          <div class="name">Clasificar</div>
+          <div class="sub">Cada cosa en su columna</div>
         </button>
         <button class="dash-action" id="dashTienda">
           <span class="ico">🛍️</span>
           <div class="name">Tienda</div>
           <div class="sub" id="dashTiendaSub">Gastá tus monedas</div>
+        </button>
+        <button class="dash-action" data-go="glossary">
+          <span class="ico">📖</span>
+          <div class="name">Glosario</div>
+          <div class="sub" id="glossCount">— términos</div>
         </button>
       </div>
 
@@ -2340,6 +2395,37 @@ body {
       </div>
       <div class="quiz-actions" id="paActions" style="display:none">
         <button class="start-btn" id="paNextBtn">Otra ronda →</button>
+        <button class="start-btn secondary" data-go="dashboard">Volver</button>
+      </div>
+    </div>
+
+    <!-- ORDENAR (secuencias) -->
+    <div class="pr-screen" id="screen-ordenar">
+      <div class="quiz-prog">
+        <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="orProgFill" style="width:0%"></div></div>
+        <span class="quiz-prog-text" id="orProgText">0 / 3</span>
+      </div>
+      <div class="ej-titulo" id="orTitulo"></div>
+      <div class="ej-ayuda" id="orAyuda">Tocá los pasos en el orden correcto.</div>
+      <div class="ord-lista" id="orLista"></div>
+      <div class="quiz-actions" id="orActions" style="display:none">
+        <button class="start-btn" id="orNextBtn">Otra secuencia →</button>
+        <button class="start-btn secondary" data-go="dashboard">Volver</button>
+      </div>
+    </div>
+
+    <!-- CLASIFICAR (columnas) -->
+    <div class="pr-screen" id="screen-clasificar">
+      <div class="quiz-prog">
+        <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="clProgFill" style="width:0%"></div></div>
+        <span class="quiz-prog-text" id="clProgText">0 / 6</span>
+      </div>
+      <div class="ej-titulo" id="clTitulo"></div>
+      <div class="ej-ayuda" id="clAyuda">Tocá una tarjeta y después la columna donde va.</div>
+      <div class="clas-pool" id="clPool"></div>
+      <div class="clas-cols" id="clCols"></div>
+      <div class="quiz-actions" id="clActions" style="display:none">
+        <button class="start-btn" id="clNextBtn">Otra tanda →</button>
         <button class="start-btn secondary" data-go="dashboard">Volver</button>
       </div>
     </div>
@@ -2530,6 +2616,7 @@ body {
   "use strict";
 
   let STORAGE_KEY = "biologia_ebook_v4_pending";
+  let SUBJECT_DATA = null;
   let PAGES = [];
   let TOC = [];
   let IMG_DB = {};
@@ -5385,6 +5472,152 @@ body {
     "d": "Conjunto de tejidos.",
     "c": 1
    }
+  ],
+  "secuencias": [
+   {
+    "c": 1,
+    "titulo": "Ordená los niveles de organización, del más chico al más grande",
+    "items": [
+     "Célula",
+     "Tejido",
+     "Órgano",
+     "Sistema de órganos"
+    ],
+    "nota": "La célula es la unidad; el tejido, un conjunto de células; el órgano, de tejidos; el sistema, de órganos."
+   },
+   {
+    "c": 7,
+    "titulo": "Ordená el recorrido del aire al entrar al cuerpo",
+    "items": [
+     "Fosas nasales",
+     "Faringe",
+     "Laringe",
+     "Tráquea",
+     "Bronquios",
+     "Bronquíolos",
+     "Alvéolos"
+    ],
+    "nota": "La tráquea se abre en dos bronquios, que se ramifican en bronquíolos y terminan en los alvéolos."
+   },
+   {
+    "c": 7,
+    "titulo": "Ordená el recorrido del alimento",
+    "items": [
+     "Boca (bolo alimenticio)",
+     "Esófago",
+     "Estómago (quimo)",
+     "Intestino delgado (quilo)",
+     "Intestino grueso"
+    ],
+    "nota": "El cardias comunica el esófago con el estómago y el píloro, el estómago con el intestino delgado."
+   },
+   {
+    "c": 7,
+    "titulo": "Ordená las 3 zonas del intestino delgado",
+    "items": [
+     "Duodeno",
+     "Yeyuno",
+     "Íleon"
+    ],
+    "nota": "El yeyuno es la zona media, entre el duodeno y el íleon."
+   }
+  ],
+  "clasif": [
+   {
+    "c": 3,
+    "titulo": "¿De qué célula es exclusiva cada estructura?",
+    "cats": [
+     "Célula vegetal",
+     "Célula animal"
+    ],
+    "items": [
+     {
+      "t": "Cloroplasto",
+      "k": 0
+     },
+     {
+      "t": "Amiloplasto",
+      "k": 0
+     },
+     {
+      "t": "Pared celular",
+      "k": 0
+     },
+     {
+      "t": "Microtúbulos",
+      "k": 1
+     },
+     {
+      "t": "Centríolos",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 4,
+    "titulo": "Clasificá estas sustancias",
+    "cats": [
+     "Orgánicas",
+     "Inorgánicas"
+    ],
+    "items": [
+     {
+      "t": "Carbohidratos",
+      "k": 0
+     },
+     {
+      "t": "Proteínas",
+      "k": 0
+     },
+     {
+      "t": "Lípidos",
+      "k": 0
+     },
+     {
+      "t": "Ácidos nucleicos",
+      "k": 0
+     },
+     {
+      "t": "Vitaminas",
+      "k": 0
+     },
+     {
+      "t": "Agua",
+      "k": 1
+     },
+     {
+      "t": "Sales minerales",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 7,
+    "titulo": "¿Dónde actúa cada enzima?",
+    "cats": [
+     "Boca",
+     "Estómago",
+     "Intestino delgado"
+    ],
+    "items": [
+     {
+      "t": "Amilasa salival",
+      "k": 0
+     },
+     {
+      "t": "Pepsina",
+      "k": 1
+     },
+     {
+      "t": "Lipasa",
+      "k": 2
+     },
+     {
+      "t": "Maltasa",
+      "k": 2
+     }
+    ]
+   }
   ]
  },
  "geo": {
@@ -8047,6 +8280,121 @@ body {
     "d": "Océano que NO baña las costas de América.\nQué es: el océano situado entre África, Asia y Oceanía; es el tercero más grande del planeta.",
     "c": 3
    }
+  ],
+  "secuencias": [
+   {
+    "c": 1,
+    "titulo": "Ordená las zonas climáticas de Norte a Sur",
+    "items": [
+     "Zona fría N",
+     "Zona templada N",
+     "Zona cálida o intertropical",
+     "Zona templada S",
+     "Zona fría S"
+    ],
+    "nota": "Son 5 y dependen de cómo llegan los rayos del Sol."
+   },
+   {
+    "c": 1,
+    "titulo": "Ordená estas líneas imaginarias de Norte a Sur",
+    "items": [
+     "Círculo Polar Ártico (66° N)",
+     "Trópico de Cáncer (23° N)",
+     "Ecuador (0°)",
+     "Trópico de Capricornio (23° S)",
+     "Círculo Polar Antártico (66° S)"
+    ],
+    "nota": "El Ecuador está en el medio, a 0° de latitud, y separa los dos hemisferios."
+   }
+  ],
+  "clasif": [
+   {
+    "c": 6,
+    "titulo": "¿A qué América pertenece cada país?",
+    "cats": [
+     "América Anglosajona",
+     "América Latina"
+    ],
+    "items": [
+     {
+      "t": "Canadá",
+      "k": 0
+     },
+     {
+      "t": "Estados Unidos",
+      "k": 0
+     },
+     {
+      "t": "México",
+      "k": 1
+     },
+     {
+      "t": "Argentina",
+      "k": 1
+     },
+     {
+      "t": "Brasil",
+      "k": 1
+     },
+     {
+      "t": "Chile",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 2,
+    "titulo": "¿Qué tipo de ambiente es cada paisaje?",
+    "cats": [
+     "Natural",
+     "Humanizado",
+     "Cultural"
+    ],
+    "items": [
+     {
+      "t": "Paisaje de montañas",
+      "k": 0
+     },
+     {
+      "t": "Paisaje de campos",
+      "k": 1
+     },
+     {
+      "t": "Paisaje de ciudades",
+      "k": 2
+     }
+    ]
+   },
+   {
+    "c": 1,
+    "titulo": "¿Qué océano baña las costas de América y cuál no?",
+    "cats": [
+     "Baña América",
+     "No baña América"
+    ],
+    "items": [
+     {
+      "t": "Pacífico",
+      "k": 0
+     },
+     {
+      "t": "Atlántico",
+      "k": 0
+     },
+     {
+      "t": "Glaciar Ártico",
+      "k": 0
+     },
+     {
+      "t": "Antártico o Austral",
+      "k": 0
+     },
+     {
+      "t": "Índico",
+      "k": 1
+     }
+    ]
+   }
   ]
  },
  "his": {
@@ -9734,6 +10082,128 @@ body {
     "c": 2,
     "t": "Trueque",
     "d": "Intercambio sin moneda. Se usó cuando la economía medieval se volvió autosuficiente."
+   }
+  ],
+  "secuencias": [
+   {
+    "c": 1,
+    "titulo": "Ordená las 3 etapas de Roma",
+    "items": [
+     "Monarquía",
+     "República",
+     "Imperio"
+    ],
+    "nota": "Primero el rey concentraba los poderes; después los ciudadanos consiguieron derechos; por último llegó la expansión."
+   },
+   {
+    "c": 2,
+    "titulo": "Ordená las etapas de la Edad Media",
+    "items": [
+     "Temprana Edad Media (476-843)",
+     "Alta Edad Media (843-1100)",
+     "Baja Edad Media (1100-1492)"
+    ],
+    "nota": "Temprana: 3 centros de poder. Alta: feudalismo. Baja: Cruzadas, ciudades y burguesía."
+   },
+   {
+    "c": 4,
+    "titulo": "Ordená estos hechos del más antiguo al más reciente",
+    "items": [
+     "Caída del último emperador romano de occidente (476)",
+     "Comienza el calendario musulmán (622)",
+     "Muere Carlomagno (814)",
+     "Se divide el imperio de Carlomagno (843)",
+     "Comienzan las Cruzadas (1100)",
+     "Llegada de los europeos a América (1492)"
+    ],
+    "nota": "Los años que marcan el comienzo y el final de cada etapa de la Edad Media."
+   },
+   {
+    "c": 3,
+    "titulo": "Ordená a estos personajes del reino franco",
+    "items": [
+     "Carlos Martel",
+     "Pipino el Breve",
+     "Carlomagno",
+     "Ludovico Pío"
+    ],
+    "nota": "Los mayordomos primero, después el emperador y por último su hijo."
+   }
+  ],
+  "clasif": [
+   {
+    "c": 4,
+    "titulo": "¿A qué parte del reparto carolingio corresponde cada cosa?",
+    "cats": [
+     "Germania",
+     "Francia",
+     "Lotaringia"
+    ],
+    "items": [
+     {
+      "t": "Luis el germánico",
+      "k": 0
+     },
+     {
+      "t": "Territorios al este del río Rin",
+      "k": 0
+     },
+     {
+      "t": "Carlos el calvo",
+      "k": 1
+     },
+     {
+      "t": "La antigua Galia, más reducida",
+      "k": 1
+     },
+     {
+      "t": "Lotario",
+      "k": 2
+     },
+     {
+      "t": "Le correspondió el título de emperador",
+      "k": 2
+     }
+    ]
+   },
+   {
+    "c": 2,
+    "titulo": "¿De qué etapa de la Edad Media es cada cosa?",
+    "cats": [
+     "Temprana",
+     "Alta",
+     "Baja"
+    ],
+    "items": [
+     {
+      "t": "3 grandes centros de poder",
+      "k": 0
+     },
+     {
+      "t": "Va del 476 al 843",
+      "k": 0
+     },
+     {
+      "t": "Cobró forma el feudalismo",
+      "k": 1
+     },
+     {
+      "t": "Va del 843 al 1100",
+      "k": 1
+     },
+     {
+      "t": "Comienza con las Cruzadas",
+      "k": 2
+     },
+     {
+      "t": "Aparece la burguesía",
+      "k": 2
+     },
+     {
+      "t": "Resurgen las ciudades",
+      "k": 2
+     }
+    ]
    }
   ]
  },
@@ -11584,6 +12054,226 @@ body {
     "t": "Vidrio",
     "d": "Material artificial inorgánico: deriva de minerales.\nRAE: material duro, frágil y transparente o traslúcido, sin estructura cristalina, obtenido por la fusión de arena silícea con potasa y moldeable a altas temperaturas."
    }
+  ],
+  "secuencias": [
+   {
+    "c": 2,
+    "titulo": "Ordená las 3 etapas de la metalurgia",
+    "items": [
+     "Obtención del concentrado",
+     "Extracción del metal",
+     "Purificación"
+    ],
+    "nota": "Son las operaciones para obtener los metales a partir de los minerales."
+   },
+   {
+    "c": 6,
+    "titulo": "Ordená lo que le pasa a un material al aumentar la fuerza",
+    "items": [
+     "Deformación elástica",
+     "Deformación plástica",
+     "Límite de rotura"
+    ],
+    "nota": "Primero vuelve a su forma; después queda deformado; al final se rompe."
+   },
+   {
+    "c": 4,
+    "titulo": "Ordená cómo se llega de la planta de algodón a la tela",
+    "items": [
+     "Capullo de la planta de algodón",
+     "Hilado",
+     "Tejido",
+     "Tela"
+    ],
+    "nota": "El algodón se obtiene del capullo y en la industria se hila y se teje."
+   }
+  ],
+  "clasif": [
+   {
+    "c": 1,
+    "titulo": "Clasificá cada material",
+    "cats": [
+     "Natural",
+     "Artificial o sintético"
+    ],
+    "items": [
+     {
+      "t": "Madera",
+      "k": 0
+     },
+     {
+      "t": "Algodón",
+      "k": 0
+     },
+     {
+      "t": "Lana",
+      "k": 0
+     },
+     {
+      "t": "Cuero",
+      "k": 0
+     },
+     {
+      "t": "Metales",
+      "k": 0
+     },
+     {
+      "t": "Polietileno",
+      "k": 1
+     },
+     {
+      "t": "Vidrio",
+      "k": 1
+     },
+     {
+      "t": "Fibras sintéticas",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 1,
+    "titulo": "¿Cuál es el origen de cada material natural?",
+    "cats": [
+     "Vegetal",
+     "Animal",
+     "Mineral"
+    ],
+    "items": [
+     {
+      "t": "Madera",
+      "k": 0
+     },
+     {
+      "t": "Algodón",
+      "k": 0
+     },
+     {
+      "t": "Lino",
+      "k": 0
+     },
+     {
+      "t": "Corcho",
+      "k": 0
+     },
+     {
+      "t": "Lana",
+      "k": 1
+     },
+     {
+      "t": "Seda",
+      "k": 1
+     },
+     {
+      "t": "Cuero",
+      "k": 1
+     },
+     {
+      "t": "Metales",
+      "k": 2
+     }
+    ]
+   },
+   {
+    "c": 3,
+    "titulo": "¿Qué tipo de madera es cada una?",
+    "cats": [
+     "Blanda",
+     "Dura",
+     "Resinosa",
+     "Fina"
+    ],
+    "items": [
+     {
+      "t": "Álamo",
+      "k": 0
+     },
+     {
+      "t": "Sauce",
+      "k": 0
+     },
+     {
+      "t": "Pino",
+      "k": 0
+     },
+     {
+      "t": "Roble",
+      "k": 1
+     },
+     {
+      "t": "Cedro",
+      "k": 2
+     },
+     {
+      "t": "Arce",
+      "k": 3
+     }
+    ]
+   },
+   {
+    "c": 5,
+    "titulo": "¿Es una técnica de unión o de corte?",
+    "cats": [
+     "Unión",
+     "Corte"
+    ],
+    "items": [
+     {
+      "t": "Pegado",
+      "k": 0
+     },
+     {
+      "t": "Clavado",
+      "k": 0
+     },
+     {
+      "t": "Atornillado",
+      "k": 0
+     },
+     {
+      "t": "Cizallado",
+      "k": 1
+     },
+     {
+      "t": "Aserrado",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 5,
+    "titulo": "¿Para qué se usa cada herramienta?",
+    "cats": [
+     "Unir",
+     "Cortar"
+    ],
+    "items": [
+     {
+      "t": "Martillo",
+      "k": 0
+     },
+     {
+      "t": "Destornillador",
+      "k": 0
+     },
+     {
+      "t": "Tijeras",
+      "k": 1
+     },
+     {
+      "t": "Cizallas",
+      "k": 1
+     },
+     {
+      "t": "Serrucho",
+      "k": 1
+     },
+     {
+      "t": "Segueta",
+      "k": 1
+     }
+    ]
+   }
   ]
  }
 };
@@ -12737,10 +13427,169 @@ body {
     $("paActions").style.display = "";
   }
 
+  /* ---- Ordenar: secuencias del apunte (etapas, recorridos, cronologías).
+     Feedback inmediato: si el paso tocado es el que sigue, queda numerado; si no,
+     tiembla y no avanza. Así enseña en vez de solo corregir al final. ---- */
+  let orSesion = null;
+
+  function iniciarOrdenar() {
+    const bancos = (SUBJECT_DATA && SUBJECT_DATA.secuencias) || [];
+    if (!bancos.length) { showToast("🔢", "Esta materia todavía no tiene secuencias"); goScreen("dashboard"); return; }
+    const veces = state.vecesResp || {};
+    const elegido = shuffleArray(bancos)
+      .map(b => ({ b, peso: 1 / (1 + (veces["or_" + b.titulo] || 0)) * (0.6 + 0.8 * Math.random()) }))
+      .sort((a, b) => b.peso - a.peso)[0].b;
+    orSesion = { sec: elegido, paso: 0, errores: 0, xp: 0, t: Date.now() };
+    renderOrdenar();
+  }
+
+  function renderOrdenar() {
+    const s = orSesion;
+    $("orTitulo").textContent = s.sec.titulo;
+    $("orAyuda").textContent = "Tocá los pasos en el orden correcto.";
+    $("orProgFill").style.width = "0%";
+    $("orProgText").textContent = "0 / " + s.sec.items.length;
+    $("orLista").innerHTML = shuffleArray(s.sec.items).map(it =>
+      `<button class="ord-item" data-it="${escapeHtml(it)}"><span class="num">•</span><span>${escapeHtml(it)}</span></button>`
+    ).join("");
+    $("orActions").style.display = "none";
+    $("orLista").querySelectorAll(".ord-item").forEach(el => {
+      el.addEventListener("click", () => tocarOrden(el));
+    });
+  }
+
+  function tocarOrden(el) {
+    const s = orSesion;
+    const esperado = s.sec.items[s.paso];
+    if (el.dataset.it === esperado) {
+      s.paso++;
+      el.classList.add("ok");
+      el.querySelector(".num").textContent = s.paso;
+      $("orProgFill").style.width = (100 * s.paso / s.sec.items.length) + "%";
+      $("orProgText").textContent = s.paso + " / " + s.sec.items.length;
+      const clave = "or_" + s.sec.titulo + "|" + s.paso;
+      state.vecesResp = state.vecesResp || {};
+      const previas = state.vecesResp[clave] || 0;
+      state.vecesResp[clave] = previas + 1;
+      const xp = previas === 0 ? 6 : (previas === 1 ? 3 : 2);
+      s.xp += xp;
+      addXp(xp, el, "quiz");
+      if (window.apuntesFX) try { window.apuntesFX.answer(true, 0, el); } catch (e) {}
+      if (s.paso >= s.sec.items.length) terminarOrdenar();
+    } else {
+      s.errores++;
+      el.classList.add("mal");
+      setTimeout(() => el.classList.remove("mal"), 350);
+      if (navigator.vibrate) try { navigator.vibrate([40, 40, 40]); } catch (e) {}
+      if (window.apuntesFX) try { window.apuntesFX.answer(false, 0, el); } catch (e) {}
+    }
+    persist();
+  }
+
+  function terminarOrdenar() {
+    const s = orSesion;
+    state.vecesResp["or_" + s.sec.titulo] = (state.vecesResp["or_" + s.sec.titulo] || 0) + 1;
+    sumarEfectivo(Math.min(60, Math.max(0, Math.round((Date.now() - s.t) / 1000))));
+    persist();
+    $("orAyuda").textContent = (s.errores === 0
+      ? "¡Perfecto, todo en orden! +" + s.xp + " XP · "
+      : "Completo con " + s.errores + (s.errores === 1 ? " error" : " errores") + ". +" + s.xp + " XP · ") + s.sec.nota;
+    $("orActions").style.display = "";
+  }
+
+  /* ---- Clasificar: tocar una tarjeta y después su columna ---- */
+  let clSesion = null;
+
+  function iniciarClasificar() {
+    const bancos = (SUBJECT_DATA && SUBJECT_DATA.clasif) || [];
+    if (!bancos.length) { showToast("🗂️", "Esta materia todavía no tiene clasificaciones"); goScreen("dashboard"); return; }
+    const veces = state.vecesResp || {};
+    const elegido = shuffleArray(bancos)
+      .map(b => ({ b, peso: 1 / (1 + (veces["cl_" + b.titulo] || 0)) * (0.6 + 0.8 * Math.random()) }))
+      .sort((a, b) => b.peso - a.peso)[0].b;
+    clSesion = { banco: elegido, puestos: 0, errores: 0, sel: null, xp: 0, t: Date.now() };
+    renderClasificar();
+  }
+
+  function renderClasificar() {
+    const s = clSesion;
+    $("clTitulo").textContent = s.banco.titulo;
+    $("clAyuda").textContent = "Tocá una tarjeta y después la columna donde va.";
+    $("clProgFill").style.width = "0%";
+    $("clProgText").textContent = "0 / " + s.banco.items.length;
+    $("clPool").innerHTML = shuffleArray(s.banco.items).map((it, i) =>
+      `<button class="clas-chip" data-k="${it.k}" data-t="${escapeHtml(it.t)}">${escapeHtml(it.t)}</button>`
+    ).join("");
+    $("clCols").innerHTML = s.banco.cats.map((c, i) =>
+      `<div class="clas-col" data-cat="${i}"><div class="cab">${escapeHtml(c)}</div></div>`).join("");
+    $("clActions").style.display = "none";
+    $("clPool").querySelectorAll(".clas-chip").forEach(el => {
+      el.addEventListener("click", () => {
+        $("clPool").querySelectorAll(".clas-chip.sel").forEach(x => x.classList.remove("sel"));
+        if (s.sel === el) { s.sel = null; return; }
+        el.classList.add("sel");
+        s.sel = el;
+        $("clCols").querySelectorAll(".clas-col").forEach(c => c.classList.add("activa"));
+      });
+    });
+    $("clCols").querySelectorAll(".clas-col").forEach(col => {
+      col.addEventListener("click", () => soltarEnColumna(col));
+    });
+  }
+
+  function soltarEnColumna(col) {
+    const s = clSesion;
+    if (!s.sel) { $("clAyuda").textContent = "Primero tocá una tarjeta de arriba."; return; }
+    const chip = s.sel;
+    const correcto = parseInt(chip.dataset.k, 10) === parseInt(col.dataset.cat, 10);
+    if (correcto) {
+      const puesto = document.createElement("div");
+      puesto.className = "puesto";
+      puesto.textContent = chip.dataset.t;
+      col.appendChild(puesto);
+      chip.remove();
+      s.puestos++;
+      const clave = "cl_" + s.banco.titulo + "|" + chip.dataset.t;
+      state.vecesResp = state.vecesResp || {};
+      const previas = state.vecesResp[clave] || 0;
+      state.vecesResp[clave] = previas + 1;
+      const xp = previas === 0 ? 5 : (previas === 1 ? 3 : 2);
+      s.xp += xp;
+      addXp(xp, col, "quiz");
+      if (window.apuntesFX) try { window.apuntesFX.answer(true, 0, col); } catch (e) {}
+      $("clProgFill").style.width = (100 * s.puestos / s.banco.items.length) + "%";
+      $("clProgText").textContent = s.puestos + " / " + s.banco.items.length;
+      if (s.puestos >= s.banco.items.length) terminarClasificar();
+    } else {
+      s.errores++;
+      chip.classList.add("mal");
+      setTimeout(() => chip.classList.remove("mal"), 350);
+      if (navigator.vibrate) try { navigator.vibrate([40, 40, 40]); } catch (e) {}
+      if (window.apuntesFX) try { window.apuntesFX.answer(false, 0, chip); } catch (e) {}
+    }
+    chip.classList.remove("sel");
+    s.sel = null;
+    $("clCols").querySelectorAll(".clas-col").forEach(c => c.classList.remove("activa"));
+    persist();
+  }
+
+  function terminarClasificar() {
+    const s = clSesion;
+    state.vecesResp["cl_" + s.banco.titulo] = (state.vecesResp["cl_" + s.banco.titulo] || 0) + 1;
+    sumarEfectivo(Math.min(60, Math.max(0, Math.round((Date.now() - s.t) / 1000))));
+    persist();
+    $("clAyuda").textContent = s.errores === 0
+      ? "¡Perfecto! Clasificaste todo sin errores. +" + s.xp + " XP"
+      : "Listo, con " + s.errores + (s.errores === 1 ? " error" : " errores") + ". +" + s.xp + " XP";
+    $("clActions").style.display = "";
+  }
+
   const PR_TITLES = {
     "dashboard": "Práctica",
     "blancos": "Completar",
     "pares": "Unir pares",
+    "ordenar": "Ordenar",
+    "clasificar": "Clasificar",
     "quiz-setup": "Cuestionario",
     "quiz-session": "Cuestionario",
     "quiz-result": "Cuestionario",
@@ -12766,6 +13615,8 @@ body {
     if (name === "glossary") renderGlossary();
     if (name === "blancos") iniciarBlancos();
     if (name === "pares") iniciarPares();
+    if (name === "ordenar") iniciarOrdenar();
+    if (name === "clasificar") iniciarClasificar();
   }
 
   function prGoBack() {
@@ -13506,6 +14357,8 @@ body {
     $("quizAgainBtn").addEventListener("click", () => goScreen("quiz-setup"));
     $("blNextBtn").addEventListener("click", siguienteBlanco);
     $("paNextBtn").addEventListener("click", iniciarPares);
+    $("orNextBtn").addEventListener("click", iniciarOrdenar);
+    $("clNextBtn").addEventListener("click", iniciarClasificar);
     $("examActionBtn").addEventListener("click", startExam);
 
     // Flashcards
@@ -13562,6 +14415,7 @@ body {
     BADGES = cat.badges;
 
     // Cargar datos en las variables globales
+    SUBJECT_DATA = subj;   // materia activa: da acceso a secuencias/clasif (19/08)
     PAGES = subj.pages;
     TOC = subj.toc;
     IMG_DB = subj.imgs;
@@ -14351,7 +15205,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "18/08 21:04";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "18/08 21:39";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
