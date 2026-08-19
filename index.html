@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="19/08 10:55">
+<meta name="apuntes-version" content="19/08 12:28">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1564,6 +1564,18 @@ body {
 .par-item.ok { border-color: #2e7d32; opacity: .55; pointer-events: none; }
 .par-item.mal { border-color: #c62828; animation: shake .3s; }
 @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+/* ---- Animaciones del avatar montado (19/08) ---- */
+@keyframes apGira { to { transform: rotate(360deg); } }
+@keyframes apBote { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
+@keyframes apParpadeo { 0%, 45% { opacity: 1; } 55%, 100% { opacity: .25; } }
+.av-rueda { animation: apGira 1.5s linear infinite; transform-origin: center; transform-box: fill-box; }
+.av-pedal { animation: apGira 1.5s linear infinite; }
+.av-jinete { animation: apBote 1.5s ease-in-out infinite; }
+.av-luz { animation: apParpadeo 1.1s steps(1, end) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .av-rueda, .av-pedal, .av-jinete, .av-luz { animation: none; }
+}
+
 .ej-titulo {
   font-family: "Fraunces", serif; font-size: 19px; font-weight: 600;
   color: var(--text); margin-bottom: 6px; line-height: 1.25;
@@ -14078,7 +14090,7 @@ body {
       } catch (e) {}
     }
     const qa = $("qrAvatar");
-    if (qa && typeof svgAvatar === "function") qa.innerHTML = svgAvatar(0.45);
+    if (qa && typeof svgAvatar === "function") qa.innerHTML = svgAvatar(0.62);
     goScreen("quiz-result");
   }
 
@@ -14572,22 +14584,109 @@ body {
     var eq = av.eq || {};
     var nina = av.gen === "nina";
     var conVehiculo = !!eq.vehiculo && !soloPersona;
-    var W = conVehiculo ? 235 : 120;
+    var esMono = conVehiculo && (eq.vehiculo.indexOf("v_mono") === 0 ||
+                 eq.vehiculo === "v_electrico" || eq.vehiculo === "v_offroad");
+    var enBici = conVehiculo && !esMono;
     var s = escala || 1;
+    var W = conVehiculo ? 200 : 120;
     var ropaCol = { r_basica: "#9aa5ad", r_buzo: "#3d5a3d", r_hawaiana: "#e07b39", r_futbol: "#7ec8e3",
                     r_canguro: "#2c2c34", r_cuero: "#4a3426", r_puffer: "#2a6fb0" }[eq.ropa] || "#9aa5ad";
+    var vCol = (itemDe(eq.color) || {}).c || "#5a6a75";
+    /* contorno heredado: le da definición sobre fondo oscuro (referencia 19/08) */
+    var CONTORNO = 'stroke="#1b1e22" stroke-width="1.3" stroke-linejoin="round"';
     var h = '<svg viewBox="0 0 ' + W + ' 150" width="' + Math.round(W * s) + '" height="' + Math.round(150 * s) + '">';
-    /* piernas + zapas */
-    h += '<rect x="49" y="100" width="9" height="32" rx="4" fill="#3a4a5a"/><rect x="62" y="100" width="9" height="32" rx="4" fill="#3a4a5a"/>';
-    h += '<ellipse cx="53" cy="136" rx="8" ry="4" fill="#2c2c34"/><ellipse cx="67" cy="136" rx="8" ry="4" fill="#2c2c34"/>';
+
+    /* ---- rueda con rayos: los rayos son los que hacen visible el giro ---- */
+    function rueda(cx, cy, r, grosor, dur) {
+      var rLl = r - grosor / 2 - 1.2;                     /* radio de la llanta */
+      var g = '<g class="av-rueda" style="animation-duration:' + dur + 's">';
+      g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#1b1e22" stroke-width="' + (grosor + 2) + '"/>';   /* cubierta */
+      g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#33383f" stroke-width="' + grosor + '"/>';
+      g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + rLl + '" fill="none" stroke="#c3ccd4" stroke-width="2"/>';                   /* llanta clara */
+      for (var a = 0; a < 8; a++) {
+        var rad = a * Math.PI / 4;
+        g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + Math.cos(rad) * rLl).toFixed(1) +
+             '" y2="' + (cy + Math.sin(rad) * rLl).toFixed(1) + '" stroke="#9aa5ad" stroke-width="1" opacity=".8"/>';
+      }
+      g += '<circle cx="' + cx + '" cy="' + cy + '" r="3" fill="#c3ccd4" stroke="#1b1e22" stroke-width="1"/>';
+      return g + '</g>';
+    }
+
+    /* ---- vehículo: se dibuja ANTES que la persona (queda montada encima) ---- */
+    if (conVehiculo) {
+      h += '<ellipse cx="100" cy="141" rx="72" ry="5" fill="rgba(0,0,0,.28)"/>';
+      if (enBici) {
+        var rW = eq.vehiculo === "v_bmx" ? 20 : eq.vehiculo === "v_mtb" ? 24 : 22;
+        var gro = eq.vehiculo === "v_mtb" ? 6 : eq.vehiculo === "v_carbono" ? 3.5 : 5;
+        h += rueda(36, 116, rW, gro, 1.5) + rueda(158, 116, rW, gro, 1.5);
+        /* cadena: del plato al buje trasero */
+        h += '<path d="M36 116 L96 116" stroke="#6f7780" stroke-width="1.6" fill="none"/>';
+        /* cuadro en diamante + horquilla, con contorno oscuro por debajo para que
+           despegue del fondo (idea tomada de la referencia de estilo del 19/08) */
+        var cuadro = 'M36 116 L96 116 M96 116 L70 92 M70 92 L146 82 M96 116 L146 82 M146 82 L158 116';
+        h += '<path d="' + cuadro + '" stroke="#1b1e22" stroke-width="8.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+        h += '<path d="' + cuadro + '" stroke="' + vCol + '" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+        h += '<path d="M61 90 q11 -4 20 0 l-2 4.5 q-8 3 -16 0 z" fill="#2c2c34" stroke="#1b1e22" stroke-width="1"/>';   /* asiento */
+        /* plato con dientes + bielas girando */
+        h += '<g class="av-pedal" style="transform-origin:96px 116px">' +
+             '<circle cx="96" cy="116" r="7" fill="#2c2c34" stroke="#c3ccd4" stroke-width="1.6"/>' +
+             '<line x1="96" y1="116" x2="96" y2="127" stroke="#c3ccd4" stroke-width="2.6" stroke-linecap="round"/>' +
+             '<line x1="96" y1="116" x2="96" y2="105" stroke="#c3ccd4" stroke-width="2.6" stroke-linecap="round"/>' +
+             '<rect x="91" y="126" width="10" height="3.4" rx="1.5" fill="#c3ccd4"/>' +
+             '<rect x="91" y="102.6" width="10" height="3.4" rx="1.5" fill="#c3ccd4"/></g>';
+      } else {
+        var rM = eq.vehiculo === "v_offroad" ? 11 : 8;
+        h += rueda(52, 129, rM, 4, 1.1) + rueda(140, 129, rM, 4, 1.1);
+        h += '<rect x="42" y="117" width="106" height="8" rx="4" fill="' + vCol + '"/>';   /* tabla */
+        h += '<path d="M144 118 L138 60" stroke="' + vCol + '" stroke-width="5" stroke-linecap="round"/>';
+        if (eq.vehiculo === "v_electrico")
+          h += '<rect x="96" y="107" width="24" height="9" rx="3" fill="#2e7d4f"/><text x="100" y="115" font-size="8" fill="#fff">⚡</text>';
+      }
+    }
+
+    /* ---- persona: mismo dibujo de siempre, movida y apoyada sobre el vehículo ---- */
+    /* OJO: la animación CSS define transform y PISA el atributo transform del SVG.
+       Por eso el rebote va en un <g> exterior y la posición/escala en uno interior
+       (si van en el mismo elemento, la persona se dibuja en el origen y sin escalar). */
+    h += conVehiculo
+      ? '<g class="av-jinete">' + (enBici
+          ? '<g transform="translate(23,14) scale(0.78) rotate(7 60 100)" ' + CONTORNO + '>'
+          : '<g transform="translate(30,5) scale(0.8)" ' + CONTORNO + '>')
+      : '<g ' + CONTORNO + '>';
+
+    if (enBici) {
+      /* piernas flexionadas: muslo hacia adelante y pantorrilla al pedal */
+      /* pierna lejana (pedal arriba) y cercana (pedal abajo): dan sensación de pedaleo */
+      /* pierna lejana (pedal arriba) y cercana (pedal abajo): sensación de pedaleo */
+      h += '<path d="M64 102 L92 102 L95 112" stroke="#33414f" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+      h += '<ellipse cx="96" cy="113" rx="8" ry="4" fill="#23262b" stroke="#1b1e22" stroke-width="1"/>';
+      h += '<path d="M58 104 L92 122 L99 140" stroke="#3a4a5a" stroke-width="9.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+      h += '<ellipse cx="100" cy="141" rx="9" ry="4.5" fill="#2c2c34" stroke="#1b1e22" stroke-width="1"/>';
+    } else {
+      h += '<rect x="49" y="100" width="9" height="32" rx="4" fill="#3a4a5a"/><rect x="62" y="100" width="9" height="32" rx="4" fill="#3a4a5a"/>';
+      h += '<ellipse cx="53" cy="136" rx="8" ry="4" fill="#2c2c34"/><ellipse cx="67" cy="136" rx="8" ry="4" fill="#2c2c34"/>';
+    }
     /* torso */
     h += '<rect x="42" y="58" width="36" height="46" rx="10" fill="' + ropaCol + '"/>';
-    /* brazos */
-    h += '<rect x="34" y="62" width="9" height="34" rx="4.5" fill="' + ropaCol + '"/><rect x="77" y="62" width="9" height="34" rx="4.5" fill="' + ropaCol + '"/>';
-    h += '<circle cx="38.5" cy="99" r="4.5" fill="#e8b88a"/><circle cx="81.5" cy="99" r="4.5" fill="#e8b88a"/>';
+    /* brazos: al manubrio si va montado, colgando si no */
+    if (conVehiculo) {
+      /* De perfil se dibuja UN solo brazo con codo: dos brazos casi paralelos se
+         funden en una tabla a este tamaño. */
+      var mx = enBici ? 150 : 135, my = enBici ? 72 : 70;
+      if (enBici) {
+        h += '<path d="M74 66 L112 80 L150 72" stroke="' + ropaCol + '" stroke-width="6.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+        h += '<circle cx="150" cy="72" r="4.2" fill="#e8b88a"/>';
+      } else {
+        h += '<path d="M76 66 L106 70 L' + mx + ' ' + my + '" stroke="' + ropaCol + '" stroke-width="6.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+        h += '<circle cx="' + mx + '" cy="' + my + '" r="4.2" fill="#e8b88a"/>';
+      }
+    } else {
+      h += '<rect x="34" y="62" width="9" height="34" rx="4.5" fill="' + ropaCol + '"/><rect x="77" y="62" width="9" height="34" rx="4.5" fill="' + ropaCol + '"/>';
+      h += '<circle cx="38.5" cy="99" r="4.5" fill="#e8b88a"/><circle cx="81.5" cy="99" r="4.5" fill="#e8b88a"/>';
+    }
     /* detalles de ropa */
     if (eq.ropa === "r_futbol") h += '<rect x="50" y="58" width="7" height="46" fill="#fff" opacity=".85"/><rect x="63" y="58" width="7" height="46" fill="#fff" opacity=".85"/>';
-    if (eq.ropa === "r_hawaiana") h += '<text x="52" y="80" font-size="9">🌺</text><text x="63" y="94" font-size="9">🌺</text>';
+    if (eq.ropa === "r_hawaiana") h += '<text x="52" y="80" font-size="9" stroke="none">🌺</text><text x="63" y="94" font-size="9" stroke="none">🌺</text>';
     if (eq.ropa === "r_canguro") h += '<path d="M48 62 q12 10 24 0" stroke="#4a4a55" stroke-width="3" fill="none"/><rect x="52" y="86" width="16" height="10" rx="3" fill="#4a4a55"/>';
     if (eq.ropa === "r_cuero") h += '<line x1="60" y1="58" x2="60" y2="104" stroke="#c9a227" stroke-width="2"/>';
     if (eq.ropa === "r_puffer") h += '<line x1="42" y1="70" x2="78" y2="70" stroke="rgba(0,0,0,.25)" stroke-width="2"/><line x1="42" y1="82" x2="78" y2="82" stroke="rgba(0,0,0,.25)" stroke-width="2"/><line x1="42" y1="94" x2="78" y2="94" stroke="rgba(0,0,0,.25)" stroke-width="2"/>';
@@ -14631,28 +14730,23 @@ body {
     }
     /* casco (accesorio, va sobre todo) */
     if (eq.extra === "x_casco" && conVehiculo) h += '<path d="M40 30 a20 20 0 0 1 40 0 l-3 4 l-34 0 z" fill="#e07b39" opacity=".95"/><line x1="45" y1="34" x2="49" y2="24" stroke="rgba(0,0,0,.2)" stroke-width="2"/><line x1="60" y1="34" x2="60" y2="21" stroke="rgba(0,0,0,.2)" stroke-width="2"/><line x1="75" y1="34" x2="71" y2="24" stroke="rgba(0,0,0,.2)" stroke-width="2"/>';
-    /* vehículo */
+    h += conVehiculo ? '</g></g>' : '</g>';
+
+    /* ---- detalles del vehículo que van por delante de la persona ---- */
     if (conVehiculo) {
-      var vCol = (itemDe(eq.color) || {}).c || "#5a6a75";
-      var esMono = eq.vehiculo.indexOf("v_mono") === 0 || eq.vehiculo === "v_electrico" || eq.vehiculo === "v_offroad";
-      if (!esMono) {
-        var rW = eq.vehiculo === "v_bmx" ? 12 : eq.vehiculo === "v_mtb" ? 17 : 15;
-        var grosor = eq.vehiculo === "v_mtb" ? 5 : eq.vehiculo === "v_carbono" ? 2 : 3;
-        h += '<circle cx="140" cy="118" r="' + rW + '" fill="none" stroke="#2c2c34" stroke-width="' + grosor + '"/>';
-        h += '<circle cx="205" cy="118" r="' + rW + '" fill="none" stroke="#2c2c34" stroke-width="' + grosor + '"/>';
-        h += '<path d="M140 118 L163 90 L192 90 L205 118 M163 90 L172 118 L140 118 M192 90 L188 76 M140 118 L152 76" stroke="' + vCol + '" stroke-width="4" fill="none" stroke-linecap="round"/>';
-        h += '<rect x="146" y="72" width="12" height="4" rx="2" fill="#2c2c34"/><path d="M184 76 l10 -4" stroke="#2c2c34" stroke-width="3"/>';
+      if (enBici) {
+        h += '<path d="M136 77 l18 -3" stroke="#2c2c34" stroke-width="4.5" stroke-linecap="round"/>';
+        if (eq.extra === "x_canasto") h += '<rect x="138" y="63" width="18" height="12" rx="2.5" fill="#b08d57" stroke="#1b1e22" stroke-width="1"/><line x1="136" y1="70" x2="154" y2="70" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/>';
+        if (eq.extra === "x_luces") h += '<circle class="av-luz" cx="154" cy="86" r="4.5" fill="#ffe95e"/><path class="av-luz" d="M159 82 l7 -5 M160 87 l8 0" stroke="#ffe95e" stroke-width="2"/>';
+        if (eq.extra === "x_bocina") h += '<circle cx="130" cy="74" r="4" fill="#c0392b" stroke="#1b1e22" stroke-width="1"/>';
+        if (eq.sticker) h += '<text x="106" y="104" font-size="15" stroke="none">' + ({ s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" }[eq.sticker] || "") + '</text>';
       } else {
-        h += '<rect x="140" y="112" width="55" height="6" rx="3" fill="' + vCol + '"/>';
-        var rM = eq.vehiculo === "v_offroad" ? 9 : 6;
-        h += '<circle cx="146" cy="124" r="' + rM + '" fill="#2c2c34"/><circle cx="189" cy="124" r="' + rM + '" fill="#2c2c34"/>';
-        h += '<path d="M191 112 L198 70" stroke="' + vCol + '" stroke-width="4" stroke-linecap="round"/><rect x="190" y="66" width="16" height="4" rx="2" fill="#2c2c34"/>';
-        if (eq.vehiculo === "v_electrico") h += '<rect x="152" y="103" width="20" height="8" rx="2" fill="#2e7d4f"/><text x="156" y="110" font-size="7" fill="#fff">⚡</text>';
+        h += '<path d="M128 58 l20 -2" stroke="#2c2c34" stroke-width="4" stroke-linecap="round"/>';
+        if (eq.extra === "x_luces") h += '<circle class="av-luz" cx="150" cy="72" r="4.5" fill="#ffe95e"/><path class="av-luz" d="M155 68 l7 -5 M156 73 l8 0" stroke="#ffe95e" stroke-width="2"/>';
+        if (eq.extra === "x_bocina") h += '<circle cx="146" cy="64" r="4" fill="#c0392b"/>';
+        if (eq.extra === "x_canasto") h += '<rect x="146" y="70" width="18" height="12" rx="2.5" fill="#b08d57"/>';
+        if (eq.sticker) h += '<text x="58" y="126" font-size="14">' + ({ s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" }[eq.sticker] || "") + '</text>';
       }
-      if (eq.sticker) h += '<text x="160" y="106" font-size="13">' + ({ s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" }[eq.sticker] || "") + '</text>';
-      if (eq.extra === "x_luces") h += '<circle cx="203" cy="98" r="4" fill="#ffe95e"/><path d="M207 94 l6 -5 M208 99 l7 0" stroke="#ffe95e" stroke-width="2"/>';
-      if (eq.extra === "x_bocina") h += '<circle cx="196" cy="70" r="4" fill="#c0392b"/>';
-      if (eq.extra === "x_canasto" && !esMono) h += '<rect x="196" y="82" width="16" height="11" rx="2" fill="#b08d57"/><line x1="196" y1="86" x2="212" y2="86" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/>';
     }
     return h + "</svg>";
   }
@@ -15210,7 +15304,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "19/08 10:55";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "19/08 12:28";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
