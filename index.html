@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="18/08 20:57">
+<meta name="apuntes-version" content="18/08 21:04">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1534,6 +1534,37 @@ body {
   box-shadow: 0 0 0 1.5px var(--highlight);
   border-radius: 2px;
 }
+/* ---- Ejercicios nuevos: Completar y Unir pares (19/08) ---- */
+.ej-frase {
+  font-family: "Crimson Pro", serif;
+  font-size: calc(var(--reader-fontsize, 19px) * 0.95);
+  line-height: 1.6; color: var(--text);
+  background: var(--bg-elev); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 16px 16px; margin-bottom: 14px;
+}
+.ej-frase .hueco {
+  display: inline-block; min-width: 90px; border-bottom: 2.5px dashed var(--accent);
+  text-align: center; font-weight: 700; color: var(--accent);
+}
+.ej-frase .hueco.ok { border-bottom-style: solid; color: #2e7d32; }
+.ej-frase .hueco.mal { border-bottom-style: solid; color: #c62828; }
+[data-theme="dark"] .ej-frase .hueco.ok { color: #9bd39e; }
+[data-theme="dark"] .ej-frase .hueco.mal { color: #ef9a9a; }
+.ej-fuente { font-size: 12px; color: var(--text-soft); margin-top: 8px; font-family: "Manrope", sans-serif; }
+.ej-ayuda { font-size: 13.5px; color: var(--text-soft); margin-bottom: 12px; font-family: "Manrope", sans-serif; }
+.pares-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+.pares-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.par-item {
+  width: 100%; text-align: left; padding: 12px 12px; border-radius: 12px;
+  border: 1.5px solid var(--border); background: var(--bg-elev); color: var(--text);
+  font-family: "Manrope", sans-serif; font-size: 13.5px; line-height: 1.35; cursor: pointer;
+  transition: border-color .15s, background .15s, opacity .2s;
+}
+.par-item.sel { border-color: var(--accent); background: var(--bg); box-shadow: 0 0 0 2px var(--accent) inset; }
+.par-item.ok { border-color: #2e7d32; opacity: .55; pointer-events: none; }
+.par-item.mal { border-color: #c62828; animation: shake .3s; }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
 /* filtro por capítulo + ver en contexto (11/08) */
 .gloss-chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
 .gloss-chip { padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(127,127,127,.4);
@@ -2205,6 +2236,16 @@ body {
           <div class="name">Flashcards</div>
           <div class="sub">Repasar conceptos</div>
         </button>
+        <button class="dash-action" data-go="blancos">
+          <span class="ico">✏️</span>
+          <div class="name">Completar</div>
+          <div class="sub">Elegí la palabra que falta</div>
+        </button>
+        <button class="dash-action" data-go="pares">
+          <span class="ico">🔗</span>
+          <div class="name">Unir pares</div>
+          <div class="sub">Cada término con su definición</div>
+        </button>
         <button class="dash-action" data-go="glossary">
           <span class="ico">📖</span>
           <div class="name">Glosario</div>
@@ -2269,6 +2310,37 @@ body {
       <div class="start-btn-row">
         <button class="start-btn" id="quizAgainBtn">🔄 Otro cuestionario</button>
         <button class="start-btn secondary" data-go="dashboard">Volver al inicio</button>
+      </div>
+    </div>
+
+    <!-- COMPLETAR (blancos con opciones) -->
+    <div class="pr-screen" id="screen-blancos">
+      <div class="quiz-prog">
+        <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="blProgFill" style="width:0%"></div></div>
+        <span class="quiz-prog-text" id="blProgText">1 / 8</span>
+      </div>
+      <div class="ej-frase" id="blFrase"></div>
+      <div class="quiz-opts" id="blOpts"></div>
+      <div id="blFeedback"></div>
+      <div class="quiz-actions" id="blActions" style="display:none">
+        <button class="start-btn" id="blNextBtn">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- UNIR PARES -->
+    <div class="pr-screen" id="screen-pares">
+      <div class="quiz-prog">
+        <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="paProgFill" style="width:0%"></div></div>
+        <span class="quiz-prog-text" id="paProgText">0 / 4</span>
+      </div>
+      <div class="ej-ayuda" id="paAyuda">Tocá un término y después su definición.</div>
+      <div class="pares-wrap">
+        <div class="pares-col" id="paIzq"></div>
+        <div class="pares-col" id="paDer"></div>
+      </div>
+      <div class="quiz-actions" id="paActions" style="display:none">
+        <button class="start-btn" id="paNextBtn">Otra ronda →</button>
+        <button class="start-btn secondary" data-go="dashboard">Volver</button>
       </div>
     </div>
 
@@ -12406,8 +12478,269 @@ body {
   // ============================================================
   // SCREEN NAVIGATION inside Practice overlay
   // ============================================================
+  /* ===================== EJERCICIOS NUEVOS (19/08) =====================
+     "Completar" y "Unir pares" NO agregan contenido al archivo: se generan en
+     el momento a partir del glosario y del texto de las páginas que la materia
+     ya tiene cargados. Por eso funcionan solos en las 4 materias y en las que
+     vengan. El XP usa el mismo esquema antifarmeo del cuestionario (state.vecesResp
+     con claves propias) para que repetir el mismo ejercicio pague cada vez menos. */
+
+  function ejEsPaginaExcluida(titulo) {
+    /* páginas marcadas como solo lectura, ej. el Cisma de Historia */
+    return /no entra/i.test(titulo || "");
+  }
+
+  function ejFrases(texto) {
+    return texto.split(/(?<=[.:;])\s+/)
+      .map(f => f.replace(/\s+/g, " ").replace(/\s+([,.;:)])/g, "$1").replace(/\(\s+/g, "(").trim());
+  }
+
+  /* Frases que arrancan refiriéndose a algo anterior ("Para hacerlo…", "Esto
+     significa…") quedan sin sentido fuera de su párrafo: no sirven de ejercicio. */
+  const EJ_ARRANQUE_DEPENDIENTE =
+    /^(esto|eso|esta|este|estos|estas|ese|esa|esos|esas|así|asi|además|ademas|también|tambien|por eso|por ello|para (hacerlo|ello|eso|esto)|de ahí|de ahi|ahí|ahi|allí|alli|luego|entonces|después|despues|sin embargo|en cambio|con ella|con él|con el |con esto|de este|de esta|de ellos|de ellas|a partir de ello|dicho esto|lo mismo|los mismos|le |les |su |sus )\b/i;
+
+  function ejEscapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+  /* Frases del apunte que contienen exactamente UNA vez un término del glosario. */
+  function generarBlancos(n) {
+    const terminos = GLOSSARY
+      .map(g => g.t)
+      .filter(t => t.length >= 5 && t.length <= 28 && !t.includes("(") && !/\d/.test(t));
+    const items = [];
+    PAGES.forEach((p, idx) => {
+      if (ejEsPaginaExcluida(p.title)) return;
+      const crudo = PAGE_TEXTS_RAW[idx] || "";
+      ejFrases(crudo).forEach(f => {
+        if (f.length < 55 || f.length > 200) return;
+        const palabras = f.split(" ");
+        if (palabras.length < 10) return;                  // muy corta para dar contexto
+        if (EJ_ARRANQUE_DEPENDIENTE.test(f)) return;       // depende del párrafo anterior
+        if (/^[·\-–—•]/.test(f)) return;                   // resto de una viñeta
+        if (!/^[A-ZÁÉÍÓÚÑ¿]/.test(f)) return;              // fragmento que empieza en minúscula
+        if (/[:;]$/.test(f)) return;                       // es la entradilla de una lista
+        /* Las tablas quedan aplanadas como texto ("Punto cardinal Lugar Territorio…"):
+           se delatan por la proporción de palabras con mayúscula inicial. */
+        const mayus = palabras.slice(1).filter(w => /^[A-ZÁÉÍÓÚÑ]/.test(w)).length;
+        if (mayus / palabras.length > 0.35) return;
+        for (const t of terminos) {
+          const re = new RegExp("\\b" + ejEscapeRe(t) + "\\b", "gi");
+          const encontrados = f.match(re);
+          if (encontrados && encontrados.length === 1) {
+            items.push({ frase: f, termino: encontrados[0], base: t, page: p.title, idx });
+            return;   // una frase = un solo hueco
+          }
+        }
+      });
+    });
+    if (!items.length) return [];
+    // menos repetidos primero (mismo criterio antifarmeo que el cuestionario)
+    const veces = state.vecesResp || {};
+    const conPeso = items.map(it => ({
+      it, peso: (1 / (1 + (veces["bl_" + it.base + "|" + it.idx] || 0))) * (0.6 + 0.8 * Math.random())
+    }));
+    conPeso.sort((a, b) => b.peso - a.peso);
+    const elegidos = [];
+    const usados = new Set();
+    for (const c of conPeso) {
+      if (usados.has(c.it.base)) continue;      // no repetir el mismo término en la ronda
+      usados.add(c.it.base);
+      elegidos.push(c.it);
+      if (elegidos.length >= n) break;
+    }
+    // distractores: otros términos del glosario, preferentemente de largo parecido
+    return elegidos.map(it => {
+      const otros = terminos
+        .filter(t => t.toLowerCase() !== it.base.toLowerCase())
+        .sort((a, b) => Math.abs(a.length - it.base.length) - Math.abs(b.length - it.base.length))
+        .slice(0, 12);
+      const distract = shuffleArray(otros).slice(0, 3);
+      const opts = shuffleArray([it.base].concat(distract));
+      return { ...it, opts, ans: opts.indexOf(it.base) };
+    });
+  }
+
+  let blSesion = null;
+
+  function iniciarBlancos() {
+    const items = generarBlancos(8);
+    if (items.length < 3) {
+      showToast("✏️", "Esta materia todavía no tiene frases para completar");
+      goScreen("dashboard");
+      return;
+    }
+    blSesion = { items, i: 0, ok: 0, xp: 0, t: Date.now() };
+    renderBlanco();
+  }
+
+  function renderBlanco() {
+    const s = blSesion, it = s.items[s.i];
+    $("blProgFill").style.width = (100 * s.i / s.items.length) + "%";
+    $("blProgText").textContent = (s.i + 1) + " / " + s.items.length;
+    const re = new RegExp("\\b" + ejEscapeRe(it.termino) + "\\b");
+    const partes = it.frase.split(re);
+    $("blFrase").innerHTML =
+      escapeHtml(partes[0]) + '<span class="hueco" id="blHueco">?</span>' + escapeHtml(partes[1] || "") +
+      '<div class="ej-fuente">📄 ' + escapeHtml(it.page) + "</div>";
+    $("blOpts").innerHTML = it.opts.map((o, i) =>
+      `<button class="quiz-opt" data-i="${i}"><span class="text">${escapeHtml(o)}</span></button>`).join("");
+    $("blFeedback").innerHTML = "";
+    $("blActions").style.display = "none";
+    $("blOpts").querySelectorAll(".quiz-opt").forEach(el => {
+      el.addEventListener("click", () => responderBlanco(el, parseInt(el.dataset.i, 10)));
+    });
+    s.tPreg = Date.now();
+  }
+
+  function responderBlanco(btn, i) {
+    const s = blSesion, it = s.items[s.i];
+    $("blOpts").querySelectorAll(".quiz-opt").forEach(el => el.setAttribute("disabled", "true"));
+    const ok = i === it.ans;
+    btn.classList.add(ok ? "correct" : "wrong");
+    if (!ok) $("blOpts").querySelectorAll(".quiz-opt")[it.ans].classList.add("correct");
+    const hueco = $("blHueco");
+    hueco.textContent = it.opts[it.ans];
+    hueco.classList.add(ok ? "ok" : "mal");
+    if (navigator.vibrate) try { navigator.vibrate(ok ? 30 : [40, 40, 40]); } catch (e) {}
+
+    // tiempo efectivo real y XP decreciente, igual que el cuestionario
+    sumarEfectivo(Math.min(20, Math.max(0, Math.round((Date.now() - s.tPreg) / 1000))));
+    const clave = "bl_" + it.base + "|" + it.idx;
+    state.vecesResp = state.vecesResp || {};
+    const previas = state.vecesResp[clave] || 0;
+    state.vecesResp[clave] = previas + 1;
+    if (ok) {
+      s.ok++;
+      const xp = previas === 0 ? 8 : (previas === 1 ? 4 : 2);
+      s.xp += xp;
+      addXp(xp, btn, "quiz");
+    } else {
+      addXp(1, btn, "quiz");
+    }
+    if (window.apuntesFX) try { window.apuntesFX.answer(ok, 0, btn); } catch (e) {}
+    persist();
+    $("blActions").style.display = "";
+    $("blNextBtn").textContent = (s.i + 1 >= s.items.length) ? "Terminar" : "Siguiente →";
+  }
+
+  function siguienteBlanco() {
+    const s = blSesion;
+    s.i++;
+    if (s.i >= s.items.length) {
+      $("qrEmoji").textContent = s.ok === s.items.length ? "🏆" : (s.ok >= s.items.length * 0.6 ? "🎉" : "💪");
+      $("qrTitle").textContent = "Completar";
+      $("qrSub").textContent = s.ok === s.items.length
+        ? "¡Todas completas! Tenés el vocabulario fresco."
+        : "Las que fallaste están en el glosario para repasarlas.";
+      $("qrScore").textContent = s.ok;
+      $("qrTotal").textContent = "/ " + s.items.length;
+      $("qrXp").textContent = "+" + s.xp + " XP";
+      $("qrAvatar").innerHTML = "";
+      goScreen("quiz-result");
+      return;
+    }
+    renderBlanco();
+  }
+
+  /* ---- Unir pares: término ↔ definición, tocando uno y después el otro
+     (nada de flechas arrastradas: en celular se traban con el scroll) ---- */
+  let paSesion = null;
+
+  function iniciarPares() {
+    const cand = GLOSSARY
+      .map(g => ({ t: g.t, d: (g.d || "").split("\n")[0].trim() }))
+      .filter(g => g.d.length >= 20 && g.d.length <= 120);
+    if (cand.length < 4) {
+      showToast("🔗", "Esta materia todavía no tiene términos para unir");
+      goScreen("dashboard");
+      return;
+    }
+    const veces = state.vecesResp || {};
+    const elegidos = shuffleArray(cand)
+      .map(g => ({ g, peso: 1 / (1 + (veces["pa_" + g.t] || 0)) * (0.6 + 0.8 * Math.random()) }))
+      .sort((a, b) => b.peso - a.peso)
+      .slice(0, 4)
+      .map(x => x.g);
+    paSesion = { pares: elegidos, hechos: 0, errores: 0, sel: null, xp: 0, t: Date.now() };
+    renderPares();
+  }
+
+  function renderPares() {
+    const s = paSesion;
+    $("paProgFill").style.width = (100 * s.hechos / s.pares.length) + "%";
+    $("paProgText").textContent = s.hechos + " / " + s.pares.length;
+    $("paAyuda").textContent = "Tocá un término y después su definición.";
+    $("paIzq").innerHTML = shuffleArray(s.pares).map(p =>
+      `<button class="par-item" data-t="${escapeHtml(p.t)}" data-lado="t">${escapeHtml(p.t)}</button>`).join("");
+    $("paDer").innerHTML = shuffleArray(s.pares).map(p =>
+      `<button class="par-item" data-t="${escapeHtml(p.t)}" data-lado="d">${escapeHtml(p.d)}</button>`).join("");
+    $("paActions").style.display = "none";
+    document.querySelectorAll("#screen-pares .par-item").forEach(el => {
+      el.addEventListener("click", () => tocarPar(el));
+    });
+    s.tRonda = Date.now();
+  }
+
+  function tocarPar(el) {
+    const s = paSesion;
+    if (el.classList.contains("ok")) return;
+    if (!s.sel) {
+      document.querySelectorAll("#screen-pares .par-item.sel").forEach(x => x.classList.remove("sel"));
+      el.classList.add("sel");
+      s.sel = el;
+      return;
+    }
+    if (s.sel === el) { el.classList.remove("sel"); s.sel = null; return; }
+    if (s.sel.dataset.lado === el.dataset.lado) {   // dos del mismo lado: cambia la selección
+      s.sel.classList.remove("sel");
+      el.classList.add("sel");
+      s.sel = el;
+      return;
+    }
+    const acierto = s.sel.dataset.t === el.dataset.t;
+    if (acierto) {
+      s.sel.classList.remove("sel");
+      s.sel.classList.add("ok");
+      el.classList.add("ok");
+      s.hechos++;
+      const clave = "pa_" + el.dataset.t;
+      state.vecesResp = state.vecesResp || {};
+      const previas = state.vecesResp[clave] || 0;
+      state.vecesResp[clave] = previas + 1;
+      const xp = previas === 0 ? 6 : (previas === 1 ? 3 : 2);
+      s.xp += xp;
+      addXp(xp, el, "quiz");
+      if (window.apuntesFX) try { window.apuntesFX.answer(true, 0, el); } catch (e) {}
+      $("paProgFill").style.width = (100 * s.hechos / s.pares.length) + "%";
+      $("paProgText").textContent = s.hechos + " / " + s.pares.length;
+      if (s.hechos >= s.pares.length) terminarPares();
+    } else {
+      s.errores++;
+      const malo = el;
+      malo.classList.add("mal");
+      s.sel.classList.remove("sel");
+      setTimeout(() => malo.classList.remove("mal"), 350);
+      if (navigator.vibrate) try { navigator.vibrate([40, 40, 40]); } catch (e) {}
+      if (window.apuntesFX) try { window.apuntesFX.answer(false, 0, el); } catch (e) {}
+    }
+    s.sel = null;
+    persist();
+  }
+
+  function terminarPares() {
+    const s = paSesion;
+    sumarEfectivo(Math.min(60, Math.max(0, Math.round((Date.now() - s.tRonda) / 1000))));
+    persist();
+    $("paAyuda").textContent = s.errores === 0
+      ? "¡Perfecto! Uniste los 4 pares sin errores. +" + s.xp + " XP"
+      : "Listo: 4 pares unidos con " + s.errores + (s.errores === 1 ? " error" : " errores") + ". +" + s.xp + " XP";
+    $("paActions").style.display = "";
+  }
+
   const PR_TITLES = {
     "dashboard": "Práctica",
+    "blancos": "Completar",
+    "pares": "Unir pares",
     "quiz-setup": "Cuestionario",
     "quiz-session": "Cuestionario",
     "quiz-result": "Cuestionario",
@@ -12431,6 +12764,8 @@ body {
     if (name === "quiz-setup") renderQuizSetup();
     if (name === "fc-setup") renderFcSetup();
     if (name === "glossary") renderGlossary();
+    if (name === "blancos") iniciarBlancos();
+    if (name === "pares") iniciarPares();
   }
 
   function prGoBack() {
@@ -13169,6 +13504,8 @@ body {
     $("quizStartBtn").addEventListener("click", startQuiz);
     $("quizNextBtn").addEventListener("click", nextQuizQ);
     $("quizAgainBtn").addEventListener("click", () => goScreen("quiz-setup"));
+    $("blNextBtn").addEventListener("click", siguienteBlanco);
+    $("paNextBtn").addEventListener("click", iniciarPares);
     $("examActionBtn").addEventListener("click", startExam);
 
     // Flashcards
@@ -14014,7 +14351,7 @@ body {
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "18/08 20:57";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "18/08 21:04";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
