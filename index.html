@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 14:08">
+<meta name="apuntes-version" content="20/08 15:00">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1878,6 +1878,7 @@ body {
 .av-cara { position: relative; overflow: hidden; border-radius: 50%;
            border-style: solid; background: rgba(128,128,128,.14); box-sizing: border-box; }
 .tienda-item .ico-dib { background-image: none; display: flex; align-items: center; justify-content: center; }
+.tienda-item .ico-thumb { background-image: none; width: 100%; height: 46px; object-fit: contain; display: block; }
 .tienda-item .ico {
   display: block; width: 46px; height: 46px; margin: 0 auto;
   background-image: url("imagenes/sprite.png");
@@ -1934,6 +1935,10 @@ body {
 .gar-mini.activo { border-color: #3d8a3d; background: rgba(61,138,61,.14); }
 .gar-mini.bloqueado { opacity: .5; }
 .gar-mini svg { width: 100%; height: 34px; }
+.gar-min-img { display: block; width: 100%; height: 34px; object-fit: contain; }
+.gar-grupo { flex: 0 0 auto; align-self: center; font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .4px; opacity: .55; padding: 0 4px;
+  writing-mode: vertical-rl; transform: rotate(180deg); }
 .gar-mini .t { display: block; font-size: 10px; font-weight: 700; margin-top: 3px; line-height: 1.15; }
 /* solapas de "Tu colección" */
 .col-solapas { display: flex; gap: 6px; margin: 6px 0 10px; }
@@ -2727,7 +2732,7 @@ var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear
    <id>.png es el vehiculo con el cuadro en gris; <id>_m.png es la
    mascara del cuadro, que el navegador usa para pintarlo. */
 var AV_GARAGE_BASE = "imagenes/garage/";
-var AV_GARAGE = {"v_bmx":{"w":1000,"h":607},"v_carbono":{"w":1000,"h":581},"v_electrico":{"w":1000,"h":623},"v_mono":{"w":1000,"h":637},"v_mtb":{"w":1000,"h":599},"v_offroad":{"w":1000,"h":616},"v_playera":{"w":1000,"h":593}};
+var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313},"a_f1":{"w":1000,"h":318},"a_gt":{"w":1000,"h":316},"a_hiper":{"w":1000,"h":317},"a_muscle":{"w":1000,"h":308},"a_rally":{"w":1000,"h":339},"a_super":{"w":1000,"h":306},"m_cafe":{"w":1000,"h":508},"m_cross":{"w":1000,"h":563},"m_cruiser":{"w":1000,"h":550},"m_gp":{"w":1000,"h":573},"m_naked":{"w":1000,"h":538},"m_sport":{"w":1000,"h":564},"v_bmx":{"w":1000,"h":607},"v_carbono":{"w":1000,"h":581},"v_electrico":{"w":1000,"h":623},"v_mono":{"w":1000,"h":637},"v_mtb":{"w":1000,"h":599},"v_offroad":{"w":1000,"h":616},"v_playera":{"w":1000,"h":593}};
 /*MAPAS-FIN*/
 </script>
 <script>
@@ -14660,13 +14665,74 @@ var AV_GARAGE = {"v_bmx":{"w":1000,"h":607},"v_carbono":{"w":1000,"h":581},"v_el
     { id: "x_bocina", slot: "extra", n: "Bocina", p: 100, e: "📢" },
     { id: "x_casco", slot: "extra", n: "Casco", p: 150, e: "🪖" },
     { id: "x_canasto", slot: "extra", n: "Canasto", p: 150, e: "🧺" },
-    { id: "x_luces", slot: "extra", n: "Luces LED", p: 200, e: "💡" }
+    { id: "x_luces", slot: "extra", n: "Luces LED", p: 200, e: "💡" },
+    /* MOTOS: se compran, pero NO se montan. El avatar esta dibujado en pose de
+       ciclista y no hay forma de sentarlo en una moto (encastrar un dibujo
+       raster con el ciclista ya fallo cinco veces). Son piezas de coleccion:
+       viven en el garage y nada mas. Por eso tienen slot propio. */
+    { id: "m_cross", slot: "moto", n: "Moto de cross", p: 1500, e: "🏍️" },
+    { id: "m_cafe", slot: "moto", n: "Café racer", p: 1800, e: "🏍️" },
+    { id: "m_naked", slot: "moto", n: "Naked", p: 2200, e: "🏍️" },
+    { id: "m_cruiser", slot: "moto", n: "Cruiser", p: 2600, e: "🏍️" },
+    { id: "m_sport", slot: "moto", n: "Deportiva", p: 3200, e: "🏍️" },
+    { id: "m_gp", slot: "moto", n: "Moto de GP", p: 4000, e: "🏍️" },
+    /* AUTOS: NO se compran con monedas. Se desbloquean por logro, para que la
+       colección signifique algo y el Fórmula 1 no valga lo mismo que una gorra
+       cara (decisión de Javier, 20/08). La condicion de cada uno esta en
+       AUTOS_LOGRO. El precio 0 es a proposito: nunca pasan por la tienda. */
+    { id: "a_clasico", slot: "auto", n: "Clásico de los 60", p: 0, e: "🚗" },
+    { id: "a_muscle", slot: "auto", n: "Muscle car", p: 0, e: "🚗" },
+    { id: "a_rally", slot: "auto", n: "Auto de rally", p: 0, e: "🚗" },
+    { id: "a_deportivo", slot: "auto", n: "Gran turismo", p: 0, e: "🚗" },
+    { id: "a_gt", slot: "auto", n: "GT de carreras", p: 0, e: "🚗" },
+    { id: "a_super", slot: "auto", n: "Superdeportivo", p: 0, e: "🚗" },
+    { id: "a_hiper", slot: "auto", n: "Hiperdeportivo", p: 0, e: "🚗" },
+    { id: "a_f1", slot: "auto", n: "Fórmula 1", p: 0, e: "🏎️" }
   ];
+
+  /* Estado global para los desbloqueos: se lee de las materias, que son la
+     fuente de verdad. 700 XP es el umbral del nivel "Maestro" en CATALOGOS. */
+  function logrosGlobales() {
+    var xp = 0, logros = 0, maestro = 0;
+    for (var k in SUBJECTS) {
+      try {
+        var s = JSON.parse(localStorage.getItem(SUBJECTS[k].storage_key) || "null");
+        if (!s) continue;
+        xp += s.xp || 0;
+        logros += (s.unlockedBadges || []).length;
+        if ((s.xp || 0) >= 700) maestro++;
+      } catch (e) {}
+    }
+    var r = 0;
+    try { r = (rachaActual() || {}).dias || 0; } catch (e) {}
+    return { xp: xp, logros: logros, maestro: maestro, racha: r };
+  }
+  /* Escalera de los autos, de menos a mas dificil. El texto es el que ve el
+     chico en el garage cuando el auto todavia no es suyo. */
+  var AUTOS_LOGRO = {
+    a_clasico:  { t: "Llegá a Maestro en una materia",
+                  f: function (g) { return g.maestro >= 1; } },
+    a_muscle:   { t: "Racha de 7 días estudiando",
+                  f: function (g) { return g.racha >= 7; } },
+    a_rally:    { t: "Conseguí 15 logros entre todas las materias",
+                  f: function (g) { return g.logros >= 15; } },
+    a_deportivo:{ t: "Llegá a Maestro en dos materias",
+                  f: function (g) { return g.maestro >= 2; } },
+    a_gt:       { t: "Racha de 15 días estudiando",
+                  f: function (g) { return g.racha >= 15; } },
+    a_super:    { t: "Conseguí 30 logros entre todas las materias",
+                  f: function (g) { return g.logros >= 30; } },
+    a_hiper:    { t: "Llegá a Maestro en tres materias",
+                  f: function (g) { return g.maestro >= 3; } },
+    a_f1:       { t: "Maestro en las cinco materias y racha de 30 días",
+                  f: function (g) { return g.maestro >= 5 && g.racha >= 30; } }
+  };
   var TIENDA_CATS = [
     ["peinado", "Peinados"], ["gorra", "Gorras y gorros"], ["ropa", "Ropa (temporada invierno)"],
     ["bufanda", "Bufandas"], ["auris", "Auriculares"], ["reloj", "Relojes"],
     ["vehiculo", "Bicis"], ["color", "Pintura del vehículo"],
-    ["sticker", "Stickers del vehículo"], ["extra", "Accesorios del vehículo"]
+    ["sticker", "Stickers del vehículo"], ["extra", "Accesorios del vehículo"],
+    ["moto", "Motos (solo para el garage)"]
   ];
   var TIENDA_PISO = 500;   // monedas GANADAS históricas para desbloquear (para siempre)
 
@@ -15494,8 +15560,30 @@ function avatarIACara(px) {
      ahora para no tener que tocar la vista dos veces.                     */
   var GAR_ARTE = window.AV_GARAGE || {};   /* manifiesto opcional del arte grande */
 
+  var GAR_GRUPOS = [["vehiculo", "Bicis"], ["moto", "Motos"], ["auto", "Autos"]];
   function garVehiculos() {
-    return CATALOGO.filter(function (x) { return x.slot === "vehiculo"; });
+    var out = [];
+    for (var i = 0; i < GAR_GRUPOS.length; i++)
+      out = out.concat(CATALOGO.filter(function (x) { return x.slot === GAR_GRUPOS[i][0]; }));
+    return out;
+  }
+  /* Los autos no se compran: se desbloquean solos cuando el chico cumple la
+     condicion. Se revisa al abrir el garage y se guarda en "comprados", asi el
+     desbloqueo tiene su momento (aviso) y despues no hay que recalcular nada. */
+  function revisarAutos() {
+    var a = avatarData(), g = logrosGlobales(), nuevos = [];
+    CATALOGO.forEach(function (it) {
+      if (it.slot !== "auto" || a.comprados.indexOf(it.id) !== -1) return;
+      var L = AUTOS_LOGRO[it.id];
+      if (L && L.f(g)) { a.comprados.push(it.id); nuevos.push(it); }
+    });
+    if (nuevos.length) {
+      guardarAvatar(a);
+      nuevos.forEach(function (it, i) {
+        setTimeout(function () { showToast("🏁", "¡Desbloqueaste " + it.n + "!"); }, 300 + i * 900);
+      });
+    }
+    return nuevos.length;
   }
   /* Caja que ocupa la bici dentro del lienzo de 470x380 del avatar. Se calcula
      del modelo y no se hardcodea: si manana cambia un radio, el encuadre sigue. */
@@ -15525,6 +15613,14 @@ function avatarIACara(px) {
      los brillos los sigue poniendo el dibujo. Misma tecnica que la bufanda
      arcoiris — y las comillas del url() van SIMPLES, que con dobles se corta el
      atributo style. */
+  /* Miniatura de la tira: la imagen chica si existe, y si no el dibujo SVG
+     (solo las bicis tienen dibujo; una moto sin arte no se muestra). */
+  function garMini(it) {
+    if (GAR_ARTE[it.id])
+      return '<img class="gar-min-img" src="' + (window.AV_GARAGE_BASE || "imagenes/garage/") +
+             it.id + '_t.webp" alt="" loading="lazy" decoding="async">';
+    return AV_BICIS[it.id] ? garSVG(it.id, "#9aa2aa", null) : '<span class="t">' + (it.e || "") + '</span>';
+  }
   function garVisual(id, color, eq) {
     var p = GAR_ARTE[id];
     if (!p) return garSVG(id, color, eq);
@@ -15549,6 +15645,7 @@ function avatarIACara(px) {
     div.id = "apGarage";
     div.className = "tienda-overlay";
     document.body.appendChild(div);
+    revisarAutos();                       /* antes de leer el estado */
     var a = avatarData();
     var v = garVehiculos();
     /* arranca en el vehiculo puesto */
@@ -15591,9 +15688,14 @@ function avatarIACara(px) {
     var eqBici = puesto ? { extra: a.eq.extra === "x_casco" ? null : a.eq.extra,
                             sticker: a.eq.sticker } : null;
 
-    var sub = !mio ? '🔒 Todavía no es tuya — 🪙 ' + it.p + ' en la tienda'
-            : puesto ? '✔ Es la que estás usando'
-            : 'Tocá “Usar esta” para subirte';
+    var esBici = it.slot === "vehiculo";
+    var L = AUTOS_LOGRO[it.id];
+    var sub = !mio
+        ? (it.slot === "auto" ? '🔒 Se desbloquea así: ' + (L ? L.t : "—")
+                              : '🔒 Todavía no es tuya — 🪙 ' + it.p + ' en la tienda')
+      : esBici ? (puesto ? '✔ Es la que estás usando' : 'Tocá “Usar esta” para subirte')
+      : (it.slot === "auto" ? '🏁 Desbloqueado — pieza de colección'
+                            : '🏍️ Es tuya — pieza de colección');
 
     var h = top +
       '<div class="gar-escena" id="garEscena">' +
@@ -15607,14 +15709,21 @@ function avatarIACara(px) {
       '<div class="gar-nom">' + it.n + '</div>' +
       '<div class="gar-sub">' + sub + '</div>' +
       '<div style="text-align:center;margin-top:10px">' +
-        (mio && !puesto ? '<button class="gar-mini" id="garUsar" style="width:auto;padding:8px 18px">Usar esta</button>' : '') +
-        (!mio ? '<button class="gar-mini" id="garComprar" style="width:auto;padding:8px 18px">Verla en la tienda</button>' : '') +
+        (mio && esBici && !puesto ? '<button class="gar-mini" id="garUsar" style="width:auto;padding:8px 18px">Usar esta</button>' : '') +
+        (!mio && it.slot !== "auto" ? '<button class="gar-mini" id="garComprar" style="width:auto;padding:8px 18px">Verla en la tienda</button>' : '') +
       '</div>' +
       '<div class="gar-tira" id="garTira">';
+    var grupoActual = "";
     for (var i = 0; i < v.length; i++) {
       var x = v[i], teng = a.comprados.indexOf(x.id) !== -1;
+      if (x.slot !== grupoActual) {          /* separador entre bicis, motos y autos */
+        grupoActual = x.slot;
+        for (var q = 0; q < GAR_GRUPOS.length; q++)
+          if (GAR_GRUPOS[q][0] === x.slot)
+            h += '<span class="gar-grupo">' + GAR_GRUPOS[q][1] + '</span>';
+      }
       h += '<button class="gar-mini' + (i === garIdx ? " activo" : "") + (teng ? "" : " bloqueado") +
-           '" data-i="' + i + '">' + garSVG(x.id, teng ? "#9aa2aa" : "#8d8d8d", null) +
+           '" data-i="' + i + '">' + garMini(x) +
            '<span class="t">' + (teng ? x.n : "🔒 " + x.n) + '</span></button>';
     }
     h += "</div>";
@@ -15639,6 +15748,11 @@ function avatarIACara(px) {
 
   function listenersGarage(g) {
     listenersColeccion(g, "garage");
+    /* con 21 vehiculos la tira es larga: si no se acompaña, el chico pasa a un
+       auto y abajo sigue viendo las bicis */
+    var act = g.querySelector(".gar-tira .gar-mini.activo");
+    if (act && act.scrollIntoView)
+      try { act.scrollIntoView({ block: "nearest", inline: "center" }); } catch (e) {}
     document.getElementById("garIzq").addEventListener("click", function () { garIr(-1); });
     document.getElementById("garDer").addEventListener("click", function () { garIr(1); });
     g.querySelectorAll(".gar-tira .gar-mini").forEach(function (b) {
@@ -15764,14 +15878,24 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         var comprado = a.comprados.indexOf(it.id) !== -1;
         var equipado = a.eq[it.slot] === it.id;
         var puede = saldo >= it.p;
-        var cls = "tienda-item" + (equipado ? " equipado" : comprado ? " comprado" : (!puede ? " caro" : ""));
-        var pre = equipado ? "✔ puesto" : comprado ? "tocá para poner" : "🪙 " + it.p;
+        /* las motos no se ponen: se tienen. No corresponde "tocá para poner". */
+        var deColeccion = it.slot === "moto" || it.slot === "auto";
+        var cls = "tienda-item" + (comprado ? (deColeccion ? " comprado" : (equipado ? " equipado" : " comprado"))
+                                            : (!puede ? " caro" : ""));
+        var pre = comprado ? (deColeccion ? "🏁 en tu garage" : (equipado ? "✔ puesto" : "tocá para poner"))
+                           : "🪙 " + it.p;
         /* Los vehiculos y los extras se dibujan por codigo: el sprite generado
            con IA mostraba un megafono en "Luces LED" y seguia dibujando
-           monopatines en los tres items que pasaron a ser bicicletas. */
-        var dib = (typeof svgIconoIA === "function") ? svgIconoIA(it.id) : "";
-        var ico = dib ? null : ICONOS[it.id];
-        var visual = dib
+           monopatines en los tres items que pasaron a ser bicicletas.
+           Las motos usan su miniatura del garage: al lado de las bicis
+           dibujadas, un emoji desentonaba. */
+        var thumb = (window.AV_GARAGE && AV_GARAGE[it.id] && deColeccion)
+          ? '<img class="ico ico-thumb" src="' + (window.AV_GARAGE_BASE || "imagenes/garage/") +
+            it.id + '_t.webp" alt="" loading="lazy" decoding="async">' : "";
+        var dib = thumb ? "" : ((typeof svgIconoIA === "function") ? svgIconoIA(it.id) : "");
+        var ico = (thumb || dib) ? null : ICONOS[it.id];
+        var visual = thumb ? thumb
+          : dib
           ? '<span class="ico ico-dib">' + dib + '</span>'
           : ico
           ? '<span class="ico" style="background-position:' + (-ico[0] * 46) + 'px ' + (-ico[1] * 46) + 'px"></span>'
@@ -16328,7 +16452,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 14:08";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 15:00";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
