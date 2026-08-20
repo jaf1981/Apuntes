@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 11:32">
+<meta name="apuntes-version" content="20/08 11:52">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -14670,10 +14670,29 @@ var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear
    puno bajo su mano. Dibujada, encastra siempre y las pinturas salen gratis.
    Las anclas salen del CICLISTA, no de la bici (ver CONTEXTO 20/08).       */
 var AV_ASIENTO = [193, 246], AV_PUNO = [315, 182], AV_PEDAL = [217, 330], AV_PISO = 366;
-/* Punto del cuadro donde apoya el sticker. Lo fija svgBiciIA segun el modelo y
-   lo lee svgExtrasIA, que siempre se dibuja despues (ver avatarIAHTML y garSVG). */
-var AV_STICKER = [252, 223];
+/* Punto del cuadro donde apoya el sticker y punto donde queda el manubrio. Los
+   fija svgBiciIA segun el modelo y los lee svgExtrasIA, que siempre se dibuja
+   despues (ver avatarIAHTML y garSVG). Hacen falta porque la bici sola no tiene
+   la misma geometria que la bici montada: sin esto, el canasto y las luces
+   quedaban donde estaria la mano del chico y no sobre el manubrio dibujado. */
+var AV_STICKER = [252, 223], AV_MANUBRIO = [315, 182];
 
+/* "sa" y "pu" son el asiento y el puño de CADA modelo, y solo se usan cuando la
+   bici va sola (garage e iconos de la tienda). Montada, el asiento tiene que
+   caer bajo la cola del chico y el puño bajo su mano, asi que ahi mandan
+   AV_ASIENTO y AV_PUNO. Esa atadura al ciclista era la razon por la que las
+   siete bicis salian casi iguales: todas con el mismo asiento y el mismo
+   manubrio (se vio recien en el garage, en grande, el 20/08). */
+/* PROBADO Y DESCARTADO (20/08): darle a cada modelo su propio asiento y su
+   propio manubrio cuando va solo, para que las siete no salieran casi iguales.
+   Se probo con pixeles y despues con fracciones del radio de rueda, y las dos
+   veces salio peor: en este lienzo la rueda es enorme respecto de la distancia
+   entre ejes (porque el dibujo esta comprimido para que el chico entre sentado),
+   asi que al subir el asiento a una altura realista el cuadro queda metido
+   dentro de las ruedas y el manubrio termina colgando en el aire. Para que esto
+   funcione habria que redibujar la bici en su propio sistema de coordenadas,
+   con proporciones reales — y a esa altura conviene mas el arte generado.
+   NO reintentar el camino de mover asiento y manubrio dentro de este lienzo. */
 var AV_BICIS = {
   v_playera:   { R: 58, goma: 9,  xt: 145, xd: 330, cuadro: "curvo" },
   v_bmx:       { R: 48, goma: 12, xt: 155, xd: 322, cuadro: "bmx" },
@@ -14718,9 +14737,19 @@ function svgBiciIA(modelo, color) {
   var tubos = [];
   function tubo(p, q) { tubos.push("M" + p[0] + " " + p[1] + "L" + q[0] + " " + q[1]); }
   var tija = [ax, ay + 8], direc = [px - 4, py + 10];
+  /* Tubo de direccion + horquilla. Antes habia un unico caño recto del manubrio
+     al eje de adelante y la rueda parecia colgada de un palo (se vio en el
+     garage, 20/08). Ahora el cuadro termina en la CABEZA y de ahi sale la
+     horquilla, mas fina, como en una bici de verdad. */
+  var fdx = xd - direc[0], fdy = cy - direc[1];
+  var flen = Math.sqrt(fdx * fdx + fdy * fdy) || 1;
+  var largoCab = Math.min(30, flen * 0.34);
+  var cabeza = [Math.round(direc[0] + fdx / flen * largoCab),
+                Math.round(direc[1] + fdy / flen * largoCab)];
   /* Donde va el sticker: sobre el CUADRO, y el cuadro cambia de forma segun el
      modelo. Con una coordenada fija quedaba flotando en el aire en la playera
      (se ve recien en el garage, en grande). Se calcula por modelo. */
+  AV_MANUBRIO = [px, py];
   AV_STICKER = c.cuadro === "curvo"
       ? [Math.round(0.25 * tija[0] + 0.5 * (tija[0] + direc[0]) / 2 + 0.25 * direc[0]),
          Math.round(0.25 * tija[1] + 0.5 * ((tija[1] + direc[1]) / 2 - 26) + 0.25 * direc[1])]
@@ -14729,22 +14758,29 @@ function svgBiciIA(modelo, color) {
       : [Math.round((tija[0] + direc[0]) / 2), Math.round((tija[1] + direc[1]) / 2)];
   if (c.cuadro === "curvo") {
     tubo(tija, [xp, yp]); tubo([xt, cy], [xp, yp]); tubo([xt, cy], tija);
+    tubo([xp, yp], cabeza);
     tubos.push("M" + tija[0] + " " + tija[1] + "Q" + ((tija[0] + direc[0]) / 2) + " " +
                ((tija[1] + direc[1]) / 2 - 26) + " " + direc[0] + " " + direc[1]);
   } else if (c.cuadro === "bmx") {
-    tubo(tija, [xp, yp]); tubo(tija, direc); tubo([xp, yp], direc);
+    tubo(tija, [xp, yp]); tubo(tija, direc); tubo([xp, yp], cabeza);
     tubo([xt, cy], [xp, yp]); tubo([xt, cy], tija);
   } else if (c.cuadro === "plegable") {
-    var medio = [(xp + direc[0]) / 2, cy - 6];
-    tubo(tija, [xp, yp]); tubo([xp, yp], medio); tubo(medio, direc); tubo([xt, cy], [xp, yp]);
+    var medio = [Math.round((xp + direc[0]) / 2), Math.round(cy - 6)];
+    tubo(tija, [xp, yp]); tubo([xp, yp], medio); tubo(medio, cabeza); tubo([xt, cy], [xp, yp]);
   } else {
-    tubo(tija, [xp, yp]); tubo(tija, direc); tubo([xp, yp], direc);
+    tubo(tija, [xp, yp]); tubo(tija, direc); tubo([xp, yp], cabeza);
     tubo([xt, cy], [xp, yp]); tubo([xt, cy], tija);
   }
-  tubo(direc, [xd, cy]);
+  tubo(direc, cabeza);                      /* tubo de direccion */
   var d = tubos.join(" ");
+  var pintura = color || "#9aa2aa";
+  /* horquilla: mismo color que el cuadro pero mas fina, y va dibujada primero
+     para que el cuadro le pase por encima en la union */
+  var hq = "M" + cabeza[0] + " " + cabeza[1] + "L" + xd + " " + cy;
+  h += '<path d="' + hq + '" fill="none" stroke="' + CONT + '" stroke-width="9.5" stroke-linecap="round"/>';
+  h += '<path d="' + hq + '" fill="none" stroke="' + pintura + '" stroke-width="6" stroke-linecap="round"/>';
   h += '<path d="' + d + '" fill="none" stroke="' + CONT + '" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>';
-  h += '<path d="' + d + '" fill="none" stroke="' + (color || "#9aa2aa") + '" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  h += '<path d="' + d + '" fill="none" stroke="' + pintura + '" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>';
   if (c.cuadro === "plegable")
     h += '<circle cx="' + ((xp + direc[0]) / 2) + '" cy="' + (cy - 6) + '" r="5" fill="' + NEG + '" stroke="' + CONT + '" stroke-width="1"/>';
   /* tija y potencia */
@@ -14824,7 +14860,7 @@ function avCapa(nombre, pose, filtro) {
 var AV_CABEZA_JIN = [230, 54];
 
 function svgExtrasIA(eq, enBici) {
-  var h = "", px = AV_PUNO[0], py = AV_PUNO[1];
+  var h = "", px = AV_MANUBRIO[0], py = AV_MANUBRIO[1];
   var CONT = "#1b1e22", NEG = "#282c33";
   if (enBici) {
     if (eq.extra === "x_canasto") {
@@ -14867,9 +14903,13 @@ function svgExtrasIA(eq, enBici) {
 function svgIconoIA(id, px) {
   px = px || 46;
   if (AV_BICIS[id]) {
+    /* el icono muestra la bici SOLA, asi que usa su geometria propia (libre) y
+       el encuadre se calcula del modelo en vez de una caja fija */
+    var caja = garCaja(id, false);
     var b = svgBiciIA(id, "#9aa2aa")
       .replace('viewBox="0 0 470 380" width="470" height="380"',
-               'viewBox="86 176 320 200" width="' + px + '" height="' + Math.round(px * 0.62) + '"');
+               'viewBox="' + caja.join(" ") + '" width="' + px +
+               '" height="' + Math.round(px * caja[3] / caja[2]) + '"');
     return b.replace('class="av-capa"', 'class="ico-svg"');
   }
   var CONT = "#1b1e22", h = "";
@@ -15396,8 +15436,10 @@ function avatarIACara(px) {
     var c = AV_BICIS[id] || AV_BICIS.v_playera;
     var cy = AV_PISO - c.R - c.goma / 2;
     var x0 = c.xt - c.R - c.goma - 6, x1 = c.xd + c.R + c.goma + 6;
+    var sa = AV_ASIENTO, pu = AV_PUNO;
     /* el canasto es lo mas alto de todo; sin canasto no hay que reservarle aire */
-    var y0 = Math.min(cy - c.R - c.goma - 6, AV_PUNO[1] - (conCanasto ? 32 : 12));
+    var y0 = Math.min(cy - c.R - c.goma - 6, sa[1] - 14,
+                      pu[1] - (conCanasto ? 32 : 12));
     var y1 = AV_PISO + 8;
     return [x0, y0, x1 - x0, y1 - y0];
   }
@@ -16206,7 +16248,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 11:32";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 11:52";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
