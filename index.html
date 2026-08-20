@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 08:33">
+<meta name="apuntes-version" content="20/08 08:42">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2550,8 +2550,10 @@ body {
     <div class="iomodal-help" id="iomodalHelp">Copiá este texto y guardalo donde quieras.</div>
     <textarea class="iomodal-textarea" id="iomodalText" placeholder="Pegá acá el progreso exportado..." spellcheck="false"></textarea>
     <div class="iomodal-feedback" id="iomodalFeedback"></div>
+    <input type="file" id="iomodalFile" accept=".json,application/json,text/plain" style="display:none">
     <div class="iomodal-actions">
       <button class="iomodal-btn secondary" id="iomodalCancel">Cerrar</button>
+      <button class="iomodal-btn secondary" id="iomodalFileBtn">Elegir archivo</button>
       <button class="iomodal-btn" id="iomodalAction">Copiar al portapapeles</button>
     </div>
   </div>
@@ -15765,6 +15767,8 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     const iomodalText = document.getElementById('iomodalText');
     const iomodalAction = document.getElementById('iomodalAction');
     const iomodalFeedback = document.getElementById('iomodalFeedback');
+    const iomodalFile = document.getElementById('iomodalFile');
+    const iomodalFileBtn = document.getElementById('iomodalFileBtn');
 
     function openIoModal(mode) {
       iomodalMode = mode;
@@ -15776,12 +15780,14 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         iomodalText.value = exportProgress();
         iomodalText.readOnly = true;
         iomodalAction.textContent = '📋 Copiar al portapapeles';
+        iomodalFileBtn.textContent = '💾 Guardar archivo';
       } else {
         iomodalTitle.textContent = 'Importar progreso';
         iomodalHelp.innerHTML = 'Pegá acá el progreso que exportaste anteriormente. <strong>Atención:</strong> esto va a sobreescribir el progreso actual de las materias incluidas en el texto.';
         iomodalText.value = '';
         iomodalText.readOnly = false;
         iomodalAction.textContent = '⬇ Importar';
+        iomodalFileBtn.textContent = '📄 Elegir archivo';
         setTimeout(() => iomodalText.focus(), 100);
       }
       iomodal.classList.add('open');
@@ -15799,6 +15805,48 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 
     document.getElementById('btnExport').addEventListener('click', () => openIoModal('export'));
     document.getElementById('btnImport').addEventListener('click', () => openIoModal('import'));
+    /* Elegir/guardar archivo en vez de copiar y pegar. Nace del bug del 20/08:
+       el teclado de iOS cambia los guiones al pegar y rompe la firma. Con el
+       archivo el texto no pasa nunca por el teclado. */
+    iomodalFileBtn.addEventListener('click', () => {
+      if (iomodalMode === 'export') {
+        try {
+          const hoy = new Date();
+          const nom = 'apuntes-progreso-' + hoy.getFullYear() + '-' +
+            String(hoy.getMonth() + 1).padStart(2, '0') + '-' +
+            String(hoy.getDate()).padStart(2, '0') + '.json';
+          const url = URL.createObjectURL(new Blob([iomodalText.value], { type: 'application/json' }));
+          const a = document.createElement('a');
+          a.href = url; a.download = nom;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          showIoFeedback('✓ Guardado como ' + nom, 'success');
+        } catch (e) {
+          showIoFeedback('No se pudo guardar el archivo. Copiá el texto a mano.', 'error');
+        }
+      } else {
+        iomodalFile.value = '';
+        iomodalFile.click();
+      }
+    });
+    iomodalFile.addEventListener('change', () => {
+      const f = iomodalFile.files && iomodalFile.files[0];
+      if (!f) return;
+      const lector = new FileReader();
+      lector.onload = () => {
+        iomodalText.value = String(lector.result || '');
+        const r = importProgress(iomodalText.value);
+        if (r.ok) {
+          showIoFeedback('✓ Progreso importado desde ' + f.name + ' (' + r.count + ' materias). Recargando...', 'success');
+          setTimeout(() => location.reload(), 1200);
+        } else {
+          showIoFeedback('✗ ' + r.error, 'error');
+        }
+      };
+      lector.onerror = () => showIoFeedback('No se pudo leer el archivo.', 'error');
+      lector.readAsText(f);
+    });
+
     document.getElementById('iomodalClose').addEventListener('click', closeIoModal);
     document.getElementById('iomodalCancel').addEventListener('click', closeIoModal);
     iomodalAction.addEventListener('click', () => {
@@ -15844,7 +15892,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 08:33";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 08:42";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
