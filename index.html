@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 08:42">
+<meta name="apuntes-version" content="20/08 09:10">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1872,6 +1872,9 @@ body {
 .av-marco { position: relative; overflow: hidden; }
 .av-lienzo { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .av-capa { position: absolute; left: 0; top: 0; image-rendering: -webkit-optimize-contrast; }
+.av-arcoiris { mix-blend-mode: color; pointer-events: none;
+  background: linear-gradient(160deg, #e03b3b 0%, #e08a20 22%, #e0c020 42%,
+              #3d9a3d 62%, #2a6fb0 82%, #7a3db0 100%); }
 .av-cara { position: relative; overflow: hidden; border-radius: 50%;
            border-style: solid; background: rgba(128,128,128,.14); box-sizing: border-box; }
 .tienda-item .ico-dib { background-image: none; display: flex; align-items: center; justify-content: center; }
@@ -14704,8 +14707,27 @@ function svgBiciIA(modelo, color) {
 /* El giro de tono de CSS es una aproximacion, no una rotacion exacta: los
    valores estan elegidos mirando el resultado, no calculados.
    OJO: "arcoiris" queda de un solo color hasta que tenga su propia imagen. */
-var AV_TONO = { b_azul: [215, "b_roja"], b_arcoiris: [95, "b_roja"],
+var AV_TONO = { b_azul: [215, "b_roja"],
                 w_deportivo: [155, "w_digital"], w_smart: [0, "w_digital", 1] };
+
+/* La bufanda arcoiris NO puede salir de un giro de tono: un giro mueve todos los
+   colores por igual, nunca produce varias franjas, y encima el giro de CSS es
+   una aproximacion que la dejaba practicamente igual a la azul.
+   Se pinta el degrade recortado con la silueta de la bufanda roja como mascara,
+   y se mezcla en modo "color": el degrade aporta el tono y el dibujo original
+   conserva su sombreado y su contorno oscuro. */
+function avCapaArcoiris(nombre) {
+  var p = AV_PIEZAS[nombre];
+  if (!p) return "";
+  /* comillas SIMPLES: el atributo style va entre dobles y un url("...") lo
+     cortaba a la mitad, asi que la mascara nunca se aplicaba */
+  var url = "url('data:image/png;base64," + p.d + "')";
+  var pos = 'left:' + p.x + 'px;top:' + p.y + 'px;width:' + p.w + 'px;height:' + p.h + 'px';
+  return avCapa(nombre, "") +
+    '<div class="av-capa av-arcoiris" data-capa="' + nombre + '_arcoiris" style="' + pos +
+    ';-webkit-mask-image:' + url + ';mask-image:' + url +
+    ';-webkit-mask-size:100% 100%;mask-size:100% 100%"></div>';
+}
 
 /* Nombre de pieza segun la apariencia: primero busca la version femenina y si
    no existe usa la del varon. Los accesorios finos (auriculares, bufanda,
@@ -14755,7 +14777,8 @@ function svgExtrasIA(eq, enBici) {
     }
     if (eq.sticker) {
       var em = { s_llamas: "\uD83D\uDD25", s_rayo: "\u26A1", s_estrellas: "\u2728", s_calavera: "\uD83D\uDC80" }[eq.sticker];
-      if (em) h += '<text x="286" y="286" font-size="26" text-anchor="middle">' + em + '</text>';
+      /* sobre el tubo diagonal del cuadro; antes caia sobre la rueda trasera */
+      if (em) h += '<text x="283" y="238" font-size="22" text-anchor="middle">' + em + '</text>';
     }
     if (eq.extra === "x_casco") {
       var cx = AV_CABEZA_JIN[0], cy = AV_CABEZA_JIN[1];
@@ -14815,14 +14838,20 @@ function avatarIAHTML(escala, soloPersona) {
   var h = "";
   if (enBici) h += svgBiciIA(eq.vehiculo, (itemDe(eq.color) || {}).c || "#9aa2aa");
   h += avCapa(avNombre("", pose, eq.ropa || "r_basica", nina), pose);
-  /* el peinado clasico ya viene dibujado en el cuerpo */
-  if (eq.peinado && eq.peinado !== "p_clasico" && (!eq.gorra || eq.gorra === "g_visera"))
+  /* El peinado clasico ya viene dibujado en el cuerpo.
+     Y si hay algo que tapa la cabeza, el peinado NO se dibuja: antes lo dejaba
+     con la gorra de visera, y las crestas y los rulos asomaban por encima de la
+     gorra y del casco (lo vio Javier el 20/08). Las gorras ya vienen dibujadas
+     con pelo debajo, asi que no se pierde nada. */
+  var tapaCabeza = !!eq.gorra || (enBici && eq.extra === "x_casco");
+  if (eq.peinado && eq.peinado !== "p_clasico" && !tapaCabeza)
     h += avCapa(avNombre("cab", pose, eq.peinado, nina), pose);
   if (eq.gorra) h += avCapa(avNombre("acc", pose, eq.gorra, nina), pose);
   if (eq.auris) h += avCapa(avNombre("acc", pose, eq.auris, nina), pose);
   ["bufanda", "reloj"].forEach(function (slot) {
     var id = eq[slot];
     if (!id) return;
+    if (id === "b_arcoiris") { h += avCapaArcoiris(avNombre("acc", pose, "b_roja", nina)); return; }
     var t = AV_TONO[id];
     if (t) h += avCapa(avNombre("acc", pose, t[1], nina), pose,
                        t[2] ? "grayscale(1) brightness(.8)" : "hue-rotate(" + t[0] + "deg)");
@@ -15892,7 +15921,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 08:42";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 09:10";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
