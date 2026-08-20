@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 10:13">
+<meta name="apuntes-version" content="20/08 11:32">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1896,6 +1896,43 @@ body {
   overflow: hidden; margin: 14px 0 6px; }
 .tienda-lock-fill { height: 100%; border-radius: 6px; background: #d4a017; }
 
+/* --- Tu garage (20/08): vitrina grande de los vehiculos ------------------
+   Reusa .tienda-overlay para el fondo y el scroll; lo propio es el escenario
+   con zoom y el carrusel de abajo. */
+.gar-escena { position: relative; margin: 6px 0 4px; border-radius: 18px;
+  background: linear-gradient(180deg, rgba(128,128,128,.10), rgba(128,128,128,.20));
+  border: 1.5px solid rgba(128,128,128,.28);
+  height: 46vh; min-height: 230px; max-height: 380px;
+  overflow: hidden; touch-action: none; }
+.gar-piso { position: absolute; left: 8%; right: 8%; bottom: 12%; height: 14px;
+  border-radius: 50%; background: rgba(0,0,0,.16); filter: blur(5px); }
+.gar-lienzo { position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: center; transform-origin: 50% 50%; transition: transform .18s ease-out; }
+.gar-lienzo.arrastrando { transition: none; }
+.gar-lienzo.bloqueado { opacity: .38; filter: grayscale(1); }
+.gar-lienzo svg, .gar-lienzo img { width: 92%; height: 92%; object-fit: contain;
+  image-rendering: -webkit-optimize-contrast; }
+.gar-ayuda { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
+  font-size: 11px; opacity: .55; pointer-events: none; }
+.gar-nom { font-size: 19px; font-weight: 800; text-align: center; margin-top: 6px; }
+.gar-sub { font-size: 13px; text-align: center; opacity: .7; margin-top: 2px; min-height: 18px; }
+.gar-flecha { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 38px; height: 38px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(128,128,128,.22); color: inherit; font-size: 18px; }
+.gar-flecha.izq { left: 6px; } .gar-flecha.der { right: 6px; }
+.gar-tira { display: flex; gap: 8px; overflow-x: auto; padding: 12px 2px 4px;
+  -webkit-overflow-scrolling: touch; }
+.gar-mini { flex: 0 0 auto; width: 74px; border-radius: 12px; padding: 6px 4px;
+  border: 1.5px solid rgba(128,128,128,.3); background: rgba(255,255,255,.35);
+  cursor: pointer; font-family: inherit; color: inherit; text-align: center; }
+[data-theme="dark"] .gar-mini { background: rgba(255,255,255,.05); }
+.gar-mini.activo { border-color: #3d8a3d; background: rgba(61,138,61,.14); }
+.gar-mini.bloqueado { opacity: .5; }
+.gar-mini svg { width: 100%; height: 34px; }
+.gar-mini .t { display: block; font-size: 10px; font-weight: 700; margin-top: 3px; line-height: 1.15; }
+.gar-vacio { text-align: center; padding: 30px 18px; }
+.gar-vacio .grande { font-size: 44px; }
+
 .sp-card::before {
   content: "";
   position: absolute;
@@ -2343,6 +2380,11 @@ body {
           <span class="ico">🛍️</span>
           <div class="name">Tienda</div>
           <div class="sub" id="dashTiendaSub">Gastá tus monedas</div>
+        </button>
+        <button class="dash-action" id="dashGarage">
+          <span class="ico">🏁</span>
+          <div class="name">Tu garage</div>
+          <div class="sub" id="dashGarageSub">Mirá tus bicis en grande</div>
         </button>
         <button class="dash-action" data-go="glossary">
           <span class="ico">📖</span>
@@ -13702,6 +13744,12 @@ var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear
         dt.addEventListener("click", () => { if (typeof abrirTienda === "function") abrirTienda(); });
       }
     }
+    // Garage desde Actividades (mismo patron que la tienda)
+    const dg = $("dashGarage");
+    if (dg && !dg.dataset.listo) {
+      dg.dataset.listo = "1";
+      dg.addEventListener("click", () => { if (typeof abrirGarage === "function") abrirGarage(); });
+    }
     // Sugerencias dinámicas: practicar lo flojo / lo leído hoy
     const sug = $("dashSug");
     if (sug) {
@@ -14580,7 +14628,7 @@ var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear
   var TIENDA_CATS = [
     ["peinado", "Peinados"], ["gorra", "Gorras y gorros"], ["ropa", "Ropa (temporada invierno)"],
     ["bufanda", "Bufandas"], ["auris", "Auriculares"], ["reloj", "Relojes"],
-    ["vehiculo", "Bicis y monopatines"], ["color", "Pintura del vehículo"],
+    ["vehiculo", "Bicis"], ["color", "Pintura del vehículo"],
     ["sticker", "Stickers del vehículo"], ["extra", "Accesorios del vehículo"]
   ];
   var TIENDA_PISO = 500;   // monedas GANADAS históricas para desbloquear (para siempre)
@@ -14622,6 +14670,9 @@ var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear
    puno bajo su mano. Dibujada, encastra siempre y las pinturas salen gratis.
    Las anclas salen del CICLISTA, no de la bici (ver CONTEXTO 20/08).       */
 var AV_ASIENTO = [193, 246], AV_PUNO = [315, 182], AV_PEDAL = [217, 330], AV_PISO = 366;
+/* Punto del cuadro donde apoya el sticker. Lo fija svgBiciIA segun el modelo y
+   lo lee svgExtrasIA, que siempre se dibuja despues (ver avatarIAHTML y garSVG). */
+var AV_STICKER = [252, 223];
 
 var AV_BICIS = {
   v_playera:   { R: 58, goma: 9,  xt: 145, xd: 330, cuadro: "curvo" },
@@ -14667,6 +14718,15 @@ function svgBiciIA(modelo, color) {
   var tubos = [];
   function tubo(p, q) { tubos.push("M" + p[0] + " " + p[1] + "L" + q[0] + " " + q[1]); }
   var tija = [ax, ay + 8], direc = [px - 4, py + 10];
+  /* Donde va el sticker: sobre el CUADRO, y el cuadro cambia de forma segun el
+     modelo. Con una coordenada fija quedaba flotando en el aire en la playera
+     (se ve recien en el garage, en grande). Se calcula por modelo. */
+  AV_STICKER = c.cuadro === "curvo"
+      ? [Math.round(0.25 * tija[0] + 0.5 * (tija[0] + direc[0]) / 2 + 0.25 * direc[0]),
+         Math.round(0.25 * tija[1] + 0.5 * ((tija[1] + direc[1]) / 2 - 26) + 0.25 * direc[1])]
+    : c.cuadro === "plegable"
+      ? [Math.round((xp + direc[0]) / 2), Math.round(cy - 6)]
+      : [Math.round((tija[0] + direc[0]) / 2), Math.round((tija[1] + direc[1]) / 2)];
   if (c.cuadro === "curvo") {
     tubo(tija, [xp, yp]); tubo([xt, cy], [xp, yp]); tubo([xt, cy], tija);
     tubos.push("M" + tija[0] + " " + tija[1] + "Q" + ((tija[0] + direc[0]) / 2) + " " +
@@ -14768,8 +14828,10 @@ function svgExtrasIA(eq, enBici) {
   var CONT = "#1b1e22", NEG = "#282c33";
   if (enBici) {
     if (eq.extra === "x_canasto") {
-      h += '<path d="M' + (px + 8) + ' ' + (py - 26) + ' h34 l-4 26 h-26 z" fill="#b08d57" stroke="' + CONT + '" stroke-width="2.4" stroke-linejoin="round"/>';
-      h += '<path d="M' + (px + 10) + ' ' + (py - 17) + ' h30 M' + (px + 11) + ' ' + (py - 9) + ' h28" stroke="rgba(0,0,0,.28)" stroke-width="2"/>';
+      /* apoyado SOBRE el manubrio: antes arrancaba en px+8 y en grande se veia
+         flotando al costado, sin tocar la bici (20/08, garage) */
+      h += '<path d="M' + (px + 1) + ' ' + (py - 24) + ' h34 l-4 26 h-26 z" fill="#b08d57" stroke="' + CONT + '" stroke-width="2.4" stroke-linejoin="round"/>';
+      h += '<path d="M' + (px + 3) + ' ' + (py - 15) + ' h30 M' + (px + 4) + ' ' + (py - 7) + ' h28" stroke="rgba(0,0,0,.28)" stroke-width="2"/>';
     }
     if (eq.extra === "x_luces") {
       h += '<rect x="' + (px + 8) + '" y="' + (py - 6) + '" width="13" height="11" rx="3" fill="' + NEG + '" stroke="' + CONT + '" stroke-width="2"/>';
@@ -14782,8 +14844,10 @@ function svgExtrasIA(eq, enBici) {
     }
     if (eq.sticker) {
       var em = { s_llamas: "\uD83D\uDD25", s_rayo: "\u26A1", s_estrellas: "\u2728", s_calavera: "\uD83D\uDC80" }[eq.sticker];
-      /* sobre el tubo diagonal del cuadro; antes caia sobre la rueda trasera */
-      if (em) h += '<text x="283" y="238" font-size="22" text-anchor="middle">' + em + '</text>';
+      /* sobre el cuadro; antes caia sobre la rueda trasera, y despues quedaba
+         flotando en la playera porque la coordenada era fija (ver AV_STICKER) */
+      if (em) h += '<text x="' + AV_STICKER[0] + '" y="' + (AV_STICKER[1] + 8) +
+                   '" font-size="22" text-anchor="middle">' + em + '</text>';
     }
     if (eq.extra === "x_casco") {
       var cx = AV_CABEZA_JIN[0], cy = AV_CABEZA_JIN[1];
@@ -15310,6 +15374,222 @@ function avatarIACara(px) {
     if (t) t.remove();
     renderAvatarInicio();
   }
+
+  /* ================= TU GARAGE (20/08) ==================================
+     Vitrina grande de los vehiculos. Nace con el dibujo SVG que ya existe
+     porque asi funciona HOY sin depender de arte nuevo; en cuanto haya PNG
+     grandes en imagenes/garage/<id>.png el mismo codigo los prefiere.
+     Ese respaldo es el mismo patron que hayPiezas() para el avatar.
+
+     Honestidad sobre el zoom: sobre el SVG el zoom es nitido pero no revela
+     nada nuevo (es un dibujo de lineas, no tiene detalle escondido). El zoom
+     recien vale la pena con el arte raster grande. Se deja andando desde
+     ahora para no tener que tocar la vista dos veces.                     */
+  var GAR_ARTE = window.AV_GARAGE || {};   /* manifiesto opcional del arte grande */
+
+  function garVehiculos() {
+    return CATALOGO.filter(function (x) { return x.slot === "vehiculo"; });
+  }
+  /* Caja que ocupa la bici dentro del lienzo de 470x380 del avatar. Se calcula
+     del modelo y no se hardcodea: si manana cambia un radio, el encuadre sigue. */
+  function garCaja(id, conCanasto) {
+    var c = AV_BICIS[id] || AV_BICIS.v_playera;
+    var cy = AV_PISO - c.R - c.goma / 2;
+    var x0 = c.xt - c.R - c.goma - 6, x1 = c.xd + c.R + c.goma + 6;
+    /* el canasto es lo mas alto de todo; sin canasto no hay que reservarle aire */
+    var y0 = Math.min(cy - c.R - c.goma - 6, AV_PUNO[1] - (conCanasto ? 32 : 12));
+    var y1 = AV_PISO + 8;
+    return [x0, y0, x1 - x0, y1 - y0];
+  }
+  function garSVG(id, color, eq) {
+    var b = svgBiciIA(id, color);
+    var ex = eq ? svgExtrasIA(eq, true) : "";
+    /* el casco va en la cabeza del chico: en el garage no hay chico */
+    var caja = garCaja(id, eq && eq.extra === "x_canasto").join(" ");
+    var capas = b.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "") +
+                ex.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+    return '<svg viewBox="' + caja + '" data-capa="garage_' + id + '">' + capas + '</svg>';
+  }
+  function garVisual(id, color, eq) {
+    var p = GAR_ARTE[id];
+    if (p) return '<img src="imagenes/garage/' + id + '.png" width="' + p.w +
+                  '" height="' + p.h + '" alt="" decoding="async">';
+    return garSVG(id, color, eq);
+  }
+
+  var garIdx = 0, garZoom = 1, garX = 0, garY = 0;
+
+  function abrirGarage() {
+    if (document.getElementById("apGarage")) return;
+    var div = document.createElement("div");
+    div.id = "apGarage";
+    div.className = "tienda-overlay";
+    document.body.appendChild(div);
+    var a = avatarData();
+    var v = garVehiculos();
+    /* arranca en el vehiculo puesto */
+    for (var i = 0; i < v.length; i++) if (v[i].id === a.eq.vehiculo) garIdx = i;
+    garZoom = 1; garX = 0; garY = 0;
+    pintarGarage();
+  }
+  function cerrarGarage() {
+    var g = document.getElementById("apGarage");
+    if (g) g.remove();
+    renderAvatarInicio();
+  }
+
+  function pintarGarage() {
+    var g = document.getElementById("apGarage");
+    if (!g) return;
+    var a = avatarData();
+    var v = garVehiculos();
+    var tengo = v.filter(function (x) { return a.comprados.indexOf(x.id) !== -1; });
+    var top = '<div class="tienda-top"><div class="tienda-titulo">🏁 Tu garage</div>' +
+              '<button class="tienda-cerrar" id="garCerrar">✕</button></div>';
+
+    if (!tengo.length) {
+      g.innerHTML = top + '<div class="gar-vacio"><div class="grande">🚲</div>' +
+        '<p><strong>Todavía no tenés ningún vehículo.</strong></p>' +
+        '<p>Comprá tu primera bici en la tienda y va a aparecer acá, en grande.</p>' +
+        '<button class="gar-mini" id="garIrTienda" style="width:auto;padding:8px 16px">Ir a la tienda</button></div>';
+      document.getElementById("garCerrar").addEventListener("click", cerrarGarage);
+      var ir = document.getElementById("garIrTienda");
+      if (ir) ir.addEventListener("click", function () { cerrarGarage(); abrirTienda(); });
+      return;
+    }
+
+    if (garIdx >= v.length) garIdx = 0;
+    var it = v[garIdx];
+    var mio = a.comprados.indexOf(it.id) !== -1;
+    var puesto = a.eq.vehiculo === it.id;
+    /* la pintura y los accesorios solo se muestran sobre el vehiculo puesto:
+       en los demas serian una promesa falsa (no estan pintados) */
+    var color = puesto ? (itemDe(a.eq.color) || {}).c : null;
+    var eqBici = puesto ? { extra: a.eq.extra === "x_casco" ? null : a.eq.extra,
+                            sticker: a.eq.sticker } : null;
+
+    var sub = !mio ? '🔒 Todavía no es tuya — 🪙 ' + it.p + ' en la tienda'
+            : puesto ? '✔ Es la que estás usando'
+            : 'Tocá “Usar esta” para subirte';
+
+    var h = top +
+      '<div class="gar-escena" id="garEscena">' +
+        '<button class="gar-flecha izq" id="garIzq">‹</button>' +
+        '<div class="gar-piso"></div>' +
+        '<div class="gar-lienzo' + (mio ? "" : " bloqueado") + '" id="garLienzo">' +
+          garVisual(it.id, color, eqBici) + '</div>' +
+        '<button class="gar-flecha der" id="garDer">›</button>' +
+        '<div class="gar-ayuda">Pellizcá para acercar · doble toque para volver</div>' +
+      '</div>' +
+      '<div class="gar-nom">' + it.n + '</div>' +
+      '<div class="gar-sub">' + sub + '</div>' +
+      '<div style="text-align:center;margin-top:10px">' +
+        (mio && !puesto ? '<button class="gar-mini" id="garUsar" style="width:auto;padding:8px 18px">Usar esta</button>' : '') +
+        (!mio ? '<button class="gar-mini" id="garComprar" style="width:auto;padding:8px 18px">Verla en la tienda</button>' : '') +
+      '</div>' +
+      '<div class="gar-tira" id="garTira">';
+    for (var i = 0; i < v.length; i++) {
+      var x = v[i], teng = a.comprados.indexOf(x.id) !== -1;
+      h += '<button class="gar-mini' + (i === garIdx ? " activo" : "") + (teng ? "" : " bloqueado") +
+           '" data-i="' + i + '">' + garSVG(x.id, teng ? "#9aa2aa" : "#8d8d8d", null) +
+           '<span class="t">' + (teng ? x.n : "🔒 " + x.n) + '</span></button>';
+    }
+    h += "</div>";
+    g.innerHTML = h;
+    listenersGarage(g);
+  }
+
+  function garAplicarZoom() {
+    var l = document.getElementById("garLienzo");
+    if (l) l.style.transform = "translate(" + garX + "px," + garY + "px) scale(" + garZoom + ")";
+    /* con la bici acercada el cartelito quedaba encima y estorbaba */
+    var ay = document.querySelector("#apGarage .gar-ayuda");
+    if (ay) ay.style.opacity = garZoom > 1 ? 0 : "";
+  }
+  function garReset() { garZoom = 1; garX = 0; garY = 0; garAplicarZoom(); }
+  function garIr(d) {
+    var v = garVehiculos();
+    garIdx = (garIdx + d + v.length) % v.length;
+    garZoom = 1; garX = 0; garY = 0;
+    pintarGarage();
+  }
+
+  function listenersGarage(g) {
+    document.getElementById("garCerrar").addEventListener("click", cerrarGarage);
+    document.getElementById("garIzq").addEventListener("click", function () { garIr(-1); });
+    document.getElementById("garDer").addEventListener("click", function () { garIr(1); });
+    g.querySelectorAll(".gar-tira .gar-mini").forEach(function (b) {
+      b.addEventListener("click", function () {
+        garIdx = parseInt(b.dataset.i, 10); garZoom = 1; garX = 0; garY = 0; pintarGarage();
+      });
+    });
+    var us = document.getElementById("garUsar");
+    if (us) us.addEventListener("click", function () {
+      var v = garVehiculos();
+      tocarItem(v[garIdx].id);      /* misma funcion que la tienda: equipa y guarda */
+      pintarGarage();
+    });
+    var co = document.getElementById("garComprar");
+    if (co) co.addEventListener("click", function () { cerrarGarage(); abrirTienda(); });
+
+    /* --- zoom: pellizco con dos dedos, arrastre con uno, doble toque vuelve ---
+       Se usa touch y no gestos de puntero porque el destino real es el iPhone
+       dentro de la app instalada, donde el pellizco de la pagina esta anulado. */
+    var esc = document.getElementById("garEscena");
+    var lienzo = document.getElementById("garLienzo");
+    if (!esc || !lienzo) return;
+    var d0 = 0, z0 = 1, ax = 0, ay = 0, x0 = 0, y0 = 0, ultimoToque = 0, movio = false;
+
+    function dist(t) {
+      var dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+    esc.addEventListener("touchstart", function (e) {
+      movio = false;
+      lienzo.classList.add("arrastrando");
+      if (e.touches.length === 2) { d0 = dist(e.touches); z0 = garZoom; }
+      else if (e.touches.length === 1) {
+        ax = e.touches[0].clientX; ay = e.touches[0].clientY; x0 = garX; y0 = garY;
+      }
+    }, { passive: true });
+    esc.addEventListener("touchmove", function (e) {
+      if (e.touches.length === 2 && d0) {
+        movio = true;
+        garZoom = Math.max(1, Math.min(4, z0 * dist(e.touches) / d0));
+        if (garZoom === 1) { garX = 0; garY = 0; }
+        garAplicarZoom();
+        e.preventDefault();
+      } else if (e.touches.length === 1 && garZoom > 1) {
+        movio = true;
+        /* el margen de arrastre crece con el zoom: sin tope se pierde la bici */
+        var lim = (garZoom - 1) * esc.clientWidth / 2;
+        var limY = (garZoom - 1) * esc.clientHeight / 2;
+        garX = Math.max(-lim, Math.min(lim, x0 + e.touches[0].clientX - ax));
+        garY = Math.max(-limY, Math.min(limY, y0 + e.touches[0].clientY - ay));
+        garAplicarZoom();
+        e.preventDefault();
+      }
+    }, { passive: false });
+    esc.addEventListener("touchend", function (e) {
+      lienzo.classList.remove("arrastrando");
+      d0 = 0;
+      if (movio) return;
+      var ahora = Date.now();
+      if (ahora - ultimoToque < 300) {          /* doble toque */
+        if (garZoom > 1) garReset();
+        else { garZoom = 2.4; garAplicarZoom(); }
+        ultimoToque = 0;
+      } else ultimoToque = ahora;
+    }, { passive: true });
+    /* en escritorio (y para las pruebas) la rueda tambien acerca */
+    esc.addEventListener("wheel", function (e) {
+      garZoom = Math.max(1, Math.min(4, garZoom - e.deltaY * 0.002));
+      if (garZoom === 1) { garX = 0; garY = 0; }
+      garAplicarZoom();
+      e.preventDefault();
+    }, { passive: false });
+  }
+  window.apuntesAbrirGarage = abrirGarage;
 var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapado": [3, 0], "v_playera": [4, 0], "c_rojo": [5, 0], "c_verde": [6, 0], "r_hawaiana": [7, 0], "r_futbol": [0, 1], "p_colita": [1, 1], "p_rulos": [2, 1], "v_bmx": [3, 1], "c_azul": [4, 1], "c_negro": [5, 1], "c_dorado": [6, 1], "r_canguro": [7, 1], "a_inear": [0, 2], "p_cresta": [1, 2], "v_mtb": [2, 2], "s_rayo": [3, 2], "s_estrellas": [4, 2], "r_cuero": [5, 2], "r_puffer": [6, 2], "a_vincha": [7, 2], "a_gamer": [0, 3], "v_carbono": [1, 3], "s_llamas": [2, 3], "s_calavera": [3, 3], "b_roja": [4, 3], "b_azul": [5, 3], "b_arcoiris": [6, 3], "w_digital": [7, 3], "w_deportivo": [0, 4], "v_mono": [1, 4], "v_electrico": [2, 4], "x_bocina": [3, 4], "x_casco": [4, 4], "g_visera": [5, 4], "g_lana": [6, 4], "g_negra": [7, 4], "w_smart": [0, 5], "v_offroad": [1, 5], "x_canasto": [2, 5], "x_luces": [3, 5]};
   function pintarTienda() {
     var t = document.getElementById("apTienda");
@@ -15926,7 +16206,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 10:13";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 11:32";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
