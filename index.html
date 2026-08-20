@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 00:22">
+<meta name="apuntes-version" content="20/08 08:33">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -15702,10 +15702,28 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       return JSON.stringify(data, null, 2);
     }
 
+    /* La "Puntuación inteligente" del teclado de iOS reemplaza al pegar los
+       guiones por guiones largos y las comillas rectas por tipográficas. El
+       texto queda distinto del exportado y la firma falla, aunque el usuario no
+       haya tocado nada (le paso a Javier el 20/08 restaurando un respaldo).
+       Se deshace esa sustitución, pero SOLO se acepta si el resultado verifica:
+       si el archivo ya era válido nunca se toca, y un archivo realmente editado
+       sigue siendo rechazado. */
+    function destipografiar(s) {
+      return String(s)
+        .replace(/[‐-―−]/g, '-')
+        .replace(/[“”„‟]/g, '"')
+        .replace(/[‘’‚‛]/g, "'")
+        .replace(/ /g, ' ');
+    }
+
     function importProgress(jsonText) {
       let parsed;
       try { parsed = JSON.parse(jsonText); }
-      catch (e) { return { ok: false, error: 'El texto no es un JSON válido.' }; }
+      catch (e) {
+        try { parsed = JSON.parse(destipografiar(jsonText)); }
+        catch (e2) { return { ok: false, error: 'El texto no es un JSON válido.' }; }
+      }
       if (!parsed || typeof parsed !== 'object') return { ok: false, error: 'Formato inválido.' };
       // Verificación de firma: exports nuevos vienen firmados; texto editado o
       // archivos de versiones viejas se rechazan (generá un export nuevo).
@@ -15713,7 +15731,13 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         return { ok: false, error: 'Este texto no tiene firma de verificación. Generá un export nuevo desde la app y usalo tal cual, sin editarlo.' };
       }
       if (firmaDe(JSON.stringify(parsed.data)) !== parsed.firma) {
-        return { ok: false, error: 'La verificación falló: el texto fue modificado después de exportarse. Usá el export original sin editar.' };
+        let rescatado = null;
+        try {
+          const p2 = JSON.parse(destipografiar(jsonText));
+          if (p2 && p2.data && p2.firma && firmaDe(JSON.stringify(p2.data)) === p2.firma) rescatado = p2;
+        } catch (e) {}
+        if (rescatado) { parsed = rescatado; }
+        else return { ok: false, error: 'La verificación falló: el texto fue modificado después de exportarse. Usá el export original sin editar.' };
       }
       let payload = parsed.data || parsed;
       if (!payload || typeof payload !== 'object') return { ok: false, error: 'No se encontraron datos para importar.' };
@@ -15820,7 +15844,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 00:22";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 08:33";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
