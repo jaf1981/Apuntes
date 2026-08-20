@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 13:35">
+<meta name="apuntes-version" content="20/08 14:08">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1935,6 +1935,23 @@ body {
 .gar-mini.bloqueado { opacity: .5; }
 .gar-mini svg { width: 100%; height: 34px; }
 .gar-mini .t { display: block; font-size: 10px; font-weight: 700; margin-top: 3px; line-height: 1.15; }
+/* solapas de "Tu colección" */
+.col-solapas { display: flex; gap: 6px; margin: 6px 0 10px; }
+.col-solapa { flex: 1; padding: 9px 6px; border-radius: 11px; cursor: pointer;
+  border: 1.5px solid rgba(128,128,128,.3); background: rgba(255,255,255,.3);
+  font-family: inherit; color: inherit; font-size: 13px; font-weight: 700; }
+[data-theme="dark"] .col-solapa { background: rgba(255,255,255,.05); }
+.col-solapa.activa { border-color: #d4a017; background: rgba(212,160,23,.16); }
+/* franja de "Tu colección" en Actividades: aparte de las tarjetas de estudiar */
+.dash-coleccion { display: flex; align-items: center; gap: 10px; width: 100%;
+  margin: 14px 0 4px; padding: 12px 14px; border-radius: 14px; cursor: pointer;
+  font-family: inherit; color: inherit; text-align: left;
+  border: 1.5px solid rgba(212,160,23,.55); background: rgba(212,160,23,.12); }
+.dash-coleccion .ico { font-size: 24px; line-height: 0; display: flex; align-items: center; }
+.dash-coleccion .txt { flex: 1; }
+.dash-coleccion .name { display: block; font-size: 15px; font-weight: 800; }
+.dash-coleccion .sub { display: block; font-size: 12px; opacity: .72; }
+.dash-coleccion .monedas { font-size: 15px; font-weight: 800; white-space: nowrap; }
 .gar-vacio { text-align: center; padding: 30px 18px; }
 .gar-vacio .grande { font-size: 44px; }
 
@@ -2381,22 +2398,24 @@ body {
           <div class="name">Clasificar</div>
           <div class="sub">Cada cosa en su columna</div>
         </button>
-        <button class="dash-action" id="dashTienda">
-          <span class="ico">🛍️</span>
-          <div class="name">Tienda</div>
-          <div class="sub" id="dashTiendaSub">Gastá tus monedas</div>
-        </button>
-        <button class="dash-action" id="dashGarage">
-          <span class="ico">🏁</span>
-          <div class="name">Tu garage</div>
-          <div class="sub" id="dashGarageSub">Mirá tus bicis en grande</div>
-        </button>
         <button class="dash-action" data-go="glossary">
           <span class="ico">📖</span>
           <div class="name">Glosario</div>
           <div class="sub" id="glossCount">— términos</div>
         </button>
       </div>
+
+      <!-- Lo ludico vive aparte de estudiar (20/08). Es una franja distinta, no
+           una tarjeta mas entre las de practicar, pero deja las monedas a la
+           vista: son el motivo por el que vale la pena seguir estudiando. -->
+      <button class="dash-coleccion" id="dashColeccion">
+        <span class="ico" id="dashColeccionIco">⭐</span>
+        <span class="txt">
+          <span class="name">Tu colección</span>
+          <span class="sub" id="dashColeccionSub">Avatar, tienda y garage</span>
+        </span>
+        <span class="monedas" id="dashColeccionMonedas">🪙 —</span>
+      </button>
 
       <div class="dash-section-title">🏆 Logros</div>
       <div class="badges-grid" id="badgesGrid"></div>
@@ -2708,7 +2727,7 @@ var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear
    <id>.png es el vehiculo con el cuadro en gris; <id>_m.png es la
    mascara del cuadro, que el navegador usa para pintarlo. */
 var AV_GARAGE_BASE = "imagenes/garage/";
-var AV_GARAGE = {"v_bmx":{"w":1000,"h":612},"v_carbono":{"w":1000,"h":581},"v_electrico":{"w":1000,"h":623},"v_mono":{"w":1000,"h":637},"v_mtb":{"w":1000,"h":599},"v_offroad":{"w":1000,"h":616},"v_playera":{"w":1000,"h":593}};
+var AV_GARAGE = {"v_bmx":{"w":1000,"h":607},"v_carbono":{"w":1000,"h":581},"v_electrico":{"w":1000,"h":623},"v_mono":{"w":1000,"h":637},"v_mtb":{"w":1000,"h":599},"v_offroad":{"w":1000,"h":616},"v_playera":{"w":1000,"h":593}};
 /*MAPAS-FIN*/
 </script>
 <script>
@@ -13750,21 +13769,23 @@ var AV_GARAGE = {"v_bmx":{"w":1000,"h":612},"v_carbono":{"w":1000,"h":581},"v_el
   // DASHBOARD
   // ============================================================
   function renderDashboard() {
-    // Tienda desde Actividades (saldo al día; listener una sola vez)
-    const dt = $("dashTienda");
-    if (dt) {
-      const sb = $("dashTiendaSub");
-      if (sb && typeof monedasSaldo === "function") sb.textContent = "🪙 " + monedasSaldo() + " monedas";
-      if (!dt.dataset.listo) {
-        dt.dataset.listo = "1";
-        dt.addEventListener("click", () => { if (typeof abrirTienda === "function") abrirTienda(); });
+    // "Tu colección" desde Actividades: una sola entrada a todo lo lúdico
+    // (avatar + tienda + garage), con el saldo al día. Antes eran dos tarjetas
+    // sueltas mezcladas con las de estudiar.
+    const dc = $("dashColeccion");
+    if (dc) {
+      const sm = $("dashColeccionMonedas");
+      if (sm && typeof monedasSaldo === "function") sm.textContent = "🪙 " + monedasSaldo();
+      // La puerta a lo suyo lleva su propia cara, no un emoji generico. El 🏆
+      // queda libre para "Logros", que esta justo debajo.
+      const si = $("dashColeccionIco");
+      if (si && typeof avatarCara === "function") {
+        try { si.innerHTML = avatarCara(32); } catch (e) {}
       }
-    }
-    // Garage desde Actividades (mismo patron que la tienda)
-    const dg = $("dashGarage");
-    if (dg && !dg.dataset.listo) {
-      dg.dataset.listo = "1";
-      dg.addEventListener("click", () => { if (typeof abrirGarage === "function") abrirGarage(); });
+      if (!dc.dataset.listo) {
+        dc.dataset.listo = "1";
+        dc.addEventListener("click", () => { if (typeof abrirTienda === "function") abrirTienda(); });
+      }
     }
     // Sugerencias dinámicas: practicar lo flojo / lo leído hoy
     const sug = $("dashSug");
@@ -15431,6 +15452,36 @@ function avatarIACara(px) {
     renderAvatarInicio();
   }
 
+  /* ---- "Tu colección": la casa de todo lo ludico (20/08) -----------------
+     La tienda y el garage siguen siendo dos overlays independientes (no se
+     reescribio nada); lo que se comparte es esta barra de solapas arriba, que
+     cierra uno y abre el otro. Cuando llegue el album de figuritas se agrega
+     una solapa mas y no hay que volver a tocar la navegacion.
+     El garage NO hereda el candado de los 5 minutos de estudio: mirar lo que
+     ya tenes no es gastar. El candado vive dentro de la solapa de la tienda. */
+  var COL_SOLAPAS = [["tienda", "🛍️ Avatar y tienda"], ["garage", "🏁 Garage"]];
+  function barraColeccion(activa) {
+    var h = '<div class="tienda-top"><div class="tienda-titulo">🏆 Tu colección</div>' +
+            '<button class="tienda-cerrar" id="colCerrar">✕</button></div><div class="col-solapas">';
+    for (var i = 0; i < COL_SOLAPAS.length; i++)
+      h += '<button class="col-solapa' + (COL_SOLAPAS[i][0] === activa ? " activa" : "") +
+           '" data-solapa="' + COL_SOLAPAS[i][0] + '">' + COL_SOLAPAS[i][1] + '</button>';
+    return h + "</div>";
+  }
+  function listenersColeccion(cont, activa) {
+    document.getElementById("colCerrar").addEventListener("click", function () {
+      cerrarTienda(); cerrarGarage();
+    });
+    cont.querySelectorAll(".col-solapa").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var d = b.dataset.solapa;
+        if (d === activa) return;
+        cerrarTienda(); cerrarGarage();
+        if (d === "garage") abrirGarage(); else abrirTienda();
+      });
+    });
+  }
+
   /* ================= TU GARAGE (20/08) ==================================
      Vitrina grande de los vehiculos. Nace con el dibujo SVG que ya existe
      porque asi funciona HOY sin depender de arte nuevo; en cuanto haya PNG
@@ -15517,15 +15568,14 @@ function avatarIACara(px) {
     var a = avatarData();
     var v = garVehiculos();
     var tengo = v.filter(function (x) { return a.comprados.indexOf(x.id) !== -1; });
-    var top = '<div class="tienda-top"><div class="tienda-titulo">🏁 Tu garage</div>' +
-              '<button class="tienda-cerrar" id="garCerrar">✕</button></div>';
+    var top = barraColeccion("garage");
 
     if (!tengo.length) {
       g.innerHTML = top + '<div class="gar-vacio"><div class="grande">🚲</div>' +
         '<p><strong>Todavía no tenés ningún vehículo.</strong></p>' +
         '<p>Comprá tu primera bici en la tienda y va a aparecer acá, en grande.</p>' +
         '<button class="gar-mini" id="garIrTienda" style="width:auto;padding:8px 16px">Ir a la tienda</button></div>';
-      document.getElementById("garCerrar").addEventListener("click", cerrarGarage);
+      listenersColeccion(g, "garage");
       var ir = document.getElementById("garIrTienda");
       if (ir) ir.addEventListener("click", function () { cerrarGarage(); abrirTienda(); });
       return;
@@ -15588,7 +15638,7 @@ function avatarIACara(px) {
   }
 
   function listenersGarage(g) {
-    document.getElementById("garCerrar").addEventListener("click", cerrarGarage);
+    listenersColeccion(g, "garage");
     document.getElementById("garIzq").addEventListener("click", function () { garIr(-1); });
     document.getElementById("garDer").addEventListener("click", function () { garIr(1); });
     g.querySelectorAll(".gar-tira .gar-mini").forEach(function (b) {
@@ -15670,8 +15720,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     var ganadas = monedasGanadas();
     var saldo = monedasSaldo();
     var a = avatarData();
-    var top = '<div class="tienda-top"><div class="tienda-titulo">🛍️ Tu avatar y la tienda</div>' +
-              '<button class="tienda-cerrar" id="tiendaCerrar">✕</button></div>';
+    var top = barraColeccion("tienda");
     /* identidad: SIEMPRE habilitada (apodo + género + probador) */
     var apodoAct = "";
     try { apodoAct = localStorage.getItem("apuntes_apodo") || ""; } catch (e) {}
@@ -15741,7 +15790,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 
   /* listeners comunes: cerrar, género y guardado de apodo (siempre presentes) */
   function listenersTiendaBase(t) {
-    document.getElementById("tiendaCerrar").addEventListener("click", cerrarTienda);
+    listenersColeccion(t, "tienda");
     t.querySelectorAll(".tienda-gen button").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var a2 = avatarData();
@@ -16279,7 +16328,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 13:35";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 14:08";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
