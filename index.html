@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 11:52">
+<meta name="apuntes-version" content="20/08 13:09">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1910,8 +1910,13 @@ body {
   justify-content: center; transform-origin: 50% 50%; transition: transform .18s ease-out; }
 .gar-lienzo.arrastrando { transition: none; }
 .gar-lienzo.bloqueado { opacity: .38; filter: grayscale(1); }
-.gar-lienzo svg, .gar-lienzo img { width: 92%; height: 92%; object-fit: contain;
+.gar-lienzo svg, .gar-lienzo > img { width: 92%; height: 92%; object-fit: contain;
   image-rendering: -webkit-optimize-contrast; }
+/* isolation: sin esto el modo "color" de la pintura se mezclaria con el fondo
+   de la pagina en vez de con el dibujo del vehiculo */
+.gar-arte { position: relative; isolation: isolate; width: 92%; line-height: 0; }
+.gar-arte img { display: block; width: 100%; height: auto; }
+.gar-pintura { position: absolute; inset: 0; mix-blend-mode: color; pointer-events: none; }
 .gar-ayuda { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
   font-size: 11px; opacity: .55; pointer-events: none; }
 .gar-nom { font-size: 19px; font-weight: 800; text-align: center; margin-top: 6px; }
@@ -2689,11 +2694,22 @@ body {
 
 
 <script>
+/* === MAPAS GENERADOS: no editar a mano ===
+   build_publico.py reemplaza este bloque entero con el contenido de
+   avatar_ia/piezas.js y avatar_ia/garage.js. Antes estaba pegado a mano
+   y quedaba viejo cada vez que se regeneraba el arte. */
+/*MAPAS-INI*/
 /* Mapa de las piezas del avatar. Las imagenes viven en
    imagenes/avatar/<nombre>.png (generado por build_assets.py). */
 var AV_LIENZO = {"pie": [170, 380], "jin": [470, 380], "cabpie": [170, 380], "cabjin": [470, 380], "accpie": [170, 380], "accjin": [470, 380], "pief": [170, 380], "jinf": [470, 380], "cabpief": [170, 380], "cabjinf": [470, 380], "accpief": [170, 380], "accjinf": [470, 380]};
 var AV_BASE = "imagenes/avatar/";
 var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear":{"x":197,"y":63,"w":71,"h":17},"accjin_a_vincha":{"x":186,"y":10,"w":89,"h":74},"accjin_b_roja":{"x":158,"y":82,"w":108,"h":58},"accjin_g_lana":{"x":191,"y":0,"w":81,"h":91},"accjin_g_negra":{"x":193,"y":9,"w":95,"h":95},"accjin_g_visera":{"x":191,"y":9,"w":98,"h":83},"accjin_w_digital":{"x":230,"y":169,"w":12,"h":16},"accjinf_g_lana":{"x":176,"y":0,"w":97,"h":78},"accjinf_g_negra":{"x":182,"y":3,"w":114,"h":76},"accjinf_g_visera":{"x":183,"y":4,"w":105,"h":74},"accpie_a_gamer":{"x":37,"y":38,"w":101,"h":86},"accpie_a_inear":{"x":45,"y":95,"w":80,"h":15},"accpie_a_vincha":{"x":39,"y":64,"w":25,"h":47},"accpie_b_roja":{"x":55,"y":120,"w":59,"h":69},"accpie_g_lana":{"x":42,"y":20,"w":85,"h":115},"accpie_g_negra":{"x":41,"y":32,"w":89,"h":101},"accpie_g_visera":{"x":44,"y":34,"w":94,"h":101},"accpie_w_digital":{"x":127,"y":240,"w":19,"h":10},"accpief_g_lana":{"x":35,"y":14,"w":100,"h":110},"accpief_g_negra":{"x":39,"y":30,"w":114,"h":60},"accpief_g_visera":{"x":39,"y":30,"w":107,"h":60},"cabjin_p_colita":{"x":167,"y":6,"w":102,"h":97},"cabjin_p_cresta":{"x":190,"y":0,"w":75,"h":103},"cabjin_p_rapado":{"x":190,"y":11,"w":77,"h":91},"cabjin_p_rulos":{"x":173,"y":0,"w":106,"h":105},"cabjinf_p_colita":{"x":152,"y":1,"w":121,"h":102},"cabjinf_p_cresta":{"x":170,"y":0,"w":103,"h":104},"cabjinf_p_rapado":{"x":191,"y":13,"w":74,"h":88},"cabjinf_p_rulos":{"x":154,"y":4,"w":130,"h":133},"cabpie_p_colita":{"x":23,"y":26,"w":105,"h":110},"cabpie_p_cresta":{"x":42,"y":15,"w":87,"h":119},"cabpie_p_rapado":{"x":42,"y":38,"w":87,"h":95},"cabpie_p_rulos":{"x":28,"y":24,"w":114,"h":112},"cabpief_p_colita":{"x":15,"y":22,"w":116,"h":115},"cabpief_p_cresta":{"x":24,"y":5,"w":104,"h":128},"cabpief_p_rapado":{"x":40,"y":40,"w":88,"h":94},"cabpief_p_rulos":{"x":14,"y":35,"w":142,"h":131},"jin_r_basica":{"x":161,"y":9,"w":163,"h":326},"jin_r_buzo":{"x":160,"y":9,"w":164,"h":326},"jin_r_canguro":{"x":159,"y":9,"w":159,"h":317},"jin_r_cuero":{"x":159,"y":8,"w":160,"h":320},"jin_r_futbol":{"x":159,"y":9,"w":158,"h":317},"jin_r_hawaiana":{"x":159,"y":9,"w":158,"h":317},"jin_r_puffer":{"x":159,"y":9,"w":159,"h":317},"jinf_r_basica":{"x":160,"y":9,"w":162,"h":327},"jinf_r_buzo":{"x":161,"y":12,"w":161,"h":324},"jinf_r_canguro":{"x":161,"y":12,"w":161,"h":324},"jinf_r_cuero":{"x":160,"y":12,"w":161,"h":324},"jinf_r_futbol":{"x":160,"y":12,"w":162,"h":324},"jinf_r_hawaiana":{"x":160,"y":12,"w":162,"h":324},"jinf_r_puffer":{"x":160,"y":12,"w":162,"h":324},"pie_r_basica":{"x":26,"y":34,"w":118,"h":328},"pie_r_buzo":{"x":23,"y":34,"w":123,"h":328},"pie_r_canguro":{"x":25,"y":34,"w":121,"h":327},"pie_r_cuero":{"x":25,"y":34,"w":121,"h":327},"pie_r_futbol":{"x":27,"y":34,"w":116,"h":327},"pie_r_hawaiana":{"x":27,"y":34,"w":117,"h":327},"pie_r_puffer":{"x":21,"y":36,"w":127,"h":325},"pief_r_basica":{"x":27,"y":37,"w":116,"h":325},"pief_r_buzo":{"x":24,"y":36,"w":122,"h":325},"pief_r_canguro":{"x":24,"y":37,"w":122,"h":325},"pief_r_cuero":{"x":25,"y":37,"w":119,"h":325},"pief_r_futbol":{"x":27,"y":33,"w":117,"h":328},"pief_r_hawaiana":{"x":27,"y":36,"w":117,"h":325},"pief_r_puffer":{"x":21,"y":37,"w":127,"h":325}};
+/* Arte grande del garage (generado por build_garage.py).
+   <id>.png es el vehiculo con el cuadro en gris; <id>_m.png es la
+   mascara del cuadro, que el navegador usa para pintarlo. */
+var AV_GARAGE_BASE = "imagenes/garage/";
+var AV_GARAGE = {"v_mtb":{"w":1000,"h":599}};
+/*MAPAS-FIN*/
 </script>
 <script>
 (function () {
@@ -15452,11 +15468,26 @@ function avatarIACara(px) {
                 ex.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
     return '<svg viewBox="' + caja + '" data-capa="garage_' + id + '">' + capas + '</svg>';
   }
+  /* Arte grande: la imagen trae el cuadro en GRIS y al lado viene su mascara.
+     La pintura comprada se aplica con un div del color, recortado con esa
+     mascara y mezclado en modo "color": el tono lo pone el div y el sombreado y
+     los brillos los sigue poniendo el dibujo. Misma tecnica que la bufanda
+     arcoiris — y las comillas del url() van SIMPLES, que con dobles se corta el
+     atributo style. */
   function garVisual(id, color, eq) {
     var p = GAR_ARTE[id];
-    if (p) return '<img src="imagenes/garage/' + id + '.png" width="' + p.w +
-                  '" height="' + p.h + '" alt="" decoding="async">';
-    return garSVG(id, color, eq);
+    if (!p) return garSVG(id, color, eq);
+    var base = (window.AV_GARAGE_BASE || "imagenes/garage/") + id;
+    var h = '<div class="gar-arte">' +
+            '<img src="' + base + '.webp" width="' + p.w + '" height="' + p.h +
+            '" alt="" decoding="async">';
+    if (color) {
+      var url = "url('" + base + "_m.png')";
+      h += '<div class="gar-pintura" style="background:' + color +
+           ';-webkit-mask-image:' + url + ';mask-image:' + url +
+           ';-webkit-mask-size:100% 100%;mask-size:100% 100%"></div>';
+    }
+    return h + '</div>';
   }
 
   var garIdx = 0, garZoom = 1, garX = 0, garY = 0;
@@ -16248,7 +16279,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 11:52";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 13:09";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
