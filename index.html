@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b1e22">
-<meta name="apuntes-version" content="21/08 16:02">
+<meta name="apuntes-version" content="21/08 16:20">
 <title>Apuntes</title>
 <style>
   html, body { margin: 0; height: 100%; }
@@ -51,8 +51,12 @@
     try { id = localStorage.getItem('apuntes_device') || ""; } catch (e) {}
     var ap = "";
     try { ap = localStorage.getItem('apuntes_apodo') || ""; } catch (e) {}
-    var cuerpo = JSON.stringify({ ev: 'baja', device: id, apodo: ap,
-                                  ver: '21/08 16:02', detalle: 'mantenimiento recibido' });
+    /* OJO: el buzon tiene lista blanca de eventos (EVENTOS_VALIDOS en el Apps
+       Script) y descarta EN SILENCIO cualquier otro. La primera version mandaba
+       ev:'baja' y no llegaba nada. Se usa 'visita', que ya es valido; lo que
+       identifica a esta pagina es la VERSION y el detalle. */
+    var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
+                                  ver: '21/08 16:20', detalle: 'BAJA - mantenimiento recibido' });
     var ok = false;
     try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
     if (!ok) {
