@@ -13,7 +13,7 @@
  *    el dibujo cambia el nombre o la version del cache. Asi una publicacion
  *    nueva no obliga a bajar de nuevo 268 KB de arte que no cambio.
  */
-var VERSION = '21/08 17:36';
+var VERSION = '21/08 18:39';
 var CACHE = 'apuntes-' + VERSION;
 
 var ESENCIALES = ['./', './index.html', './manifest.json',
@@ -110,6 +110,14 @@ self.addEventListener('fetch', function (e) {
   var url;
   try { url = new URL(req.url); } catch (err) { return; }
   if (url.origin !== self.location.origin) return;   /* la medicion no se toca */
+
+  /* bloqueos.json NUNCA pasa por el cache. Si el service worker devolviera la
+     copia guardada, la app leeria su cabecera Date vieja y la tomaria como "hora
+     del servidor": con eso, sin conexion, el reloj de referencia queda plantado en
+     el momento en que se cacheo y se dispara el cierre por reloj raro a cualquiera.
+     Detectado el 21/08 probando el caso "fuera de la ventana, sin conexion".
+     Sin respondWith, el pedido va derecho a la red y falla limpio si no hay. */
+  if (/\/bloqueos\.json$/i.test(url.pathname)) return;
 
   var esImagen = /\.(png|jpg|jpeg|webp|svg)$/i.test(url.pathname);
 

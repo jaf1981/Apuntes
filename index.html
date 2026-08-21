@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="21/08 17:36">
+<meta name="apuntes-version" content="21/08 18:39">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2208,6 +2208,200 @@ body {
 </style>
 </head>
 <body data-theme="paper">
+<script>
+/* Cierre por ventana horaria (21/08/2026) — pedido de Javier tras detectar a un
+   alumno usando la app durante un examen.
+ *
+ * COMO FUNCIONA
+ *   Las ventanas viven en bloqueos.json, en la raiz del repo. Es un archivo de
+ *   DATOS, editable desde el celular en GitHub sin recompilar nada, asi que se
+ *   puede poner el mismo dia del examen y no con una semana de antelacion.
+ *   La app se lo guarda en localStorage: por eso el cierre tambien funciona SIN
+ *   CONEXION, que era el requisito.
+ *
+ * QUE VE EL CHICO
+ *   Un error generico, igual al de un servidor caido. Nada de "cerrado por
+ *   examen": decidido asi para no anunciar que existe un bloqueo ni invitar a
+ *   buscarle la vuelta.
+ *
+ * EL RELOJ
+ *   Cuando hay conexion manda el servidor: se lee la cabecera Date de la
+ *   respuesta y esa hora es la que vale. Sin conexion se usa la del telefono,
+ *   con un control de saltos: si el reloj va MAS ATRAS que la ultima hora vista
+ *   (o absurdamente adelante), se cierra igual.
+ *
+ * LIMITE HONESTO, ESCRITO PARA NO OLVIDARLO
+ *   Un salto de reloj HACIA ADELANTE de pocas horas, estando sin conexion, es
+ *   indistinguible de que el tiempo haya pasado de verdad. Ese caso pasa. Por eso
+ *   conviene bloquear el DIA ENTERO y no solo la hora del examen: escapar exige
+ *   un salto grande, y cuando el telefono vuelve a tener señal la hora del
+ *   servidor corrige la marca y el intento queda registrado.
+ */
+(function () {
+  var URL_BUZON = 'https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec';
+  var K_REGLAS = 'apuntes_bloq';      /* copia local de bloqueos.json */
+  var K_RELOJ = 'apuntes_reloj';      /* ultima hora confiable vista */
+  var K_AVISADO = 'apuntes_bloq_av';  /* para no repetir el aviso al buzon */
+  var TOL_ATRAS = 45 * 60 * 1000;             /* 45 min: absorbe relojes corridos */
+  var MAX_ADELANTE = 40 * 24 * 3600 * 1000;   /* 40 dias: salto absurdo */
+
+  function lget(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lset(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function dosD(n) { return (n < 10 ? '0' : '') + n; }
+  function claveDia(d) { return d.getFullYear() + '-' + dosD(d.getMonth() + 1) + '-' + dosD(d.getDate()); }
+  function aMin(hhmm) { var p = String(hhmm || '').split(':'); return (Number(p[0]) || 0) * 60 + (Number(p[1]) || 0); }
+
+  function reglas() {
+    try { return JSON.parse(lget(K_REGLAS) || 'null'); } catch (e) { return null; }
+  }
+  function hayReglas(r) { return !!(r && r.bloqueos && r.bloqueos.length); }
+
+  /* Las ventanas se comparan como INSTANTES ABSOLUTOS, no como hora de pared.
+     Motivo: con hora de pared alcanzaba con cambiar la ZONA HORARIA del telefono
+     —sin tocar el reloj— para correrse de la ventana, y ninguno de los controles
+     de reloj lo detecta porque el instante absoluto no cambia. Por eso el archivo
+     lleva el huso escrito (-03:00). El atajo "d": "AAAA-MM-DD" es el dia entero. */
+  function limites(b) {
+    if (!b) return null;
+    if (b.desde || b.hasta) {
+      var d1 = b.desde ? Date.parse(b.desde) : -Infinity;
+      var d2 = b.hasta ? Date.parse(b.hasta) : Infinity;
+      if (isNaN(d1) || isNaN(d2)) return null;
+      return [d1, d2];
+    }
+    if (b.d) {
+      var ini = Date.parse(b.d + 'T00:00:00-03:00');
+      if (isNaN(ini)) return null;
+      return [ini, ini + 24 * 3600 * 1000];
+    }
+    return null;
+  }
+  function dentro(r, ms) {
+    if (!hayReglas(r)) return false;
+    for (var i = 0; i < r.bloqueos.length; i++) {
+      var L = limites(r.bloqueos[i]);
+      if (L && ms >= L[0] && ms < L[1]) return true;
+    }
+    return false;
+  }
+
+  /* Hora confiable. Con conexion manda el servidor y ademas se guarda el DESFASE
+     contra el reloj del telefono, para poder corregirlo despues sin conexion. */
+  function guardarServidor(ms) {
+    lset(K_RELOJ, JSON.stringify({ visto: ms, desf: ms - Date.now() }));
+  }
+  function estado() {
+    try { return JSON.parse(lget(K_RELOJ) || 'null'); } catch (e) { return null; }
+  }
+  function ahoraLocalCorregida() {
+    var st = estado();
+    return Date.now() + ((st && typeof st.desf === 'number') ? st.desf : 0);
+  }
+  /* Solo tiene sentido SIN conexion: con servidor, el servidor manda y no hay nada
+     que sospechar. La tolerancia es amplia a proposito — un telefono con el reloj
+     20 minutos corrido es comun y no puede quedar afuera por eso. */
+  function relojRaro(ms) {
+    var st = estado();
+    if (!st || typeof st.visto !== 'number') return false;
+    return ms < st.visto - TOL_ATRAS || ms > st.visto + MAX_ADELANTE;
+  }
+
+  var cerrado = false;
+  function cerrar(motivo) {
+    if (cerrado) return;
+    cerrado = true;
+    /* OJO: aca NO puede aparecer la cadena de cierre de <body> ni la de <script>.
+       build_publico.py inyecta el registro del service worker reemplazando el
+       cierre de body, y como str.replace de Python cambia TODAS las apariciones,
+       una copia de esa cadena dentro de este JavaScript termina partiendo el
+       bloque al medio. Paso el 21/08 y costo un rato encontrarlo. Por eso se
+       reescribe solo el contenido del body, sin armar un documento entero. */
+    try {
+      var b = document.body;
+      b.style.cssText = 'margin:0;min-height:100vh;background:#14161a;color:#e9e4d8;' +
+        'display:flex;align-items:center;justify-content:center;text-align:center;' +
+        'font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;padding:24px';
+      b.innerHTML =
+        '<div><div style="font-size:54px;line-height:1">🛠️</div>' +
+        '<h1 style="font-size:22px;font-weight:800;margin:18px 0 10px">Error de conexión</h1>' +
+        '<p style="font-size:16px;opacity:.75;margin:0">No se pudo cargar la aplicación.</p></div>';
+      document.documentElement.style.background = '#14161a';
+    } catch (e) {}
+    try { document.title = 'Apuntes'; } catch (e) {}
+    avisar(motivo);
+  }
+
+  /* Un aviso por dia y por motivo: sirve para saber quien se topo con el cierre.
+     OJO: el buzon tiene lista blanca de eventos y descarta en silencio los que no
+     conoce, asi que va como 'visita' y se distingue por el detalle. */
+  function avisar(motivo) {
+    try {
+      var hoy = claveDia(new Date()) + '|' + motivo;
+      if (lget(K_AVISADO) === hoy) return;
+      lset(K_AVISADO, hoy);
+      if (!URL_BUZON || URL_BUZON.indexOf('__') === 0) return;
+      var id = lget('apuntes_device') || '';
+      var ap = lget('apuntes_apodo') || '';
+      var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
+                                    ver: '21/08 18:39', detalle: 'CIERRE ' + motivo });
+      var ok = false;
+      try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
+      if (!ok) {
+        try {
+          fetch(URL_BUZON, { method: 'POST', mode: 'no-cors',
+                             headers: { 'Content-Type': 'text/plain' }, body: cuerpo });
+        } catch (e) {}
+      }
+    } catch (e) {}
+  }
+
+  /* conServidor = esta carga pudo hablar con el servidor: su hora es la que vale. */
+  function evaluar(ms, conServidor) {
+    var r = reglas();
+    if (!hayReglas(r)) return false;            /* sin examen cargado, nada se cierra */
+    if (dentro(r, ms)) { cerrar('ventana'); return true; }
+    if (!conServidor && relojRaro(ms)) { cerrar('reloj'); return true; }
+    return false;
+  }
+
+  /* 1) Decision inmediata con lo guardado: sin conexion tambien cierra, y sin que
+        llegue a verse la app un instante. */
+  evaluar(ahoraLocalCorregida(), false);
+
+  /* 2) Con conexion: se refrescan las reglas y la hora la pone el servidor. */
+  var t0 = Date.now();
+  try {
+    fetch('bloqueos.json?t=' + t0, { cache: 'no-store' })
+      .then(function (res) {
+        var msSrv = 0;
+        try {
+          var h = res.headers.get('date');
+          var ts = h ? Date.parse(h) : 0;
+          /* Segundo cinturon: una respuesta cacheada trae una cabecera Date vieja.
+             Si la hora que llega es ANTERIOR a la ultima confiable, no es del
+             servidor: es una copia guardada. Se ignora y se sigue como sin conexion. */
+          var st = estado();
+          var vieja = st && typeof st.visto === 'number' && ts < st.visto - 60000;
+          if (ts && !vieja) { msSrv = ts + (Date.now() - t0); guardarServidor(msSrv); }
+        } catch (e) {}
+        return res.json().then(function (j) { return [j, msSrv]; });
+      })
+      .then(function (par) {
+        var j = par[0], msSrv = par[1];
+        if (j && j.bloqueos) lset(K_REGLAS, JSON.stringify(j));
+        evaluar(msSrv || ahoraLocalCorregida(), !!msSrv);
+      })
+      .catch(function () {});
+  } catch (e) {}
+
+  /* 3) Si la ventana empieza con la app abierta, cierra igual. */
+  setInterval(function () { if (!cerrado) evaluar(ahoraLocalCorregida(), false); }, 30000);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && !cerrado) evaluar(ahoraLocalCorregida(), false);
+  });
+})();
+
+</script>
 
 <div class="welcome welcome-hidden" id="welcome">
   <div class="welcome-eyebrow">Apuntes de clase</div>
@@ -16897,7 +17091,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "21/08 17:36";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "21/08 18:39";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
