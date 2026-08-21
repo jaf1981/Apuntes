@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="21/08 18:39">
+<meta name="apuntes-version" content="21/08 18:49">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2276,10 +2276,29 @@ body {
     }
     return null;
   }
+  /* Minutos desde la medianoche EN ARGENTINA, calculados del instante absoluto.
+     No se usa getHours() a proposito: eso lee la zona horaria del telefono y
+     cambiarla seria la forma facil de escaparse. Argentina es UTC-3 todo el año
+     (no aplica horario de verano desde 2009), asi que el desfase es fijo. */
+  var AR_OFFSET_MIN = -180;
+  function minutosAR(ms) {
+    var m = Math.floor(ms / 60000) + AR_OFFSET_MIN;
+    return ((m % 1440) + 1440) % 1440;
+  }
+  /* Regla que se repite todos los dias: { "diario": { "desde": "22:00", "hasta": "07:00" } }
+     Si desde > hasta, la ventana cruza la medianoche. */
+  function dentroDiario(b, ms) {
+    var v = b && b.diario;
+    if (!v || !v.desde || !v.hasta) return false;
+    var a = aMin(v.desde), z = aMin(v.hasta), m = minutosAR(ms);
+    return a <= z ? (m >= a && m < z) : (m >= a || m < z);
+  }
   function dentro(r, ms) {
     if (!hayReglas(r)) return false;
     for (var i = 0; i < r.bloqueos.length; i++) {
-      var L = limites(r.bloqueos[i]);
+      var b = r.bloqueos[i];
+      if (dentroDiario(b, ms)) return true;
+      var L = limites(b);
       if (L && ms >= L[0] && ms < L[1]) return true;
     }
     return false;
@@ -2343,7 +2362,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '21/08 18:39', detalle: 'CIERRE ' + motivo });
+                                    ver: '21/08 18:49', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -17091,7 +17110,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "21/08 18:39";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "21/08 18:49";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
