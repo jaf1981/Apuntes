@@ -17,9 +17,13 @@ self.addEventListener('activate', function (e) {
     caches.keys()
       .then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); })
       .then(function () { return self.clients.claim(); })
-      .then(function () { return self.registration.unregister(); })
-      .then(function () { return self.clients.matchAll(); })
+      /* OJO con el orden: primero se recargan las pestañas abiertas y RECIEN
+         DESPUES se desregistra. Al reves, el service worker ya no controla a los
+         clientes y c.navigate() no hace nada: el que estaba con la app abierta
+         se quedaba adentro. */
+      .then(function () { return self.clients.matchAll({ type: 'window' }); })
       .then(function (cs) { cs.forEach(function (c) { try { c.navigate(c.url); } catch (e) {} }); })
+      .then(function () { return self.registration.unregister(); })
       .catch(function () {})
   );
 });
