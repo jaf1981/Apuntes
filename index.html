@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b1e22">
-<meta name="apuntes-version" content="21/08 15:47">
+<meta name="apuntes-version" content="21/08 16:02">
 <title>Apuntes</title>
 <style>
   html, body { margin: 0; height: 100%; }
@@ -41,6 +41,28 @@
    uno, y no habria forma de recuperarlo. Sin la app, esos datos quedan inertes;
    el dia que se vuelva a publicar, cada uno se reencuentra su progreso. */
 (function () {
+  /* Aviso al buzon de que ESTE equipo ya bajo la version de mantenimiento.
+     Sin esto la planilla simplemente se queda muda y no hay forma de saber
+     quien la agarro y quien sigue con la app vieja. Usa el mismo id de
+     dispositivo y el mismo apodo que ya existian; no agrega ningun dato nuevo. */
+  try {
+    var URL_BUZON = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
+    var id = "";
+    try { id = localStorage.getItem('apuntes_device') || ""; } catch (e) {}
+    var ap = "";
+    try { ap = localStorage.getItem('apuntes_apodo') || ""; } catch (e) {}
+    var cuerpo = JSON.stringify({ ev: 'baja', device: id, apodo: ap,
+                                  ver: '21/08 16:02', detalle: 'mantenimiento recibido' });
+    var ok = false;
+    try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
+    if (!ok) {
+      try {
+        fetch(URL_BUZON, { method: 'POST', mode: 'no-cors',
+                           headers: { 'Content-Type': 'text/plain' }, body: cuerpo });
+      } catch (e) {}
+    }
+  } catch (e) {}
+
   try {
     if (window.caches && caches.keys) {
       caches.keys().then(function (ks) {
