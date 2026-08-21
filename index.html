@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="20/08 15:00">
+<meta name="apuntes-version" content="20/08 22:03">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -12415,6 +12415,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     chapStats: {1:{a:0,c:0}, 2:{a:0,c:0}, 3:{a:0,c:0}, 4:{a:0,c:0}, 5:{a:0,c:0}},
     fcReviewed: {},
     vecesResp: {},        // veces que se respondió cada pregunta (XP decreciente + ponderación)
+    recientes: {},        // últimos bancos jugados por tipo, para no repetirlos (20/08)
     quizCorrectIds: [],
     glossSeenIds: [],
     unlockedBadges: []
@@ -13556,14 +13557,61 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      tiembla y no avanza. Así enseña en vez de solo corregir al final. ---- */
   let orSesion = null;
 
-  function iniciarOrdenar() {
+  /* ---- Elegir banco sin repetir (20/08) -------------------------------
+     Antes la eleccion era solo una ponderacion blanda: 1/(1+veces) por un
+     factor al azar. Cuando todos los bancos van empatados —que es lo normal—
+     los pesos quedan iguales y sale uno al azar, asi que con 2 secuencias
+     repetir la que acabas de hacer tiene 50% de chance. Y Geografia tiene
+     exactamente 2 secuencias, e Historia 2 clasificaciones. Por eso se repetia.
+     Ahora hay exclusion DURA en tres niveles, cada uno mas permisivo que el
+     anterior, para que nunca se quede sin candidatos:
+       1. ni los de esta tanda ni los de las ultimas veces
+       2. al menos, ninguno de esta tanda Y tampoco el ultimo que jugo
+       3. al menos, no el ultimo que jugo
+     El orden importa: si el nivel 2 solo excluyera la tanda, al volver a entrar
+     (tanda vacia) devolveria TODO y se perderia la memoria entre sesiones —
+     justo el caso de Javier, que cerraba y volvia a la misma secuencia.
+     Si la materia tiene un solo banco no queda opcion, y para eso esta el
+     boton que manda a OTRO ejercicio en vez de ofrecer "otra vez lo mismo". */
+  function elegirBanco(bancos, tipo, hechos) {
+    const veces = state.vecesResp || {};
+    const rec = (state.recientes && state.recientes[tipo]) || [];
+    const sin = ex => bancos.filter(b => ex.indexOf(b.titulo) === -1);
+    let c = sin(hechos.concat(rec));
+    if (!c.length) c = sin(hechos.concat(rec.slice(0, 1)));
+    if (!c.length) c = sin(rec.slice(0, 1));
+    if (!c.length) c = bancos;
+    return shuffleArray(c)
+      .map(b => ({ b, peso: 1 / (1 + (veces[tipo + "_" + b.titulo] || 0)) * (0.6 + 0.8 * Math.random()) }))
+      .sort((a, b) => b.peso - a.peso)[0].b;
+  }
+  function marcarReciente(tipo, titulo) {
+    state.recientes = state.recientes || {};
+    const r = (state.recientes[tipo] || []).filter(t => t !== titulo);
+    r.unshift(titulo);
+    state.recientes[tipo] = r.slice(0, 3);
+  }
+  /* Cierra la tanda: si quedan bancos sin hacer ofrece otro; si no, manda al
+     otro ejercicio en vez de repetir. Lo pidio Javier el 20/08. */
+  function cerrarTanda(btnId, ayudaId, bancos, hechos, otro, otroTxt, propio) {
+    const quedan = bancos.filter(b => hechos.indexOf(b.titulo) === -1).length;
+    const btn = $(btnId);
+    if (quedan) {
+      btn.textContent = propio;
+      delete btn.dataset.ir;
+    } else {
+      btn.textContent = otroTxt;
+      btn.dataset.ir = otro;
+      $(ayudaId).textContent += "  ·  Ya hiciste todas las de esta materia por ahora.";
+    }
+  }
+
+  let orHechos = [];
+  function iniciarOrdenar(seguir) {
     const bancos = (SUBJECT_DATA && SUBJECT_DATA.secuencias) || [];
     if (!bancos.length) { showToast("🔢", "Esta materia todavía no tiene secuencias"); goScreen("dashboard"); return; }
-    const veces = state.vecesResp || {};
-    const elegido = shuffleArray(bancos)
-      .map(b => ({ b, peso: 1 / (1 + (veces["or_" + b.titulo] || 0)) * (0.6 + 0.8 * Math.random()) }))
-      .sort((a, b) => b.peso - a.peso)[0].b;
-    orSesion = { sec: elegido, paso: 0, errores: 0, xp: 0, t: Date.now() };
+    if (!seguir) orHechos = [];
+    orSesion = { sec: elegirBanco(bancos, "or", orHechos), paso: 0, errores: 0, xp: 0, t: Date.now() };
     renderOrdenar();
   }
 
@@ -13618,25 +13666,27 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   function terminarOrdenar() {
     const s = orSesion;
     state.vecesResp["or_" + s.sec.titulo] = (state.vecesResp["or_" + s.sec.titulo] || 0) + 1;
+    if (orHechos.indexOf(s.sec.titulo) === -1) orHechos.push(s.sec.titulo);
+    marcarReciente("or", s.sec.titulo);
     sumarEfectivo(Math.min(60, Math.max(0, Math.round((Date.now() - s.t) / 1000))));
     persist();
     $("orAyuda").textContent = (s.errores === 0
       ? "¡Perfecto, todo en orden! +" + s.xp + " XP · "
       : "Completo con " + s.errores + (s.errores === 1 ? " error" : " errores") + ". +" + s.xp + " XP · ") + s.sec.nota;
+    cerrarTanda("orNextBtn", "orAyuda", (SUBJECT_DATA && SUBJECT_DATA.secuencias) || [],
+                orHechos, "clasificar", "🗂️ Probá Clasificar →", "Otra secuencia →");
     $("orActions").style.display = "";
   }
 
   /* ---- Clasificar: tocar una tarjeta y después su columna ---- */
   let clSesion = null;
 
-  function iniciarClasificar() {
+  let clHechos = [];
+  function iniciarClasificar(seguir) {
     const bancos = (SUBJECT_DATA && SUBJECT_DATA.clasif) || [];
     if (!bancos.length) { showToast("🗂️", "Esta materia todavía no tiene clasificaciones"); goScreen("dashboard"); return; }
-    const veces = state.vecesResp || {};
-    const elegido = shuffleArray(bancos)
-      .map(b => ({ b, peso: 1 / (1 + (veces["cl_" + b.titulo] || 0)) * (0.6 + 0.8 * Math.random()) }))
-      .sort((a, b) => b.peso - a.peso)[0].b;
-    clSesion = { banco: elegido, puestos: 0, errores: 0, sel: null, xp: 0, t: Date.now() };
+    if (!seguir) clHechos = [];
+    clSesion = { banco: elegirBanco(bancos, "cl", clHechos), puestos: 0, errores: 0, sel: null, xp: 0, t: Date.now() };
     renderClasificar();
   }
 
@@ -13705,11 +13755,15 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   function terminarClasificar() {
     const s = clSesion;
     state.vecesResp["cl_" + s.banco.titulo] = (state.vecesResp["cl_" + s.banco.titulo] || 0) + 1;
+    if (clHechos.indexOf(s.banco.titulo) === -1) clHechos.push(s.banco.titulo);
+    marcarReciente("cl", s.banco.titulo);
     sumarEfectivo(Math.min(60, Math.max(0, Math.round((Date.now() - s.t) / 1000))));
     persist();
     $("clAyuda").textContent = s.errores === 0
       ? "¡Perfecto! Clasificaste todo sin errores. +" + s.xp + " XP"
       : "Listo, con " + s.errores + (s.errores === 1 ? " error" : " errores") + ". +" + s.xp + " XP";
+    cerrarTanda("clNextBtn", "clAyuda", (SUBJECT_DATA && SUBJECT_DATA.clasif) || [],
+                clHechos, "ordenar", "🔢 Probá Ordenar →", "Otra tanda →");
     $("clActions").style.display = "";
   }
 
@@ -14494,8 +14548,14 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     $("quizAgainBtn").addEventListener("click", () => goScreen("quiz-setup"));
     $("blNextBtn").addEventListener("click", siguienteBlanco);
     $("paNextBtn").addEventListener("click", iniciarPares);
-    $("orNextBtn").addEventListener("click", iniciarOrdenar);
-    $("clNextBtn").addEventListener("click", iniciarClasificar);
+    $("orNextBtn").addEventListener("click", function () {
+      if (this.dataset.ir) { goScreen(this.dataset.ir); return; }
+      iniciarOrdenar(true);
+    });
+    $("clNextBtn").addEventListener("click", function () {
+      if (this.dataset.ir) { goScreen(this.dataset.ir); return; }
+      iniciarClasificar(true);
+    });
     $("examActionBtn").addEventListener("click", startExam);
 
     // Flashcards
@@ -16452,7 +16512,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "20/08 15:00";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "20/08 22:03";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
