@@ -1,31 +1,141 @@
-/* Service worker de BAJA (21/08).
+/* Service worker de Apuntes.
  *
- * Segundo camino de apagado, independiente del de la pagina. El navegador
- * revisa sw.js cada tanto y, si cambio un solo byte, instala el nuevo. Este
- * borra todos los caches y se desregistra solo. Sirve para el equipo que tenga
- * el service worker viejo activo aunque no llegue a ejecutar el script de la
- * pagina.
+ * Antes no habia ninguno: la app funcionaba sin conexion de casualidad, porque
+ * todo vivia dentro de un unico HTML y el navegador lo cacheaba solo. Al sacar
+ * el arte a archivos sueltos (20/08) esa casualidad deja de alcanzar, y hay que
+ * declarar explicitamente que se guarda.
  *
- * Mientras tanto NO responde ningun pedido: todo va a la red. Si no hay red, el
- * telefono muestra el error del navegador en vez de la app cacheada, que es
- * justamente lo que se busca.
+ * Dos estrategias distintas y el motivo de cada una:
+ *  - El HTML va por RED PRIMERO. Si contestara desde el cache, el chico se
+ *    quedaria clavado en una version vieja y romperiamos la actualizacion
+ *    automatica, que justamente pide la pagina con ?vchk= para comparar sellos.
+ *  - Las imagenes van por CACHE PRIMERO. Cada archivo es inmutable: si cambia
+ *    el dibujo cambia el nombre o la version del cache. Asi una publicacion
+ *    nueva no obliga a bajar de nuevo 268 KB de arte que no cambio.
  */
-self.addEventListener('install', function () { self.skipWaiting(); });
+var VERSION = '21/08 17:36';
+var CACHE = 'apuntes-' + VERSION;
 
-self.addEventListener('activate', function (e) {
-  e.waitUntil(
-    caches.keys()
-      .then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); })
-      .then(function () { return self.clients.claim(); })
-      /* OJO con el orden: primero se recargan las pestañas abiertas y RECIEN
-         DESPUES se desregistra. Al reves, el service worker ya no controla a los
-         clientes y c.navigate() no hace nada: el que estaba con la app abierta
-         se quedaba adentro. */
-      .then(function () { return self.clients.matchAll({ type: 'window' }); })
-      .then(function (cs) { cs.forEach(function (c) { try { c.navigate(c.url); } catch (e) {} }); })
-      .then(function () { return self.registration.unregister(); })
-      .catch(function () {})
-  );
+var ESENCIALES = ['./', './index.html', './manifest.json',
+                  './icon-192.png', './icon-512.png', './imagenes/sprite.png',
+                  './imagenes/avatar/accjin_a_gamer.png',
+                  './imagenes/avatar/accjin_a_inear.png',
+                  './imagenes/avatar/accjin_a_vincha.png',
+                  './imagenes/avatar/accjin_b_roja.png',
+                  './imagenes/avatar/accjin_g_lana.png',
+                  './imagenes/avatar/accjin_g_negra.png',
+                  './imagenes/avatar/accjin_g_visera.png',
+                  './imagenes/avatar/accjin_w_digital.png',
+                  './imagenes/avatar/accjinf_g_lana.png',
+                  './imagenes/avatar/accjinf_g_negra.png',
+                  './imagenes/avatar/accjinf_g_visera.png',
+                  './imagenes/avatar/accpie_a_gamer.png',
+                  './imagenes/avatar/accpie_a_inear.png',
+                  './imagenes/avatar/accpie_a_vincha.png',
+                  './imagenes/avatar/accpie_b_roja.png',
+                  './imagenes/avatar/accpie_g_lana.png',
+                  './imagenes/avatar/accpie_g_negra.png',
+                  './imagenes/avatar/accpie_g_visera.png',
+                  './imagenes/avatar/accpie_w_digital.png',
+                  './imagenes/avatar/accpief_g_lana.png',
+                  './imagenes/avatar/accpief_g_negra.png',
+                  './imagenes/avatar/accpief_g_visera.png',
+                  './imagenes/avatar/cabjin_p_colita.png',
+                  './imagenes/avatar/cabjin_p_cresta.png',
+                  './imagenes/avatar/cabjin_p_rapado.png',
+                  './imagenes/avatar/cabjin_p_rulos.png',
+                  './imagenes/avatar/cabjinf_p_colita.png',
+                  './imagenes/avatar/cabjinf_p_cresta.png',
+                  './imagenes/avatar/cabjinf_p_rapado.png',
+                  './imagenes/avatar/cabjinf_p_rulos.png',
+                  './imagenes/avatar/cabpie_p_colita.png',
+                  './imagenes/avatar/cabpie_p_cresta.png',
+                  './imagenes/avatar/cabpie_p_rapado.png',
+                  './imagenes/avatar/cabpie_p_rulos.png',
+                  './imagenes/avatar/cabpief_p_colita.png',
+                  './imagenes/avatar/cabpief_p_cresta.png',
+                  './imagenes/avatar/cabpief_p_rapado.png',
+                  './imagenes/avatar/cabpief_p_rulos.png',
+                  './imagenes/avatar/jin_r_basica.png',
+                  './imagenes/avatar/jin_r_buzo.png',
+                  './imagenes/avatar/jin_r_canguro.png',
+                  './imagenes/avatar/jin_r_cuero.png',
+                  './imagenes/avatar/jin_r_futbol.png',
+                  './imagenes/avatar/jin_r_hawaiana.png',
+                  './imagenes/avatar/jin_r_puffer.png',
+                  './imagenes/avatar/jinf_r_basica.png',
+                  './imagenes/avatar/jinf_r_buzo.png',
+                  './imagenes/avatar/jinf_r_canguro.png',
+                  './imagenes/avatar/jinf_r_cuero.png',
+                  './imagenes/avatar/jinf_r_futbol.png',
+                  './imagenes/avatar/jinf_r_hawaiana.png',
+                  './imagenes/avatar/jinf_r_puffer.png',
+                  './imagenes/avatar/pie_r_basica.png',
+                  './imagenes/avatar/pie_r_buzo.png',
+                  './imagenes/avatar/pie_r_canguro.png',
+                  './imagenes/avatar/pie_r_cuero.png',
+                  './imagenes/avatar/pie_r_futbol.png',
+                  './imagenes/avatar/pie_r_hawaiana.png',
+                  './imagenes/avatar/pie_r_puffer.png',
+                  './imagenes/avatar/pief_r_basica.png',
+                  './imagenes/avatar/pief_r_buzo.png',
+                  './imagenes/avatar/pief_r_canguro.png',
+                  './imagenes/avatar/pief_r_cuero.png',
+                  './imagenes/avatar/pief_r_futbol.png',
+                  './imagenes/avatar/pief_r_hawaiana.png',
+                  './imagenes/avatar/pief_r_puffer.png'];
+
+self.addEventListener('install', function (e) {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(function (c) {
+    /* addAll falla entero si un solo archivo falla; se agregan de a uno para
+       que un 404 suelto no deje la app sin cache. */
+    return Promise.all(ESENCIALES.map(function (u) {
+      return c.add(u).catch(function () {});
+    }));
+  }));
 });
 
-/* sin handler de fetch: todo pasa derecho a la red */
+self.addEventListener('activate', function (e) {
+  e.waitUntil(caches.keys().then(function (ks) {
+    return Promise.all(ks.map(function (k) {
+      return k.indexOf('apuntes-') === 0 && k !== CACHE ? caches.delete(k) : null;
+    }));
+  }).then(function () { return self.clients.claim(); }));
+});
+
+self.addEventListener('fetch', function (e) {
+  var req = e.request;
+  if (req.method !== 'GET') return;
+  var url;
+  try { url = new URL(req.url); } catch (err) { return; }
+  if (url.origin !== self.location.origin) return;   /* la medicion no se toca */
+
+  var esImagen = /\.(png|jpg|jpeg|webp|svg)$/i.test(url.pathname);
+
+  if (esImagen) {
+    e.respondWith(caches.open(CACHE).then(function (c) {
+      return c.match(req).then(function (hit) {
+        if (hit) return hit;
+        return fetch(req).then(function (res) {
+          if (res && res.ok) c.put(req, res.clone());
+          return res;
+        });
+      });
+    }));
+    return;
+  }
+
+  /* HTML y todo lo demas: red primero, cache como red de seguridad */
+  e.respondWith(fetch(req).then(function (res) {
+    if (res && res.ok && url.search.indexOf('vchk') === -1) {
+      var copia = res.clone();
+      caches.open(CACHE).then(function (c) { c.put(req, copia); });
+    }
+    return res;
+  }).catch(function () {
+    return caches.match(req).then(function (hit) {
+      return hit || caches.match('./index.html');
+    });
+  }));
+});
