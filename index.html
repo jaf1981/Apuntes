@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 02:02">
+<meta name="apuntes-version" content="22/08 02:55">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2421,7 +2421,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 02:02', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 02:55', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -2446,36 +2446,55 @@ body {
         llegue a verse la app un instante. */
   evaluar(ahoraLocalCorregida(), false);
 
-  /* 2) Con conexion: se refrescan las reglas y la hora la pone el servidor. */
-  var t0 = Date.now();
-  try {
-    fetch('bloqueos.json?t=' + t0, { cache: 'no-store' })
-      .then(function (res) {
-        var msSrv = 0;
-        try {
-          var h = res.headers.get('date');
-          var ts = h ? Date.parse(h) : 0;
-          /* Segundo cinturon: una respuesta cacheada trae una cabecera Date vieja.
-             Si la hora que llega es ANTERIOR a la ultima confiable, no es del
-             servidor: es una copia guardada. Se ignora y se sigue como sin conexion. */
-          var st = estado();
-          var vieja = st && typeof st.visto === 'number' && ts < st.visto - 60000;
-          if (ts && !vieja) { msSrv = ts + (Date.now() - t0); guardarServidor(msSrv); }
-        } catch (e) {}
-        return res.json().then(function (j) { return [j, msSrv]; });
-      })
-      .then(function (par) {
-        var j = par[0], msSrv = par[1];
-        if (j && j.bloqueos) lset(K_REGLAS, JSON.stringify(j));
-        evaluar(msSrv || ahoraLocalCorregida(), !!msSrv);
-      })
-      .catch(function () {});
-  } catch (e) {}
+  /* 2) Con conexion: se refrescan las reglas y la hora la pone el servidor.
 
-  /* 3) Si la ventana empieza con la app abierta, cierra igual. */
-  setInterval(function () { if (!cerrado) evaluar(ahoraLocalCorregida(), false); }, 30000);
+     Se vuelve a pedir cada tanto, no una sola vez al abrir. Motivo: si el chico
+     ya tiene la app abierta y en ese rato se publica una ventana nueva, leyendo
+     solo al inicio no se enteraria hasta cerrar y volver a entrar — y el caso de
+     uso es justamente cargar el bloqueo minutos antes del examen.
+     El pedido lleva ?t= y cache:'no-store', y el service worker no intercepta
+     este archivo, asi que los 10 minutos de cache de GitHub Pages no aplican. */
+  var ultimoFetch = 0;
+  function refrescar() {
+    var t0 = Date.now();
+    if (t0 - ultimoFetch < 20000) return;     /* no martillar al servidor */
+    ultimoFetch = t0;
+    try {
+      fetch('bloqueos.json?t=' + t0, { cache: 'no-store' })
+        .then(function (res) {
+          var msSrv = 0;
+          try {
+            var h = res.headers.get('date');
+            var ts = h ? Date.parse(h) : 0;
+            /* una respuesta cacheada trae una cabecera Date vieja: si la hora que
+               llega es anterior a la ultima confiable, no es del servidor */
+            var st = estado();
+            var vieja = st && typeof st.visto === 'number' && ts < st.visto - 60000;
+            if (ts && !vieja) { msSrv = ts + (Date.now() - t0); guardarServidor(msSrv); }
+          } catch (e) {}
+          return res.json().then(function (j) { return [j, msSrv]; });
+        })
+        .then(function (par) {
+          var j = par[0], msSrv = par[1];
+          if (j && j.bloqueos) lset(K_REGLAS, JSON.stringify(j));
+          evaluar(msSrv || ahoraLocalCorregida(), !!msSrv);
+        })
+        .catch(function () {});
+    } catch (e) {}
+  }
+  refrescar();
+
+  /* 3) Si la ventana empieza con la app abierta, cierra igual. Cada vuelta
+        reevalua con lo que ya tiene y ademas vuelve a pedir el archivo. */
+  setInterval(function () {
+    if (cerrado) return;
+    evaluar(ahoraLocalCorregida(), false);
+    refrescar();
+  }, 30000);
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible' && !cerrado) evaluar(ahoraLocalCorregida(), false);
+    if (document.visibilityState !== 'visible' || cerrado) return;
+    evaluar(ahoraLocalCorregida(), false);
+    refrescar();
   });
 })();
 
@@ -17169,7 +17188,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 02:02";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 02:55";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
