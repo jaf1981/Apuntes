@@ -1,1 +1,19 @@
+<<<<<<< HEAD
 {"bloqueos": [{"diario": {"desde": "22:00", "hasta": "07:00"}}]}
+=======
+{
+  "_como_se_usa": [
+    "Cada entrada cierra la app. Editable desde el celular: repo Apuntes -> bloqueos.json -> lapiz -> Commit.",
+    "Se publica solo en un par de minutos.",
+    "TODAS LAS NOCHES:  { \"diario\": { \"desde\": \"22:00\", \"hasta\": \"07:00\" } }   (hora argentina, cruza la medianoche)",
+    "DIA ENTERO:        { \"d\": \"2026-08-25\" }",
+    "FRANJA PUNTUAL:    { \"desde\": \"2026-08-25T13:00:00-03:00\", \"hasta\": \"2026-08-25T15:30:00-03:00\" }",
+    "El -03:00 va SIEMPRE en las franjas puntuales: si se compara hora local, alcanza con cambiar la zona horaria del telefono para escaparse.",
+    "Para un examen conviene el dia entero antes que la franja: escaparse exige mover el reloj mucho mas.",
+    "Con la lista vacia no se cierra nada."
+  ],
+  "bloqueos": [
+    { "diario": { "desde": "23:59", "hasta": "07:00" } }
+  ]
+}
+>>>>>>> 95dd83a002f7f25916d6f2466b6a44984e79a4fb
