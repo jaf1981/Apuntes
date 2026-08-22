@@ -1,13 +1,26 @@
 {
-  "_como_se_usa": [
-    "Cada entrada cierra la app. Editable desde el celular: repo Apuntes -> bloqueos.json -> lapiz -> Commit.",
-    "Se publica solo en un par de minutos.",
-    "TODAS LAS NOCHES:  { \"diario\": { \"desde\": \"22:00\", \"hasta\": \"07:00\" } }   (hora argentina, cruza la medianoche)",
+  "_1_lo_mas_importante": [
+    "Esta lista es COMPLETA, no se suma a nada. Lo que no esta aca, no esta bloqueado.",
+    "Con senal manda este archivo. La app lo relee cada 30 segundos: cierra y tambien ABRE sola.",
+    "Sin senal vale la copia que quedo dentro del index.html, que se actualiza sola desde aca."
+  ],
+  "_2_para_agregar_o_extender_un_bloqueo": [
+    "Agregas o editas una entrada, dejando las que quieras conservar.",
+    "TODAS LAS NOCHES:  { \"diario\": { \"desde\": \"22:00\", \"hasta\": \"07:00\" } }",
     "DIA ENTERO:        { \"d\": \"2026-08-25\" }",
-    "FRANJA PUNTUAL:    { \"desde\": \"2026-08-25T13:00:00-03:00\", \"hasta\": \"2026-08-25T15:30:00-03:00\" }",
+    "FRANJA PUNTUAL:    { \"desde\": \"2026-08-25T13:00:00-03:00\", \"hasta\": \"2026-08-25T15:30:00-03:00\" }"
+  ],
+  "_3_para_desbloquear_o_achicar_un_bloqueo": [
+    "Escribis directamente la ventana que SI queres que este cerrada. No hace falta nada especial.",
+    "Ejemplo: si estaba de 22:00 a 07:00 y queres que a las 22 funcione, poner { \"diario\": { \"desde\": \"04:00\", \"hasta\": \"07:00\" } }",
+    "Para abrir todo: dejar la lista vacia -> \"bloqueos\": []",
+    "Para un agujero EN EL MEDIO de un periodo hay que partirlo en dos franjas (00:00->18:00 y 20:00->00:00)."
+  ],
+  "_4_detalles": [
     "El -03:00 va SIEMPRE en las franjas puntuales: si se compara hora local, alcanza con cambiar la zona horaria del telefono para escaparse.",
+    "diario cruza la medianoche si desde > hasta.",
     "Para un examen conviene el dia entero antes que la franja: escaparse exige mover el reloj mucho mas.",
-    "Con la lista vacia no se cierra nada."
+    "Se publica solo en un par de minutos. Editar: repo Apuntes -> bloqueos.json -> lapiz -> Commit."
   ],
   "bloqueos": [
     { "diario": { "desde": "04:00", "hasta": "07:00" } }
