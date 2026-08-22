@@ -10,6 +10,6 @@
     "Con la lista vacia no se cierra nada."
   ],
   "bloqueos": [
-    { "diario": { "desde": "22:00", "hasta": "07:00" } }
+    { "diario": { "desde": "23:59", "hasta": "07:00" } }
   ]
 }
