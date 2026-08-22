@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 02:55">
+<meta name="apuntes-version" content="22/08 03:14">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2256,7 +2256,7 @@ body {
      una copia vieja (o nunca lo leyo), la app abria igual. Paso el 21/08 a la
      noche con el corte de las 22:00. Ahora la regla viaja adentro del propio
      index.html y funciona desde la primera carga. */
-  var REGLAS_BASE = {"bloqueos": [{"diario": {"desde": "22:00", "hasta": "07:00"}}]};
+  var REGLAS_BASE = {"bloqueos": [{"diario": {"desde": "04:00", "hasta": "07:00"}}]};
 
   function reglas() {
     try { return JSON.parse(lget(K_REGLAS) || 'null'); } catch (e) { return null; }
@@ -2421,7 +2421,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 02:55', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 03:14', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -17188,7 +17188,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 02:55";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 03:14";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
