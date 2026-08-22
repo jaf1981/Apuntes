@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="21/08 18:49">
+<meta name="apuntes-version" content="22/08 01:03">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2251,6 +2251,13 @@ body {
   function claveDia(d) { return d.getFullYear() + '-' + dosD(d.getMonth() + 1) + '-' + dosD(d.getDate()); }
   function aMin(hhmm) { var p = String(hhmm || '').split(':'); return (Number(p[0]) || 0) * 60 + (Number(p[1]) || 0); }
 
+  /* Reglas HORNEADAS en el HTML al compilar. Sin esto, el cierre dependia de que
+     el telefono hubiera podido leer bloqueos.json alguna vez: si se quedaba con
+     una copia vieja (o nunca lo leyo), la app abria igual. Paso el 21/08 a la
+     noche con el corte de las 22:00. Ahora la regla viaja adentro del propio
+     index.html y funciona desde la primera carga. */
+  var REGLAS_BASE = {"bloqueos": [{"diario": {"desde": "22:00", "hasta": "07:00"}}]};
+
   function reglas() {
     try { return JSON.parse(lget(K_REGLAS) || 'null'); } catch (e) { return null; }
   }
@@ -2293,7 +2300,7 @@ body {
     var a = aMin(v.desde), z = aMin(v.hasta), m = minutosAR(ms);
     return a <= z ? (m >= a && m < z) : (m >= a || m < z);
   }
-  function dentro(r, ms) {
+  function dentroDe(r, ms) {
     if (!hayReglas(r)) return false;
     for (var i = 0; i < r.bloqueos.length; i++) {
       var b = r.bloqueos[i];
@@ -2302,6 +2309,12 @@ body {
       if (L && ms >= L[0] && ms < L[1]) return true;
     }
     return false;
+  }
+  /* UNION de las dos fuentes, no una u otra: si CUALQUIERA de las dos dice que
+     hay que cerrar, se cierra. Asi una copia local vieja no puede desactivar una
+     regla horneada, y una regla nueva publicada despues igual entra por el JSON. */
+  function dentro(r, ms) {
+    return dentroDe(REGLAS_BASE, ms) || dentroDe(r, ms);
   }
 
   /* Hora confiable. Con conexion manda el servidor y ademas se guarda el DESFASE
@@ -2362,7 +2375,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '21/08 18:49', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 01:03', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -2377,7 +2390,7 @@ body {
   /* conServidor = esta carga pudo hablar con el servidor: su hora es la que vale. */
   function evaluar(ms, conServidor) {
     var r = reglas();
-    if (!hayReglas(r)) return false;            /* sin examen cargado, nada se cierra */
+    if (!hayReglas(r) && !hayReglas(REGLAS_BASE)) return false;   /* nada cargado */
     if (dentro(r, ms)) { cerrar('ventana'); return true; }
     if (!conServidor && relojRaro(ms)) { cerrar('reloj'); return true; }
     return false;
@@ -17110,7 +17123,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "21/08 18:49";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 01:03";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
