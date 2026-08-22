@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 11:01">
+<meta name="apuntes-version" content="22/08 11:14">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2226,6 +2226,15 @@ body {
  *   examen": decidido asi para no anunciar que existe un bloqueo ni invitar a
  *   buscarle la vuelta.
  *
+ * QUE FUENTE MANDA (cambiado el 22/08)
+ *   Si se pudo bajar bloqueos.json del servidor en los ultimos 5 minutos, manda
+ *   ESE archivo y nada mas: cierra y tambien ABRE. Editas el horario en GitHub
+ *   desde el celular y en menos de un minuto la app se entera sola, en los dos
+ *   sentidos, sin recompilar y sin que el chico tenga que salir y volver a entrar.
+ *   Si NO se pudo bajar (sin señal, modo avion), se vuelve al piso estricto:
+ *   reglas horneadas en el HTML UNION la ultima copia local. O sea que cortar la
+ *   red nunca abre nada.
+ *
  * EL RELOJ
  *   Cuando hay conexion manda el servidor: se lee la cabecera Date de la
  *   respuesta y esa hora es la que vale. Sin conexion se usa la del telefono,
@@ -2312,10 +2321,36 @@ body {
     }
     return false;
   }
-  /* UNION de las dos fuentes, no una u otra: si CUALQUIERA de las dos dice que
-     hay que cerrar, se cierra. Asi una copia local vieja no puede desactivar una
-     regla horneada, y una regla nueva publicada despues igual entra por el JSON. */
+  /* QUE FUENTE MANDA (22/08, pedido de Javier).
+
+     Antes se hacia la UNION de las reglas horneadas y la copia local: si
+     cualquiera decia cerrar, se cerraba. Eso protegia de una copia local vieja,
+     pero tenia un efecto que no estaba a la vista: el JSON solo podia AGREGAR
+     bloqueos, **nunca levantarlos**. Javier cambio el horario desde el celular y
+     la app siguio cerrada, porque el horario viejo venia horneado en el HTML.
+
+     Ahora: si en los ultimos minutos se pudo BAJAR bloqueos.json del servidor,
+     manda **solo** ese archivo, en los dos sentidos (cierra y tambien abre). Si
+     no se pudo bajar —sin señal, modo avion, el archivo caido— se vuelve al piso
+     estricto: horneadas UNION copia local.
+
+     Por que sigue sirviendo como anti-trampa: cortar la red no abre nada, al
+     contrario, deja la regla mas estricta. Y el archivo viene por HTTPS de
+     GitHub Pages, asi que no se puede falsificar la respuesta.
+     LIMITE HONESTO: un bloqueos.json mal escrito ahora SI puede abrir la app.
+     Antes no podia. Es el precio de poder levantar un bloqueo desde el celular. */
+  /* Cuanto vale lo ultimo bajado del servidor. Se pide cada 30 s, asi que 2
+     minutos son 4 pedidos fallados seguidos: no es un bache de señal, es que no
+     hay red. Pasado ese rato vuelve a mandar el piso estricto. Mas largo seria
+     una ventana comoda para escaparse en modo avion; mas corto cerraria la app
+     cada vez que el chico entra en un ascensor. */
+  var VENCE_SERVIDOR = 2 * 60 * 1000;
+  var reglasServidor = null, servidorVistoMs = 0;
+  function mandaServidor(ms) {
+    return !!reglasServidor && ms - servidorVistoMs >= 0 && ms - servidorVistoMs < VENCE_SERVIDOR;
+  }
   function dentro(r, ms) {
+    if (mandaServidor(ms)) return dentroDe(reglasServidor, ms);
     return dentroDe(REGLAS_BASE, ms) || dentroDe(r, ms);
   }
 
@@ -2411,6 +2446,27 @@ body {
     if (!avisado) { avisado = true; avisar(motivo); }
   }
 
+  /* Volver a abrir sin recargar (22/08). Hasta hoy "cerrado" era una tranca de una
+     sola via: una vez cerrada, el intervalo hacia return y la app no volvia nunca,
+     aunque se levantara el bloqueo. Ahora, si la regla dejo de aplicar, se saca la
+     hoja de estilo que escondia todo y se borra el panel. No se recarga la pagina
+     A PROPOSITO: la recarga volveria a cerrar en el arranque (las horneadas mandan
+     hasta que baje el JSON) y el ciclo se repetiria en bucle. */
+  function reabrir() {
+    if (!cerrado) return;
+    cerrado = false;
+    avisado = false;
+    try {
+      var st = document.getElementById('apCierreCSS');
+      if (st && st.parentNode) st.parentNode.removeChild(st);
+      var raiz = document.documentElement;
+      raiz.className = String(raiz.className).replace(/\s*ap-cerrado\b/g, '');
+      raiz.style.background = '';
+      var d = document.getElementById('apCierrePanel');
+      if (d && d.parentNode) d.parentNode.removeChild(d);
+    } catch (e) {}
+  }
+
   /* Un aviso por dia y por motivo: sirve para saber quien se topo con el cierre.
      OJO: el buzon tiene lista blanca de eventos y descarta en silencio los que no
      conoce, asi que va como 'visita' y se distingue por el detalle. */
@@ -2423,7 +2479,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 11:01', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 11:14', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -2438,9 +2494,13 @@ body {
   /* conServidor = esta carga pudo hablar con el servidor: su hora es la que vale. */
   function evaluar(ms, conServidor) {
     var r = reglas();
-    if (!hayReglas(r) && !hayReglas(REGLAS_BASE)) return false;   /* nada cargado */
+    if (!hayReglas(r) && !hayReglas(REGLAS_BASE) && !hayReglas(reglasServidor)) {
+      reabrir();                                                  /* nada cargado */
+      return false;
+    }
     if (dentro(r, ms)) { cerrar('ventana'); return true; }
     if (!conServidor && relojRaro(ms)) { cerrar('reloj'); return true; }
+    reabrir();
     return false;
   }
 
@@ -2478,7 +2538,15 @@ body {
         })
         .then(function (par) {
           var j = par[0], msSrv = par[1];
-          if (j && j.bloqueos) lset(K_REGLAS, JSON.stringify(j));
+          /* Solo se acepta como "palabra del servidor" un archivo con la forma
+             correcta. Un JSON roto —el 22/08 se publicaron marcas de conflicto de
+             git adentro— no puede pasar por permiso para abrir: si no parsea, esta
+             linea no se ejecuta y sigue mandando el piso estricto. */
+          if (j && Object.prototype.toString.call(j.bloqueos) === '[object Array]') {
+            lset(K_REGLAS, JSON.stringify(j));
+            reglasServidor = j;
+            servidorVistoMs = msSrv || ahoraLocalCorregida();
+          }
           evaluar(msSrv || ahoraLocalCorregida(), !!msSrv);
         })
         .catch(function () {});
@@ -2486,15 +2554,17 @@ body {
   }
   refrescar();
 
-  /* 3) Si la ventana empieza con la app abierta, cierra igual. Cada vuelta
-        reevalua con lo que ya tiene y ademas vuelve a pedir el archivo. */
+  /* 3) Cada vuelta reevalua con lo que ya tiene y vuelve a pedir el archivo. Si la
+        ventana empieza con la app abierta, cierra; y si se levanta el bloqueo,
+        abre. OJO: aca habia un `if (cerrado) return;` que hacia que, una vez
+        cerrada, la app no volviera a mirar nada nunca mas — ni el reloj ni el
+        JSON. Por eso levantar un bloqueo no tenia ningun efecto hasta recargar. */
   setInterval(function () {
-    if (cerrado) return;
     evaluar(ahoraLocalCorregida(), false);
     refrescar();
   }, 30000);
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState !== 'visible' || cerrado) return;
+    if (document.visibilityState !== 'visible') return;
     evaluar(ahoraLocalCorregida(), false);
     refrescar();
   });
@@ -18339,7 +18409,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 11:01";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 11:14";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
