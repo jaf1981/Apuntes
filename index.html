@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 01:03">
+<meta name="apuntes-version" content="22/08 01:58">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2338,29 +2338,70 @@ body {
     return ms < st.visto - TOL_ATRAS || ms > st.visto + MAX_ADELANTE;
   }
 
-  var cerrado = false;
-  function cerrar(motivo) {
-    if (cerrado) return;
-    cerrado = true;
-    /* OJO: aca NO puede aparecer la cadena de cierre de <body> ni la de <script>.
-       build_publico.py inyecta el registro del service worker reemplazando el
-       cierre de body, y como str.replace de Python cambia TODAS las apariciones,
-       una copia de esa cadena dentro de este JavaScript termina partiendo el
-       bloque al medio. Paso el 21/08 y costo un rato encontrarlo. Por eso se
-       reescribe solo el contenido del body, sin armar un documento entero. */
+  var cerrado = false, avisado = false;
+
+  /* OJO con el MOMENTO. Este script corre arriba de todo, apenas se abre el
+     <body>, para decidir antes de que se dibuje nada. Pero en ese instante el
+     body esta VACIO: escribir ahi la pantalla de error no sirve, porque el
+     navegador sigue pegando toda la app a continuacion y la tapa.
+     Paso el 22/08 y el test no lo vio: buscaba el <h1> del error, que si existia
+     —arriba de todo, con la app entera debajo—.
+     Solucion: se esconde el documento de entrada con una hoja de estilo, y la
+     pantalla se pinta cuando el body ya esta completo (y de nuevo cada vez que
+     haga falta, en vez de pintar una sola vez). */
+  function esconderYa() {
     try {
-      var b = document.body;
-      b.style.cssText = 'margin:0;min-height:100vh;background:#14161a;color:#e9e4d8;' +
-        'display:flex;align-items:center;justify-content:center;text-align:center;' +
-        'font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;padding:24px';
-      b.innerHTML =
-        '<div><div style="font-size:54px;line-height:1">🛠️</div>' +
-        '<h1 style="font-size:22px;font-weight:800;margin:18px 0 10px">Error de conexión</h1>' +
-        '<p style="font-size:16px;opacity:.75;margin:0">No se pudo cargar la aplicación.</p></div>';
-      document.documentElement.style.background = '#14161a';
+      if (document.getElementById('apCierreCSS')) return;
+      var st = document.createElement('style');
+      st.id = 'apCierreCSS';
+      /* :not(#apCierrePanel) para no esconder la propia pantalla de error */
+      st.textContent = 'html.ap-cerrado body > *:not(#apCierrePanel){display:none !important}' +
+                       'html.ap-cerrado{background:#14161a !important}' +
+                       'html.ap-cerrado body{overflow:hidden !important}';
+      (document.head || document.documentElement).appendChild(st);
+      document.documentElement.className += ' ap-cerrado';
     } catch (e) {}
-    try { document.title = 'Apuntes'; } catch (e) {}
-    avisar(motivo);
+  }
+  function pintar() {
+    if (!cerrado || !document.body) return;
+    try {
+      /* OJO: aca NO puede aparecer la cadena de cierre de <body> ni la de
+         <script>. build_publico.py inyecta el registro del service worker
+         reemplazando el cierre de body, y str.replace de Python cambia TODAS
+         las apariciones: una copia dentro de este JavaScript parte el bloque al
+         medio. Paso el 21/08 y costo un rato encontrarlo. */
+      var d = document.getElementById('apCierrePanel');
+      if (!d) {
+        d = document.createElement('div');
+        d.id = 'apCierrePanel';
+        d.innerHTML =
+          '<div style="font-size:54px;line-height:1">🛠️</div>' +
+          '<h1 style="font-size:22px;font-weight:800;margin:18px 0 10px">Error de conexión</h1>' +
+          '<p style="font-size:16px;opacity:.75;margin:0">No se pudo cargar la aplicación.</p>';
+        document.body.appendChild(d);
+      }
+      /* un solo display, y con !important: si se pone dos veces en el mismo
+         bloque, el que lleva !important gana y rompe el centrado */
+      d.style.cssText = 'position:fixed;inset:0;z-index:2147483647;' +
+        'background:#14161a;color:#e9e4d8;display:flex !important;flex-direction:column;' +
+        'align-items:center;justify-content:center;text-align:center;padding:24px;' +
+        'font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif';
+      document.documentElement.style.background = '#14161a';
+      document.title = 'Apuntes';
+    } catch (e) {}
+  }
+  function cerrar(motivo) {
+    cerrado = true;
+    esconderYa();
+    pintar();
+    if (document.readyState === 'loading') {
+      try { document.addEventListener('DOMContentLoaded', pintar); } catch (e) {}
+      try { window.addEventListener('load', pintar); } catch (e) {}
+    }
+    /* repintar por las dudas: la app dibuja su interfaz despues de cargar y
+       podria taparlo si alguna pantalla se monta tarde */
+    try { setTimeout(pintar, 300); setTimeout(pintar, 1500); } catch (e) {}
+    if (!avisado) { avisado = true; avisar(motivo); }
   }
 
   /* Un aviso por dia y por motivo: sirve para saber quien se topo con el cierre.
@@ -2375,7 +2416,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 01:03', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 01:58', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -17123,7 +17164,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 01:03";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 01:58";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
