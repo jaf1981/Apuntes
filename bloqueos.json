@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "_como_se_usa": [
     "Cada entrada cierra la app. Editable desde el celular: repo Apuntes -> bloqueos.json -> lapiz -> Commit.",
@@ -13,3 +14,6 @@
     { "diario": { "desde": "22:00", "hasta": "07:00" } }
   ]
 }
+=======
+{"bloqueos": [{"diario": {"desde": "04:00", "hasta": "07:00"}}]}
+>>>>>>> da56e048669454a344c2f03c2c79753f0cdb7095
