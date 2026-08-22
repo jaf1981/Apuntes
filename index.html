@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 18:00">
+<meta name="apuntes-version" content="22/08 19:29">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1920,13 +1920,15 @@ body {
 .gar-arte { position: relative; isolation: isolate; width: 92%; line-height: 0; }
 .gar-arte img { display: block; width: 100%; height: auto; }
 .gar-pintura { position: absolute; inset: 0; mix-blend-mode: color; pointer-events: none; }
-/* El tamano del sticker lo pone el JS en px, medido sobre el ancho real de la
-   foto. A proposito NO se usan unidades relativas modernas (cqw y compania): ya
-   nos paso el 13/08 que una sintaxis CSS nueva la descarta el Safari del iPhone
-   y el arreglo termina peor que el problema. El pellizco es un transform, asi
-   que igual lo agranda junto con la bici. */
-.gar-sticker { position: absolute; transform: translate(-50%, -50%); pointer-events: none;
-  line-height: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,.45)); }
+.gar-paleta { display: flex; gap: 10px; justify-content: center; align-items: center;
+  margin-top: 12px; flex-wrap: wrap; }
+.gar-color { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; padding: 0;
+  border: 2px solid rgba(128,128,128,.45); }
+.gar-color.activo { border-color: var(--text); box-shadow: 0 0 0 3px rgba(128,128,128,.28); }
+/* "sin pintura": la barra diagonal se lee como "ninguno" sin necesidad de texto */
+.gar-color.sin { background: transparent; position: relative; }
+.gar-color.sin::after { content: ""; position: absolute; left: 50%; top: -3px; width: 2px;
+  height: 32px; background: currentColor; opacity: .55; transform: rotate(45deg); }
 .gar-ayuda { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
   font-size: 11px; opacity: .55; pointer-events: none; }
 .gar-nom { font-size: 19px; font-weight: 800; text-align: center; margin-top: 6px; }
@@ -2486,7 +2488,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 18:00', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 19:29', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -16650,19 +16652,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     { id: "v_mono", slot: "vehiculo", n: "Bici plegable", p: 400, e: "🛴" },
     { id: "v_electrico", slot: "vehiculo", n: "Bici eléctrica", p: 700, e: "🔋" },
     { id: "v_offroad", slot: "vehiculo", n: "Fat bike", p: 900, e: "🏔️" },
-    { id: "c_rojo", slot: "color", n: "Pintura roja", p: 100, e: "🔴", c: "#c0392b" },
-    { id: "c_verde", slot: "color", n: "Pintura verde", p: 100, e: "🟢", c: "#2e7d4f" },
-    { id: "c_azul", slot: "color", n: "Pintura azul", p: 100, e: "🔵", c: "#2a6fb0" },
-    { id: "c_negro", slot: "color", n: "Pintura negra", p: 150, e: "⚫", c: "#2c2c34" },
-    { id: "c_dorado", slot: "color", n: "Pintura dorada", p: 300, e: "🟡", c: "#c9a227" },
-    { id: "s_rayo", slot: "sticker", n: "Sticker rayo", p: 200, e: "⚡" },
-    { id: "s_estrellas", slot: "sticker", n: "Sticker estrellas", p: 200, e: "✨" },
-    { id: "s_llamas", slot: "sticker", n: "Sticker llamas", p: 250, e: "🔥" },
-    { id: "s_calavera", slot: "sticker", n: "Sticker calavera", p: 300, e: "💀" },
-    { id: "x_bocina", slot: "extra", n: "Bocina", p: 100, e: "📢" },
-    { id: "x_casco", slot: "extra", n: "Casco", p: 150, e: "🪖" },
-    { id: "x_canasto", slot: "extra", n: "Canasto", p: 150, e: "🧺" },
-    { id: "x_luces", slot: "extra", n: "Luces LED", p: 200, e: "💡" },
+    { id: "c_rojo", slot: "color", n: "Pintura roja", p: 0, e: "🔴", c: "#c0392b" },
+    { id: "c_verde", slot: "color", n: "Pintura verde", p: 0, e: "🟢", c: "#2e7d4f" },
+    { id: "c_azul", slot: "color", n: "Pintura azul", p: 0, e: "🔵", c: "#2a6fb0" },
+    { id: "c_negro", slot: "color", n: "Pintura negra", p: 0, e: "⚫", c: "#2c2c34" },
+    { id: "c_dorado", slot: "color", n: "Pintura dorada", p: 0, e: "🟡", c: "#c9a227" },
     /* MOTOS: se compran, pero NO se montan. El avatar esta dibujado en pose de
        ciclista y no hay forma de sentarlo en una moto (encastrar un dibujo
        raster con el ciclista ya fallo cinco veces). Son piezas de coleccion:
@@ -16727,8 +16721,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   var TIENDA_CATS = [
     ["peinado", "Peinados"], ["gorra", "Gorras y gorros"], ["ropa", "Ropa (temporada invierno)"],
     ["bufanda", "Bufandas"], ["auris", "Auriculares"], ["reloj", "Relojes"],
-    ["vehiculo", "Bicis"], ["color", "Pintura del vehículo"],
-    ["sticker", "Stickers del vehículo"], ["extra", "Accesorios del vehículo"],
+    ["vehiculo", "Bicis"],
     ["moto", "Motos (solo para el garage)"]
   ];
   var TIENDA_PISO = 500;   // monedas GANADAS históricas para desbloquear (para siempre)
@@ -16741,6 +16734,63 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     return a;
   }
   function guardarAvatar(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} }
+
+  /* ===== PINTURA DEL VEHICULO (22/08) ======================================
+     Antes se compraba en la tienda y habia UN color para todo lo equipado.
+     Ahora es GRATIS, se elige en el garage y cada vehiculo recuerda el suyo:
+     a.pintura = { v_bmx: "c_rojo", m_gp: "c_negro", ... }.
+     Motivo (Javier): que se puedan ver los colores de las bicis, las motos y
+     los autos sin tener que pagar por cada lata de pintura. */
+  function pinturas() {
+    var out = [];
+    for (var i = 0; i < CATALOGO.length; i++)
+      if (CATALOGO[i].slot === "color") out.push(CATALOGO[i]);
+    return out;
+  }
+  function colorVehiculo(idVehiculo) {
+    if (!idVehiculo) return null;
+    var a = avatarData();
+    var it = itemDe((a.pintura || {})[idVehiculo]);
+    return it ? it.c : null;
+  }
+  function pintarVehiculo(idVehiculo, idColor) {
+    var a = avatarData();
+    if (!a.pintura) a.pintura = {};
+    if (idColor) a.pintura[idVehiculo] = idColor; else delete a.pintura[idVehiculo];
+    guardarAvatar(a);
+  }
+
+  /* Migracion unica: el 22/08 desaparecieron los stickers y los accesorios, y la
+     pintura dejo de costar. A quien ya habia pagado se le DEVUELVEN las monedas
+     (baja 'gastadas', que es lo que se resta del saldo) y se le conserva el color
+     que tenia puesto, ahora atado al vehiculo que estaba usando. Corre una sola
+     vez por dispositivo; si algo falla, no se toca nada. */
+  var PRECIOS_RETIRADOS = { s_rayo: 200, s_estrellas: 200, s_llamas: 250, s_calavera: 300,
+                            x_bocina: 100, x_casco: 150, x_canasto: 150, x_luces: 200,
+                            c_rojo: 100, c_verde: 100, c_azul: 100, c_negro: 150, c_dorado: 300 };
+  function migrarTienda2208() {
+    try {
+      var a = avatarData();
+      if (a.migr2208) return;
+      var dev = 0, quedan = [];
+      for (var i = 0; i < (a.comprados || []).length; i++) {
+        var id = a.comprados[i];
+        if (PRECIOS_RETIRADOS[id] !== undefined) dev += PRECIOS_RETIRADOS[id];
+        else quedan.push(id);
+      }
+      /* el color que tenia puesto se conserva, ahora sobre su vehiculo */
+      if (a.eq && a.eq.color && a.eq.vehiculo) {
+        if (!a.pintura) a.pintura = {};
+        if (!a.pintura[a.eq.vehiculo]) a.pintura[a.eq.vehiculo] = a.eq.color;
+      }
+      if (a.eq) { delete a.eq.color; delete a.eq.sticker; delete a.eq.extra; }
+      a.comprados = quedan;
+      a.gastadas = Math.max(0, (a.gastadas || 0) - dev);
+      a.migr2208 = 1;
+      guardarAvatar(a);
+    } catch (e) {}
+  }
+  migrarTienda2208();
 
   function xpTotalGlobal() {
     var total = 0;
@@ -16771,11 +16821,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
    Las anclas salen del CICLISTA, no de la bici (ver CONTEXTO 20/08).       */
 var AV_ASIENTO = [193, 246], AV_PUNO = [315, 182], AV_PEDAL = [217, 330], AV_PISO = 366;
 /* Punto del cuadro donde apoya el sticker y punto donde queda el manubrio. Los
-   fija svgBiciIA segun el modelo y los lee svgExtrasIA, que siempre se dibuja
    despues (ver avatarIAHTML y garSVG). Hacen falta porque la bici sola no tiene
    la misma geometria que la bici montada: sin esto, el canasto y las luces
    quedaban donde estaria la mano del chico y no sobre el manubrio dibujado. */
-var AV_STICKER = [252, 223], AV_MANUBRIO = [315, 182];
+var AV_MANUBRIO = [315, 182];
 
 /* "sa" y "pu" son el asiento y el puño de CADA modelo, y solo se usan cuando la
    bici va sola (garage e iconos de la tienda). Montada, el asiento tiene que
@@ -16846,16 +16895,7 @@ function svgBiciIA(modelo, color) {
   var largoCab = Math.min(30, flen * 0.34);
   var cabeza = [Math.round(direc[0] + fdx / flen * largoCab),
                 Math.round(direc[1] + fdy / flen * largoCab)];
-  /* Donde va el sticker: sobre el CUADRO, y el cuadro cambia de forma segun el
-     modelo. Con una coordenada fija quedaba flotando en el aire en la playera
-     (se ve recien en el garage, en grande). Se calcula por modelo. */
   AV_MANUBRIO = [px, py];
-  AV_STICKER = c.cuadro === "curvo"
-      ? [Math.round(0.25 * tija[0] + 0.5 * (tija[0] + direc[0]) / 2 + 0.25 * direc[0]),
-         Math.round(0.25 * tija[1] + 0.5 * ((tija[1] + direc[1]) / 2 - 26) + 0.25 * direc[1])]
-    : c.cuadro === "plegable"
-      ? [Math.round((xp + direc[0]) / 2), Math.round(cy - 6)]
-      : [Math.round((tija[0] + direc[0]) / 2), Math.round((tija[1] + direc[1]) / 2)];
   if (c.cuadro === "curvo") {
     tubo(tija, [xp, yp]); tubo([xt, cy], [xp, yp]); tubo([xt, cy], tija);
     tubo([xp, yp], cabeza);
@@ -16959,42 +16999,12 @@ function avCapa(nombre, pose, filtro) {
    en (230, 54) con la base del casco a la altura de las cejas.            */
 var AV_CABEZA_JIN = [230, 54];
 
-function svgExtrasIA(eq, enBici) {
-  var h = "", px = AV_MANUBRIO[0], py = AV_MANUBRIO[1];
-  var CONT = "#1b1e22", NEG = "#282c33";
-  if (enBici) {
-    if (eq.extra === "x_canasto") {
-      /* apoyado SOBRE el manubrio: antes arrancaba en px+8 y en grande se veia
-         flotando al costado, sin tocar la bici (20/08, garage) */
-      h += '<path d="M' + (px + 1) + ' ' + (py - 24) + ' h34 l-4 26 h-26 z" fill="#b08d57" stroke="' + CONT + '" stroke-width="2.4" stroke-linejoin="round"/>';
-      h += '<path d="M' + (px + 3) + ' ' + (py - 15) + ' h30 M' + (px + 4) + ' ' + (py - 7) + ' h28" stroke="rgba(0,0,0,.28)" stroke-width="2"/>';
-    }
-    if (eq.extra === "x_luces") {
-      h += '<rect x="' + (px + 8) + '" y="' + (py - 6) + '" width="13" height="11" rx="3" fill="' + NEG + '" stroke="' + CONT + '" stroke-width="2"/>';
-      h += '<circle class="av-luz" cx="' + (px + 21) + '" cy="' + (py - 0.5) + '" r="4.5" fill="#ffe95e"/>';
-      h += '<path class="av-luz" d="M' + (px + 28) + ' ' + (py - 8) + ' l9 -6 M' + (px + 29) + ' ' + (py - 1) + ' l10 0 M' + (px + 28) + ' ' + (py + 6) + ' l9 6" stroke="#ffe95e" stroke-width="2.6" stroke-linecap="round"/>';
-    }
-    if (eq.extra === "x_bocina") {
-      h += '<circle cx="' + (px - 16) + '" cy="' + (py - 7) + '" r="6.5" fill="#c0392b" stroke="' + CONT + '" stroke-width="2"/>';
-      h += '<circle cx="' + (px - 16) + '" cy="' + (py - 7) + '" r="2.4" fill="rgba(0,0,0,.3)" stroke="none"/>';
-    }
-    if (eq.sticker) {
-      var em = { s_llamas: "\uD83D\uDD25", s_rayo: "\u26A1", s_estrellas: "\u2728", s_calavera: "\uD83D\uDC80" }[eq.sticker];
-      /* sobre el cuadro; antes caia sobre la rueda trasera, y despues quedaba
-         flotando en la playera porque la coordenada era fija (ver AV_STICKER) */
-      if (em) h += '<text x="' + AV_STICKER[0] + '" y="' + (AV_STICKER[1] + 8) +
-                   '" font-size="22" text-anchor="middle">' + em + '</text>';
-    }
-    if (eq.extra === "x_casco") {
-      var cx = AV_CABEZA_JIN[0], cy = AV_CABEZA_JIN[1];
-      h += '<path d="M' + (cx - 42) + ' ' + (cy - 4) + ' a42 42 0 0 1 84 0 l-6 9 l-72 0 z" fill="#e07b39" stroke="' + CONT + '" stroke-width="2.6" stroke-linejoin="round"/>';
-      h += '<path d="M' + (cx - 30) + ' ' + (cy - 2) + ' l8 -26 M' + cx + ' ' + (cy - 3) + ' l1 -30 M' + (cx + 28) + ' ' + (cy - 2) + ' l-6 -27" stroke="rgba(0,0,0,.22)" stroke-width="3.4" stroke-linecap="round"/>';
-      h += '<path d="M' + (cx + 42) + ' ' + (cy - 4) + ' h14" stroke="#e07b39" stroke-width="7" stroke-linecap="round"/>';
-    }
-  }
-  if (!h) return "";
-  return '<svg class="av-capa" data-capa="extras" viewBox="0 0 470 380" width="470" height="380">' + h + '</svg>';
-}
+/* svgExtrasIA() y AV_STICKER se eliminaron el 22/08 junto con los stickers y
+   los accesorios del vehiculo (canasto, luces, bocina, casco). Decision de
+   Javier: el sticker nunca llego a verse como una calcomania pegada al cano
+   —quedaba como un emoji apoyado encima— y los accesorios no se podian
+   dibujar sobre el arte raster del garage. Si algun dia vuelven, tienen que
+   venir DENTRO del arte de cada vehiculo, no superpuestos. */
 
 /* Icono de la tienda para vehiculos y extras: se dibuja con el mismo codigo que
    el avatar. Antes venian del sprite generado con IA, y ahi habia dos problemas:
@@ -17012,21 +17022,8 @@ function svgIconoIA(id, px) {
                '" height="' + Math.round(px * caja[3] / caja[2]) + '"');
     return b.replace('class="av-capa"', 'class="ico-svg"');
   }
-  var CONT = "#1b1e22", h = "";
-  if (id === "x_casco")
-    h = '<path d="M4 26 a22 22 0 0 1 44 0 l-3 5 l-38 0 z" fill="#e07b39" stroke="' + CONT + '" stroke-width="2.4" stroke-linejoin="round"/>' +
-        '<path d="M16 24 l5 -14 M26 23 l1 -16 M37 24 l-4 -15" stroke="rgba(0,0,0,.22)" stroke-width="3"/>' +
-        '<path d="M48 26 h7" stroke="#e07b39" stroke-width="6" stroke-linecap="round"/>';
-  else if (id === "x_canasto")
-    h = '<path d="M8 12 h40 l-5 32 h-30 z" fill="#b08d57" stroke="' + CONT + '" stroke-width="2.6" stroke-linejoin="round"/>' +
-        '<path d="M10 23 h36 M12 33 h32" stroke="rgba(0,0,0,.28)" stroke-width="2.4"/>';
-  else if (id === "x_luces")
-    h = '<rect x="6" y="18" width="18" height="18" rx="4" fill="#282c33" stroke="' + CONT + '" stroke-width="2.4"/>' +
-        '<circle cx="26" cy="27" r="7" fill="#ffe95e" stroke="' + CONT + '" stroke-width="1.6"/>' +
-        '<path d="M38 15 l10 -6 M39 27 l12 0 M38 39 l10 6" stroke="#ffe95e" stroke-width="3.4" stroke-linecap="round"/>';
-  else if (id === "x_bocina")
-    h = '<circle cx="27" cy="27" r="15" fill="#c0392b" stroke="' + CONT + '" stroke-width="2.6"/>' +
-        '<circle cx="27" cy="27" r="5" fill="rgba(0,0,0,.3)"/>';
+  /* Los iconos de los accesorios (casco, canasto, luces, bocina) se borraron
+     el 22/08 con los items. */
   else return "";
   return '<svg class="ico-svg" viewBox="0 0 56 56" width="' + px + '" height="' + px + '">' + h + '</svg>';
 }
@@ -17045,14 +17042,14 @@ function avatarIAHTML(escala, soloPersona) {
   var L = AV_LIENZO[pose], W = L[0], H = L[1];
   var s = (escala || 1) * AV_UNIDAD;
   var h = "";
-  if (enBici) h += svgBiciIA(eq.vehiculo, (itemDe(eq.color) || {}).c || "#9aa2aa");
+  if (enBici) h += svgBiciIA(eq.vehiculo, colorVehiculo(eq.vehiculo) || "#9aa2aa");
   h += avCapa(avNombre("", pose, eq.ropa || "r_basica", nina), pose);
   /* El peinado clasico ya viene dibujado en el cuerpo.
      Y si hay algo que tapa la cabeza, el peinado NO se dibuja: antes lo dejaba
      con la gorra de visera, y las crestas y los rulos asomaban por encima de la
      gorra y del casco (lo vio Javier el 20/08). Las gorras ya vienen dibujadas
      con pelo debajo, asi que no se pierde nada. */
-  var tapaCabeza = !!eq.gorra || (enBici && eq.extra === "x_casco");
+  var tapaCabeza = !!eq.gorra;
   if (eq.peinado && eq.peinado !== "p_clasico" && !tapaCabeza)
     h += avCapa(avNombre("cab", pose, eq.peinado, nina), pose);
   if (eq.gorra) h += avCapa(avNombre("acc", pose, eq.gorra, nina), pose);
@@ -17066,7 +17063,6 @@ function avatarIAHTML(escala, soloPersona) {
                        t[2] ? "grayscale(1) brightness(.8)" : "hue-rotate(" + t[0] + "deg)");
     else h += avCapa(avNombre("acc", pose, id, nina), pose);
   });
-  if (enBici) h += svgExtrasIA(eq, true);
   return '<div class="av-marco" style="width:' + Math.round(W * s) + 'px;height:' + Math.round(H * s) +
          'px"><div class="av-lienzo" style="width:' + W + 'px;height:' + H + 'px;transform:scale(' + s + ')">' +
          h + '</div></div>';
@@ -17333,7 +17329,7 @@ function avatarIACara(px) {
     var W = conVehiculo ? 200 : 120;
     var ropaCol = { r_basica: "#9aa5ad", r_buzo: "#3d5a3d", r_hawaiana: "#e07b39", r_futbol: "#7ec8e3",
                     r_canguro: "#2c2c34", r_cuero: "#4a3426", r_puffer: "#2a6fb0" }[eq.ropa] || "#9aa5ad";
-    var vCol = (itemDe(eq.color) || {}).c || "#5a6a75";
+    var vCol = colorVehiculo(eq.vehiculo) || "#5a6a75";
     /* contorno heredado: le da definición sobre fondo oscuro (referencia 19/08) */
     var CONTORNO = 'stroke="#1b1e22" stroke-width="1.3" stroke-linejoin="round"';
     var h = '<svg viewBox="0 0 ' + W + ' 150" width="' + Math.round(W * s) + '" height="' + Math.round(150 * s) + '">';
@@ -17470,24 +17466,14 @@ function avatarIACara(px) {
       h += '<rect x="37" y="31" width="8" height="13" rx="4" fill="' + aCol + '"/><rect x="75" y="31" width="8" height="13" rx="4" fill="' + aCol + '"/>';
       if (eq.auris === "a_gamer") h += '<circle cx="41" cy="37" r="1.8" fill="#4be04b"/><circle cx="79" cy="37" r="1.8" fill="#e04b4b"/><path d="M42 43 q4 8 12 8" stroke="#7a3db0" stroke-width="2" fill="none"/>';
     }
-    /* casco (accesorio, va sobre todo) */
-    if (eq.extra === "x_casco" && conVehiculo) h += '<path d="M40 30 a20 20 0 0 1 40 0 l-3 4 l-34 0 z" fill="#e07b39" opacity=".95"/><line x1="45" y1="34" x2="49" y2="24" stroke="rgba(0,0,0,.2)" stroke-width="2"/><line x1="60" y1="34" x2="60" y2="21" stroke="rgba(0,0,0,.2)" stroke-width="2"/><line x1="75" y1="34" x2="71" y2="24" stroke="rgba(0,0,0,.2)" stroke-width="2"/>';
     h += conVehiculo ? '</g></g>' : '</g>';
 
     /* ---- detalles del vehículo que van por delante de la persona ---- */
     if (conVehiculo) {
       if (enBici) {
         h += '<path d="M136 77 l18 -3" stroke="#2c2c34" stroke-width="4.5" stroke-linecap="round"/>';
-        if (eq.extra === "x_canasto") h += '<rect x="138" y="63" width="18" height="12" rx="2.5" fill="#b08d57" stroke="#1b1e22" stroke-width="1"/><line x1="136" y1="70" x2="154" y2="70" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/>';
-        if (eq.extra === "x_luces") h += '<circle class="av-luz" cx="154" cy="86" r="4.5" fill="#ffe95e"/><path class="av-luz" d="M159 82 l7 -5 M160 87 l8 0" stroke="#ffe95e" stroke-width="2"/>';
-        if (eq.extra === "x_bocina") h += '<circle cx="130" cy="74" r="4" fill="#c0392b" stroke="#1b1e22" stroke-width="1"/>';
-        if (eq.sticker) h += '<text x="106" y="104" font-size="15" stroke="none">' + ({ s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" }[eq.sticker] || "") + '</text>';
       } else {
         h += '<path d="M128 58 l20 -2" stroke="#2c2c34" stroke-width="4" stroke-linecap="round"/>';
-        if (eq.extra === "x_luces") h += '<circle class="av-luz" cx="150" cy="72" r="4.5" fill="#ffe95e"/><path class="av-luz" d="M155 68 l7 -5 M156 73 l8 0" stroke="#ffe95e" stroke-width="2"/>';
-        if (eq.extra === "x_bocina") h += '<circle cx="146" cy="64" r="4" fill="#c0392b"/>';
-        if (eq.extra === "x_canasto") h += '<rect x="146" y="70" width="18" height="12" rx="2.5" fill="#b08d57"/>';
-        if (eq.sticker) h += '<text x="58" y="126" font-size="14">' + ({ s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" }[eq.sticker] || "") + '</text>';
       }
     }
     return h + "</svg>";
@@ -17556,10 +17542,6 @@ function avatarIACara(px) {
      recien vale la pena con el arte raster grande. Se deja andando desde
      ahora para no tener que tocar la vista dos veces.                     */
   var GAR_ARTE = window.AV_GARAGE || {};   /* manifiesto opcional del arte grande */
-  /* Un solo lugar con los emojis de los stickers: antes estaba copiado en tres
-     lados (avatar, dos miniaturas) y agregar uno nuevo obligaba a acordarse de
-     los tres. */
-  var EMOJI_STICKER = { s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" };
 
   var GAR_GRUPOS = [["vehiculo", "Bicis"], ["moto", "Motos"], ["auto", "Autos"]];
   function garVehiculos() {
@@ -17599,13 +17581,26 @@ function avatarIACara(px) {
     var y1 = AV_PISO + 8;
     return [x0, y0, x1 - x0, y1 - y0];
   }
-  function garSVG(id, color, eq) {
+  /* Paleta del garage (22/08): la pintura es gratis y cada vehiculo guarda la
+     suya. El primer boton es "sin pintura", que devuelve el vehiculo a su color
+     original — sin eso no habia forma de arrepentirse. */
+  function paletaGarage(idVehiculo) {
+    var actual = (avatarData().pintura || {})[idVehiculo] || "";
+    var h = '<div class="gar-paleta" id="garPaleta">' +
+            '<button class="gar-color sin' + (actual ? "" : " activo") +
+            '" data-color="" title="Sin pintura" aria-label="Sin pintura"></button>';
+    var P = pinturas();
+    for (var i = 0; i < P.length; i++)
+      h += '<button class="gar-color' + (actual === P[i].id ? " activo" : "") +
+           '" data-color="' + P[i].id + '" title="' + P[i].n + '" aria-label="' + P[i].n +
+           '" style="background:' + P[i].c + '"></button>';
+    return h + '</div>';
+  }
+
+  function garSVG(id, color) {
     var b = svgBiciIA(id, color);
-    var ex = eq ? svgExtrasIA(eq, true) : "";
-    /* el casco va en la cabeza del chico: en el garage no hay chico */
-    var caja = garCaja(id, eq && eq.extra === "x_canasto").join(" ");
-    var capas = b.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "") +
-                ex.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+    var caja = garCaja(id, false).join(" ");
+    var capas = b.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
     return '<svg viewBox="' + caja + '" data-capa="garage_' + id + '">' + capas + '</svg>';
   }
   /* Arte grande: la imagen trae el cuadro en GRIS y al lado viene su mascara.
@@ -17622,9 +17617,9 @@ function avatarIACara(px) {
              it.id + '_t.webp" alt="" loading="lazy" decoding="async">';
     return AV_BICIS[it.id] ? garSVG(it.id, "#9aa2aa", null) : '<span class="t">' + (it.e || "") + '</span>';
   }
-  function garVisual(id, color, eq) {
+  function garVisual(id, color) {
     var p = GAR_ARTE[id];
-    if (!p) return garSVG(id, color, eq);
+    if (!p) return garSVG(id, color);
     var base = (window.AV_GARAGE_BASE || "imagenes/garage/") + id;
     var h = '<div class="gar-arte">' +
             '<img src="' + base + '.webp" width="' + p.w + '" height="' + p.h +
@@ -17634,18 +17629,6 @@ function avatarIACara(px) {
       h += '<div class="gar-pintura" style="background:' + color +
            ';-webkit-mask-image:' + url + ';mask-image:' + url +
            ';-webkit-mask-size:100% 100%;mask-size:100% 100%"></div>';
-    }
-    /* Sticker (22/08). Javier compro uno, se lo puso a la bici y en el garage no
-       aparecia: esta rama del dibujo —la del arte grande— ignoraba 'eq' por
-       completo. La otra (garSVG) si lo dibujaba, asi que se perdio el dia que el
-       arte reemplazo al SVG.
-       Va DENTRO de .gar-arte para que el pellizco lo agrande junto con la foto, y
-       el punto de apoyo (p.st) lo calcula build_garage.py sobre la mascara del
-       cuadro. Solo bicis: en motos y autos no aplica (decision de Javier). */
-    if (eq && eq.sticker && p.st) {
-      var em = EMOJI_STICKER[eq.sticker];
-      if (em) h += '<div class="gar-sticker" style="left:' + p.st[0] + '%;top:' +
-                   p.st[1] + '%">' + em + '</div>';
     }
     return h + '</div>';
   }
@@ -17695,11 +17678,10 @@ function avatarIACara(px) {
     var it = v[garIdx];
     var mio = a.comprados.indexOf(it.id) !== -1;
     var puesto = a.eq.vehiculo === it.id;
-    /* la pintura y los accesorios solo se muestran sobre el vehiculo puesto:
-       en los demas serian una promesa falsa (no estan pintados) */
-    var color = puesto ? (itemDe(a.eq.color) || {}).c : null;
-    var eqBici = puesto ? { extra: a.eq.extra === "x_casco" ? null : a.eq.extra,
-                            sticker: a.eq.sticker } : null;
+    /* La pintura ahora es GRATIS y se elige aca, con un color propio por
+       vehiculo (22/08). Solo se muestra en los que son del chico: en uno
+       bloqueado seria una promesa falsa. */
+    var color = mio ? colorVehiculo(it.id) : null;
 
     var esBici = it.slot === "vehiculo";
     var L = AUTOS_LOGRO[it.id];
@@ -17715,12 +17697,13 @@ function avatarIACara(px) {
         '<button class="gar-flecha izq" id="garIzq">‹</button>' +
         '<div class="gar-piso"></div>' +
         '<div class="gar-lienzo' + (mio ? "" : " bloqueado") + '" id="garLienzo">' +
-          garVisual(it.id, color, eqBici) + '</div>' +
+          garVisual(it.id, color) + '</div>' +
         '<button class="gar-flecha der" id="garDer">›</button>' +
         '<div class="gar-ayuda">Pellizcá para acercar · doble toque para volver</div>' +
       '</div>' +
       '<div class="gar-nom">' + it.n + '</div>' +
       '<div class="gar-sub">' + sub + '</div>' +
+      (mio ? paletaGarage(it.id) : '') +
       '<div style="text-align:center;margin-top:10px">' +
         (mio && esBici && !puesto ? '<button class="gar-mini" id="garUsar" style="width:auto;padding:8px 18px">Usar esta</button>' : '') +
         (!mio && it.slot !== "auto" ? '<button class="gar-mini" id="garComprar" style="width:auto;padding:8px 18px">Verla en la tienda</button>' : '') +
@@ -17741,24 +17724,9 @@ function avatarIACara(px) {
     }
     h += "</div>";
     g.innerHTML = h;
-    garMedirSticker();
     listenersGarage(g);
   }
 
-  /* El sticker se dimensiona con el ancho REAL de la foto ya dibujada. Si la
-     imagen todavia no cargo, el ancho es 0: por eso se vuelve a medir en su
-     evento load. */
-  function garMedirSticker() {
-    var st = document.querySelector("#apGarage .gar-sticker");
-    if (!st) return;
-    var img = document.querySelector("#apGarage .gar-arte img");
-    function medir() {
-      var w = img ? img.clientWidth : 0;
-      if (w > 0) st.style.fontSize = Math.round(w * 0.09) + "px";
-    }
-    medir();
-    if (img && !img.complete) img.addEventListener("load", medir, { once: true });
-  }
 
   function garAplicarZoom() {
     var l = document.getElementById("garLienzo");
@@ -17782,6 +17750,22 @@ function avatarIACara(px) {
     var act = g.querySelector(".gar-tira .gar-mini.activo");
     if (act && act.scrollIntoView)
       try { act.scrollIntoView({ block: "nearest", inline: "center" }); } catch (e) {}
+    /* Paleta: pintar es instantaneo y no cuesta nada, asi que se repinta la
+       escena en el lugar en vez de rehacer todo el garage (rehacerlo perdia el
+       scroll de la tira y el zoom). */
+    g.querySelectorAll(".gar-paleta .gar-color").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var v = garVehiculos()[garIdx];
+        if (!v) return;
+        pintarVehiculo(v.id, b.dataset.color || null);
+        var l = document.getElementById("garLienzo");
+        if (l) l.innerHTML = garVisual(v.id, colorVehiculo(v.id));
+        g.querySelectorAll(".gar-paleta .gar-color").forEach(function (o) {
+          o.classList.toggle("activo", o === b);
+        });
+        renderAvatarInicio();          /* si es la bici en uso, el inicio la muestra */
+      });
+    });
     document.getElementById("garIzq").addEventListener("click", function () { garIr(-1); });
     document.getElementById("garDer").addEventListener("click", function () { garIr(1); });
     g.querySelectorAll(".gar-tira .gar-mini").forEach(function (b) {
@@ -17982,11 +17966,6 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       } else {
         a.eq[it.slot] = id;
       }
-      /* color/sticker/extra requieren vehículo */
-      if ((it.slot === "color" || it.slot === "sticker" || it.slot === "extra") && !a.eq.vehiculo) {
-        showToast("🚲", "Primero equipá una bici o monopatín");
-        delete a.eq[it.slot];
-      }
       guardarAvatar(a);
     } else {
       var saldo = monedasSaldo();
@@ -17994,11 +17973,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       a.gastadas = (a.gastadas || 0) + it.p;
       a.comprados.push(id);
       a.eq[it.slot] = id;
-      if ((it.slot === "color" || it.slot === "sticker" || it.slot === "extra") && !a.eq.vehiculo) {
-        showToast("🚲", "Comprado — se va a ver cuando equipes una bici o monopatín");
-      } else {
-        showToast("🎉", "¡" + it.n + " comprado!");
-      }
+      showToast("🎉", "¡" + it.n + " comprado!");
       guardarAvatar(a);
     }
     pintarTienda();
@@ -18482,7 +18457,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 18:00";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 19:29";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
