@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 12:59">
+<meta name="apuntes-version" content="22/08 18:00">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1920,6 +1920,13 @@ body {
 .gar-arte { position: relative; isolation: isolate; width: 92%; line-height: 0; }
 .gar-arte img { display: block; width: 100%; height: auto; }
 .gar-pintura { position: absolute; inset: 0; mix-blend-mode: color; pointer-events: none; }
+/* El tamano del sticker lo pone el JS en px, medido sobre el ancho real de la
+   foto. A proposito NO se usan unidades relativas modernas (cqw y compania): ya
+   nos paso el 13/08 que una sintaxis CSS nueva la descarta el Safari del iPhone
+   y el arreglo termina peor que el problema. El pellizco es un transform, asi
+   que igual lo agranda junto con la bici. */
+.gar-sticker { position: absolute; transform: translate(-50%, -50%); pointer-events: none;
+  line-height: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,.45)); }
 .gar-ayuda { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
   font-size: 11px; opacity: .55; pointer-events: none; }
 .gar-nom { font-size: 19px; font-weight: 800; text-align: center; margin-top: 6px; }
@@ -2479,7 +2486,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 12:59', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 18:00', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -3108,7 +3115,7 @@ var AV_PIEZAS = {"accjin_a_gamer":{"x":190,"y":10,"w":84,"h":82},"accjin_a_inear
    <id>.png es el vehiculo con el cuadro en gris; <id>_m.png es la
    mascara del cuadro, que el navegador usa para pintarlo. */
 var AV_GARAGE_BASE = "imagenes/garage/";
-var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313},"a_f1":{"w":1000,"h":318},"a_gt":{"w":1000,"h":316},"a_hiper":{"w":1000,"h":317},"a_muscle":{"w":1000,"h":308},"a_rally":{"w":1000,"h":339},"a_super":{"w":1000,"h":306},"m_cafe":{"w":1000,"h":508},"m_cross":{"w":1000,"h":563},"m_cruiser":{"w":1000,"h":550},"m_gp":{"w":1000,"h":573},"m_naked":{"w":1000,"h":538},"m_sport":{"w":1000,"h":564},"v_bmx":{"w":1000,"h":607},"v_carbono":{"w":1000,"h":581},"v_electrico":{"w":1000,"h":623},"v_mono":{"w":1000,"h":637},"v_mtb":{"w":1000,"h":599},"v_offroad":{"w":1000,"h":616},"v_playera":{"w":1000,"h":593}};
+var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313},"a_f1":{"w":1000,"h":318},"a_gt":{"w":1000,"h":316},"a_hiper":{"w":1000,"h":317},"a_muscle":{"w":1000,"h":308},"a_rally":{"w":1000,"h":339},"a_super":{"w":1000,"h":306},"m_cafe":{"w":1000,"h":508},"m_cross":{"w":1000,"h":563},"m_cruiser":{"w":1000,"h":550},"m_gp":{"w":1000,"h":573},"m_naked":{"w":1000,"h":538},"m_sport":{"w":1000,"h":564},"v_bmx":{"w":1000,"h":607,"st":[38.0,43.0]},"v_carbono":{"w":1000,"h":581,"st":[52.8,57.8]},"v_electrico":{"w":1000,"h":623,"st":[62.9,45.4]},"v_mono":{"w":1000,"h":637,"st":[41.4,52.7]},"v_mtb":{"w":1000,"h":599,"st":[38.8,40.3]},"v_offroad":{"w":1000,"h":616,"st":[58.8,46.0]},"v_playera":{"w":1000,"h":593,"st":[52.4,62.6]}};
 /*MAPAS-FIN*/
 </script>
 <script>
@@ -17549,6 +17556,10 @@ function avatarIACara(px) {
      recien vale la pena con el arte raster grande. Se deja andando desde
      ahora para no tener que tocar la vista dos veces.                     */
   var GAR_ARTE = window.AV_GARAGE || {};   /* manifiesto opcional del arte grande */
+  /* Un solo lugar con los emojis de los stickers: antes estaba copiado en tres
+     lados (avatar, dos miniaturas) y agregar uno nuevo obligaba a acordarse de
+     los tres. */
+  var EMOJI_STICKER = { s_llamas: "🔥", s_rayo: "⚡", s_estrellas: "✨", s_calavera: "💀" };
 
   var GAR_GRUPOS = [["vehiculo", "Bicis"], ["moto", "Motos"], ["auto", "Autos"]];
   function garVehiculos() {
@@ -17623,6 +17634,18 @@ function avatarIACara(px) {
       h += '<div class="gar-pintura" style="background:' + color +
            ';-webkit-mask-image:' + url + ';mask-image:' + url +
            ';-webkit-mask-size:100% 100%;mask-size:100% 100%"></div>';
+    }
+    /* Sticker (22/08). Javier compro uno, se lo puso a la bici y en el garage no
+       aparecia: esta rama del dibujo —la del arte grande— ignoraba 'eq' por
+       completo. La otra (garSVG) si lo dibujaba, asi que se perdio el dia que el
+       arte reemplazo al SVG.
+       Va DENTRO de .gar-arte para que el pellizco lo agrande junto con la foto, y
+       el punto de apoyo (p.st) lo calcula build_garage.py sobre la mascara del
+       cuadro. Solo bicis: en motos y autos no aplica (decision de Javier). */
+    if (eq && eq.sticker && p.st) {
+      var em = EMOJI_STICKER[eq.sticker];
+      if (em) h += '<div class="gar-sticker" style="left:' + p.st[0] + '%;top:' +
+                   p.st[1] + '%">' + em + '</div>';
     }
     return h + '</div>';
   }
@@ -17718,7 +17741,23 @@ function avatarIACara(px) {
     }
     h += "</div>";
     g.innerHTML = h;
+    garMedirSticker();
     listenersGarage(g);
+  }
+
+  /* El sticker se dimensiona con el ancho REAL de la foto ya dibujada. Si la
+     imagen todavia no cargo, el ancho es 0: por eso se vuelve a medir en su
+     evento load. */
+  function garMedirSticker() {
+    var st = document.querySelector("#apGarage .gar-sticker");
+    if (!st) return;
+    var img = document.querySelector("#apGarage .gar-arte img");
+    function medir() {
+      var w = img ? img.clientWidth : 0;
+      if (w > 0) st.style.fontSize = Math.round(w * 0.09) + "px";
+    }
+    medir();
+    if (img && !img.complete) img.addEventListener("load", medir, { once: true });
   }
 
   function garAplicarZoom() {
@@ -18443,7 +18482,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 12:59";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 18:00";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
