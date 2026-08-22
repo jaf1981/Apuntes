@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 12:37">
+<meta name="apuntes-version" content="22/08 12:59">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2479,7 +2479,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 12:37', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 12:59', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -3537,11 +3537,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué es la célula?",
     "opts": [
      "Un órgano del cuerpo humano",
-     "La unidad estructural, funcional y de origen de todo ser vivo",
      "Una sustancia química",
-     "Un tipo de tejido"
+     "Un tipo de tejido",
+     "La unidad estructural, funcional y de origen de todo ser vivo"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "La célula es la unidad mínima estructural, funcional y de origen de todo ser vivo.",
     "page": "Las Células",
     "id": 0
@@ -3552,10 +3552,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Porque tiene una forma definida",
      "Porque forma estructuras",
-     "Porque realiza todas las funciones (respiración, alimentación, etc.)",
-     "Porque proviene de otra célula"
+     "Porque proviene de otra célula",
+     "Porque realiza todas las funciones (respiración, alimentación, etc.)"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Funcional significa que realiza todas las funciones vitales: respiración, relación, alimentación, etc.",
     "page": "Las Células",
     "id": 1
@@ -3564,12 +3564,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Cómo se llama un ser vivo formado por una sola célula?",
     "opts": [
-     "Pluricelular",
      "Unicelular",
      "Procariota",
-     "Heterótrofo"
+     "Heterótrofo",
+     "Pluricelular"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Los seres unicelulares están formados por una sola célula.",
     "page": "Las características de los seres vivos",
     "id": 2
@@ -3578,12 +3578,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Cuál de estos es un ejemplo de ser autótrofo?",
     "opts": [
-     "León",
      "Ser humano",
-     "Árbol",
-     "Bacteria intestinal"
+     "León",
+     "Bacteria intestinal",
+     "Árbol"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "El árbol es autótrofo: produce su propio alimento mediante la fotosíntesis. El león es heterótrofo.",
     "page": "Las características de los seres vivos",
     "id": 3
@@ -3592,12 +3592,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Qué forma tienen las células nerviosas?",
     "opts": [
-     "Esféricas",
      "Poliédricas",
-     "Estrelladas",
-     "En forma de huso"
+     "Esféricas",
+     "En forma de huso",
+     "Estrelladas"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Las células nerviosas son estrelladas, lo que les permite captar y transmitir impulsos.",
     "page": "Las células: su forma y función",
     "id": 4
@@ -3606,12 +3606,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Qué tipo de células son los óvulos de los peces?",
     "opts": [
-     "Esféricas, adaptadas a la flotación",
-     "En forma de huso",
      "Estrelladas",
-     "Ameboides"
+     "Ameboides",
+     "Esféricas, adaptadas a la flotación",
+     "En forma de huso"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Los óvulos de los peces son esféricos, adaptados a la flotación en el medio acuático.",
     "page": "Las células: su forma y función",
     "id": 5
@@ -3620,12 +3620,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Cuál es el primer nivel de organización donde aparece la vida?",
     "opts": [
-     "Átomo",
-     "Molécula",
      "Célula",
-     "Tejido"
+     "Átomo",
+     "Tejido",
+     "Molécula"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "La célula es el primer nivel de organización en el que aparece la vida.",
     "page": "Niveles de organización de la materia",
     "id": 6
@@ -3634,12 +3634,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "Ordená de menor a mayor estos niveles de organización:",
     "opts": [
-     "Célula → Órgano → Tejido → Sistema",
-     "Célula → Tejido → Órgano → Sistema",
+     "Sistema → Órgano → Tejido → Célula",
      "Tejido → Célula → Sistema → Órgano",
-     "Sistema → Órgano → Tejido → Célula"
+     "Célula → Órgano → Tejido → Sistema",
+     "Célula → Tejido → Órgano → Sistema"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "El orden correcto es: Célula → Tejido → Órgano → Sistema de órganos → Organismo.",
     "page": "Niveles de organización de la materia",
     "id": 7
@@ -3650,8 +3650,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Del latín",
      "Del griego pro (antes) + karyon (núcleo)",
-     "Del griego que significa pequeña",
-     "Es un nombre inventado"
+     "Es un nombre inventado",
+     "Del griego que significa pequeña"
     ],
     "ans": 1,
     "exp": "Procariota viene del griego: pro (antes/previamente) + karyon (núcleo) = antes del núcleo.",
@@ -3662,9 +3662,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Cómo se reproducen las células somáticas (musculares, óseas, de la piel)?",
     "opts": [
-     "Por meiosis",
-     "Por mitosis",
      "Por fermentación",
+     "Por mitosis",
+     "Por meiosis",
      "Por fotosíntesis"
     ],
     "ans": 1,
@@ -3676,12 +3676,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Cómo se multiplican las células sexuales (óvulo y espermatozoide)?",
     "opts": [
-     "Por mitosis",
      "Por meiosis",
-     "Por división simple",
-     "Por reproducción asexual"
+     "Por reproducción asexual",
+     "Por mitosis",
+     "Por división simple"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Las células sexuales (óvulo y espermatozoide) se multiplican por meiosis.",
     "page": "Concepto de célula",
     "id": 10
@@ -3691,11 +3691,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Dónde se encuentra el material genético en una célula procariota?",
     "opts": [
      "En un núcleo definido",
-     "En las mitocondrias",
      "Disperso en el citoplasma",
+     "En las mitocondrias",
      "En el aparato de Golgi"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La procariota carece de núcleo definido. Su material genético está disperso en el citoplasma.",
     "page": "La célula procariota",
     "id": 11
@@ -3704,12 +3704,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Cuál es la función del flagelo en las bacterias?",
     "opts": [
+     "Defender de anticuerpos",
      "Sintetizar proteínas",
-     "Permitir el desplazamiento",
      "Almacenar información genética",
-     "Defender de anticuerpos"
+     "Permitir el desplazamiento"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "El flagelo interviene en el desplazamiento de la bacteria.",
     "page": "La célula procariota",
     "id": 12
@@ -3718,12 +3718,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué función cumple la cápsula bacteriana?",
     "opts": [
-     "Mover a la bacteria",
-     "Protegerla de anticuerpos y evitar la pérdida de humedad",
+     "Generar energía",
      "Sintetizar proteínas",
-     "Generar energía"
+     "Protegerla de anticuerpos y evitar la pérdida de humedad",
+     "Mover a la bacteria"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "La cápsula protege frente a anticuerpos y evita la pérdida de humedad. Las bacterias con cápsula son más virulentas.",
     "page": "La célula procariota",
     "id": 13
@@ -3732,12 +3732,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué contiene un plásmido bacteriano?",
     "opts": [
-     "La información genética principal",
-     "Información para resistir antibióticos o ser patógena",
      "Solo proteínas",
-     "Información sobre la forma de la bacteria"
+     "La información genética principal",
+     "Información sobre la forma de la bacteria",
+     "Información para resistir antibióticos o ser patógena"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "El plásmido es un ADN accesorio independiente del cromosoma bacteriano, que contiene info para resistencia a antibióticos o patogenicidad.",
     "page": "La célula procariota",
     "id": 14
@@ -3746,12 +3746,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Cuál de estas bacterias se encuentra naturalmente en el intestino humano?",
     "opts": [
-     "Mycobacterium tuberculosis",
-     "Escherichia coli",
+     "Cyanobacteria",
      "Salmonella enterica",
-     "Cyanobacteria"
+     "Mycobacterium tuberculosis",
+     "Escherichia coli"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Escherichia coli es una bacteria común en el intestino humano, esencial en investigación genética.",
     "page": "Ejemplos de células procariotas",
     "id": 15
@@ -3760,12 +3760,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué bacteria causa la tuberculosis?",
     "opts": [
-     "Escherichia coli",
-     "Bacillus subtilis",
      "Mycobacterium tuberculosis",
-     "Lactobacillus acidophilus"
+     "Bacillus subtilis",
+     "Lactobacillus acidophilus",
+     "Escherichia coli"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Mycobacterium tuberculosis es la bacteria causante de la tuberculosis.",
     "page": "Ejemplos de células procariotas",
     "id": 16
@@ -3788,12 +3788,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué hacen las cianobacterias?",
     "opts": [
-     "Causan tuberculosis",
      "Producen yogur",
-     "Realizan fotosíntesis y producen oxígeno",
-     "Solo viven en el intestino"
+     "Solo viven en el intestino",
+     "Causan tuberculosis",
+     "Realizan fotosíntesis y producen oxígeno"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Las cianobacterias son fotosintéticas: producen oxígeno (ejemplo: Phormidium).",
     "page": "Ejemplos de células procariotas",
     "id": 18
@@ -3802,12 +3802,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Hace cuánto tiempo surgieron las células eucariotas?",
     "opts": [
+     "Hace 1.500 millones de años",
      "Hace 100 millones de años",
      "Hace 500 millones de años",
-     "Hace 1.500 millones de años",
      "Hace 10.000 años"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Las células eucariotas surgieron en la Tierra hace 1.500 millones de años.",
     "page": "Las células eucariotas",
     "id": 19
@@ -3816,12 +3816,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuál es la principal diferencia entre células procariotas y eucariotas?",
     "opts": [
-     "Su color",
-     "Las eucariotas tienen núcleo definido y son más complejas",
      "Su forma",
-     "Las procariotas son siempre más grandes"
+     "Las procariotas son siempre más grandes",
+     "Su color",
+     "Las eucariotas tienen núcleo definido y son más complejas"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Las eucariotas tienen un núcleo definido que aloja al ADN, y su estructura interna es más compleja.",
     "page": "Las células eucariotas",
     "id": 20
@@ -3830,12 +3830,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Qué significa que la membrana plasmática sea \"selectiva\"?",
     "opts": [
-     "Que tiene color especial",
      "Que no todo puede atravesarla, sólo lo del tamaño adecuado",
-     "Que cambia de color",
-     "Que decide qué función cumplir"
+     "Que tiene color especial",
+     "Que decide qué función cumplir",
+     "Que cambia de color"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Es selectiva: sólo pasa lo que tiene igual o menor tamaño que sus poros.",
     "page": "Estructura de la célula eucariota",
     "id": 21
@@ -3844,12 +3844,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Dónde se producen los ribosomas?",
     "opts": [
-     "En las mitocondrias",
-     "En el citoplasma",
      "En el nucléolo",
+     "En el citoplasma",
+     "En las mitocondrias",
      "En el aparato de Golgi"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Los ribosomas se producen en el nucléolo, ubicado dentro del núcleo.",
     "page": "Estructura de la célula eucariota",
     "id": 22
@@ -3858,10 +3858,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuál es la función principal de las mitocondrias?",
     "opts": [
-     "Almacenar agua",
+     "Digerir alimentos",
      "Generar la energía necesaria para las funciones celulares",
-     "Producir lípidos",
-     "Digerir alimentos"
+     "Almacenar agua",
+     "Producir lípidos"
     ],
     "ans": 1,
     "exp": "Las mitocondrias son las \"usinas\" celulares: generan la energía necesaria.",
@@ -3873,9 +3873,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Para qué sirven los ribosomas?",
     "opts": [
      "Generar energía",
-     "Digerir partículas",
+     "Almacenar ADN",
      "Fabricar (sintetizar) proteínas",
-     "Almacenar ADN"
+     "Digerir partículas"
     ],
     "ans": 2,
     "exp": "Los ribosomas son los encargados de fabricar o sintetizar proteínas.",
@@ -3886,10 +3886,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Qué hace el aparato de Golgi?",
     "opts": [
-     "Digiere partículas",
+     "Hace fotosíntesis",
      "Envuelve o \"empaqueta\" sustancias para ser evacuadas o almacenadas",
      "Genera energía",
-     "Hace fotosíntesis"
+     "Digiere partículas"
     ],
     "ans": 1,
     "exp": "El aparato de Golgi empaqueta sustancias para que sean evacuadas al exterior o almacenadas.",
@@ -3900,12 +3900,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Qué retículo endoplasmático sintetiza lípidos?",
     "opts": [
-     "El rugoso (RER)",
-     "El liso (REL)",
+     "Ninguno",
      "El aparato de Golgi",
-     "Ninguno"
+     "El liso (REL)",
+     "El rugoso (RER)"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "El retículo endoplasmático liso (REL) sintetiza lípidos. El rugoso (RER) transporta proteínas.",
     "page": "Organoides de la célula eucariota animal",
     "id": 26
@@ -3914,12 +3914,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuál es la función de los lisosomas?",
     "opts": [
-     "Sintetizar proteínas",
-     "Generar energía",
      "Digerir partículas alimenticias",
-     "Hacer fotosíntesis"
+     "Hacer fotosíntesis",
+     "Generar energía",
+     "Sintetizar proteínas"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Los lisosomas intervienen en la digestión de partículas alimenticias.",
     "page": "Organoides de la célula eucariota animal",
     "id": 27
@@ -3928,9 +3928,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuál de estas estructuras es EXCLUSIVA de la célula vegetal?",
     "opts": [
-     "Mitocondrias",
-     "Cloroplastos",
      "Núcleo",
+     "Cloroplastos",
+     "Mitocondrias",
      "Membrana celular"
     ],
     "ans": 1,
@@ -3942,12 +3942,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuál de estas estructuras es EXCLUSIVA de la célula animal?",
     "opts": [
-     "Vacuolas",
-     "Pared celular",
      "Cloroplastos",
-     "Centríolos"
+     "Vacuolas",
+     "Centríolos",
+     "Pared celular"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "Los centríolos y microtúbulos son exclusivos de la célula animal.",
     "page": "Célula vegetal vs. célula animal",
     "id": 29
@@ -3957,11 +3957,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Dónde se produce la fotosíntesis y qué pigmento la hace posible?",
     "opts": [
      "En las mitocondrias, con hemoglobina",
-     "En los cloroplastos, gracias a la clorofila",
+     "En el citoplasma, con caroteno",
      "En el núcleo, con melanina",
-     "En el citoplasma, con caroteno"
+     "En los cloroplastos, gracias a la clorofila"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "La fotosíntesis se produce en los cloroplastos, que contienen el pigmento verde llamado clorofila.",
     "page": "La célula eucariota vegetal",
     "id": 30
@@ -3970,12 +3970,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuál es el principal componente de todo organismo?",
     "opts": [
+     "Lípidos",
      "Proteínas",
      "Agua",
-     "Lípidos",
      "Carbohidratos"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "El agua es el principal componente: representa entre el 50% y el 95% del peso de un organismo.",
     "page": "Las biomoléculas",
     "id": 31
@@ -3984,12 +3984,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuál de estas es una sustancia INORGÁNICA?",
     "opts": [
-     "Proteína",
-     "Lípido",
      "Agua",
-     "Carbohidrato"
+     "Carbohidrato",
+     "Proteína",
+     "Lípido"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Las sustancias inorgánicas son agua y sales minerales. Las orgánicas son carbohidratos, proteínas, lípidos, ácidos nucleicos y vitaminas.",
     "page": "Las biomoléculas",
     "id": 32
@@ -3998,12 +3998,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Qué átomos forman las proteínas?",
     "opts": [
-     "Carbono e hidrógeno (CH)",
-     "Carbono, hidrógeno y oxígeno (CHO)",
      "Carbono, hidrógeno, oxígeno y nitrógeno (CHON)",
-     "Solo nitrógeno"
+     "Solo nitrógeno",
+     "Carbono e hidrógeno (CH)",
+     "Carbono, hidrógeno y oxígeno (CHO)"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Las proteínas están formadas por carbono, hidrógeno, oxígeno y nitrógeno (CHON).",
     "page": "Las proteínas",
     "id": 33
@@ -4013,11 +4013,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué proteína transporta oxígeno en la sangre?",
     "opts": [
      "Insulina",
-     "Hemoglobina",
      "Miosina",
+     "Hemoglobina",
      "Queratina"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "La hemoglobina es la proteína de transporte que lleva oxígeno por la sangre.",
     "page": "Las proteínas",
     "id": 34
@@ -4026,12 +4026,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Qué proteína forma los pelos y plumas?",
     "opts": [
-     "Colágeno",
      "Insulina",
      "Queratina",
-     "Hemoglobina"
+     "Hemoglobina",
+     "Colágeno"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La queratina es una proteína estructural que se encuentra en pelos y plumas.",
     "page": "Las proteínas",
     "id": 35
@@ -4040,10 +4040,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Qué hormona regula el nivel de glucosa en sangre?",
     "opts": [
-     "Hormona de crecimiento",
+     "Hemoglobina",
      "Insulina",
      "Adrenalina",
-     "Hemoglobina"
+     "Hormona de crecimiento"
     ],
     "ans": 1,
     "exp": "La insulina es una proteína reguladora que controla el nivel de glucosa en la sangre.",
@@ -4054,12 +4054,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Qué significa \"glúcidos\" en griego?",
     "opts": [
+     "Vital",
      "Energía",
      "Dulce",
-     "Pequeño",
-     "Vital"
+     "Pequeño"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Glúcidos significa \"dulce\" en griego, por el sabor de algunas de estas sustancias.",
     "page": "Carbohidratos, glúcidos o hidratos de carbono",
     "id": 37
@@ -4070,8 +4070,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Disacáridos",
      "Monosacáridos",
-     "Polisacáridos",
-     "Trisacáridos"
+     "Trisacáridos",
+     "Polisacáridos"
     ],
     "ans": 1,
     "exp": "Los monosacáridos son los azúcares más sencillos, compuestos por una sola unidad de azúcar. Ej: glucosa.",
@@ -4082,12 +4082,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuál de estos es un disacárido?",
     "opts": [
-     "Glucosa",
      "Sacarosa",
-     "Almidón",
-     "Celulosa"
+     "Glucosa",
+     "Celulosa",
+     "Almidón"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "La sacarosa (azúcar común) es un disacárido. Otro ejemplo es la lactosa.",
     "page": "Carbohidratos, glúcidos o hidratos de carbono",
     "id": 39
@@ -4097,9 +4097,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál es el polisacárido de reserva en los animales?",
     "opts": [
      "Almidón",
-     "Celulosa",
+     "Sacarosa",
      "Glucógeno",
-     "Sacarosa"
+     "Celulosa"
     ],
     "ans": 2,
     "exp": "El glucógeno es el polisacárido de reserva energética en los animales. El almidón lo es en las plantas.",
@@ -4110,10 +4110,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuál es la propiedad en común de TODOS los lípidos?",
     "opts": [
-     "Son dulces",
-     "Son insolubles en agua",
      "Se disuelven en agua",
-     "Son sólidos"
+     "Son insolubles en agua",
+     "Son sólidos",
+     "Son dulces"
     ],
     "ans": 1,
     "exp": "Todos los lípidos tienen en común que son insolubles en agua.",
@@ -4124,9 +4124,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cómo se forman los triglicéridos?",
     "opts": [
-     "3 azúcares unidos",
-     "3 ácidos grasos + 1 molécula de glicerol",
      "3 proteínas juntas",
+     "3 ácidos grasos + 1 molécula de glicerol",
+     "3 azúcares unidos",
      "Solo carbono"
     ],
     "ans": 1,
@@ -4152,12 +4152,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuáles son los dos tipos de ácidos nucleicos?",
     "opts": [
+     "ARN y proteína",
      "ADN y ARN",
      "ADN y ATP",
-     "ARN y proteína",
      "Glucosa y glucógeno"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Los dos tipos de ácidos nucleicos son el ADN (ácido desoxirribonucleico) y el ARN (ácido ribonucleico).",
     "page": "Ácidos nucleicos",
     "id": 44
@@ -4166,12 +4166,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuántos tipos de aminoácidos existen?",
     "opts": [
-     "10",
      "20",
+     "10",
      "50",
      "100"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Existen 20 tipos de aminoácidos que forman todas las proteínas de los seres vivos.",
     "page": "Los aminoácidos",
     "id": 45
@@ -4180,12 +4180,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Cuál NO es una función del agua?",
     "opts": [
-     "Termorregulador",
      "Disolvente",
-     "Generar energía celular",
-     "Medio de transporte"
+     "Medio de transporte",
+     "Termorregulador",
+     "Generar energía celular"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "El agua actúa como disolvente, transporte, termorregulador y aporta medio acuoso, pero no genera energía celular.",
     "page": "El agua",
     "id": 46
@@ -4194,12 +4194,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué enzima ayuda a remover manchas de sangre y huevo en la ropa?",
     "opts": [
+     "Insulina",
      "Lipasa",
      "Proteasa",
-     "Amilasa",
-     "Insulina"
+     "Amilasa"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Las proteasas aceleran la degradación de proteínas, ayudando a remover manchas de sangre y huevo.",
     "page": "El uso de enzimas en la industria",
     "id": 47
@@ -4208,12 +4208,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué enzima elimina manchas de grasa?",
     "opts": [
-     "Proteasa",
+     "Caseína",
      "Amilasa",
-     "Lipasa",
-     "Caseína"
+     "Proteasa",
+     "Lipasa"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Las lipasas aceleran la degradación de lípidos y ayudan a eliminar manchas de grasa.",
     "page": "El uso de enzimas en la industria",
     "id": 48
@@ -4222,12 +4222,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué enzima degrada el almidón?",
     "opts": [
-     "Proteasa",
+     "Insulina",
      "Lipasa",
-     "Amilasa",
-     "Insulina"
+     "Proteasa",
+     "Amilasa"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "La enzima amilasa degrada el almidón. Se usa en industria textil y alimenticia.",
     "page": "El uso de enzimas en la industria",
     "id": 49
@@ -4236,10 +4236,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Por qué las levaduras necesitan azúcar para activarse?",
     "opts": [
-     "Para crecer en tamaño",
      "Para reproducirse",
+     "Para volverse más dulces",
      "Porque usan el azúcar como fuente de energía para fermentar",
-     "Para volverse más dulces"
+     "Para crecer en tamaño"
     ],
     "ans": 2,
     "exp": "Las levaduras usan el azúcar como fuente de energía para acelerar el proceso de fermentación.",
@@ -4250,10 +4250,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué son los alimentos?",
     "opts": [
-     "Sustancias químicas inorgánicas",
+     "Vitaminas en general",
      "Sustancias de origen animal o vegetal, naturales o elaborados, que son digeridas y absorbidas en el tubo digestivo",
      "Solo lo que se cocina",
-     "Vitaminas en general"
+     "Sustancias químicas inorgánicas"
     ],
     "ans": 1,
     "exp": "Los alimentos pueden ser de origen animal o vegetal, naturales o elaborados, y sus sustancias son digeridas y absorbidas en el tubo digestivo.",
@@ -4264,12 +4264,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué son los nutrientes?",
     "opts": [
-     "Sustancias químicas presentes en los alimentos, orgánicas o inorgánicas, responsables de todas las actividades que realizamos",
+     "Cualquier alimento que comemos",
      "Solo las vitaminas y minerales",
      "Solo las proteínas",
-     "Cualquier alimento que comemos"
+     "Sustancias químicas presentes en los alimentos, orgánicas o inorgánicas, responsables de todas las actividades que realizamos"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Los nutrientes son sustancias químicas presentes en los alimentos, pueden ser orgánicos o inorgánicos, y son responsables de todas las actividades que realizamos.",
     "page": "Alimentos, nutrientes y alimentación",
     "id": 52
@@ -4278,12 +4278,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué es la alimentación?",
     "opts": [
-     "Sinónimo de nutrición",
-     "El proceso de digerir los alimentos",
      "El proceso a través del cual se seleccionan los alimentos para su consumo",
-     "Solo cocinar"
+     "Sinónimo de nutrición",
+     "Solo cocinar",
+     "El proceso de digerir los alimentos"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "La alimentación es el proceso a través del cual se seleccionan los alimentos para su consumo. Es distinta de la nutrición (que ocurre dentro del cuerpo).",
     "page": "Alimentos, nutrientes y alimentación",
     "id": 53
@@ -4292,12 +4292,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuáles son las 3 categorías de nutrientes según su función?",
     "opts": [
+     "Orgánicos, inorgánicos y mixtos",
      "Animales, vegetales y minerales",
      "Energéticos, estructurales (o plásticos) y reguladores",
-     "Orgánicos, inorgánicos y mixtos",
      "Sólidos, líquidos y gaseosos"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Los nutrientes se clasifican en: energéticos (aportan energía), estructurales o plásticos (forman y reparan tejidos) y reguladores (controlan procesos metabólicos).",
     "page": "Alimentos, nutrientes y alimentación",
     "id": 54
@@ -4306,12 +4306,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué nutrientes son ENERGÉTICOS?",
     "opts": [
-     "Proteínas y vitaminas",
-     "Hidratos de carbono y lípidos",
+     "Solo vitaminas",
      "Agua y minerales",
-     "Solo vitaminas"
+     "Hidratos de carbono y lípidos",
+     "Proteínas y vitaminas"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Los nutrientes energéticos son los hidratos de carbono y los lípidos. Aportan energía, producen calor y permiten la actividad física.",
     "page": "Alimentos, nutrientes y alimentación",
     "id": 55
@@ -4320,10 +4320,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué nutrientes son ESTRUCTURALES o PLÁSTICOS?",
     "opts": [
+     "Solo proteínas",
      "Vitaminas y carbohidratos",
-     "Lípidos solamente",
      "Proteínas, agua y minerales",
-     "Solo proteínas"
+     "Lípidos solamente"
     ],
     "ans": 2,
     "exp": "Los nutrientes estructurales o plásticos son las proteínas, el agua y los minerales. Intervienen en la formación y reparación de tejidos.",
@@ -4335,11 +4335,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué nutrientes son REGULADORES?",
     "opts": [
      "Solo las vitaminas",
-     "Agua, minerales, proteínas y vitaminas",
      "Solo hidratos de carbono",
+     "Agua, minerales, proteínas y vitaminas",
      "Solo grasas"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Los nutrientes reguladores son el agua, los minerales, las proteínas y las vitaminas. Controlan los procesos metabólicos del organismo.",
     "page": "Alimentos, nutrientes y alimentación",
     "id": 57
@@ -4348,12 +4348,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuáles son los alimentos de MAYOR CONSUMO MUNDIAL?",
     "opts": [
-     "Carnes y lácteos",
-     "Frutas y verduras",
      "Los que tienen hidratos de carbono (cereales, dulces, pastas, pan)",
-     "Los que tienen proteínas"
+     "Los que tienen proteínas",
+     "Carnes y lácteos",
+     "Frutas y verduras"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Los alimentos con hidratos de carbono (cereales, dulces, pastas, pan) son los de mayor consumo mundial.",
     "page": "Ejemplos de alimentos según el nutriente",
     "id": 58
@@ -4362,10 +4362,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuáles de estos son alimentos ricos en LÍPIDOS?",
     "opts": [
-     "Cereales y pastas",
+     "Solo el aceite de oliva",
      "Carnes grasosas, huevos, cremas, manteca, comidas fritas y fiambres",
-     "Verduras y frutas",
-     "Solo el aceite de oliva"
+     "Cereales y pastas",
+     "Verduras y frutas"
     ],
     "ans": 1,
     "exp": "Los alimentos con lípidos incluyen carnes grasosas, huevos, cremas, manteca, comidas fritas y fiambres.",
@@ -4376,10 +4376,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuáles son alimentos ricos en PROTEÍNAS?",
     "opts": [
-     "Pan, pastas y dulces",
+     "Solo huevos",
      "Carnes (rojas y blancas), lácteos y clara de huevo",
      "Frutas y verduras",
-     "Solo huevos"
+     "Pan, pastas y dulces"
     ],
     "ans": 1,
     "exp": "Los alimentos con proteínas son las carnes (rojas y blancas), los lácteos y la clara de huevo.",
@@ -4391,9 +4391,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué es la digestión?",
     "opts": [
      "El proceso por el cual moléculas complejas se transforman en moléculas más sencillas para ingresar en las células",
-     "El transporte de oxígeno hacia las células",
+     "La formación de la materia fecal en el intestino grueso",
      "La eliminación de los desechos del organismo",
-     "La formación de la materia fecal en el intestino grueso"
+     "El transporte de oxígeno hacia las células"
     ],
     "ans": 0,
     "exp": "La digestión transforma moléculas complejas (polímeros, lípidos grandes) en moléculas más sencillas (monómeros) para ingresar en las células y ser usadas como materia prima o energía.",
@@ -4404,10 +4404,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cuáles son los 2 tipos de digestión?",
     "opts": [
-     "Interna y externa",
+     "Oral y estomacal",
      "Mecánica y química",
      "Rápida y lenta",
-     "Oral y estomacal"
+     "Interna y externa"
     ],
     "ans": 1,
     "exp": "Existen 2 tipos: la digestión mecánica (dientes y musculatura) y la digestión química (enzimas y jugos digestivos).",
@@ -4418,12 +4418,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Quiénes llevan a cabo la digestión MECÁNICA?",
     "opts": [
-     "Las enzimas de la saliva",
      "El ácido clorhídrico del estómago",
-     "Los dientes y la musculatura del esófago, del estómago y los intestinos",
-     "La bilis y el jugo pancreático"
+     "La bilis y el jugo pancreático",
+     "Las enzimas de la saliva",
+     "Los dientes y la musculatura del esófago, del estómago y los intestinos"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "La digestión mecánica es llevada a cabo por los dientes y la musculatura del esófago, del estómago y los intestinos.",
     "page": "El proceso digestivo",
     "id": 63
@@ -4446,12 +4446,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cuál es la función de la AMILASA SALIVAL?",
     "opts": [
+     "Convertir los lípidos en ácidos grasos",
      "Convertir el almidón (polisacárido) en moléculas de maltosa (disacárido)",
      "Transformar las proteínas en aminoácidos",
-     "Convertir los lípidos en ácidos grasos",
      "Neutralizar el ácido del estómago"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "La amilasa salival, presente en la saliva, convierte el almidón (polisacárido) en moléculas de maltosa (disacárido).",
     "page": "Enzimas del proceso digestivo",
     "id": 65
@@ -4460,12 +4460,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué enzima del estómago transforma las proteínas en péptidos menores y aminoácidos?",
     "opts": [
+     "La amilasa",
      "La lipasa",
      "La pepsina",
-     "La amilasa",
      "La maltasa"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "En el estómago está presente la pepsina, que transforma las proteínas en péptidos menores y aminoácidos.",
     "page": "Enzimas del proceso digestivo",
     "id": 66
@@ -4475,9 +4475,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué hace la LIPASA en el intestino delgado?",
     "opts": [
      "Degrada el almidón",
-     "Transforma los polipéptidos en aminoácidos",
+     "Produce la vitamina K",
      "Convierte los lípidos en ácidos grasos y glicerol",
-     "Produce la vitamina K"
+     "Transforma los polipéptidos en aminoácidos"
     ],
     "ans": 2,
     "exp": "En el intestino delgado, la lipasa convierte los lípidos en ácidos grasos y glicerol.",
@@ -4488,12 +4488,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué enzima degrada la maltosa en monosacáridos?",
     "opts": [
+     "La amilasa salival",
      "La maltasa",
-     "La pepsina",
      "La tripsina",
-     "La amilasa salival"
+     "La pepsina"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "La maltasa degrada la maltosa (disacárido) en monosacáridos, en el intestino delgado.",
     "page": "Enzimas del proceso digestivo",
     "id": 68
@@ -4504,8 +4504,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Emulsionan las grasas",
      "Transforman los polipéptidos en aminoácidos",
-     "Degradan el almidón en maltosa",
-     "Forman el bolo alimenticio"
+     "Forman el bolo alimenticio",
+     "Degradan el almidón en maltosa"
     ],
     "ans": 1,
     "exp": "La quimotripsina y la tripsina transforman los polipéptidos en aminoácidos.",
@@ -4516,12 +4516,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cómo se llaman los dos orificios del estómago?",
     "opts": [
-     "Duodeno e íleon",
-     "Coanas y trompas de Eustaquio",
+     "Cardias (superior, con el esófago) y píloro (inferior, con el intestino delgado)",
      "Colon y apéndice",
-     "Cardias (superior, con el esófago) y píloro (inferior, con el intestino delgado)"
+     "Duodeno e íleon",
+     "Coanas y trompas de Eustaquio"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "El estómago posee dos orificios: el cardias, que lo comunica con el esófago, y el píloro, que lo comunica con el intestino delgado.",
     "page": "Órganos del sistema digestivo y su función",
     "id": 70
@@ -4530,12 +4530,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cuáles son las tres zonas del intestino delgado?",
     "opts": [
+     "Faringe, esófago y estómago",
      "Colon ascendente, transverso y descendente",
      "Duodeno, yeyuno e íleon",
-     "Cardias, píloro y recto",
-     "Faringe, esófago y estómago"
+     "Cardias, píloro y recto"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "En el intestino delgado, que mide unos 7 m, se identifican tres zonas: duodeno, yeyuno e íleon.",
     "page": "Órganos del sistema digestivo y su función",
     "id": 71
@@ -4544,12 +4544,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Para qué sirven las VELLOSIDADES INTESTINALES?",
     "opts": [
-     "Para aumentar la superficie de absorción de nutrientes del intestino delgado",
      "Para producir el jugo gástrico",
-     "Para almacenar la bilis",
-     "Para formar la materia fecal"
+     "Para formar la materia fecal",
+     "Para aumentar la superficie de absorción de nutrientes del intestino delgado",
+     "Para almacenar la bilis"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Las vellosidades intestinales son pliegues que aumentan drásticamente la superficie de absorción (de unos 4 m² a unos 300 m²) para asimilar nutrientes, electrolitos y agua y pasarlos al torrente sanguíneo.",
     "page": "Órganos del sistema digestivo y su función",
     "id": 72
@@ -4559,11 +4559,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué órgano es el más grande del cuerpo y se comunica con la vesícula biliar?",
     "opts": [
      "El páncreas",
+     "El pulmón",
      "El estómago",
-     "El hígado",
-     "El pulmón"
+     "El hígado"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "El hígado es el órgano más grande del cuerpo, se ubica debajo del lado derecho del diafragma y se comunica con la vesícula biliar y el intestino delgado.",
     "page": "Órganos del sistema digestivo y su función",
     "id": 73
@@ -4572,12 +4572,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cuál es la función de la BILIS?",
     "opts": [
-     "Degradar las proteínas con sus enzimas",
      "Emulsionar las grasas para permitir su digestión y absorción",
+     "Absorber el agua de los alimentos",
      "Producir vitamina K",
-     "Absorber el agua de los alimentos"
+     "Degradar las proteínas con sus enzimas"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "La bilis carece de enzimas: su función es emulsionar las grasas, lo que permite su digestión y absorción. También ayuda a neutralizar el ácido del estómago.",
     "page": "El proceso digestivo paso a paso",
     "id": 74
@@ -4586,10 +4586,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué nombre recibe el alimento en la boca, el estómago y el intestino delgado?",
     "opts": [
-     "Quimo, quilo y bolo",
-     "Bolo alimenticio, quimo y quilo",
      "Quilo, quimo y bolo",
-     "Bolo alimenticio, quilo y quimo"
+     "Bolo alimenticio, quimo y quilo",
+     "Bolo alimenticio, quilo y quimo",
+     "Quimo, quilo y bolo"
     ],
     "ans": 1,
     "exp": "En la boca se forma el bolo alimenticio; en el estómago se convierte en quimo (masa semilíquida); y en el intestino delgado, en quilo.",
@@ -4600,12 +4600,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cuáles son los pasos principales del proceso de digestión?",
     "opts": [
-     "Ingestión, digestión, absorción y excreción",
-     "Masticación, deglución y expulsión",
+     "Ingestión, circulación y respiración",
      "Inspiración, espiración y hematosis",
-     "Ingestión, circulación y respiración"
+     "Masticación, deglución y expulsión",
+     "Ingestión, digestión, absorción y excreción"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Los pasos principales son: 1) ingestión (incorporar), 2) digestión, 3) absorción y 4) excreción.",
     "page": "El recorrido del alimento",
     "id": 76
@@ -4614,12 +4614,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué permiten los movimientos peristálticos?",
     "opts": [
+     "El avance del bolo alimenticio y su mezcla en el estómago",
      "La entrada de aire a los pulmones",
      "El intercambio de gases en los alvéolos",
-     "La producción de saliva",
-     "El avance del bolo alimenticio y su mezcla en el estómago"
+     "La producción de saliva"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "Los movimientos peristálticos permiten el avance del bolo alimenticio, y también su mezcla en el estómago.",
     "page": "El recorrido del alimento",
     "id": 77
@@ -4628,12 +4628,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué hace el INTESTINO GRUESO?",
     "opts": [
+     "Segrega el ácido clorhídrico",
      "Fabrica el jugo pancreático",
-     "Absorbe agua y forma la materia fecal",
      "Finaliza la digestión química de los lípidos",
-     "Segrega el ácido clorhídrico"
+     "Absorbe agua y forma la materia fecal"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "El intestino grueso absorbe agua y forma la materia fecal, constituida por las sustancias que no fueron digeridas.",
     "page": "El proceso digestivo paso a paso",
     "id": 78
@@ -4642,10 +4642,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué hacen las bacterias de la flora intestinal del colon?",
     "opts": [
-     "Degradan el almidón en maltosa",
+     "Emulsionan las grasas",
      "Producen el jugo gástrico",
      "Colaboran en la absorción de minerales y producen la vitamina K",
-     "Emulsionan las grasas"
+     "Degradan el almidón en maltosa"
     ],
     "ans": 2,
     "exp": "En el colon se hallan las bacterias de la flora intestinal, que colaboran en la absorción de minerales y producen la vitamina K.",
@@ -4671,11 +4671,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué es la VENTILACIÓN PULMONAR?",
     "opts": [
      "El intercambio de gases entre la sangre y las células",
-     "El mecanismo que permite el ingreso del aire (inspiración) y su salida (espiración)",
      "La producción de energía en la mitocondria",
-     "La vibración de las cuerdas vocales"
+     "La vibración de las cuerdas vocales",
+     "El mecanismo que permite el ingreso del aire (inspiración) y su salida (espiración)"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "La ventilación pulmonar es el mecanismo que permite el ingreso del aire en el organismo (inspiración) y la salida de él (espiración).",
     "page": "La ventilación pulmonar",
     "id": 81
@@ -4684,12 +4684,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué ocurre durante la INSPIRACIÓN?",
     "opts": [
-     "Los músculos se relajan y la caja torácica se achica",
-     "El aire sale del organismo hacia la atmósfera",
+     "Se cierra la epiglotis y baja el alimento",
      "El diafragma y los intercostales se contraen y aumentan el volumen de la caja torácica, y el aire entra",
-     "Se cierra la epiglotis y baja el alimento"
+     "Los músculos se relajan y la caja torácica se achica",
+     "El aire sale del organismo hacia la atmósfera"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "Durante la inspiración, el diafragma y los músculos intercostales se contraen, aumenta el volumen de la caja torácica y el aire pasa del lugar de mayor presión (atmósfera) al de menor presión (medio interno).",
     "page": "La ventilación pulmonar",
     "id": 82
@@ -4698,12 +4698,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué es la EPIGLOTIS?",
     "opts": [
-     "Una tapa en la laringe que se cierra cuando baja el alimento y se abre para dejar pasar el aire",
-     "Un cartílago de la tráquea",
      "El orificio inferior del estómago",
-     "La membrana que recubre los alvéolos"
+     "Un cartílago de la tráquea",
+     "La membrana que recubre los alvéolos",
+     "Una tapa en la laringe que se cierra cuando baja el alimento y se abre para dejar pasar el aire"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "La epiglotis, en la parte superior de la laringe, funciona a modo de tapa: se cierra cuando baja el alimento (que sigue por el esófago) y se abre para permitir el pasaje del aire.",
     "page": "Sistema respiratorio: los órganos",
     "id": 83
@@ -4712,12 +4712,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Dónde se encuentran las CUERDAS VOCALES?",
     "opts": [
+     "En la laringe",
      "En la faringe",
      "En la tráquea",
-     "En los bronquios",
-     "En la laringe"
+     "En los bronquios"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "Las cuerdas vocales están en la laringe: son dos pliegues membranosos y elásticos de unos 2 cm que vibran y producen sonidos cuando el aire espirado las atraviesa.",
     "page": "Sistema respiratorio: los órganos",
     "id": 84
@@ -4726,12 +4726,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿En qué termina cada bronquíolo?",
     "opts": [
-     "En un alvéolo, rodeado por capilares sanguíneos",
-     "En la tráquea",
      "En la epiglotis",
-     "En el diafragma"
+     "En la tráquea",
+     "En el diafragma",
+     "En un alvéolo, rodeado por capilares sanguíneos"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Cada bronquíolo termina en una diminuta bolsita llamada alvéolo, rodeada por capilares sanguíneos, fundamental para el ingreso de oxígeno a la sangre.",
     "page": "Sistema respiratorio: los órganos",
     "id": 85
@@ -4740,12 +4740,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cuántos alvéolos tiene aproximadamente cada pulmón?",
     "opts": [
-     "Unos 700",
      "Más de 350 millones",
-     "Unos 100",
-     "Exactamente 1 millón"
+     "Unos 700",
+     "Exactamente 1 millón",
+     "Unos 100"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Cada pulmón tiene más de 350 millones de alvéolos; los 700 millones de ambos pulmones cubrirían unos 100 m², media cancha de tenis.",
     "page": "Sistema respiratorio: los órganos",
     "id": 86
@@ -4755,11 +4755,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué es la HEMATOSIS y dónde ocurre?",
     "opts": [
      "La formación de heces en el intestino grueso",
-     "La entrada de aire por las fosas nasales",
      "El intercambio de gases, que ocurre en los alvéolos",
+     "La entrada de aire por las fosas nasales",
      "La digestión de los lípidos en el estómago"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La hematosis es el intercambio de gases (O₂ y CO₂) entre el aire y la sangre, y se produce en los alvéolos.",
     "page": "La hematosis o intercambio gaseoso",
     "id": 87
@@ -4782,12 +4782,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué características presentan las paredes alveolares y los capilares sanguíneos?",
     "opts": [
-     "Son gruesas y rígidas",
      "Son muy delgadas, por eso los gases pueden atravesarlas fácilmente",
+     "Son gruesas y rígidas",
      "Están recubiertas de cartílago",
      "Contienen enzimas digestivas"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Las paredes de los alvéolos y de los capilares son muy delgadas: por eso el oxígeno y el dióxido de carbono pueden atravesarlas fácilmente.",
     "page": "La hematosis o intercambio gaseoso",
     "id": 89
@@ -4796,12 +4796,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "La respiración celular, ¿en qué organela ocurre?",
     "opts": [
-     "En el núcleo",
      "En el ribosoma",
-     "En el aparato de Golgi",
-     "En la mitocondria"
+     "En el núcleo",
+     "En la mitocondria",
+     "En el aparato de Golgi"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "La respiración celular ocurre en la mitocondria: allí la célula usa el oxígeno para obtener energía y se deshace del dióxido de carbono.",
     "page": "La hematosis o intercambio gaseoso",
     "id": 90
@@ -4810,12 +4810,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué dos sistemas intervienen en el intercambio gaseoso?",
     "opts": [
-     "El respiratorio y el circulatorio",
      "El digestivo y el respiratorio",
+     "El respiratorio y el nervioso",
      "El circulatorio y el digestivo",
-     "El respiratorio y el nervioso"
+     "El respiratorio y el circulatorio"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "En el intercambio gaseoso intervienen el sistema respiratorio y el sistema circulatorio.",
     "page": "La hematosis o intercambio gaseoso",
     "id": 91
@@ -6525,12 +6525,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Cuáles son los 6 continentes del planisferio?",
     "opts": [
-     "América, África, Europa, Asia, Oceanía y Antártida",
-     "América, África, Europa, Asia y Oceanía (sin Antártida)",
+     "América del Norte, del Sur, Europa, África, Asia, Antártida",
      "Sólo 5 continentes: América, África, Asia, Europa y Oceanía",
-     "América del Norte, del Sur, Europa, África, Asia, Antártida"
+     "América, África, Europa, Asia, Oceanía y Antártida",
+     "América, África, Europa, Asia y Oceanía (sin Antártida)"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Los 6 continentes son: Europa, Asia, América, África, Oceanía y Antártida. Europa + Asia forman 'Eurasia'.",
     "page": "Actividad introductoria: el mapa planisferio político",
     "id": 0
@@ -6539,12 +6539,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿A qué se llama 'Eurasia'?",
     "opts": [
-     "A la unión de Europa y África",
-     "A la unión de Europa y Asia",
+     "A todos los continentes del hemisferio norte",
      "A una región de Asia",
-     "A todos los continentes del hemisferio norte"
+     "A la unión de Europa y África",
+     "A la unión de Europa y Asia"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Eurasia es la denominación para el conjunto formado por Europa y Asia, que físicamente forman una sola masa continental.",
     "page": "Actividad introductoria: el mapa planisferio político",
     "id": 1
@@ -6567,12 +6567,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Qué significan las siglas HN, HS, HO y HE?",
     "opts": [
-     "Hemisferio Norte, Sur, Occidental, Oriental",
      "Horas Naturales, Sociales, Ofuscadas, Especiales",
+     "Son nombres de continentes",
      "Hábitat Natural, Selvático, Oriental, Ecuatorial",
-     "Son nombres de continentes"
+     "Hemisferio Norte, Sur, Occidental, Oriental"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "HN = Hemisferio Norte (Boreal); HS = Hemisferio Sur (Austral); HO = Hemisferio Occidental (Oeste); HE = Hemisferio Oriental (Este).",
     "page": "Actividad introductoria: el mapa planisferio político",
     "id": 3
@@ -6581,12 +6581,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Qué son los cuadrantes en cartografía?",
     "opts": [
-     "Líneas imaginarias",
      "Las 4 divisiones que resultan de cruzar los hemisferios (NO, NE, SO, SE)",
-     "Los 4 puntos cardinales",
-     "Las zonas climáticas"
+     "Las zonas climáticas",
+     "Líneas imaginarias",
+     "Los 4 puntos cardinales"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Los cuadrantes son las 4 divisiones del planisferio que resultan de cruzar los hemisferios: NO (Noroeste), NE (Noreste), SO (Suroeste), SE (Sureste).",
     "page": "Actividad introductoria: el mapa planisferio político",
     "id": 4
@@ -6596,11 +6596,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿En qué grado se encuentra el Trópico de Cáncer?",
     "opts": [
      "0°",
+     "66° Norte",
      "23° Norte",
-     "23° Sur",
-     "66° Norte"
+     "23° Sur"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "El Trópico de Cáncer está a 23° Norte. El Trópico de Capricornio está a 23° Sur. El Ecuador a 0°.",
     "page": "Actividad introductoria: el mapa planisferio político",
     "id": 5
@@ -6610,11 +6610,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué línea imaginaria está en 0° y separa los hemisferios Norte y Sur?",
     "opts": [
      "Trópico de Cáncer",
+     "Círculo Polar Ártico",
      "Meridiano de Greenwich",
-     "Ecuador",
-     "Círculo Polar Ártico"
+     "Ecuador"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "El Ecuador está a 0° y separa el Hemisferio Norte del Hemisferio Sur.",
     "page": "Actividad introductoria: el mapa planisferio político",
     "id": 6
@@ -6623,12 +6623,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 1,
     "q": "¿Cuál es el meridiano de origen (0°)?",
     "opts": [
-     "El Ecuador",
      "El Meridiano de Greenwich",
-     "El Trópico de Cáncer",
-     "La Línea Internacional de Cambio de Fecha"
+     "La Línea Internacional de Cambio de Fecha",
+     "El Ecuador",
+     "El Trópico de Cáncer"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "El Meridiano de Greenwich (o meridiano de origen) está a 0° y separa los hemisferios Occidental y Oriental.",
     "page": "Actividad introductoria: el mapa planisferio político",
     "id": 7
@@ -6637,12 +6637,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿De qué dos palabras viene 'Geografía'?",
     "opts": [
+     "Es una palabra inventada",
      "Geo (Tierra) + grafía (estudio/descripción)",
      "Geo (Sol) + grafía (escritura)",
-     "Geo (mapa) + grafía (dibujo)",
-     "Es una palabra inventada"
+     "Geo (mapa) + grafía (dibujo)"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Geografía viene del griego: Geo (Tierra) + grafía (estudio o descripción) = estudio o descripción del planeta.",
     "page": "Definición y objeto de estudio",
     "id": 8
@@ -6653,8 +6653,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "El estudio o descripción del planeta",
      "La ciencia social que estudia el espacio geográfico organizado por el hombre",
-     "Una ciencia natural que estudia las rocas",
-     "El estudio de los mapas"
+     "El estudio de los mapas",
+     "Una ciencia natural que estudia las rocas"
     ],
     "ans": 1,
     "exp": "La definición actual: 'Es la ciencia social que estudia el espacio geográfico organizado por el hombre con el fin de satisfacer las necesidades que surgen de la vida en sociedad.'",
@@ -6666,11 +6666,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál es la diferencia entre la definición antigua y la actual de Geografía?",
     "opts": [
      "No hay diferencia",
-     "La antigua es descriptiva (sólo describe); la actual es social (incluye al hombre y la sociedad)",
+     "Sólo cambió el idioma",
      "La actual es más corta",
-     "Sólo cambió el idioma"
+     "La antigua es descriptiva (sólo describe); la actual es social (incluye al hombre y la sociedad)"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "La definición antigua era descriptiva ('estudio del planeta'). La actual incorpora al hombre y la sociedad como organizadores del espacio.",
     "page": "Definición y objeto de estudio",
     "id": 10
@@ -6679,12 +6679,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Cuáles son los 3 componentes del espacio geográfico?",
     "opts": [
+     "Territorio, ambiente y sociedad",
      "Tierra, agua, aire",
      "Norte, Sur, Centro",
-     "Territorio, ambiente y sociedad",
      "Pasado, presente, futuro"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "El espacio geográfico está compuesto por: Territorio, Ambiente y Sociedad.",
     "page": "Definición y objeto de estudio",
     "id": 11
@@ -6721,12 +6721,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué es la SOCIEDAD en geografía?",
     "opts": [
+     "Un país",
      "Cualquier grupo humano",
      "Conjunto de personas con intereses y vida en común que permiten identificarla",
-     "Un país",
      "Una empresa"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Sociedad: conjunto de personas con intereses y vida en común. Ej: barrios en NY, aldeas en el Amazonas.",
     "page": "Definición y objeto de estudio",
     "id": 14
@@ -6735,12 +6735,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Cuáles son las 4 esferas o capas del planeta?",
     "opts": [
-     "Norte, Sur, Este, Oeste",
      "Atmósfera, Hidrósfera, Litósfera y Biósfera",
      "Capa de ozono, troposfera, mesosfera, ionosfera",
+     "Norte, Sur, Este, Oeste",
      "Continentes, islas, mares, océanos"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Las 4 esferas son: Atmósfera (aire), Hidrósfera (agua), Litósfera (suelo) y Biósfera (seres vivos).",
     "page": "La organización del espacio geográfico",
     "id": 15
@@ -6749,12 +6749,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué es la Hidrósfera?",
     "opts": [
+     "La capa de seres vivos",
      "La capa de aire",
-     "La capa de agua",
      "La capa de suelo",
-     "La capa de seres vivos"
+     "La capa de agua"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "La Hidrósfera es la capa de agua del planeta.",
     "page": "La organización del espacio geográfico",
     "id": 16
@@ -6763,12 +6763,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué es la Litósfera?",
     "opts": [
-     "La capa de aire",
-     "La capa de agua",
+     "La capa de seres vivos",
      "La capa de suelo",
-     "La capa de seres vivos"
+     "La capa de agua",
+     "La capa de aire"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La Litósfera es la capa de suelo (rocosa) del planeta.",
     "page": "La organización del espacio geográfico",
     "id": 17
@@ -6777,12 +6777,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Cuáles son los 3 tipos de ambiente según la intervención humana?",
     "opts": [
-     "Frío, templado y cálido",
-     "Natural, humanizado y cultural",
+     "Físico, biológico y químico",
      "Urbano, rural y mixto",
-     "Físico, biológico y químico"
+     "Frío, templado y cálido",
+     "Natural, humanizado y cultural"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Los 3 tipos son: ambiente natural (paisaje de montañas), humanizado (paisaje de campos) y cultural (paisaje de ciudades).",
     "page": "Tipos de ambiente",
     "id": 18
@@ -6791,12 +6791,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 2,
     "q": "¿Qué tipo de ambiente corresponde a un paisaje de ciudades?",
     "opts": [
-     "Natural",
      "Humanizado",
      "Cultural",
+     "Natural",
      "Salvaje"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "El ambiente cultural representa las máximas transformaciones del hombre, con organización política y modo de vida particular. Ej: paisaje de ciudades.",
     "page": "Tipos de ambiente",
     "id": 19
@@ -6819,8 +6819,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Qué océano NO baña las costas de América?",
     "opts": [
-     "Pacífico",
      "Atlántico",
+     "Pacífico",
      "Índico",
      "Glaciar Ártico"
     ],
@@ -6834,9 +6834,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿En cuántos hemisferios se ubica América?",
     "opts": [
      "1",
-     "2",
+     "4",
      "3",
-     "4"
+     "2"
     ],
     "ans": 2,
     "exp": "América se ubica en 3 hemisferios: Norte, Sur y Oeste (Occidental).",
@@ -6847,10 +6847,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Qué océano separa a América de África y Europa?",
     "opts": [
-     "Pacífico",
-     "Atlántico",
      "Índico",
-     "Glaciar Ártico"
+     "Atlántico",
+     "Glaciar Ártico",
+     "Pacífico"
     ],
     "ans": 1,
     "exp": "Al Este de América se sitúa el océano Atlántico, que la separa de África y Europa.",
@@ -6861,12 +6861,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuántos paralelos (líneas imaginarias) cruzan el territorio americano?",
     "opts": [
-     "2",
+     "5",
      "3",
-     "4",
-     "5"
+     "2",
+     "4"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Por América pasan 4 paralelos: Círculo Polar Ártico, Trópico de Cáncer, Ecuador y Trópico de Capricornio. NO pasa el Círculo Polar Antártico (queda al sur de Tierra del Fuego).",
     "page": "Ubicación general",
     "id": 24
@@ -6876,11 +6876,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál es el punto extremo NORTE de América?",
     "opts": [
      "Cabo Branco (Brasil)",
-     "Cabo Morris (Groenlandia, Dinamarca)",
      "Islas Aleutianas (Alaska)",
+     "Cabo Morris (Groenlandia, Dinamarca)",
      "Isla Diego Ramírez (Chile)"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "El punto extremo Norte de América es el Cabo Morris, en Groenlandia (Dinamarca).",
     "page": "Puntos extremos de América",
     "id": 25
@@ -6889,12 +6889,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuál es el punto extremo SUR de América?",
     "opts": [
-     "Cabo Morris (Groenlandia)",
-     "Cabo Branco (Brasil)",
      "Isla Diego Ramírez (Chile)",
+     "Cabo Branco (Brasil)",
+     "Cabo Morris (Groenlandia)",
      "Tierra del Fuego (Argentina)"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "El punto extremo Sur de América es la Isla Diego Ramírez, en Chile.",
     "page": "Puntos extremos de América",
     "id": 26
@@ -6903,12 +6903,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "¿Cuál es el punto extremo OESTE de América?",
     "opts": [
-     "Cabo Branco (Brasil)",
      "Islas Aleutianas (Alaska, EEUU)",
      "Cabo Morris",
+     "Cabo Branco (Brasil)",
      "Hawái"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "El punto extremo Oeste de América son las Islas Aleutianas, en Alaska (Estados Unidos).",
     "page": "Puntos extremos de América",
     "id": 27
@@ -6918,11 +6918,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "Si un territorio es más extenso en sentido N-S, ¿qué consecuencia tiene?",
     "opts": [
      "Tiene diferentes horas en su territorio",
-     "Tiene mayor variedad de zonas climáticas, biomas, paisajes y actividades económicas",
      "No tiene consecuencias",
+     "Tiene mayor variedad de zonas climáticas, biomas, paisajes y actividades económicas",
      "Es más pequeño"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Si un territorio es más extenso en sentido N-S, tendrá mayor variedad de zonas climáticas, climas, biomas, paisajes, actividades económicas y recursos naturales.",
     "page": "Puntos extremos de América",
     "id": 28
@@ -6931,12 +6931,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 3,
     "q": "Si un país es más extenso en sentido O-E, ¿qué presenta dentro de su territorio?",
     "opts": [
-     "Más zonas climáticas",
-     "Diferentes horas (husos horarios distintos)",
      "Más biomas",
-     "Menos recursos naturales"
+     "Menos recursos naturales",
+     "Diferentes horas (husos horarios distintos)",
+     "Más zonas climáticas"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Un territorio extenso O-E presenta diferentes horas dentro de su territorio, porque depende de la parte que pasa frente al Sol durante el día (24 hs = 1 día).",
     "page": "Puntos extremos de América",
     "id": 29
@@ -6945,12 +6945,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuál es el continente MÁS GRANDE del planeta?",
     "opts": [
-     "América",
      "África",
-     "Asia",
-     "Antártida"
+     "Antártida",
+     "América",
+     "Asia"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Asia es el mayor continente, con el 29,5 % de la superficie total de los continentes.",
     "page": "Superficie de los continentes (km²)",
     "id": 30
@@ -6959,9 +6959,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿En qué puesto de tamaño está América entre los continentes?",
     "opts": [
-     "1°",
-     "2°",
      "3°",
+     "2°",
+     "1°",
      "4°"
     ],
     "ans": 1,
@@ -6974,11 +6974,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál es el continente MÁS PEQUEÑO?",
     "opts": [
      "Antártida",
-     "Europa",
      "Oceanía",
-     "Asia"
+     "Asia",
+     "Europa"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "Oceanía es el continente más pequeño, con el 6 % de la superficie.",
     "page": "Superficie de los continentes (km²)",
     "id": 32
@@ -6987,12 +6987,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuál es el océano MÁS GRANDE del planeta?",
     "opts": [
-     "Atlántico",
      "Pacífico",
      "Índico",
+     "Atlántico",
      "Antártico"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "El Pacífico es el océano más grande, con el 43 % de la superficie total de los océanos.",
     "page": "Superficie de los océanos",
     "id": 33
@@ -7001,9 +7001,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "¿Cuál es el segundo océano más grande?",
     "opts": [
-     "Índico",
-     "Atlántico",
      "Pacífico",
+     "Atlántico",
+     "Índico",
      "Ártico"
     ],
     "ans": 1,
@@ -7016,11 +7016,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál es el océano MÁS PEQUEÑO?",
     "opts": [
      "Antártico",
-     "Ártico",
+     "Pacífico",
      "Índico",
-     "Pacífico"
+     "Ártico"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "El Ártico (Glaciar Ártico) es el más pequeño, con sólo el 4 %.",
     "page": "Superficie de los océanos",
     "id": 35
@@ -7029,12 +7029,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 4,
     "q": "En el planeta Tierra, ¿qué predomina en su superficie?",
     "opts": [
-     "La tierra firme",
      "El agua de los océanos y mares",
-     "Hielo polar",
-     "Bosques"
+     "La tierra firme",
+     "Bosques",
+     "Hielo polar"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "A pesar de su nombre 'Tierra', en el planeta predomina el agua de los océanos y mares.",
     "page": "Superficie de los continentes (km²)",
     "id": 36
@@ -7043,10 +7043,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué significa 'orientarse'?",
     "opts": [
-     "Mirar hacia el norte",
-     "Ubicarse en el espacio buscando el oriente o lugar por donde sale el Sol",
      "Usar una brújula",
-     "Leer un mapa"
+     "Ubicarse en el espacio buscando el oriente o lugar por donde sale el Sol",
+     "Leer un mapa",
+     "Mirar hacia el norte"
     ],
     "ans": 1,
     "exp": "Orientarse es la acción de ubicarse en el espacio buscando el oriente, o lugar por donde sale el Sol.",
@@ -7058,11 +7058,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué se necesita tener en cuenta para orientarse?",
     "opts": [
      "Sólo la brújula",
-     "Los puntos cardinales",
      "La hora del día",
+     "Los puntos cardinales",
      "La ubicación de las estrellas"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Para orientarse es necesario tener en cuenta los puntos cardinales (N, S, E, O).",
     "page": "Orientación",
     "id": 38
@@ -7071,10 +7071,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Por qué se busca el 'oriente' al orientarse?",
     "opts": [
-     "Porque es la dirección más cercana",
+     "Por tradición",
      "Porque es donde sale el Sol",
      "Porque es el norte",
-     "Por tradición"
+     "Porque es la dirección más cercana"
     ],
     "ans": 1,
     "exp": "Al orientarse se busca el 'oriente' porque es el lugar por donde sale el Sol; de allí viene la palabra 'orientación'.",
@@ -7085,12 +7085,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué son los PARALELOS?",
     "opts": [
+     "Líneas que miden la longitud",
      "Semicírculos que corren de N a S",
      "Círculos concéntricos que corren de E a O",
-     "Líneas que miden la longitud",
      "Círculos todos del mismo tamaño"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Los paralelos son círculos concéntricos que corren de E a O. El mayor es el Ecuador y los demás reducen su extensión hacia los polos.",
     "page": "Latitud y longitud",
     "id": 40
@@ -7099,12 +7099,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Cuál es el paralelo MAYOR?",
     "opts": [
+     "El Ecuador",
      "El Trópico de Cáncer",
      "El Meridiano de Greenwich",
-     "El Ecuador",
      "El Círculo Polar Ártico"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "El mayor de los paralelos es el Ecuador; a partir de él los demás forman anillos cada vez más chicos hacia los polos.",
     "page": "Latitud y longitud",
     "id": 41
@@ -7115,8 +7115,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "En hemisferio Norte (HN) y hemisferio Sur (HS)",
      "En hemisferio Este y Oeste",
-     "En 4 cuadrantes",
-     "En zonas climáticas"
+     "En zonas climáticas",
+     "En 4 cuadrantes"
     ],
     "ans": 0,
     "exp": "El Ecuador divide a la Tierra en 2 partes iguales: el hemisferio Norte (HN) y el hemisferio Sur (HS).",
@@ -7127,10 +7127,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué son los MERIDIANOS?",
     "opts": [
-     "Círculos concéntricos de distinto tamaño",
-     "Semicírculos no concéntricos que corren de N a S, todos iguales",
      "Líneas que corren de E a O",
-     "Anillos paralelos al Ecuador"
+     "Semicírculos no concéntricos que corren de N a S, todos iguales",
+     "Anillos paralelos al Ecuador",
+     "Círculos concéntricos de distinto tamaño"
     ],
     "ans": 1,
     "exp": "Los meridianos son semicírculos no concéntricos que corren de N a S y son todos iguales.",
@@ -7142,11 +7142,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué meridiano se toma como punto de referencia?",
     "opts": [
      "El Antemeridiano",
-     "El meridiano de Buenos Aires",
      "El Ecuador",
-     "El Meridiano de Greenwich"
+     "El Meridiano de Greenwich",
+     "El meridiano de Buenos Aires"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "Se considera al Meridiano de Greenwich como punto de referencia: divide a la Tierra en hemisferio Oeste (HO) y hemisferio Este (HE).",
     "page": "Latitud y longitud",
     "id": 44
@@ -7155,12 +7155,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué es la LATITUD?",
     "opts": [
-     "La distancia entre un punto y el paralelo del Ecuador (0°); puede ser N o S",
+     "La distancia entre dos meridianos",
      "La distancia entre un punto y Greenwich",
-     "La altura sobre el nivel del mar",
-     "La distancia entre dos meridianos"
+     "La distancia entre un punto y el paralelo del Ecuador (0°); puede ser N o S",
+     "La altura sobre el nivel del mar"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "La latitud es la distancia entre un punto cualquiera y el paralelo del Ecuador (latitud 0°). Puede ser N o S y llega a 90° en los polos.",
     "page": "Latitud y longitud",
     "id": 45
@@ -7169,12 +7169,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué es la LONGITUD?",
     "opts": [
+     "La profundidad de los océanos",
      "La distancia entre un punto y el Ecuador",
      "La distancia entre un punto y el Meridiano de Greenwich (0°); puede ser E u O",
-     "La profundidad de los océanos",
      "La distancia entre dos paralelos"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "La longitud es la distancia entre un punto cualquiera y el Meridiano de Greenwich (longitud 0°). Puede ser E u O, hasta 180° a cada lado.",
     "page": "Latitud y longitud",
     "id": 46
@@ -7183,12 +7183,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Cuál es el valor MÁXIMO de latitud y dónde se alcanza?",
     "opts": [
-     "180° en Greenwich",
      "360° en el Antemeridiano",
-     "90° en los polos",
-     "45° en los trópicos"
+     "180° en Greenwich",
+     "45° en los trópicos",
+     "90° en los polos"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "La latitud aumenta desde el Ecuador hacia el N o el S hasta llegar al máximo de 90° en ambos polos.",
     "page": "Latitud y longitud",
     "id": 47
@@ -7197,12 +7197,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Dónde se ubica BUENOS AIRES según el ejemplo del cuaderno?",
     "opts": [
-     "Latitud N 35°, longitud E 59°",
      "Latitud S 35° (HS), longitud O 59° (HO)",
-     "Latitud S 59°, longitud O 35°",
-     "Latitud 0°, longitud 0°"
+     "Latitud 0°, longitud 0°",
+     "Latitud N 35°, longitud E 59°",
+     "Latitud S 59°, longitud O 35°"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Buenos Aires se ubica a latitud S 35° (hemisferio Sur) y longitud O 59° (hemisferio Oeste).",
     "page": "Latitud y longitud",
     "id": 48
@@ -7211,10 +7211,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué LATITUD presenta América?",
     "opts": [
-     "Solo latitud N",
+     "No tiene latitud",
      "Solo latitud S",
      "Latitud N y S, porque se extiende mayormente en sentido N-S",
-     "No tiene latitud"
+     "Solo latitud N"
     ],
     "ans": 2,
     "exp": "América se extiende mayormente en sentido N-S, por lo tanto presenta latitud N y S.",
@@ -7225,12 +7225,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "¿Qué LONGITUD tiene cualquier lugar de América?",
     "opts": [
-     "Longitud O, por ubicarse en el hemisferio Oeste",
+     "Depende del país",
      "Longitud E",
-     "Longitud N",
-     "Depende del país"
+     "Longitud O, por ubicarse en el hemisferio Oeste",
+     "Longitud N"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Por ubicarse todo el continente en el hemisferio O, cualquier lugar de América tiene longitud O.",
     "page": "América en las coordenadas",
     "id": 50
@@ -7239,12 +7239,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 5,
     "q": "Según el ejercicio corregido del cuaderno, ¿qué latitud tiene BRASIL?",
     "opts": [
-     "Solo N",
-     "Solo S",
+     "O",
      "N-S (lo cruza el Ecuador)",
-     "O"
+     "Solo S",
+     "Solo N"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "En el ejercicio corregido, Brasil figura con latitud N-S: el Ecuador lo atraviesa, así que tiene tierras en ambos hemisferios.",
     "page": "América en las coordenadas",
     "id": 51
@@ -7267,12 +7267,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué abarca AMÉRICA DEL NORTE?",
     "opts": [
-     "Desde la zona Ártica hasta el S de México",
-     "Desde Alaska hasta Panamá",
      "Desde Canadá hasta Colombia",
-     "Solo Canadá y Estados Unidos"
+     "Solo Canadá y Estados Unidos",
+     "Desde Alaska hasta Panamá",
+     "Desde la zona Ártica hasta el S de México"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "América del Norte va desde la zona Ártica hasta el sur de México, e incluye a Groenlandia y Alaska.",
     "page": "Subcontinentes: la división física",
     "id": 53
@@ -7281,12 +7281,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué es GROENLANDIA?",
     "opts": [
-     "Un país independiente",
-     "Un estado de Estados Unidos",
      "Un territorio dependiente de Dinamarca",
-     "Una isla de las Antillas"
+     "Un estado de Estados Unidos",
+     "Una isla de las Antillas",
+     "Un país independiente"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "Groenlandia es un territorio dependiente del país europeo Dinamarca.",
     "page": "Subcontinentes: la división física",
     "id": 54
@@ -7295,12 +7295,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué es ALASKA?",
     "opts": [
+     "Una dependencia de Rusia",
      "Un territorio de Canadá",
-     "Un estado de Estados Unidos",
      "Un país independiente",
-     "Una dependencia de Rusia"
+     "Un estado de Estados Unidos"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Alaska es un estado de Estados Unidos, aunque esté separado del resto del país.",
     "page": "Subcontinentes: la división física",
     "id": 55
@@ -7310,9 +7310,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué partes forman AMÉRICA CENTRAL?",
     "opts": [
      "La parte Continental o Ístmica y la Insular (islas del mar Caribe)",
+     "América Latina y Anglosajona",
      "Solo las Antillas",
-     "Solo el istmo de Panamá",
-     "América Latina y Anglosajona"
+     "Solo el istmo de Panamá"
     ],
     "ans": 0,
     "exp": "América Central está formada por la parte Continental o Ístmica (puente terrestre entre América del N y del S) y la Insular (islas del mar Caribe).",
@@ -7323,12 +7323,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "Según el cuaderno, ¿qué países forman las ANTILLAS MAYORES?",
     "opts": [
+     "Trinidad, Barbados y Granada",
      "Belice, Costa Rica y Panamá",
-     "Cuba, Jamaica, Bahamas, Haití y República Dominicana",
      "Guyana, Surinam y Guayana Francesa",
-     "Trinidad, Barbados y Granada"
+     "Cuba, Jamaica, Bahamas, Haití y República Dominicana"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Los principales países de las Antillas Mayores son Cuba, Jamaica, Bahamas (archipiélago), Haití y República Dominicana.",
     "page": "Subcontinentes: la división física",
     "id": 57
@@ -7337,12 +7337,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué dos países comparten la isla LA ESPAÑOLA?",
     "opts": [
-     "Cuba y Jamaica",
      "Haití y República Dominicana",
+     "Cuba y Jamaica",
      "República Dominicana y Puerto Rico",
      "Haití y Bahamas"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Haití y República Dominicana comparten la isla La Española.",
     "page": "Subcontinentes: la división física",
     "id": 58
@@ -7352,11 +7352,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué territorio de AMÉRICA DEL SUR no es independiente?",
     "opts": [
      "Guyana",
+     "Las Islas Malvinas",
      "Surinam",
-     "La Guayana Francesa, que pertenece a Francia",
-     "Las Islas Malvinas"
+     "La Guayana Francesa, que pertenece a Francia"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "En América del Sur se encuentra la Guayana Francesa, que no es independiente ya que pertenece a Francia.",
     "page": "Subcontinentes: la división física",
     "id": 59
@@ -7365,12 +7365,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Qué países forman AMÉRICA ANGLOSAJONA?",
     "opts": [
-     "Canadá y Estados Unidos",
-     "Estados Unidos y México",
+     "Todos los de habla inglesa del Caribe",
      "Canadá, Estados Unidos y México",
-     "Todos los de habla inglesa del Caribe"
+     "Estados Unidos y México",
+     "Canadá y Estados Unidos"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "América Anglosajona (o Desarrollada) está formada por Canadá y Estados Unidos.",
     "page": "América Latina y América Anglosajona",
     "id": 60
@@ -7380,11 +7380,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Desde dónde se extiende AMÉRICA LATINA?",
     "opts": [
      "Desde Colombia hacia el S",
-     "Desde México (límite con EE.UU., donde está el río Grande o Bravo del Norte) hacia el S",
      "Desde Panamá hacia el S",
-     "Desde la zona Ártica hacia el S"
+     "Desde la zona Ártica hacia el S",
+     "Desde México (límite con EE.UU., donde está el río Grande o Bravo del Norte) hacia el S"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "América Latina se extiende desde México hacia el S. El límite con Estados Unidos está marcado por el río Grande o Bravo del Norte.",
     "page": "América Latina y América Anglosajona",
     "id": 61
@@ -7393,12 +7393,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿De qué países fueron colonias los territorios de AMÉRICA LATINA?",
     "opts": [
-     "De Inglaterra y Francia",
-     "De España y Portugal",
      "De Holanda y Dinamarca",
-     "De Italia y Grecia"
+     "De Italia y Grecia",
+     "De Inglaterra y Francia",
+     "De España y Portugal"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "América Latina está formada por ex colonias de España y Portugal.",
     "page": "América Latina y América Anglosajona",
     "id": 62
@@ -7407,12 +7407,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿De qué país fueron colonias los territorios de AMÉRICA ANGLOSAJONA?",
     "opts": [
-     "De España",
-     "De Portugal",
+     "De Inglaterra",
      "De Francia",
-     "De Inglaterra"
+     "De España",
+     "De Portugal"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "América Anglosajona abarca antiguas colonias de Inglaterra, colonizadas y organizadas desde el N de Europa.",
     "page": "América Latina y América Anglosajona",
     "id": 63
@@ -7421,12 +7421,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuál es la religión mayoritaria en AMÉRICA LATINA según el cuadro?",
     "opts": [
-     "Protestante",
      "Católica",
-     "Anglicana",
-     "Ortodoxa"
+     "Ortodoxa",
+     "Protestante",
+     "Anglicana"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Según el cuadro comparativo, en América Latina la religión es mayormente católica.",
     "page": "América Latina y América Anglosajona",
     "id": 64
@@ -7435,8 +7435,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuáles son criterios de la subdivisión SOCIOECONÓMICA?",
     "opts": [
-     "Solo el idioma",
      "El relieve y el clima",
+     "Solo el idioma",
      "Idioma, historia, cultura, costumbres, población, religión, ubicación, situación económica y proceso colonizador",
      "La cantidad de ríos y lagos"
     ],
@@ -7449,12 +7449,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "Según el cuadro, ¿qué caracteriza a la población de AMÉRICA ANGLOSAJONA?",
     "opts": [
-     "Gran parte tiene una adecuada calidad de vida",
-     "Grandes desigualdades y desempleo",
      "Desigual distribución de la población",
-     "Países en vías de desarrollo"
+     "Gran parte tiene una adecuada calidad de vida",
+     "Países en vías de desarrollo",
+     "Grandes desigualdades y desempleo"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Según el cuadro comparativo, gran parte de la población de América Anglosajona tiene una adecuada calidad de vida.",
     "page": "América Latina y América Anglosajona",
     "id": 66
@@ -7463,12 +7463,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuál es la capital de CANADÁ?",
     "opts": [
-     "Toronto",
-     "Montreal",
+     "Vancouver",
      "Ottawa",
-     "Vancouver"
+     "Montreal",
+     "Toronto"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La capital de Canadá es Ottawa.",
     "page": "Países y capitales de América",
     "id": 67
@@ -7477,12 +7477,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuál es la capital de ESTADOS UNIDOS?",
     "opts": [
-     "Nueva York",
-     "Washington D.C.",
      "Los Ángeles",
-     "Chicago"
+     "Nueva York",
+     "Chicago",
+     "Washington D.C."
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "La capital de Estados Unidos es Washington D.C.",
     "page": "Países y capitales de América",
     "id": 68
@@ -7491,12 +7491,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuál es la capital de MÉXICO?",
     "opts": [
-     "Guadalajara",
      "Monterrey",
-     "Cancún",
-     "Ciudad de México"
+     "Guadalajara",
+     "Ciudad de México",
+     "Cancún"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "La capital de México es Ciudad de México.",
     "page": "Países y capitales de América",
     "id": 69
@@ -7506,11 +7506,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué país tiene DOS capitales según el cuadro?",
     "opts": [
      "Brasil",
-     "Bolivia (La Paz y Sucre)",
      "Perú",
-     "Chile"
+     "Chile",
+     "Bolivia (La Paz y Sucre)"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Bolivia figura con dos capitales: La Paz y Sucre.",
     "page": "Países y capitales de América",
     "id": 70
@@ -7519,12 +7519,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuál es la capital de BRASIL?",
     "opts": [
+     "Brasilia",
      "Río de Janeiro",
      "San Pablo",
-     "Brasilia",
      "Salvador de Bahía"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "La capital de Brasil es Brasilia.",
     "page": "Países y capitales de América",
     "id": 71
@@ -7533,12 +7533,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuál es la capital de PERÚ?",
     "opts": [
-     "Lima",
-     "Cusco",
      "Quito",
+     "Cusco",
+     "Lima",
      "Bogotá"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "La capital de Perú es Lima.",
     "page": "Países y capitales de América",
     "id": 72
@@ -7547,12 +7547,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 6,
     "q": "¿Cuántos países en total tiene el cuadro de América?",
     "opts": [
+     "30",
      "21",
      "25",
-     "27",
-     "30"
+     "27"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "El cuadro del cuaderno enumera 27 países: 3 de América del N, 7 de América Central continental, 5 de las Antillas Mayores y 12 de América del S.",
     "page": "Países y capitales de América",
     "id": 73
@@ -7561,12 +7561,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Con qué se representan los elementos en planos y mapas?",
     "opts": [
-     "Solo con colores",
-     "Con trazos, dibujos y colores",
+     "Con letras y números",
      "Solo con fotografías",
-     "Con letras y números"
+     "Con trazos, dibujos y colores",
+     "Solo con colores"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Tanto en los planos como en los mapas, los diferentes elementos se representan con trazos, dibujos y colores.",
     "page": "El mapa físico y sus elementos",
     "id": 74
@@ -7575,12 +7575,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Dónde se indica el significado de los símbolos de un mapa?",
     "opts": [
-     "En el cuadro de referencias",
      "En el título",
+     "En el cuadro de referencias",
      "En la escala numérica",
      "En el índice"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Los símbolos se representan en un cuadro de referencias, donde se indica el significado de cada uno.",
     "page": "El mapa físico y sus elementos",
     "id": 75
@@ -7589,12 +7589,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué información brinda el MAPA FÍSICO de América?",
     "opts": [
-     "Los límites entre países y sus capitales",
      "La altura de los relieves, las aguas continentales y los signos cartográficos",
+     "Las rutas y ciudades solamente",
      "La cantidad de habitantes",
-     "Las rutas y ciudades solamente"
+     "Los límites entre países y sus capitales"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "El mapa físico brinda información sobre la altura de los relieves (escala cromática), las aguas continentales (ríos y lagos) y los signos cartográficos.",
     "page": "El mapa físico y sus elementos",
     "id": 76
@@ -7603,12 +7603,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cuáles son las principales FORMAS DE RELIEVE?",
     "opts": [
+     "Bosque, selva y desierto",
      "Llanura, meseta, sierra y montaña",
      "Lago, laguna, arroyo y río",
-     "Bosque, selva y desierto",
      "Valle, playa y acantilado"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Las principales formas de relieve de los paisajes naturales son: llanura, meseta, sierra y montaña.",
     "page": "Componentes de los paisajes naturales",
     "id": 77
@@ -7618,11 +7618,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuáles son los TIPOS DE CLIMAS del cuaderno?",
     "opts": [
      "Húmedo y seco",
+     "Continental y marítimo",
      "Cálido, frío, templado, árido o desértico, y de altura o montaña",
-     "Tropical y polar",
-     "Continental y marítimo"
+     "Tropical y polar"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Los tipos de climas son: cálido, frío, templado, árido o desértico, y de altura o montaña.",
     "page": "Componentes de los paisajes naturales",
     "id": 78
@@ -7632,11 +7632,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuáles son los principales BIOMAS?",
     "opts": [
      "Ciudad, campo y montaña",
+     "Llanura, meseta y cordillera",
      "Norte, centro y sur",
-     "Bosque, desierto, selva, tundra y pradera o pastizal",
-     "Llanura, meseta y cordillera"
+     "Bosque, desierto, selva, tundra y pradera o pastizal"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Los principales biomas son: bosque, desierto, selva, tundra y pradera o pastizal.",
     "page": "Componentes de los paisajes naturales",
     "id": 79
@@ -7645,12 +7645,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué es la ESCALA CROMÁTICA?",
     "opts": [
+     "Una lista de colores de banderas",
      "Una regla para medir distancias en el mapa",
      "Un gráfico que muestra las alturas de la superficie terrestre y las profundidades de mares y océanos",
-     "Una lista de colores de banderas",
      "El índice del mapa"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "La escala cromática es un gráfico que muestra con colores las alturas de la superficie terrestre y las profundidades en los mares y océanos.",
     "page": "Escala cromática",
     "id": 80
@@ -7660,9 +7660,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál es el valor de referencia de la escala cromática?",
     "opts": [
      "El 0 m sobre el nivel del mar (MSNM)",
-     "La cima del Aconcagua",
+     "Los 100 m de profundidad",
      "El centro de la Tierra",
-     "Los 100 m de profundidad"
+     "La cima del Aconcagua"
     ],
     "ans": 0,
     "exp": "El valor de referencia es el 0 m sobre el nivel del mar (MSNM): por encima, relieves positivos o emergidos; por debajo, negativos o sumergidos.",
@@ -7674,11 +7674,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué altura tienen las MONTAÑAS ALTAS en la escala cromática?",
     "opts": [
      "De 0 a 500 m",
-     "De 500 a 2.000 m",
      "Más de 2.000 m",
+     "De 500 a 2.000 m",
      "Menos de 0 m"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "Las montañas altas tienen más de 2.000 m. Entre 500 y 2.000 m están las montañas bajas, mesetas y sierras.",
     "page": "Escala cromática",
     "id": 82
@@ -7687,12 +7687,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué altura tienen las LLANURAS en la escala cromática?",
     "opts": [
-     "De 0 a 500 m",
      "De 500 a 2.000 m",
+     "De 0 a 500 m",
      "Más de 2.000 m",
      "De 0 a -2.000 m"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Las llanuras van de 0 a 500 m de altura.",
     "page": "Escala cromática",
     "id": 83
@@ -7701,12 +7701,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cómo se llaman los relieves que están POR DEBAJO del nivel del mar?",
     "opts": [
-     "Positivos o emergidos",
-     "Negativos o sumergidos",
+     "Elevados",
      "Continentales",
-     "Elevados"
+     "Positivos o emergidos",
+     "Negativos o sumergidos"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Los relieves por debajo del 0 m son negativos o sumergidos; los que están por encima son positivos o emergidos.",
     "page": "Escala cromática",
     "id": 84
@@ -7715,12 +7715,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué son los SIGNOS CARTOGRÁFICOS?",
     "opts": [
-     "Los gráficos o dibujos que aparecen en los mapas y planos",
      "Las líneas imaginarias de la Tierra",
+     "Los gráficos o dibujos que aparecen en los mapas y planos",
      "Los nombres de los países",
      "Los colores de la escala cromática"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Los signos cartográficos son los gráficos o dibujos que aparecen en los mapas y en los planos.",
     "page": "Signos cartográficos",
     "id": 85
@@ -7744,11 +7744,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "Según el cuaderno, un PUENTE es un signo de clase...",
     "opts": [
      "N (natural)",
+     "No es un signo",
      "M (mixto)",
-     "A (artificial)",
-     "No es un signo"
+     "A (artificial)"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "El puente figura como signo artificial (A), igual que las vías del FC, la ruta nacional o el aeropuerto.",
     "page": "Signos cartográficos",
     "id": 87
@@ -7758,9 +7758,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué son los PROCESOS ENDÓGENOS?",
     "opts": [
      "Los vinculados con movimientos de placas de la corteza terrestre",
-     "Los provocados por el agua, el hielo y el viento",
      "Los que ocurren en la atmósfera",
-     "Los provocados por los seres humanos"
+     "Los provocados por los seres humanos",
+     "Los provocados por el agua, el hielo y el viento"
     ],
     "ans": 0,
     "exp": "Los procesos endógenos están vinculados con los movimientos de placas de la corteza terrestre; en las zonas de contacto se forman relieves elevados y bajos.",
@@ -7771,12 +7771,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué son los PROCESOS EXÓGENOS?",
     "opts": [
-     "Los movimientos de placas",
-     "Los asociados a la acción de elementos naturales como el agua, el hielo y el viento",
      "Los terremotos y volcanes",
-     "Los cambios de clima"
+     "Los cambios de clima",
+     "Los asociados a la acción de elementos naturales como el agua, el hielo y el viento",
+     "Los movimientos de placas"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Los procesos exógenos están asociados a la acción de elementos naturales: el agua, el hielo y el viento.",
     "page": "Formación de los relieves",
     "id": 89
@@ -7785,10 +7785,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué relieve elevado se formó por el contacto de placas en América?",
     "opts": [
-     "La llanura pampeana",
+     "La meseta patagónica",
      "La cordillera de los Andes",
-     "El desierto de Atacama",
-     "La meseta patagónica"
+     "La llanura pampeana",
+     "El desierto de Atacama"
     ],
     "ans": 1,
     "exp": "En las zonas de contacto de placas se forman relieves elevados como la cordillera de los Andes (y bajos como la llanura costera del golfo de México).",
@@ -7799,12 +7799,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Dónde se produce el DESGASTE y dónde el DEPÓSITO de material?",
     "opts": [
-     "Desgaste y erosión en zonas altas; depósito y acumulación en zonas bajas",
+     "Ambos solo en las montañas",
      "Desgaste en zonas bajas; depósito en zonas altas",
-     "Ambos solo en la costa",
-     "Ambos solo en las montañas"
+     "Desgaste y erosión en zonas altas; depósito y acumulación en zonas bajas",
+     "Ambos solo en la costa"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Los procesos pueden ser de desgaste y erosión de zonas altas, y de depósito y acumulación en zonas bajas.",
     "page": "Formación de los relieves",
     "id": 91
@@ -7813,12 +7813,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Cómo se llaman los relieves que surgen SOBRE el nivel del mar?",
     "opts": [
-     "Sumergidos, negativos u oceánicos",
-     "Emergidos, positivos o continentales",
      "Insulares",
-     "Marítimos"
+     "Marítimos",
+     "Sumergidos, negativos u oceánicos",
+     "Emergidos, positivos o continentales"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "De la combinación de ambos procesos surgen los relieves emergidos/positivos/continentales y los sumergidos/negativos/oceánicos o marítimos.",
     "page": "Formación de los relieves",
     "id": 92
@@ -7827,12 +7827,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "c": 7,
     "q": "¿Qué es una MONTAÑA?",
     "opts": [
-     "Una zona plana relativamente baja",
      "Un relieve elevado con cumbre y laderas",
+     "Una zona plana elevada",
      "Una zona baja entre montañas",
-     "Una zona plana elevada"
+     "Una zona plana relativamente baja"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Montaña: relieve elevado con cumbre y laderas.",
     "page": "Formas de relieve: definiciones",
     "id": 93
@@ -7842,9 +7842,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué es una LLANURA?",
     "opts": [
      "Una zona plana relativamente baja",
-     "Un conjunto de montañas",
      "Una zona elevada aislada",
-     "Una zona baja entre montañas"
+     "Una zona baja entre montañas",
+     "Un conjunto de montañas"
     ],
     "ans": 0,
     "exp": "Llanura: zona plana relativamente baja.",
@@ -7856,9 +7856,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué es un VALLE?",
     "opts": [
      "Una zona plana elevada",
-     "Un relieve con cumbre y laderas",
+     "Un conjunto de montañas",
      "Una zona baja entre montañas",
-     "Un conjunto de montañas"
+     "Un relieve con cumbre y laderas"
     ],
     "ans": 2,
     "exp": "Valle: zona baja entre montañas.",
@@ -7898,9 +7898,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué es una MESETA o MACIZO?",
     "opts": [
      "Una zona plana elevada",
-     "Una zona plana baja",
      "Una zona baja entre montañas",
-     "Un relieve sumergido"
+     "Un relieve sumergido",
+     "Una zona plana baja"
     ],
     "ans": 0,
     "exp": "Meseta o macizo: zona plana elevada.",
@@ -11320,12 +11320,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué es un material y de dónde proviene",
     "q": "¿Qué es un material?",
     "opts": [
-     "Una sustancia que puede usarse para construir un objeto o elaborar un producto",
      "Solo las sustancias de origen mineral",
-     "Una herramienta de trabajo",
-     "Cualquier objeto ya terminado"
+     "Una sustancia que puede usarse para construir un objeto o elaborar un producto",
+     "Cualquier objeto ya terminado",
+     "Una herramienta de trabajo"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Material: sustancia que puede ser utilizada para construir un objeto o elaborar algún producto.",
     "id": 0
    },
@@ -11334,12 +11334,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué es un material y de dónde proviene",
     "q": "¿Cuáles son los 3 orígenes de los materiales naturales?",
     "opts": [
-     "Natural, artificial y mixto",
-     "Vegetal, animal y mineral",
      "Orgánico, inorgánico y sintético",
-     "Sólido, líquido y gaseoso"
+     "Sólido, líquido y gaseoso",
+     "Natural, artificial y mixto",
+     "Vegetal, animal y mineral"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Vegetal (madera, algodón), animal (lana, cuero) y mineral (metales).",
     "id": 1
    },
@@ -11348,10 +11348,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué es un material y de dónde proviene",
     "q": "La lana y el cuero son materiales naturales de origen...",
     "opts": [
-     "Vegetal",
+     "Sintético",
      "Animal",
-     "Mineral",
-     "Sintético"
+     "Vegetal",
+     "Mineral"
     ],
     "ans": 1,
     "exp": "Animal. Vegetal: madera y algodón. Mineral: metales.",
@@ -11362,12 +11362,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Materiales artificiales o sintéticos",
     "q": "El polietileno es un ejemplo de material...",
     "opts": [
+     "Inorgánico derivado de minerales",
      "Cerámico",
      "Natural de origen vegetal",
-     "Orgánico (deriva de moléculas orgánicas)",
-     "Inorgánico derivado de minerales"
+     "Orgánico (deriva de moléculas orgánicas)"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Entre los artificiales, los que derivan de moléculas orgánicas son orgánicos, como el polietileno. El vidrio es inorgánico.",
     "id": 3
    },
@@ -11376,12 +11376,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Materiales artificiales o sintéticos",
     "q": "El vidrio es un material artificial...",
     "opts": [
-     "Inorgánico: deriva de minerales",
-     "Orgánico: deriva del petróleo",
      "De origen animal",
-     "Natural de origen mineral"
+     "Natural de origen mineral",
+     "Inorgánico: deriva de minerales",
+     "Orgánico: deriva del petróleo"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Los artificiales que derivan de minerales se denominan inorgánicos, como el vidrio.",
     "id": 4
    },
@@ -11390,12 +11390,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Cómo se elige un material",
     "q": "¿Cuál de estos es uno de los factores para elegir un material?",
     "opts": [
-     "El color favorito del fabricante",
      "La marca del producto",
-     "El país de origen del vendedor",
-     "El impacto ambiental de su procesamiento"
+     "El color favorito del fabricante",
+     "El impacto ambiental de su procesamiento",
+     "El país de origen del vendedor"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "Calidad, propiedades, técnicas/herramientas disponibles, disponibilidad, precio e impacto ambiental.",
     "id": 5
    },
@@ -11404,12 +11404,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los cerámicos",
     "q": "¿Por qué compuestos están formados principalmente los cerámicos?",
     "opts": [
+     "Hierro y carbono",
      "Celulosa y resina",
-     "Óxido de silicio y aluminio",
      "Polímeros sintéticos",
-     "Hierro y carbono"
+     "Óxido de silicio y aluminio"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Los cerámicos están compuestos principalmente por óxido de silicio y aluminio.",
     "id": 6
    },
@@ -11418,12 +11418,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los cerámicos",
     "q": "¿Cuál de estas es una propiedad de los cerámicos?",
     "opts": [
-     "Son buenos aisladores del calor",
-     "Conducen la corriente eléctrica",
+     "Son muy flexibles",
      "Tienen mucho brillo",
-     "Son muy flexibles"
+     "Conducen la corriente eléctrica",
+     "Son buenos aisladores del calor"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "No tienen brillo, no conducen la corriente, son buenos aisladores del calor y son frágiles.",
     "id": 7
    },
@@ -11432,12 +11432,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los cerámicos",
     "q": "¿Cuál fue el primer material natural usado para fabricar productos tecnológicos de cierta complejidad?",
     "opts": [
-     "La madera",
-     "El hierro",
      "La arcilla",
-     "El cuero"
+     "El cuero",
+     "El hierro",
+     "La madera"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "La arcilla: su propiedad más importante es la plasticidad — con agua forma una pasta moldeable.",
     "id": 8
    },
@@ -11447,11 +11447,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuándo comenzó la verdadera revolución de los materiales?",
     "opts": [
      "En el siglo XX, con el plástico",
+     "En la Edad Media, con el bronce",
      "Hace 3.000 años, con el uso del hierro",
-     "Hace 150 años, con el acero",
-     "En la Edad Media, con el bronce"
+     "Hace 150 años, con el acero"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "Comenzó 3.000 años atrás, cuando comenzó a utilizarse el hierro.",
     "id": 9
    },
@@ -11460,12 +11460,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los metales y la metalurgia",
     "q": "¿Cómo se llama la parte útil del mineral y cómo la que se desecha?",
     "opts": [
-     "Ganga la útil, mena la que se desecha",
      "Veta y escoria",
-     "Mena la útil, ganga la que se desecha",
-     "Concentrado y purificado"
+     "Concentrado y purificado",
+     "Ganga la útil, mena la que se desecha",
+     "Mena la útil, ganga la que se desecha"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "La parte útil se llama mena; lo que se desecha, ganga.",
     "id": 10
    },
@@ -11474,8 +11474,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los metales y la metalurgia",
     "q": "¿Cuáles son las 3 etapas de la metalurgia, en orden?",
     "opts": [
-     "Purificación → extracción → concentrado",
      "Fundición → moldeado → templado",
+     "Purificación → extracción → concentrado",
      "Extracción → oxidación → refinado",
      "Obtención del concentrado → extracción del metal → purificación"
     ],
@@ -11489,9 +11489,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál es una característica importante de los metales?",
     "opts": [
      "Son inertes frente a la oxidación",
-     "No conducen la electricidad",
+     "Son aisladores del calor",
      "Conducen la energía eléctrica pero no resisten la oxidación",
-     "Son aisladores del calor"
+     "No conducen la electricidad"
     ],
     "ans": 2,
     "exp": "Conducen la energía eléctrica y no son resistentes a la oxidación.",
@@ -11502,12 +11502,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los plásticos",
     "q": "¿Qué es un plástico?",
     "opts": [
-     "Una fibra natural derivada del petróleo",
      "Un polímero sintético que puede moldearse en alguna fase de su elaboración",
      "Un mineral moldeable",
+     "Una fibra natural derivada del petróleo",
      "Un metal liviano"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Plástico: polímero sintético que puede ser moldeado en alguna de las fases de su elaboración.",
     "id": 13
    },
@@ -11516,12 +11516,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los plásticos",
     "q": "¿Por qué los plásticos sirven para hacer envases?",
     "opts": [
-     "Porque son transparentes",
      "Porque son inertes frente a la oxidación y al ataque de ácidos y bases",
+     "Porque conducen la electricidad",
      "Porque son biodegradables",
-     "Porque conducen la electricidad"
+     "Porque son transparentes"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Su condición de inertes frente a la oxidación, ácidos y bases los hace aptos para envases.",
     "id": 14
    },
@@ -11531,11 +11531,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Por qué los residuos plásticos son un grave problema ambiental?",
     "opts": [
      "Porque conducen electricidad",
-     "Porque son muy pesados",
      "Su resistencia a la corrosión, al agua y a las bacterias los hace de difícil eliminación",
+     "Porque son muy pesados",
      "Porque atraen insectos"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La resistencia a la corrosión, al agua y a la descomposición bacteriana hace que sean de difícil eliminación.",
     "id": 15
    },
@@ -11544,10 +11544,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "La madera",
     "q": "¿Qué constituye la madera en los vegetales leñosos?",
     "opts": [
-     "Las raíces",
+     "Las hojas y flores",
      "La corteza externa",
      "El armazón de los troncos y las ramas",
-     "Las hojas y flores"
+     "Las raíces"
     ],
     "ans": 2,
     "exp": "La madera constituye el armazón de los troncos y las ramas de los vegetales leñosos.",
@@ -11558,12 +11558,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "La madera",
     "q": "¿Qué se obtiene de la madera, además de construcciones?",
     "opts": [
-     "Cuero curtido",
-     "Fibras sintéticas",
      "Vidrio y cerámica",
-     "Pasta para hacer papel y productos químicos"
+     "Pasta para hacer papel y productos químicos",
+     "Cuero curtido",
+     "Fibras sintéticas"
     ],
-    "ans": 3,
+    "ans": 1,
     "exp": "De la madera se obtiene pasta para hacer papel y numerosos productos químicos.",
     "id": 17
    },
@@ -11572,12 +11572,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clasificación de la madera",
     "q": "¿Qué madera es la materia prima para hacer papel?",
     "opts": [
+     "La fina (arce)",
      "La resinosa (cedro)",
      "La dura (roble)",
-     "La blanda (álamo, sauce, pino)",
-     "La fina (arce)"
+     "La blanda (álamo, sauce, pino)"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "La madera blanda es fácil de trabajar, de colores claros, y es la materia prima del papel.",
     "id": 18
    },
@@ -11587,8 +11587,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Con qué tipo de madera se hacían las antiguas embarcaciones?",
     "opts": [
      "Madera dura, como el roble",
-     "Madera resinosa, como el cedro",
      "Madera fina, como el arce",
+     "Madera resinosa, como el cedro",
      "Madera blanda, como el pino"
     ],
     "ans": 0,
@@ -11600,12 +11600,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clasificación de la madera",
     "q": "¿Cuál es la característica especial de la madera resinosa (ej. cedro)?",
     "opts": [
-     "Es especialmente resistente a la humedad",
+     "Es la más blanda",
      "No sirve para muebles",
-     "Es la más barata",
-     "Es la más blanda"
+     "Es especialmente resistente a la humedad",
+     "Es la más barata"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "La madera resinosa es especialmente resistente a la humedad y se usa en muebles.",
     "id": 20
    },
@@ -11614,12 +11614,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clasificación de la madera",
     "q": "¿Para qué se utiliza la madera fina, como el arce?",
     "opts": [
-     "Aplicaciones artísticas, instrumentos musicales y objetos de adorno",
      "Suelos de parqué",
-     "Hacer papel",
-     "Embarcaciones"
+     "Embarcaciones",
+     "Aplicaciones artísticas, instrumentos musicales y objetos de adorno",
+     "Hacer papel"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "La madera fina se usa en esculturas, arquitecturas, instrumentos musicales y adornos.",
     "id": 21
    },
@@ -11629,11 +11629,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuál era la fibra natural más usada, ideal contra las altas temperaturas?",
     "opts": [
      "La lana",
-     "El lino",
      "El algodón",
-     "La seda"
+     "La seda",
+     "El lino"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "El lino: sus tejidos son muy ligeros y permiten combatir las altas temperaturas.",
     "id": 22
    },
@@ -11642,12 +11642,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Fibras vegetales: lino y algodón",
     "q": "¿De dónde se obtiene el algodón y con qué procesos se hace tela?",
     "opts": [
-     "Del gusano de seda, desenredando el capullo",
-     "De la corteza del alcornoque, por descortezado",
      "De las ovejas, por esquila",
-     "Del capullo de la planta, mediante hilado y tejido"
+     "Del capullo de la planta, mediante hilado y tejido",
+     "De la corteza del alcornoque, por descortezado",
+     "Del gusano de seda, desenredando el capullo"
     ],
-    "ans": 3,
+    "ans": 1,
     "exp": "Se obtiene del capullo de la planta de algodón y con hilado y tejido se obtiene la tela.",
     "id": 23
    },
@@ -11656,12 +11656,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El corcho",
     "q": "¿De qué árbol se obtiene el corcho?",
     "opts": [
+     "Del alcornoque, una especie de roble",
      "Del cedro",
      "Del álamo",
-     "Del arce",
-     "Del alcornoque, una especie de roble"
+     "Del arce"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "El corcho es la capa externa y gruesa de la corteza del alcornoque.",
     "id": 24
    },
@@ -11671,8 +11671,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué propiedad tiene el corcho por su sustancia grasa?",
     "opts": [
      "Es casi impermeable al agua y los gases",
-     "Brilla al pulirlo",
      "Es muy frágil",
+     "Brilla al pulirlo",
      "Conduce la electricidad"
     ],
     "ans": 0,
@@ -11684,9 +11684,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El corcho",
     "q": "¿Cada cuánto se repiten los descortezamientos del alcornoque después del primero?",
     "opts": [
-     "Cada año",
      "Cada 50 años",
      "Una sola vez en la vida del árbol",
+     "Cada año",
      "Cada unos 10 años"
     ],
     "ans": 3,
@@ -11698,12 +11698,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Fibras animales: lana, seda y cuero",
     "q": "¿Por qué la lana es adecuada para vestir?",
     "opts": [
-     "Por su capacidad de absorber humedad y sus propiedades aislantes",
-     "Porque no se arruga nunca",
+     "Porque soporta altísimas temperaturas",
      "Porque es impermeable como el corcho",
-     "Porque soporta altísimas temperaturas"
+     "Porque no se arruga nunca",
+     "Por su capacidad de absorber humedad y sus propiedades aislantes"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Fibras suaves y rizadas de las ovejas: absorben humedad y son aislantes.",
     "id": 27
    },
@@ -11712,12 +11712,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Fibras animales: lana, seda y cuero",
     "q": "¿Cuánto puede alcanzar el hilo de seda de un capullo?",
     "opts": [
-     "Hasta 7,5 cm",
      "Hasta 150 m",
-     "Hasta 900 m",
-     "Hasta 30 m"
+     "Hasta 30 m",
+     "Hasta 7,5 cm",
+     "Hasta 900 m"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "La larva no mide más de 7,5 cm, pero el hilo de su capullo puede alcanzar hasta 900 m.",
     "id": 28
    },
@@ -11727,11 +11727,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cómo se llama el proceso de producción del cuero a partir de pieles curadas, descarnadas y sin pelo?",
     "opts": [
      "Descortezado",
-     "Templado",
      "Curtido",
+     "Templado",
      "Hilado"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "Ese proceso se denomina curtido.",
     "id": 29
    },
@@ -11742,8 +11742,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "De la lana procesada",
      "Del plástico, que deriva del petróleo",
-     "De la celulosa de la madera",
-     "Del vidrio hilado"
+     "Del vidrio hilado",
+     "De la celulosa de la madera"
     ],
     "ans": 1,
     "exp": "Se emplea sobre todo el plástico, un producto derivado del petróleo.",
@@ -11754,12 +11754,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Técnicas de unión: el pegado",
     "q": "En el pegado, ¿para qué sirven los elementos auxiliares (hilos, cuerdas, objetos pesados)?",
     "opts": [
-     "Para hacer más fuerte la cola",
+     "Para mantener juntas las superficies hasta que el pegamento seque",
      "Para lijar la superficie",
      "Para decorar la unión",
-     "Para mantener juntas las superficies hasta que el pegamento seque"
+     "Para hacer más fuerte la cola"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "Mantienen las superficies juntas hasta que el pegamento esté completamente seco.",
     "id": 31
    },
@@ -11768,12 +11768,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clavado y atornillado",
     "q": "¿Cuál es la técnica de unión más antigua?",
     "opts": [
-     "El pegado",
-     "El atornillado",
      "El clavado",
-     "La soldadura"
+     "El atornillado",
+     "La soldadura",
+     "El pegado"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "El clavado es la técnica más antigua para unir 2 piezas: requiere clavos y martillo.",
     "id": 32
    },
@@ -11782,12 +11782,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clavado y atornillado",
     "q": "¿Por qué los clavos se usan para uniones permanentes?",
     "opts": [
-     "Porque una vez clavados no pueden sacarse con facilidad",
+     "Porque tienen rosca",
      "Porque se pegan con cola",
      "Porque son de metal",
-     "Porque tienen rosca"
+     "Porque una vez clavados no pueden sacarse con facilidad"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Una vez clavados no pueden ser sacados con facilidad.",
     "id": 33
    },
@@ -11796,10 +11796,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clavado y atornillado",
     "q": "¿Cuál es la ventaja del atornillado?",
     "opts": [
-     "Es invisible",
+     "Es la unión más rápida",
      "No requiere herramientas",
      "Es desmontable: se separan las partes sin daño alguno",
-     "Es la unión más rápida"
+     "Es invisible"
     ],
     "ans": 2,
     "exp": "La unión atornillada es desmontable: las partes se separan sin daño.",
@@ -11810,12 +11810,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clavado y atornillado",
     "q": "¿Qué diferencia a un tornillo de un clavo?",
     "opts": [
-     "Nada, son iguales",
-     "El tamaño",
      "El material del que está hecho",
-     "La rosca y la cabeza con ranura para el destornillador"
+     "Nada, son iguales",
+     "La rosca y la cabeza con ranura para el destornillador",
+     "El tamaño"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "El tornillo es parecido al clavo pero con rosca y cabeza con ranura donde se inserta el destornillador.",
     "id": 35
    },
@@ -11824,12 +11824,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Técnicas de corte: el cizallado",
     "q": "¿Por qué hay que estar seguro antes de cortar una pieza?",
     "opts": [
-     "Porque el corte lleva mucho tiempo",
-     "Porque las herramientas son caras",
      "Porque una vez efectuada la operación no hay forma de volver atrás",
+     "Porque las herramientas son caras",
+     "Porque el corte lleva mucho tiempo",
      "Porque hay que pedir permiso"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "El corte es irreversible: no hay forma de volver atrás.",
     "id": 36
    },
@@ -11838,9 +11838,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Técnicas de corte: el cizallado",
     "q": "¿Cuándo se usan las cizallas en lugar de las tijeras?",
     "opts": [
-     "Para materiales blandos",
      "Para cortes curvos en madera",
      "Para cortar papel y cartón",
+     "Para materiales blandos",
      "Para piezas largas con bordes perfectamente rectos y perpendiculares"
     ],
     "ans": 3,
@@ -11852,9 +11852,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El aserrado",
     "q": "¿Qué permite cortar el serrucho?",
     "opts": [
+     "Solo papel y cartón",
      "Únicamente metales",
      "Piezas que deban quedar curvas",
-     "Solo papel y cartón",
      "Materiales gruesos, con su lámina de acero flexible con dientes"
     ],
     "ans": 3,
@@ -11867,11 +11867,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "En la segueta, ¿qué determina la amplitud del arco?",
     "opts": [
      "El tipo de madera",
-     "El tamaño de la pieza que se puede cortar",
      "El filo de la hoja",
-     "La velocidad del corte"
+     "La velocidad del corte",
+     "El tamaño de la pieza que se puede cortar"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "El arco es de metal y su amplitud determina el tamaño de la pieza que se puede cortar.",
     "id": 39
    },
@@ -11880,9 +11880,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Deformación elástica, plástica y rotura",
     "q": "¿Cuándo se produce una deformación elástica?",
     "opts": [
-     "Cuando el objeto queda deformado para siempre",
-     "Cuando la fuerza queda dentro de cierto límite y el objeto vuelve a su forma al cesar",
      "Cuando no se aplica ninguna fuerza",
+     "Cuando la fuerza queda dentro de cierto límite y el objeto vuelve a su forma al cesar",
+     "Cuando el objeto queda deformado para siempre",
      "Cuando el objeto se rompe"
     ],
     "ans": 1,
@@ -11908,9 +11908,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Deformación elástica, plástica y rotura",
     "q": "¿Qué pasa al alcanzarse el límite de rotura?",
     "opts": [
-     "El objeto se vuelve elástico",
      "No pasa nada",
      "El objeto vuelve a su forma",
+     "El objeto se vuelve elástico",
      "El objeto se rompe"
     ],
     "ans": 3,
@@ -11922,12 +11922,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Tracción y compresión",
     "q": "¿Qué esfuerzo sufren los objetos estirados por fuerzas que tiran hacia afuera?",
     "opts": [
-     "Compresión",
-     "Torsión",
+     "Pandeo",
      "Tracción",
-     "Pandeo"
+     "Torsión",
+     "Compresión"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La tracción estira el objeto desde los extremos (el dibujo de las flechas hacia afuera).",
     "id": 43
    },
@@ -11936,12 +11936,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Tracción y compresión",
     "q": "¿Qué les pasa a los soportes sometidos a compresión?",
     "opts": [
-     "Se arquean hacia un lado",
+     "Se retuercen",
      "Se estiran",
-     "Se acortan en una pequeñísima longitud",
-     "Se retuercen"
+     "Se arquean hacia un lado",
+     "Se acortan en una pequeñísima longitud"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Aplastados por un peso, los soportes se acortan una pequeñísima longitud.",
     "id": 44
    },
@@ -11950,12 +11950,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Flexión, pandeo y torsión",
     "q": "¿Qué combina la flexión?",
     "opts": [
-     "Compresión en la parte superior y tracción en la inferior",
-     "Dos tracciones opuestas",
      "Torsión y pandeo",
+     "Dos tracciones opuestas",
+     "Compresión en la parte superior y tracción en la inferior",
      "Compresión en ambas caras"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "La flexión combina compresión arriba y tracción abajo.",
     "id": 45
    },
@@ -11965,11 +11965,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cuándo se produce el pandeo?",
     "opts": [
      "Cuando el objeto se rompe",
+     "Cuando se retuerce una pieza",
      "Cuando se estira un cable",
-     "Cuando un soporte alto y fino se arquea al comprimirlo",
-     "Cuando se retuerce una pieza"
+     "Cuando un soporte alto y fino se arquea al comprimirlo"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Si el soporte es alto y fino puede arquearse al comprimirse: fuerzas de compresión, deformación como la flexión.",
     "id": 46
    },
@@ -11978,12 +11978,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Flexión, pandeo y torsión",
     "q": "¿A qué se parece la deformación por torsión?",
     "opts": [
-     "Al arqueo de una columna",
      "Al retorcimiento de un trapo cuando se lo escurre",
+     "Al estiramiento de un resorte",
      "Al aplastamiento de una lata",
-     "Al estiramiento de un resorte"
+     "Al arqueo de una columna"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "La torsión se parece al retorcimiento de un trapo al escurrirlo, aunque a niveles normales no se percibe.",
     "id": 47
    },
@@ -11993,9 +11993,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "La madera y el algodón son materiales naturales de origen...",
     "opts": [
      "Mineral",
-     "Animal",
+     "Sintético",
      "Vegetal",
-     "Sintético"
+     "Animal"
     ],
     "ans": 2,
     "exp": "De origen vegetal, por ejemplo: madera y algodón.",
@@ -12006,12 +12006,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué es un material y de dónde proviene",
     "q": "Los metales son materiales naturales de origen...",
     "opts": [
-     "Artificial",
-     "Mineral",
      "Animal",
-     "Vegetal"
+     "Vegetal",
+     "Mineral",
+     "Artificial"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "De origen mineral, por ejemplo: los metales.",
     "id": 49
    },
@@ -12020,12 +12020,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Materiales artificiales o sintéticos",
     "q": "¿Cómo se llaman los materiales que el hombre elaboró a partir de nuevas sustancias?",
     "opts": [
-     "Naturales",
-     "Cerámicos",
+     "Leñosos",
      "Artificiales o sintéticos",
-     "Leñosos"
+     "Cerámicos",
+     "Naturales"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "A partir del descubrimiento de nuevas sustancias, el hombre elaboró materiales artificiales o sintéticos.",
     "id": 50
    },
@@ -12049,11 +12049,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué factor ambiental hay que tener en cuenta al elegir un material?",
     "opts": [
      "El clima del lugar de venta",
-     "La humedad del depósito",
+     "El impacto ambiental que pueda producir su procesamiento",
      "La temperatura del taller",
-     "El impacto ambiental que pueda producir su procesamiento"
+     "La humedad del depósito"
     ],
-    "ans": 3,
+    "ans": 1,
     "exp": "Uno de los factores es el impacto ambiental que pueda producir su procesamiento.",
     "id": 52
    },
@@ -12062,12 +12062,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los cerámicos",
     "q": "¿Qué pasa con la corriente eléctrica y el calor en los cerámicos?",
     "opts": [
-     "Conducen la corriente pero no el calor",
-     "Conducen la corriente y el calor",
+     "Se derriten con el calor",
      "No conducen la corriente y son buenos aisladores del calor",
-     "Se derriten con el calor"
+     "Conducen la corriente y el calor",
+     "Conducen la corriente pero no el calor"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "Los cerámicos no conducen la corriente eléctrica y son buenos aisladores del calor.",
     "id": 53
    },
@@ -12076,12 +12076,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los cerámicos",
     "q": "¿A qué se aplica habitualmente la palabra 'cerámica'?",
     "opts": [
+     "A la fabricación de metales",
      "Al moldeado de plásticos",
      "A todo lo relacionado con el arte de trabajar la arcilla",
-     "Al corte de la madera",
-     "A la fabricación de metales"
+     "Al corte de la madera"
     ],
-    "ans": 1,
+    "ans": 2,
     "exp": "La palabra cerámica se suele aplicar a todo lo relacionado con el arte de trabajar la arcilla.",
     "id": 54
    },
@@ -12090,12 +12090,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los cerámicos",
     "q": "¿Cuál es la propiedad más importante de la arcilla?",
     "opts": [
+     "La plasticidad: mezclada con agua forma una pasta moldeable",
      "La resistencia a la rotura",
      "La conducción de la electricidad",
-     "El brillo",
-     "La plasticidad: mezclada con agua forma una pasta moldeable"
+     "El brillo"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "Su propiedad más importante es la plasticidad: mezclada con agua forma una pasta moldeable.",
     "id": 55
    },
@@ -12118,12 +12118,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los metales y la metalurgia",
     "q": "¿Qué debilidad tienen los metales?",
     "opts": [
-     "Son siempre frágiles",
      "No se pueden moldear",
      "No conducen la electricidad",
-     "No son resistentes a la oxidación"
+     "No son resistentes a la oxidación",
+     "Son siempre frágiles"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "Una característica importante es que conducen la energía eléctrica, pero no son resistentes a la oxidación.",
     "id": 57
    },
@@ -12132,10 +12132,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los plásticos",
     "q": "¿Frente a qué son inertes los plásticos?",
     "opts": [
-     "Al calor y al fuego",
+     "A la corriente eléctrica y al agua",
      "A la oxidación y al ataque de ácidos y bases",
      "A los golpes y al peso",
-     "A la corriente eléctrica y al agua"
+     "Al calor y al fuego"
     ],
     "ans": 1,
     "exp": "Son inertes frente a la oxidación y al ataque de ácidos y bases: por eso sirven para envases.",
@@ -12146,12 +12146,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los plásticos",
     "q": "¿Cómo son los plásticos en cuanto a peso y resistencia?",
     "opts": [
-     "Pesados y siempre frágiles",
+     "Livianos, y pueden fabricarse resistentes como la madera, el vidrio y el metal",
      "Livianos pero nunca resistentes",
      "Pesados pero muy resistentes",
-     "Livianos, y pueden fabricarse resistentes como la madera, el vidrio y el metal"
+     "Pesados y siempre frágiles"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "Los plásticos son livianos y pueden fabricarse para que sean resistentes como madera, vidrio y metal.",
     "id": 59
    },
@@ -12160,12 +12160,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los plásticos",
     "q": "¿Por qué los plásticos se usan como aisladores en artefactos eléctricos?",
     "opts": [
-     "Porque no conducen la corriente eléctrica",
      "Porque resisten los ácidos",
+     "Porque no conducen la corriente eléctrica",
      "Porque son transparentes",
      "Porque son livianos"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "No conducen la corriente eléctrica, por lo cual se utilizan como aisladores en artefactos eléctricos.",
     "id": 60
    },
@@ -12175,11 +12175,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Cómo son los colores de la madera blanda?",
     "opts": [
      "Rojizos",
-     "Siempre oscuros",
      "Generalmente muy claros",
-     "Grises"
+     "Grises",
+     "Siempre oscuros"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "La madera blanda es fácil de trabajar y de colores generalmente muy claros.",
     "id": 61
    },
@@ -12188,10 +12188,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clasificación de la madera",
     "q": "Además de muebles, ¿en qué se usa la madera dura?",
     "opts": [
-     "En salvavidas",
+     "En papel y cartón",
      "En instrumentos musicales",
      "En construcciones resistentes y suelos de parqué",
-     "En papel y cartón"
+     "En salvavidas"
     ],
     "ans": 2,
     "exp": "La madera dura se usa en muebles, construcciones resistentes y suelos de parqué.",
@@ -12202,12 +12202,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clasificación de la madera",
     "q": "¿Qué ejemplos de madera blanda da el cuaderno?",
     "opts": [
-     "Arce",
      "Álamo, sauce y pino",
-     "Roble",
-     "Cedro"
+     "Arce",
+     "Cedro",
+     "Roble"
     ],
-    "ans": 1,
+    "ans": 0,
     "exp": "Ejemplos de madera blanda: álamo, sauce y pino.",
     "id": 63
    },
@@ -12216,12 +12216,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "La madera",
     "q": "¿Qué se obtiene de la madera además de pasta para papel?",
     "opts": [
-     "Fibras animales",
-     "Metales",
      "Numerosos productos químicos",
-     "Cerámicos"
+     "Metales",
+     "Cerámicos",
+     "Fibras animales"
     ],
-    "ans": 2,
+    "ans": 0,
     "exp": "De la madera se obtiene pasta para hacer papel y numerosos productos químicos.",
     "id": 64
    },
@@ -12230,10 +12230,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Fibras vegetales: lino y algodón",
     "q": "¿Por qué el lino era la fibra natural más usada?",
     "opts": [
-     "Porque no se arruga nunca",
+     "Porque abriga más que la lana",
      "Porque sus tejidos son muy ligeros y permiten combatir las altas temperaturas",
-     "Porque es impermeable",
-     "Porque abriga más que la lana"
+     "Porque no se arruga nunca",
+     "Porque es impermeable"
     ],
     "ans": 1,
     "exp": "Los tejidos de lino son muy ligeros y permiten combatir las altas temperaturas.",
@@ -12244,12 +12244,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Fibras vegetales: lino y algodón",
     "q": "¿Qué características tiene la tela de algodón?",
     "opts": [
-     "Es impermeable y muy pesada",
-     "Resiste altísimas temperaturas",
+     "Es resistente, tiende a arrugarse y las prendas son frescas",
      "Es elástica y no se arruga",
-     "Es resistente, tiende a arrugarse y las prendas son frescas"
+     "Resiste altísimas temperaturas",
+     "Es impermeable y muy pesada"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "La tela de algodón es resistente, tiende a arrugarse y las prendas son frescas.",
     "id": 66
    },
@@ -12258,12 +12258,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El corcho",
     "q": "¿A qué edad se le saca por primera vez la corteza al alcornoque?",
     "opts": [
-     "A los 5 años",
-     "A los 30 años",
+     "Entre los 15 y 20 años",
      "A los 150 años",
-     "Entre los 15 y 20 años"
+     "A los 5 años",
+     "A los 30 años"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "Los árboles jóvenes son desprovistos de su corteza cuando tienen entre 15 y 20 años.",
     "id": 67
    },
@@ -12272,10 +12272,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El corcho",
     "q": "¿Cómo es ese primer corcho que se obtiene?",
     "opts": [
-     "Igual a todos los demás",
      "El más compacto de todos",
+     "Impermeable pero quebradizo",
      "Tosco; los siguientes descortezamientos dan un producto más compacto",
-     "Impermeable pero quebradizo"
+     "Igual a todos los demás"
     ],
     "ans": 2,
     "exp": "El primer corcho es tosco, pero los siguientes descortezamientos presentan un producto más compacto.",
@@ -12286,12 +12286,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El corcho",
     "q": "¿En qué se usa el corcho?",
     "opts": [
-     "En el interior de la suela del calzado y como salvavidas",
      "En instrumentos musicales",
+     "En suelos de parqué",
      "En trajes de bombero",
-     "En suelos de parqué"
+     "En el interior de la suela del calzado y como salvavidas"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "El corcho se usa en el interior de la suela del calzado, como salvavidas y en otros productos.",
     "id": 69
    },
@@ -12300,12 +12300,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Fibras animales: lana, seda y cuero",
     "q": "¿De qué animal se obtiene la lana?",
     "opts": [
+     "Del ganado vacuno",
      "De las ovejas",
      "De las cabras",
-     "Del gusano de seda",
-     "Del ganado vacuno"
+     "Del gusano de seda"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "La lana son las fibras suaves y rizadas que se obtienen de las ovejas.",
     "id": 70
    },
@@ -12316,10 +12316,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Se fabrica con petróleo",
      "Se obtiene de la corteza de un árbol",
-     "Se extrae de una planta",
-     "Un gusano cuya larva crea un capullo que la envuelve"
+     "Un gusano cuya larva crea un capullo que la envuelve",
+     "Se extrae de una planta"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "La seda es producida por un gusano, cuya larva crea un capullo que lo envuelve con esta fibra.",
     "id": 71
    },
@@ -12328,12 +12328,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Fibras animales: lana, seda y cuero",
     "q": "¿De qué pieles procede casi toda la producción mundial de cuero?",
     "opts": [
+     "Vacuno, caprino y lanar",
      "Oveja únicamente",
      "Caballo, cerdo y ciervo",
-     "Reptiles",
-     "Vacuno, caprino y lanar"
+     "Reptiles"
     ],
-    "ans": 3,
+    "ans": 0,
     "exp": "Casi toda la producción mundial de cuero procede de pieles de ganado vacuno, caprino y lanar.",
     "id": 72
    },
@@ -12344,8 +12344,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Para soportar altísimas temperaturas",
      "Para mantener una temperatura corporal estable",
-     "Para flotar",
-     "Para no arrugarse en el agua"
+     "Para no arrugarse en el agua",
+     "Para flotar"
     ],
     "ans": 1,
     "exp": "Los trajes de los buceadores pueden mantener una temperatura corporal estable.",
@@ -12358,10 +12358,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Solo para metales",
      "Solo para plásticos",
-     "Para piezas que se van a desmontar",
-     "Para unir superficies como maderas y cartones"
+     "Para unir superficies como maderas y cartones",
+     "Para piezas que se van a desmontar"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "El pegado se usa para unir superficies como maderas, cartones, etc.",
     "id": 74
    },
@@ -12370,12 +12370,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Clavado y atornillado",
     "q": "¿De qué partes está formado un martillo?",
     "opts": [
+     "Dos hojas articuladas",
      "Un mango y una lámina de acero con dientes",
      "Un arco de metal y tornillos de fijación",
-     "Un mango de madera y una pieza de metal unida al mango",
-     "Dos hojas articuladas"
+     "Un mango de madera y una pieza de metal unida al mango"
     ],
-    "ans": 2,
+    "ans": 3,
     "exp": "Los martillos están formados por un mango de madera y una pieza de metal con la que se golpean los clavos.",
     "id": 75
    },
@@ -12384,12 +12384,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Técnicas de corte: el cizallado",
     "q": "¿Qué tienen las tijeras para poder usarlas con los dedos?",
     "opts": [
-     "Un arco de metal",
      "Una rosca",
      "Una empuñadura",
-     "Una cabeza redondeada"
+     "Una cabeza redondeada",
+     "Un arco de metal"
     ],
-    "ans": 2,
+    "ans": 1,
     "exp": "Las tijeras están provistas de una empuñadura para los dedos y son de acero.",
     "id": 76
    },
@@ -12399,11 +12399,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué materiales se cortan habitualmente con tijeras?",
     "opts": [
      "Planchas de metal",
-     "Maderas gruesas",
      "Piezas largas de bordes perpendiculares",
-     "Papel, cartón y otros materiales que no son demasiado duros"
+     "Papel, cartón y otros materiales que no son demasiado duros",
+     "Maderas gruesas"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "Las tijeras se utilizan habitualmente para cortar papel, cartón u otros materiales que no son demasiado duros.",
     "id": 77
    },
@@ -12412,12 +12412,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El aserrado",
     "q": "¿De qué 2 partes consta la segueta?",
     "opts": [
+     "Una empuñadura y una rosca",
      "El mango de madera torneada y el arco de metal",
      "El mango y una lámina con dientes",
-     "Una empuñadura y una rosca",
      "Dos hojas articuladas"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "La segueta consta de 2 partes: el mango de madera torneada y el arco de metal.",
     "id": 78
    },
@@ -12427,11 +12427,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "En la segueta, ¿para qué sirven los tornillos de fijación?",
     "opts": [
      "Para afilar los dientes",
-     "Para unir las dos hojas",
+     "Para sujetar el elemento cortante",
      "Para regular el tamaño del mango",
-     "Para sujetar el elemento cortante"
+     "Para unir las dos hojas"
     ],
-    "ans": 3,
+    "ans": 1,
     "exp": "Los tornillos de fijación sirven para sujetar el elemento cortante, que permite el corte en todas las direcciones.",
     "id": 79
    },
@@ -12440,12 +12440,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Deformación elástica, plástica y rotura",
     "q": "¿Por qué la deformación elástica se llama así?",
     "opts": [
-     "Porque el material es siempre de goma",
-     "Porque el objeto vuelve a su forma y tamaño iniciales cuando la fuerza cesa, como un resorte",
      "Porque el objeto se rompe",
-     "Porque el objeto queda deformado para siempre"
+     "Porque el material es siempre de goma",
+     "Porque el objeto queda deformado para siempre",
+     "Porque el objeto vuelve a su forma y tamaño iniciales cuando la fuerza cesa, como un resorte"
     ],
-    "ans": 1,
+    "ans": 3,
     "exp": "Se llama elástica porque el objeto vuelve a su forma y tamaño iniciales cuando la fuerza cesa, como si fuese un resorte.",
     "id": 80
    },
@@ -12454,12 +12454,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Flexión, pandeo y torsión",
     "q": "En la flexión, ¿en qué parte del objeto hay tracción?",
     "opts": [
-     "En la parte inferior",
-     "En los extremos",
      "En la parte superior",
-     "En el centro"
+     "En el centro",
+     "En los extremos",
+     "En la parte inferior"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "La flexión combina compresión en la parte superior del objeto y tracción en la parte inferior.",
     "id": 81
    },
@@ -12470,10 +12470,10 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Las fuerzas y la deformación son iguales a las de la compresión",
      "Las fuerzas actúan como en la tracción y la deformación es como la torsión",
-     "Las fuerzas actúan como en la flexión y la deformación como en la compresión",
-     "Las fuerzas actúan como en la compresión, pero la deformación es como la de la flexión"
+     "Las fuerzas actúan como en la compresión, pero la deformación es como la de la flexión",
+     "Las fuerzas actúan como en la flexión y la deformación como en la compresión"
     ],
-    "ans": 3,
+    "ans": 2,
     "exp": "En el pandeo las fuerzas actúan como en la compresión pero la deformación es como la de la flexión.",
     "id": 82
    }
@@ -13258,12 +13258,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué expresa el verbo",
     "q": "¿Qué expresa el verbo?",
     "opts": [
-     "Acciones, estados o procesos",
      "Solamente acciones",
      "Cualidades de los sustantivos",
-     "Cantidades y medidas"
+     "Cantidades y medidas",
+     "Acciones, estados o procesos"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Las tres cosas: acciones (él corre), estados (yo soy argentino) y procesos (las plantas crecen).",
     "id": 0
    },
@@ -13272,12 +13272,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué expresa el verbo",
     "q": "En \"las plantas crecen\", ¿qué expresa el verbo?",
     "opts": [
-     "Un proceso",
      "Una acción",
-     "Un estado",
-     "Una cualidad"
+     "Un proceso",
+     "Una cualidad",
+     "Un estado"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Crecer no es algo que las plantas \"hagan\" ni algo que \"sean\": es un proceso, un cambio que ocurre.",
     "id": 1
    },
@@ -13286,12 +13286,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué expresa el verbo",
     "q": "En \"yo soy argentino\", ¿qué expresa el verbo?",
     "opts": [
-     "Un estado",
      "Una acción",
      "Un proceso",
+     "Un estado",
      "Una orden"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Ser argentino no es hacer algo: es un estado. El ejemplo del cuaderno para estados es justamente este.",
     "id": 2
    },
@@ -13300,12 +13300,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Qué expresa el verbo",
     "q": "En \"él corre\", ¿qué expresa el verbo?",
     "opts": [
-     "Una acción",
-     "Un estado",
+     "Una duda",
      "Un proceso",
-     "Una duda"
+     "Un estado",
+     "Una acción"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Correr es algo que el sujeto hace: una acción.",
     "id": 3
    },
@@ -13314,12 +13314,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Las dos partes: raíz y desinencia",
     "q": "¿Cuáles son las 2 partes del verbo?",
     "opts": [
-     "La raíz y la desinencia",
+     "El modo y el tiempo",
      "El sujeto y el predicado",
      "El infinitivo y el participio",
-     "El modo y el tiempo"
+     "La raíz y la desinencia"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "El verbo es una clase de palabra variable formada por raíz + desinencia.",
     "id": 4
    },
@@ -13328,12 +13328,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Las dos partes: raíz y desinencia",
     "q": "¿Qué indica la RAÍZ del verbo?",
     "opts": [
-     "El significado del verbo",
      "La persona que realiza la acción",
-     "El tiempo en que ocurre",
-     "El modo del hablante"
+     "El significado del verbo",
+     "El modo del hablante",
+     "El tiempo en que ocurre"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "La raíz indica el significado y suele mantenerse a lo largo de toda la conjugación.",
     "id": 5
    },
@@ -13342,12 +13342,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Las dos partes: raíz y desinencia",
     "q": "¿Qué señala la DESINENCIA?",
     "opts": [
+     "El sujeto de la oración",
      "Modificaciones según persona, número, tiempo y modo",
-     "El significado del verbo",
      "Si la palabra es variable o invariable",
-     "El sujeto de la oración"
+     "El significado del verbo"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "La desinencia señala las modificaciones en la forma según persona, número, tiempo y modo.",
     "id": 6
    },
@@ -13356,12 +13356,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Las dos partes: raíz y desinencia",
     "q": "¿De dónde se obtienen la raíz y la desinencia?",
     "opts": [
-     "Del infinitivo",
      "Del participio",
+     "Del infinitivo",
      "Del gerundio",
      "Del sustantivo"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Del infinitivo: cantar → cant- (raíz) + -ar (desinencia).",
     "id": 7
    },
@@ -13370,12 +13370,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Las dos partes: raíz y desinencia",
     "q": "En el verbo \"cantar\", ¿cuál es la raíz?",
     "opts": [
-     "cant-",
+     "cantar entero",
      "-ar",
-     "canta",
-     "cantar entero"
+     "cant-",
+     "canta"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "cant- es la raíz (el significado) y -ar la desinencia.",
     "id": 8
    },
@@ -13384,12 +13384,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El número y la persona",
     "q": "¿Mediante qué expresan las formas verbales los accidentes de número y persona?",
     "opts": [
-     "Mediante sus desinencias",
-     "Mediante su raíz",
      "Mediante el sujeto",
-     "Mediante los adverbios"
+     "Mediante los adverbios",
+     "Mediante su raíz",
+     "Mediante sus desinencias"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Es la desinencia la que cambia: interpretaba / interpretábamos.",
     "id": 9
    },
@@ -13398,12 +13398,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El número y la persona",
     "q": "¿Cuáles son los dos números del verbo?",
     "opts": [
-     "Singular y plural",
      "Primera y segunda",
+     "Real y posible",
      "Simple y compuesto",
-     "Real y posible"
+     "Singular y plural"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "El número puede ser singular (una persona) o plural (varias).",
     "id": 10
    },
@@ -13412,12 +13412,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El número y la persona",
     "q": "¿Cuáles son las tres personas?",
     "opts": [
-     "Primera, segunda y tercera",
-     "Yo, nosotros y ustedes",
      "Singular, plural y neutra",
-     "Indicativa, subjuntiva e imperativa"
+     "Primera, segunda y tercera",
+     "Indicativa, subjuntiva e imperativa",
+     "Yo, nosotros y ustedes"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Primera, segunda y tercera, cada una en singular y en plural.",
     "id": 11
    },
@@ -13426,12 +13426,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El número y la persona",
     "q": "La forma \"interpretábamos\", ¿en qué número está?",
     "opts": [
-     "Plural",
      "Singular",
      "No tiene número",
+     "Plural",
      "Depende del modo"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Designa la acción que realizan varias personas (nosotros/nosotras): plural.",
     "id": 12
    },
@@ -13440,12 +13440,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El número y la persona",
     "q": "La forma \"interpretaba\", ¿en qué número está?",
     "opts": [
-     "Singular",
      "Plural",
-     "En los dos a la vez",
-     "No tiene número"
+     "No tiene número",
+     "Singular",
+     "En los dos a la vez"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Indica la acción que realiza una sola persona (yo, él, ella): singular.",
     "id": 13
    },
@@ -13455,8 +13455,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "Según el cuadro del cuaderno, ¿qué pronombre corresponde a la 1.ª persona del plural?",
     "opts": [
      "nosotros",
-     "ustedes",
      "ellos",
+     "ustedes",
      "yo"
     ],
     "ans": 0,
@@ -13469,9 +13469,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "Según el cuadro del cuaderno, ¿qué pronombre corresponde a la 2.ª persona del plural?",
     "opts": [
      "ustedes",
-     "nosotros",
+     "él",
      "ellos",
-     "él"
+     "nosotros"
     ],
     "ans": 0,
     "exp": "El cuadro pone ustedes en la 2.ª del plural.",
@@ -13482,12 +13482,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los modos: indicativo, subjuntivo e imperativo",
     "q": "¿Para qué sirven los modos verbales?",
     "opts": [
-     "Para indicar distintas actitudes del hablante",
-     "Para indicar cuándo ocurre la acción",
      "Para separar la raíz de la desinencia",
-     "Para marcar el número"
+     "Para indicar cuándo ocurre la acción",
+     "Para marcar el número",
+     "Para indicar distintas actitudes del hablante"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Informar, pedir, rogar, dar una orden, expresar una duda: esas actitudes se marcan con el modo.",
     "id": 16
    },
@@ -13497,9 +13497,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "\"Pedro canta en el bar\", ¿en qué modo está?",
     "opts": [
      "Indicativo",
-     "Subjuntivo",
      "Imperativo",
-     "Condicional"
+     "Condicional",
+     "Subjuntivo"
     ],
     "ans": 0,
     "exp": "Afirma un hecho que se considera real o posible: modo indicativo.",
@@ -13510,12 +13510,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los modos: indicativo, subjuntivo e imperativo",
     "q": "\"Ojalá Pedro cante en el bar\", ¿en qué modo está?",
     "opts": [
-     "Subjuntivo",
-     "Indicativo",
      "Imperativo",
-     "Ninguno"
+     "Indicativo",
+     "Ninguno",
+     "Subjuntivo"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Expresa un deseo: modo subjuntivo. El subjuntivo también expresa dudas y posibilidades.",
     "id": 18
    },
@@ -13524,12 +13524,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los modos: indicativo, subjuntivo e imperativo",
     "q": "\"¡Cantá en el bar!\", ¿en qué modo está?",
     "opts": [
+     "Condicional",
      "Imperativo",
      "Indicativo",
-     "Subjuntivo",
-     "Condicional"
+     "Subjuntivo"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Da una orden afirmativa: modo imperativo. También sirve para pedir, rogar o recomendar.",
     "id": 19
    },
@@ -13538,12 +13538,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los modos: indicativo, subjuntivo e imperativo",
     "q": "¿Qué modo se usa para expresar ÓRDENES en oraciones NEGATIVAS?",
     "opts": [
-     "El subjuntivo",
      "El imperativo",
      "El indicativo",
+     "El subjuntivo",
      "El condicional"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Es la parte que se olvida: el imperativo sirve para la orden afirmativa, pero la orden negativa la expresa el subjuntivo.",
     "id": 20
    },
@@ -13552,12 +13552,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los modos: indicativo, subjuntivo e imperativo",
     "q": "¿Qué modo se usa para afirmar o negar un hecho que se considera real o posible?",
     "opts": [
-     "El indicativo",
      "El subjuntivo",
      "El imperativo",
+     "El indicativo",
      "Ninguno de los tres"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Esa es la definición del modo indicativo.",
     "id": 21
    },
@@ -13566,12 +13566,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Los modos: indicativo, subjuntivo e imperativo",
     "q": "Deseo, duda o posibilidad: ¿qué modo es?",
     "opts": [
-     "El subjuntivo",
-     "El indicativo",
      "El imperativo",
-     "El infinitivo"
+     "El indicativo",
+     "El infinitivo",
+     "El subjuntivo"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "El subjuntivo expresa un deseo, una duda o una posibilidad.",
     "id": 22
    },
@@ -13580,12 +13580,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Tiempos simples y compuestos",
     "q": "¿Cómo está formado un tiempo SIMPLE?",
     "opts": [
-     "Por una sola palabra",
+     "Por raíz sin desinencia",
      "Por el auxiliar haber más un participio",
      "Por dos verbos cualesquiera",
-     "Por raíz sin desinencia"
+     "Por una sola palabra"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Simple = una sola palabra (canté). Compuesto = haber conjugado + participio (he cantado).",
     "id": 23
    },
@@ -13594,12 +13594,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Tiempos simples y compuestos",
     "q": "¿Cómo está formado un tiempo COMPUESTO?",
     "opts": [
-     "Por el verbo auxiliar haber conjugado más un participio",
-     "Por una sola palabra",
      "Por dos raíces distintas",
-     "Por el auxiliar ser más un gerundio"
+     "Por el verbo auxiliar haber conjugado más un participio",
+     "Por el auxiliar ser más un gerundio",
+     "Por una sola palabra"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "El auxiliar es haber: he cantado, había cantado, habré cantado.",
     "id": 24
    },
@@ -13608,12 +13608,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Tiempos simples y compuestos",
     "q": "¿Cuál es el verbo auxiliar de los tiempos compuestos?",
     "opts": [
+     "tener",
      "haber",
-     "ser",
      "estar",
-     "tener"
+     "ser"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "El cuaderno lo dice expreso: el auxiliar haber conjugado más un participio.",
     "id": 25
    },
@@ -13636,12 +13636,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Tiempos simples y compuestos",
     "q": "\"Cantaba\", ¿es un tiempo simple o compuesto?",
     "opts": [
-     "Simple",
-     "Compuesto",
      "Depende del modo",
+     "Compuesto",
+     "Simple",
      "Depende de la persona"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Una sola palabra, sin auxiliar: simple.",
     "id": 27
    },
@@ -13651,9 +13651,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "¿Qué nos informan los tiempos verbales?",
     "opts": [
      "Cuándo se realizan las acciones",
+     "El significado del verbo",
      "Quién realiza la acción",
-     "La actitud del hablante",
-     "El significado del verbo"
+     "La actitud del hablante"
     ],
     "ans": 0,
     "exp": "El tiempo ubica la acción respecto del momento en que se habla. Quién la realiza es la persona; la actitud es el modo.",
@@ -13665,9 +13665,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "q": "El pasado es…",
     "opts": [
      "anterior al momento en que se habla",
-     "simultáneo al momento en que se habla",
+     "independiente del momento en que se habla",
      "posterior al momento en que se habla",
-     "independiente del momento en que se habla"
+     "simultáneo al momento en que se habla"
     ],
     "ans": 0,
     "exp": "Pasado = anterior; presente = simultáneo; futuro = posterior.",
@@ -13678,12 +13678,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "Tiempos simples y compuestos",
     "q": "El presente es…",
     "opts": [
-     "simultáneo al momento en que se habla",
-     "anterior al momento en que se habla",
      "posterior al momento en que se habla",
-     "probable si se cumple una condición"
+     "probable si se cumple una condición",
+     "simultáneo al momento en que se habla",
+     "anterior al momento en que se habla"
     ],
-    "ans": 0,
+    "ans": 2,
     "exp": "Simultáneo: ocurre al mismo tiempo que se habla.",
     "id": 30
    },
@@ -13706,12 +13706,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El condicional y sus usos",
     "q": "¿Cómo sitúa la acción el condicional?",
     "opts": [
+     "Como algo simultáneo al momento en que se habla",
      "Como probable de realizarse si se cumple determinada condición",
-     "Como un hecho ya ocurrido",
      "Como una orden que hay que cumplir",
-     "Como algo simultáneo al momento en que se habla"
+     "Como un hecho ya ocurrido"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Esa es su definición. Después tiene tres usos más: cortesía, información no confirmada y suposición.",
     "id": 32
    },
@@ -13722,8 +13722,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "opts": [
      "Para indicar respeto o cortesía al pedir",
      "Para dar una información no confirmada",
-     "Para expresar un cálculo",
-     "Para dar una orden"
+     "Para dar una orden",
+     "Para expresar un cálculo"
     ],
     "ans": 0,
     "exp": "Es un pedido suavizado: cortesía. \"Prepará el informe\" sería una orden.",
@@ -13734,12 +13734,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El condicional y sus usos",
     "q": "\"El delincuente habría entrado por la ventana.\" — ¿qué uso del condicional es?",
     "opts": [
+     "Dar una orden",
      "Dar una información no confirmada",
-     "Indicar cortesía",
      "Expresar una estimación de cantidad",
-     "Dar una orden"
+     "Indicar cortesía"
     ],
-    "ans": 0,
+    "ans": 1,
     "exp": "Es lo que se dice cuando todavía no está confirmado. Por eso aparece tanto en las noticias.",
     "id": 34
    },
@@ -13748,12 +13748,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "page": "El condicional y sus usos",
     "q": "\"El cantante tendría alrededor de 30 años.\" — ¿qué uso del condicional es?",
     "opts": [
-     "Expresar suposición, estimación o cálculo",
-     "Indicar cortesía",
      "Dar una orden",
-     "Afirmar un hecho comprobado"
+     "Afirmar un hecho comprobado",
+     "Indicar cortesía",
+     "Expresar suposición, estimación o cálculo"
     ],
-    "ans": 0,
+    "ans": 3,
     "exp": "Es un cálculo a ojo: suposición o estimación.",
     "id": 35
    }
@@ -18443,7 +18443,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 12:37";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 12:59";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
