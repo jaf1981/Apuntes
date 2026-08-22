@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 11:14">
+<meta name="apuntes-version" content="22/08 12:37">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2479,7 +2479,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 11:14', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 12:37', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -14912,11 +14912,42 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
         {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
         {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
       ]
+    },
+    len: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",      icon: "🌱"},
+        {xp: 50,   name: "Estudiante",    icon: "🪴"},
+        {xp: 150,  name: "Avanzado",      icon: "🌿"},
+        {xp: 350,  name: "Experto",       icon: "🌳"},
+        {xp: 700,  name: "Maestro",       icon: "🏆"},
+        {xp: 1200, name: "Lingüista Pro", icon: "✍️"},
+      ],
+      // Lengua tiene 3 capitulos, no 6: los logros de maestria van a 1/2/3.
+      // Sin esto, "master_biom" (cap. 4) era IMPOSIBLE de conseguir.
+      masterCaps: [1, 2, 3],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"✍️", name:"Maestro del verbo",     desc:"Todas del cap. 1 acertadas"},
+        {id:"master_euk",    em:"🔤", name:"Maestro de los modos",  desc:"Todas del cap. 2 acertadas"},
+        {id:"master_biom",   em:"⏳", name:"Maestro de los tiempos",desc:"Todas del cap. 3 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
     }
   }; // FIN_CATALOGOS
 
   let LEVELS = CATALOGOS.bio.levels;
   let BADGES = CATALOGOS.bio.badges;
+  // Que capitulos dan los 3 logros de maestria. Estaba clavado en 2/3/4 dentro de
+  // checkChapterMastery, que sirve para las materias de 6 capitulos pero deja
+  // logros inalcanzables en una materia corta.
+  let MASTER_CAPS = CATALOGOS.bio.masterCaps || [2, 3, 4];
 
   // ============================================================
   // LEVELING / BADGES helpers
@@ -16079,11 +16110,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
 
   function checkChapterMastery(chapNum) {
     const inChap = QUIZ_BANK.filter(q => q.c === chapNum);
+    if (!inChap.length) return;   // every() sobre una lista vacia da true
     const allAnswered = inChap.every(q => state.quizCorrectIds.includes(q.id));
     if (!allAnswered) return;
-    if (chapNum === 2) checkBadge("master_proc");
-    if (chapNum === 3) checkBadge("master_euk");
-    if (chapNum === 4) checkBadge("master_biom");
+    if (chapNum === MASTER_CAPS[0]) checkBadge("master_proc");
+    if (chapNum === MASTER_CAPS[1]) checkBadge("master_euk");
+    if (chapNum === MASTER_CAPS[2]) checkBadge("master_biom");
   }
 
   function nextQuizQ() {
@@ -16507,6 +16539,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     const cat = CATALOGOS[subjectKey] || CATALOGOS.bio;
     LEVELS = cat.levels;
     BADGES = cat.badges;
+    MASTER_CAPS = cat.masterCaps || [2, 3, 4];
 
     // Cargar datos en las variables globales
     SUBJECT_DATA = subj;   // materia activa: da acceso a secuencias/clasif (19/08)
@@ -18185,6 +18218,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       'biologia_ebook_v4_geo',
       'biologia_ebook_v4_his',
       'biologia_ebook_v4_tec',
+      'biologia_ebook_v4_len',
       'biologia_ebook_v3',
       'biologia_ebook_v2',
       'apuntes_avatar',      // monedas gastadas, compras y look
@@ -18409,7 +18443,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 11:14";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 12:37";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -18514,7 +18548,8 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       var m = card.classList.contains('bio') ? 'Biología'
             : (card.classList.contains('geo') ? 'Geografía'
             : (card.classList.contains('his') ? 'Historia'
-            : (card.classList.contains('tec') ? 'Tecnología' : 'otra')));
+            : (card.classList.contains('tec') ? 'Tecnología'
+            : (card.classList.contains('len') ? 'Lengua' : 'otra'))));
       sendDiario('materia_' + m, 'abre_materia', { materia: m });
     }
     var fab = e.target && e.target.closest ? e.target.closest('#fabPractice') : null;
@@ -18525,7 +18560,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   }, true);
 
   /* ---- resumen de sesión (sesion_fin): foto del progreso al entrar, delta al salir ---- */
-  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his', 'Tecnología': 'biologia_ebook_v4_tec' };
+  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his', 'Tecnología': 'biologia_ebook_v4_tec', 'Lengua': 'biologia_ebook_v4_len' };
 
   function fotoProgreso() {
     var out = {};
@@ -19034,6 +19069,33 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         {id:"master_proc",   em:"🧱", name:"Maestro de materiales", desc:"Todas del cap. 2 acertadas"},
         {id:"master_euk",    em:"🪵", name:"Maestro maderero",      desc:"Todas del cap. 3 acertadas"},
         {id:"master_biom",   em:"🧵", name:"Maestro textil",        desc:"Todas del cap. 4 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    },
+    len: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",      icon: "🌱"},
+        {xp: 50,   name: "Estudiante",    icon: "🪴"},
+        {xp: 150,  name: "Avanzado",      icon: "🌿"},
+        {xp: 350,  name: "Experto",       icon: "🌳"},
+        {xp: 700,  name: "Maestro",       icon: "🏆"},
+        {xp: 1200, name: "Lingüista Pro", icon: "✍️"},
+      ],
+      // Lengua tiene 3 capitulos, no 6: los logros de maestria van a 1/2/3.
+      // Sin esto, "master_biom" (cap. 4) era IMPOSIBLE de conseguir.
+      masterCaps: [1, 2, 3],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"✍️", name:"Maestro del verbo",     desc:"Todas del cap. 1 acertadas"},
+        {id:"master_euk",    em:"🔤", name:"Maestro de los modos",  desc:"Todas del cap. 2 acertadas"},
+        {id:"master_biom",   em:"⏳", name:"Maestro de los tiempos",desc:"Todas del cap. 3 acertadas"},
         {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
         {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
         {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
