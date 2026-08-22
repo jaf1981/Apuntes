@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 03:14">
+<meta name="apuntes-version" content="22/08 11:01">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1794,6 +1794,8 @@ body {
 [data-theme="dark"] .sp-card.his { --card-tint: #c9a877; }
 .sp-card.tec { --card-tint: #8a8f98; }
 [data-theme="dark"] .sp-card.tec { --card-tint: #a8b0bc; }
+.sp-card.len { --card-tint: #6d5b9e; }
+[data-theme="dark"] .sp-card.len { --card-tint: #a495d8; }
 
 /* ---- Slot de novedades del inicio (REPASO / desafíos) ---- */
 .sp-slot {
@@ -2421,7 +2423,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 03:14', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 11:01', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -2985,6 +2987,19 @@ body {
           <div class="sp-card-progress">
             <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="tecProgressFill" style="width:0%"></div></div>
             <div class="sp-card-progress-text" id="tecProgressText">0 XP</div>
+          </div>
+        </div>
+        <span class="sp-card-arrow">›</span>
+      </button>
+
+      <button class="sp-card len" data-subject="len">
+        <span class="sp-card-emoji">✍️</span>
+        <div class="sp-card-body">
+          <div class="sp-card-title">Lengua</div>
+          <div class="sp-card-stats" id="lenStats">6 páginas · 36 preguntas · examen 25/08</div>
+          <div class="sp-card-progress">
+            <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="lenProgressFill" style="width:0%"></div></div>
+            <div class="sp-card-progress-text" id="lenProgressText">0 XP</div>
           </div>
         </div>
         <span class="sp-card-arrow">›</span>
@@ -13075,6 +13090,1142 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ]
    }
   ]
+ },
+ "len": {
+  "name": "Lengua",
+  "emoji": "✍️",
+  "storage_key": "biologia_ebook_v4_len",
+  "exam_date": "25/08",
+  "pages": [
+   {
+    "title": "Qué expresa el verbo",
+    "html": "<p><strong>El verbo</strong> es una clase de palabra que expresa:</p>\n<ul><li><strong>acciones</strong> — <em>él <strong>corre</strong></em></li><li><strong>estados</strong> — <em>yo <strong>soy</strong> argentino</em></li><li><strong>procesos</strong> — <em>las plantas <strong>crecen</strong></em></li></ul>\n<div class=\"callout\">📌 Si te preguntan &quot;¿qué expresa el verbo?&quot;, la respuesta completa son las <strong>tres</strong>: acciones, estados <strong>y</strong> procesos. Con decir &quot;acciones&quot; queda a medias.</div>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "Las dos partes: raíz y desinencia",
+    "html": "<p>El verbo es una clase de palabra <strong>variable</strong> que posee <strong>2 partes</strong>:</p>\n<ul><li><strong>La raíz:</strong> indica el <strong>significado</strong> del verbo y <strong>suele mantenerse a lo largo de toda la conjugación</strong>.</li><li><strong>La desinencia:</strong> señala <strong>modificaciones en la forma</strong> de acuerdo con la <strong>persona</strong>, el <strong>número</strong>, el <strong>tiempo</strong> y el <strong>modo</strong> que está expresando.</li></ul>\n<p><strong>Estas partes se obtienen del infinitivo.</strong> Por ejemplo:</p>\n<p><strong>cant</strong> · <strong>ar</strong> ↑ raíz ↑ desinencia</p>\n<div class=\"callout\">📌 Truco: al infinitivo le sacás la terminación <em>-ar</em>, <em>-er</em> o <em>-ir</em> y lo que queda es la raíz. <em>Cantar</em> → <em>cant-</em>. <em>Correr</em> → <em>corr-</em>. <em>Partir</em> → <em>part-</em>.</div>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "El número y la persona",
+    "html": "<p>Las formas verbales expresan, <strong>mediante sus desinencias</strong>, los accidentes de <strong>número</strong> y <strong>persona</strong>.</p>\n<ul><li><strong>Número:</strong> singular o plural.</li><li><strong>Persona:</strong> primera, segunda o tercera.</li></ul>\n<p>Por ejemplo, la forma <em>interpretaba</em> indica la acción que realiza <strong>una sola persona</strong> (yo, él, ella): está en <strong>singular</strong>. En cambio, <em>interpretábamos</em> designa la acción que realizan <strong>varias personas</strong> (nosotros / nosotras): está en <strong>plural</strong>.</p>\n<div class=\"tbl-wrap\"><table><thead><tr><th></th><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td><strong>1.ª persona</strong></td><td>yo</td><td>nosotros</td></tr><tr><td><strong>2.ª persona</strong></td><td>tú</td><td>ustedes</td></tr><tr><td><strong>3.ª persona</strong></td><td>él</td><td>ellos</td></tr></tbody></table></div>\n<div class=\"callout\">✍️ <strong>Nota (no está en el cuaderno):</strong> el cuadro dice <em>tú</em>, que es el trato de segunda persona del español general. **En Argentina usamos *vos***, y por eso el ejemplo del imperativo más abajo es <em>&quot;¡Cantá!&quot;</em> y no <em>&quot;¡Canta!&quot;</em>. Las dos formas son correctas; en la prueba usá la del cuadro salvo que la profesora indique otra cosa.</div>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "Los modos: indicativo, subjuntivo e imperativo",
+    "html": "<p>Para indicar <strong>distintas actitudes del hablante</strong> (informar, pedir, rogar, dar una orden, expresar una duda, etc.), se utilizan los verbos en diferentes <strong>modos</strong>.</p>\n<ul><li><strong>Modo indicativo:</strong> se expresa para <strong>afirmar o negar un hecho que se considera real o posible</strong>. <em>Pedro <strong>canta</strong> en el bar.</em></li><li><strong>Modo subjuntivo:</strong> se expresa un <strong>deseo, una duda o una posibilidad</strong>. También sirve para expresar <strong>órdenes en oraciones negativas</strong>. <em>Ojalá Pedro <strong>cante</strong> en el bar.</em></li><li><strong>Modo imperativo:</strong> sirve para <strong>pedir, rogar, recomendar o dar una orden afirmativa</strong>. <em>¡<strong>Cantá</strong> en el bar!</em></li></ul>\n<div class=\"callout\">📌 Fijate que el verbo es el mismo —<em>cantar</em>— y lo único que cambia es la <strong>actitud del que habla</strong>: informa, desea o manda. Eso es el modo.</div>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "Tiempos simples y compuestos",
+    "html": "<p>Los tiempos pueden ser:</p>\n<ul><li><strong>Simples:</strong> formados por <strong>una sola palabra</strong>. <em>canté</em>, <em>cantaba</em>, <em>cantaré</em></li><li><strong>Compuestos:</strong> formados por el **verbo auxiliar <em>haber</em> conjugado + un participio**. <em>he cantado</em>, <em>había cantado</em>, <em>habré cantado</em></li></ul>\n<p>Los tiempos nos informan <strong>cuándo se realizan las acciones</strong>:</p>\n<ul><li><strong>El pasado</strong> es <strong>anterior</strong> al momento en que se habla.</li><li><strong>El presente</strong> es <strong>simultáneo</strong> al momento en que se habla.</li><li><strong>El futuro</strong> es <strong>posterior</strong> al momento en que se habla.</li></ul>\n<div class=\"callout\">📌 Para reconocer un tiempo compuesto buscá el <em>haber</em>: si hay un <em>he</em>, <em>has</em>, <em>había</em>, <em>habré</em>… seguido de un participio (<em>-ado</em>, <em>-ido</em>), es compuesto.</div>",
+    "image_keys": [],
+    "chap_idx": 2
+   },
+   {
+    "title": "El condicional y sus usos",
+    "html": "<p><strong>El condicional</strong> sitúa la acción como <strong>probable de realizarse si se cumple determinada condición</strong>.</p>\n<p>Sin embargo, <strong>también suele utilizarse para</strong>:</p>\n<ul><li><strong>Indicar respeto o cortesía</strong> para preguntar o pedir. <em>¿<strong>Prepararías</strong> el informe?</em></li><li><strong>Dar informaciones no confirmadas.</strong> <em>El delincuente <strong>habría entrado</strong> por la ventana.</em></li><li><strong>Expresar suposición, estimación o cálculo.</strong> <em>El cantante <strong>tendría</strong> alrededor de 30 años.</em></li></ul>\n<div class=\"callout\">📌 Los tres usos &quot;extra&quot; tienen algo en común: <strong>nadie está afirmando el hecho</strong>. Se pide con suavidad, se informa sin confirmar o se calcula a ojo.</div>",
+    "image_keys": [],
+    "chap_idx": 2
+   }
+  ],
+  "toc": [
+   {
+    "num": 1,
+    "name": "El verbo",
+    "icon": "✍️",
+    "pages": [
+     {
+      "idx": 0,
+      "title": "Qué expresa el verbo"
+     },
+     {
+      "idx": 1,
+      "title": "Las dos partes: raíz y desinencia"
+     }
+    ]
+   },
+   {
+    "num": 2,
+    "name": "Los accidentes del verbo",
+    "icon": "🔤",
+    "pages": [
+     {
+      "idx": 2,
+      "title": "El número y la persona"
+     },
+     {
+      "idx": 3,
+      "title": "Los modos: indicativo, subjuntivo e imperativo"
+     }
+    ]
+   },
+   {
+    "num": 3,
+    "name": "Los tiempos verbales",
+    "icon": "⏳",
+    "pages": [
+     {
+      "idx": 4,
+      "title": "Tiempos simples y compuestos"
+     },
+     {
+      "idx": 5,
+      "title": "El condicional y sus usos"
+     }
+    ]
+   }
+  ],
+  "imgs": {},
+  "quiz": [
+   {
+    "c": 1,
+    "page": "Qué expresa el verbo",
+    "q": "¿Qué expresa el verbo?",
+    "opts": [
+     "Acciones, estados o procesos",
+     "Solamente acciones",
+     "Cualidades de los sustantivos",
+     "Cantidades y medidas"
+    ],
+    "ans": 0,
+    "exp": "Las tres cosas: acciones (él corre), estados (yo soy argentino) y procesos (las plantas crecen).",
+    "id": 0
+   },
+   {
+    "c": 1,
+    "page": "Qué expresa el verbo",
+    "q": "En \"las plantas crecen\", ¿qué expresa el verbo?",
+    "opts": [
+     "Un proceso",
+     "Una acción",
+     "Un estado",
+     "Una cualidad"
+    ],
+    "ans": 0,
+    "exp": "Crecer no es algo que las plantas \"hagan\" ni algo que \"sean\": es un proceso, un cambio que ocurre.",
+    "id": 1
+   },
+   {
+    "c": 1,
+    "page": "Qué expresa el verbo",
+    "q": "En \"yo soy argentino\", ¿qué expresa el verbo?",
+    "opts": [
+     "Un estado",
+     "Una acción",
+     "Un proceso",
+     "Una orden"
+    ],
+    "ans": 0,
+    "exp": "Ser argentino no es hacer algo: es un estado. El ejemplo del cuaderno para estados es justamente este.",
+    "id": 2
+   },
+   {
+    "c": 1,
+    "page": "Qué expresa el verbo",
+    "q": "En \"él corre\", ¿qué expresa el verbo?",
+    "opts": [
+     "Una acción",
+     "Un estado",
+     "Un proceso",
+     "Una duda"
+    ],
+    "ans": 0,
+    "exp": "Correr es algo que el sujeto hace: una acción.",
+    "id": 3
+   },
+   {
+    "c": 1,
+    "page": "Las dos partes: raíz y desinencia",
+    "q": "¿Cuáles son las 2 partes del verbo?",
+    "opts": [
+     "La raíz y la desinencia",
+     "El sujeto y el predicado",
+     "El infinitivo y el participio",
+     "El modo y el tiempo"
+    ],
+    "ans": 0,
+    "exp": "El verbo es una clase de palabra variable formada por raíz + desinencia.",
+    "id": 4
+   },
+   {
+    "c": 1,
+    "page": "Las dos partes: raíz y desinencia",
+    "q": "¿Qué indica la RAÍZ del verbo?",
+    "opts": [
+     "El significado del verbo",
+     "La persona que realiza la acción",
+     "El tiempo en que ocurre",
+     "El modo del hablante"
+    ],
+    "ans": 0,
+    "exp": "La raíz indica el significado y suele mantenerse a lo largo de toda la conjugación.",
+    "id": 5
+   },
+   {
+    "c": 1,
+    "page": "Las dos partes: raíz y desinencia",
+    "q": "¿Qué señala la DESINENCIA?",
+    "opts": [
+     "Modificaciones según persona, número, tiempo y modo",
+     "El significado del verbo",
+     "Si la palabra es variable o invariable",
+     "El sujeto de la oración"
+    ],
+    "ans": 0,
+    "exp": "La desinencia señala las modificaciones en la forma según persona, número, tiempo y modo.",
+    "id": 6
+   },
+   {
+    "c": 1,
+    "page": "Las dos partes: raíz y desinencia",
+    "q": "¿De dónde se obtienen la raíz y la desinencia?",
+    "opts": [
+     "Del infinitivo",
+     "Del participio",
+     "Del gerundio",
+     "Del sustantivo"
+    ],
+    "ans": 0,
+    "exp": "Del infinitivo: cantar → cant- (raíz) + -ar (desinencia).",
+    "id": 7
+   },
+   {
+    "c": 1,
+    "page": "Las dos partes: raíz y desinencia",
+    "q": "En el verbo \"cantar\", ¿cuál es la raíz?",
+    "opts": [
+     "cant-",
+     "-ar",
+     "canta",
+     "cantar entero"
+    ],
+    "ans": 0,
+    "exp": "cant- es la raíz (el significado) y -ar la desinencia.",
+    "id": 8
+   },
+   {
+    "c": 2,
+    "page": "El número y la persona",
+    "q": "¿Mediante qué expresan las formas verbales los accidentes de número y persona?",
+    "opts": [
+     "Mediante sus desinencias",
+     "Mediante su raíz",
+     "Mediante el sujeto",
+     "Mediante los adverbios"
+    ],
+    "ans": 0,
+    "exp": "Es la desinencia la que cambia: interpretaba / interpretábamos.",
+    "id": 9
+   },
+   {
+    "c": 2,
+    "page": "El número y la persona",
+    "q": "¿Cuáles son los dos números del verbo?",
+    "opts": [
+     "Singular y plural",
+     "Primera y segunda",
+     "Simple y compuesto",
+     "Real y posible"
+    ],
+    "ans": 0,
+    "exp": "El número puede ser singular (una persona) o plural (varias).",
+    "id": 10
+   },
+   {
+    "c": 2,
+    "page": "El número y la persona",
+    "q": "¿Cuáles son las tres personas?",
+    "opts": [
+     "Primera, segunda y tercera",
+     "Yo, nosotros y ustedes",
+     "Singular, plural y neutra",
+     "Indicativa, subjuntiva e imperativa"
+    ],
+    "ans": 0,
+    "exp": "Primera, segunda y tercera, cada una en singular y en plural.",
+    "id": 11
+   },
+   {
+    "c": 2,
+    "page": "El número y la persona",
+    "q": "La forma \"interpretábamos\", ¿en qué número está?",
+    "opts": [
+     "Plural",
+     "Singular",
+     "No tiene número",
+     "Depende del modo"
+    ],
+    "ans": 0,
+    "exp": "Designa la acción que realizan varias personas (nosotros/nosotras): plural.",
+    "id": 12
+   },
+   {
+    "c": 2,
+    "page": "El número y la persona",
+    "q": "La forma \"interpretaba\", ¿en qué número está?",
+    "opts": [
+     "Singular",
+     "Plural",
+     "En los dos a la vez",
+     "No tiene número"
+    ],
+    "ans": 0,
+    "exp": "Indica la acción que realiza una sola persona (yo, él, ella): singular.",
+    "id": 13
+   },
+   {
+    "c": 2,
+    "page": "El número y la persona",
+    "q": "Según el cuadro del cuaderno, ¿qué pronombre corresponde a la 1.ª persona del plural?",
+    "opts": [
+     "nosotros",
+     "ustedes",
+     "ellos",
+     "yo"
+    ],
+    "ans": 0,
+    "exp": "1.ª plural: nosotros / nosotras. 2.ª plural: ustedes. 3.ª plural: ellos.",
+    "id": 14
+   },
+   {
+    "c": 2,
+    "page": "El número y la persona",
+    "q": "Según el cuadro del cuaderno, ¿qué pronombre corresponde a la 2.ª persona del plural?",
+    "opts": [
+     "ustedes",
+     "nosotros",
+     "ellos",
+     "él"
+    ],
+    "ans": 0,
+    "exp": "El cuadro pone ustedes en la 2.ª del plural.",
+    "id": 15
+   },
+   {
+    "c": 2,
+    "page": "Los modos: indicativo, subjuntivo e imperativo",
+    "q": "¿Para qué sirven los modos verbales?",
+    "opts": [
+     "Para indicar distintas actitudes del hablante",
+     "Para indicar cuándo ocurre la acción",
+     "Para separar la raíz de la desinencia",
+     "Para marcar el número"
+    ],
+    "ans": 0,
+    "exp": "Informar, pedir, rogar, dar una orden, expresar una duda: esas actitudes se marcan con el modo.",
+    "id": 16
+   },
+   {
+    "c": 2,
+    "page": "Los modos: indicativo, subjuntivo e imperativo",
+    "q": "\"Pedro canta en el bar\", ¿en qué modo está?",
+    "opts": [
+     "Indicativo",
+     "Subjuntivo",
+     "Imperativo",
+     "Condicional"
+    ],
+    "ans": 0,
+    "exp": "Afirma un hecho que se considera real o posible: modo indicativo.",
+    "id": 17
+   },
+   {
+    "c": 2,
+    "page": "Los modos: indicativo, subjuntivo e imperativo",
+    "q": "\"Ojalá Pedro cante en el bar\", ¿en qué modo está?",
+    "opts": [
+     "Subjuntivo",
+     "Indicativo",
+     "Imperativo",
+     "Ninguno"
+    ],
+    "ans": 0,
+    "exp": "Expresa un deseo: modo subjuntivo. El subjuntivo también expresa dudas y posibilidades.",
+    "id": 18
+   },
+   {
+    "c": 2,
+    "page": "Los modos: indicativo, subjuntivo e imperativo",
+    "q": "\"¡Cantá en el bar!\", ¿en qué modo está?",
+    "opts": [
+     "Imperativo",
+     "Indicativo",
+     "Subjuntivo",
+     "Condicional"
+    ],
+    "ans": 0,
+    "exp": "Da una orden afirmativa: modo imperativo. También sirve para pedir, rogar o recomendar.",
+    "id": 19
+   },
+   {
+    "c": 2,
+    "page": "Los modos: indicativo, subjuntivo e imperativo",
+    "q": "¿Qué modo se usa para expresar ÓRDENES en oraciones NEGATIVAS?",
+    "opts": [
+     "El subjuntivo",
+     "El imperativo",
+     "El indicativo",
+     "El condicional"
+    ],
+    "ans": 0,
+    "exp": "Es la parte que se olvida: el imperativo sirve para la orden afirmativa, pero la orden negativa la expresa el subjuntivo.",
+    "id": 20
+   },
+   {
+    "c": 2,
+    "page": "Los modos: indicativo, subjuntivo e imperativo",
+    "q": "¿Qué modo se usa para afirmar o negar un hecho que se considera real o posible?",
+    "opts": [
+     "El indicativo",
+     "El subjuntivo",
+     "El imperativo",
+     "Ninguno de los tres"
+    ],
+    "ans": 0,
+    "exp": "Esa es la definición del modo indicativo.",
+    "id": 21
+   },
+   {
+    "c": 2,
+    "page": "Los modos: indicativo, subjuntivo e imperativo",
+    "q": "Deseo, duda o posibilidad: ¿qué modo es?",
+    "opts": [
+     "El subjuntivo",
+     "El indicativo",
+     "El imperativo",
+     "El infinitivo"
+    ],
+    "ans": 0,
+    "exp": "El subjuntivo expresa un deseo, una duda o una posibilidad.",
+    "id": 22
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "¿Cómo está formado un tiempo SIMPLE?",
+    "opts": [
+     "Por una sola palabra",
+     "Por el auxiliar haber más un participio",
+     "Por dos verbos cualesquiera",
+     "Por raíz sin desinencia"
+    ],
+    "ans": 0,
+    "exp": "Simple = una sola palabra (canté). Compuesto = haber conjugado + participio (he cantado).",
+    "id": 23
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "¿Cómo está formado un tiempo COMPUESTO?",
+    "opts": [
+     "Por el verbo auxiliar haber conjugado más un participio",
+     "Por una sola palabra",
+     "Por dos raíces distintas",
+     "Por el auxiliar ser más un gerundio"
+    ],
+    "ans": 0,
+    "exp": "El auxiliar es haber: he cantado, había cantado, habré cantado.",
+    "id": 24
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "¿Cuál es el verbo auxiliar de los tiempos compuestos?",
+    "opts": [
+     "haber",
+     "ser",
+     "estar",
+     "tener"
+    ],
+    "ans": 0,
+    "exp": "El cuaderno lo dice expreso: el auxiliar haber conjugado más un participio.",
+    "id": 25
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "\"He cantado\", ¿es un tiempo simple o compuesto?",
+    "opts": [
+     "Compuesto",
+     "Simple",
+     "Las dos cosas",
+     "Ninguna"
+    ],
+    "ans": 0,
+    "exp": "Lleva el auxiliar haber (he) + participio (cantado): compuesto.",
+    "id": 26
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "\"Cantaba\", ¿es un tiempo simple o compuesto?",
+    "opts": [
+     "Simple",
+     "Compuesto",
+     "Depende del modo",
+     "Depende de la persona"
+    ],
+    "ans": 0,
+    "exp": "Una sola palabra, sin auxiliar: simple.",
+    "id": 27
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "¿Qué nos informan los tiempos verbales?",
+    "opts": [
+     "Cuándo se realizan las acciones",
+     "Quién realiza la acción",
+     "La actitud del hablante",
+     "El significado del verbo"
+    ],
+    "ans": 0,
+    "exp": "El tiempo ubica la acción respecto del momento en que se habla. Quién la realiza es la persona; la actitud es el modo.",
+    "id": 28
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "El pasado es…",
+    "opts": [
+     "anterior al momento en que se habla",
+     "simultáneo al momento en que se habla",
+     "posterior al momento en que se habla",
+     "independiente del momento en que se habla"
+    ],
+    "ans": 0,
+    "exp": "Pasado = anterior; presente = simultáneo; futuro = posterior.",
+    "id": 29
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "El presente es…",
+    "opts": [
+     "simultáneo al momento en que se habla",
+     "anterior al momento en que se habla",
+     "posterior al momento en que se habla",
+     "probable si se cumple una condición"
+    ],
+    "ans": 0,
+    "exp": "Simultáneo: ocurre al mismo tiempo que se habla.",
+    "id": 30
+   },
+   {
+    "c": 3,
+    "page": "Tiempos simples y compuestos",
+    "q": "El futuro es…",
+    "opts": [
+     "posterior al momento en que se habla",
+     "anterior al momento en que se habla",
+     "simultáneo al momento en que se habla",
+     "siempre compuesto"
+    ],
+    "ans": 0,
+    "exp": "Posterior: todavía no ocurrió cuando se habla.",
+    "id": 31
+   },
+   {
+    "c": 3,
+    "page": "El condicional y sus usos",
+    "q": "¿Cómo sitúa la acción el condicional?",
+    "opts": [
+     "Como probable de realizarse si se cumple determinada condición",
+     "Como un hecho ya ocurrido",
+     "Como una orden que hay que cumplir",
+     "Como algo simultáneo al momento en que se habla"
+    ],
+    "ans": 0,
+    "exp": "Esa es su definición. Después tiene tres usos más: cortesía, información no confirmada y suposición.",
+    "id": 32
+   },
+   {
+    "c": 3,
+    "page": "El condicional y sus usos",
+    "q": "\"¿Prepararías el informe?\" — ¿para qué se usa acá el condicional?",
+    "opts": [
+     "Para indicar respeto o cortesía al pedir",
+     "Para dar una información no confirmada",
+     "Para expresar un cálculo",
+     "Para dar una orden"
+    ],
+    "ans": 0,
+    "exp": "Es un pedido suavizado: cortesía. \"Prepará el informe\" sería una orden.",
+    "id": 33
+   },
+   {
+    "c": 3,
+    "page": "El condicional y sus usos",
+    "q": "\"El delincuente habría entrado por la ventana.\" — ¿qué uso del condicional es?",
+    "opts": [
+     "Dar una información no confirmada",
+     "Indicar cortesía",
+     "Expresar una estimación de cantidad",
+     "Dar una orden"
+    ],
+    "ans": 0,
+    "exp": "Es lo que se dice cuando todavía no está confirmado. Por eso aparece tanto en las noticias.",
+    "id": 34
+   },
+   {
+    "c": 3,
+    "page": "El condicional y sus usos",
+    "q": "\"El cantante tendría alrededor de 30 años.\" — ¿qué uso del condicional es?",
+    "opts": [
+     "Expresar suposición, estimación o cálculo",
+     "Indicar cortesía",
+     "Dar una orden",
+     "Afirmar un hecho comprobado"
+    ],
+    "ans": 0,
+    "exp": "Es un cálculo a ojo: suposición o estimación.",
+    "id": 35
+   }
+  ],
+  "flashcards": [
+   {
+    "c": 1,
+    "t": "El verbo",
+    "d": "Clase de palabra variable que expresa acciones (él corre), estados (yo soy argentino) o procesos (las plantas crecen).",
+    "id": 0
+   },
+   {
+    "c": 1,
+    "t": "Raíz",
+    "d": "Parte del verbo que indica el significado y suele mantenerse a lo largo de toda la conjugación.",
+    "id": 1
+   },
+   {
+    "c": 1,
+    "t": "Desinencia",
+    "d": "Parte del verbo que señala modificaciones en la forma según persona, número, tiempo y modo.",
+    "id": 2
+   },
+   {
+    "c": 1,
+    "t": "Cantar → cant- + -ar",
+    "d": "Raíz + desinencia. Las dos partes se obtienen del infinitivo.",
+    "id": 3
+   },
+   {
+    "c": 2,
+    "t": "Accidentes de número",
+    "d": "Singular (una sola persona) o plural (varias personas). Se expresan mediante las desinencias.",
+    "id": 4
+   },
+   {
+    "c": 2,
+    "t": "Accidentes de persona",
+    "d": "Primera, segunda o tercera. Se expresan mediante las desinencias.",
+    "id": 5
+   },
+   {
+    "c": 2,
+    "t": "interpretaba / interpretábamos",
+    "d": "La primera está en singular (yo, él, ella); la segunda en plural (nosotros/nosotras).",
+    "id": 6
+   },
+   {
+    "c": 2,
+    "t": "Cuadro de personas",
+    "d": "Singular: yo, tú, él. Plural: nosotros, ustedes, ellos.",
+    "id": 7
+   },
+   {
+    "c": 2,
+    "t": "Los modos",
+    "d": "Indican distintas actitudes del hablante: informar, pedir, rogar, dar una orden, expresar una duda.",
+    "id": 8
+   },
+   {
+    "c": 2,
+    "t": "Modo indicativo",
+    "d": "Afirma o niega un hecho que se considera real o posible. Ej: Pedro canta en el bar.",
+    "id": 9
+   },
+   {
+    "c": 2,
+    "t": "Modo subjuntivo",
+    "d": "Expresa deseo, duda o posibilidad. También órdenes en oraciones negativas. Ej: Ojalá Pedro cante en el bar.",
+    "id": 10
+   },
+   {
+    "c": 2,
+    "t": "Modo imperativo",
+    "d": "Pide, ruega, recomienda o da una orden afirmativa. Ej: ¡Cantá en el bar!",
+    "id": 11
+   },
+   {
+    "c": 3,
+    "t": "Tiempos simples",
+    "d": "Formados por una sola palabra: canté, cantaba, cantaré.",
+    "id": 12
+   },
+   {
+    "c": 3,
+    "t": "Tiempos compuestos",
+    "d": "Formados por el verbo auxiliar haber conjugado más un participio: he cantado, había cantado.",
+    "id": 13
+   },
+   {
+    "c": 3,
+    "t": "El pasado",
+    "d": "Anterior al momento en que se habla.",
+    "id": 14
+   },
+   {
+    "c": 3,
+    "t": "El presente",
+    "d": "Simultáneo al momento en que se habla.",
+    "id": 15
+   },
+   {
+    "c": 3,
+    "t": "El futuro",
+    "d": "Posterior al momento en que se habla.",
+    "id": 16
+   },
+   {
+    "c": 3,
+    "t": "El condicional",
+    "d": "Sitúa la acción como probable de realizarse si se cumple determinada condición.",
+    "id": 17
+   },
+   {
+    "c": 3,
+    "t": "Condicional de cortesía",
+    "d": "Indica respeto al preguntar o pedir. Ej: ¿Prepararías el informe?",
+    "id": 18
+   },
+   {
+    "c": 3,
+    "t": "Condicional de información no confirmada",
+    "d": "Ej: El delincuente habría entrado por la ventana.",
+    "id": 19
+   },
+   {
+    "c": 3,
+    "t": "Condicional de suposición",
+    "d": "Expresa estimación o cálculo. Ej: El cantante tendría alrededor de 30 años.",
+    "id": 20
+   }
+  ],
+  "glossary": [
+   {
+    "c": 2,
+    "t": "Accidentes del verbo",
+    "d": "Las modificaciones que expresa la forma verbal: número, persona, tiempo y modo."
+   },
+   {
+    "c": 1,
+    "t": "Acción",
+    "d": "Lo que el sujeto hace. Ej: él corre."
+   },
+   {
+    "c": 3,
+    "t": "Condicional",
+    "d": "Sitúa la acción como probable si se cumple determinada condición. También se usa para cortesía, información no confirmada y suposición."
+   },
+   {
+    "c": 1,
+    "t": "Conjugación",
+    "d": "Conjunto de las formas que toma un verbo. La raíz suele mantenerse a lo largo de toda ella."
+   },
+   {
+    "c": 1,
+    "t": "Desinencia",
+    "d": "Terminación del verbo que marca persona, número, tiempo y modo."
+   },
+   {
+    "c": 1,
+    "t": "Estado",
+    "d": "Situación o condición del sujeto. Ej: yo soy argentino."
+   },
+   {
+    "c": 3,
+    "t": "Futuro",
+    "d": "Tiempo posterior al momento en que se habla."
+   },
+   {
+    "c": 1,
+    "t": "Infinitivo",
+    "d": "Forma del verbo de la que se obtienen la raíz y la desinencia: cantar, correr, partir."
+   },
+   {
+    "c": 2,
+    "t": "Modo",
+    "d": "Accidente que indica la actitud del hablante: informar, pedir, rogar, ordenar, dudar."
+   },
+   {
+    "c": 2,
+    "t": "Modo imperativo",
+    "d": "Pide, ruega, recomienda o da una orden afirmativa."
+   },
+   {
+    "c": 2,
+    "t": "Modo indicativo",
+    "d": "Afirma o niega un hecho considerado real o posible."
+   },
+   {
+    "c": 2,
+    "t": "Modo subjuntivo",
+    "d": "Expresa deseo, duda o posibilidad, y las órdenes negativas."
+   },
+   {
+    "c": 2,
+    "t": "Número",
+    "d": "Accidente que distingue singular (una persona) de plural (varias)."
+   },
+   {
+    "c": 1,
+    "t": "Palabra variable",
+    "d": "La que cambia de forma. El verbo lo es: cambia según persona, número, tiempo y modo."
+   },
+   {
+    "c": 3,
+    "t": "Participio",
+    "d": "Forma verbal que acompaña a haber en los tiempos compuestos: cantado, comido, partido."
+   },
+   {
+    "c": 3,
+    "t": "Pasado",
+    "d": "Tiempo anterior al momento en que se habla."
+   },
+   {
+    "c": 2,
+    "t": "Persona (gramatical)",
+    "d": "Accidente que distingue primera, segunda y tercera."
+   },
+   {
+    "c": 2,
+    "t": "Plural",
+    "d": "Número de la forma verbal cuando la acción la realizan varias personas: nosotros, ustedes, ellos."
+   },
+   {
+    "c": 3,
+    "t": "Presente",
+    "d": "Tiempo simultáneo al momento en que se habla."
+   },
+   {
+    "c": 1,
+    "t": "Proceso",
+    "d": "Cambio que ocurre en el sujeto. Ej: las plantas crecen."
+   },
+   {
+    "c": 1,
+    "t": "Raíz",
+    "d": "Parte del verbo que lleva el significado y suele mantenerse en toda la conjugación."
+   },
+   {
+    "c": 2,
+    "t": "Singular",
+    "d": "Número de la forma verbal cuando la acción la realiza una sola persona: yo, tú, él."
+   },
+   {
+    "c": 3,
+    "t": "Tiempo compuesto",
+    "d": "El que se forma con el auxiliar haber conjugado más un participio."
+   },
+   {
+    "c": 3,
+    "t": "Tiempo simple",
+    "d": "El que se forma con una sola palabra."
+   },
+   {
+    "c": 3,
+    "t": "Tiempo verbal",
+    "d": "Accidente que informa cuándo se realiza la acción respecto del momento en que se habla."
+   },
+   {
+    "c": 1,
+    "t": "Verbo",
+    "d": "Clase de palabra variable que expresa acciones, estados o procesos."
+   },
+   {
+    "c": 3,
+    "t": "Verbo auxiliar",
+    "d": "El que acompaña a otro para formar un tiempo compuesto. En español es haber."
+   }
+  ],
+  "secuencias": [
+   {
+    "c": 3,
+    "titulo": "Ordená estas frases según cuándo ocurre la acción",
+    "items": [
+     "Ayer canté en el bar",
+     "Hoy canto en el bar",
+     "Mañana cantaré en el bar"
+    ],
+    "nota": "El pasado es anterior al momento en que se habla, el presente simultáneo y el futuro posterior."
+   },
+   {
+    "c": 1,
+    "titulo": "Ordená los pasos para separar la raíz de la desinencia",
+    "items": [
+     "Buscar el infinitivo del verbo",
+     "Sacarle la terminación -ar, -er o -ir",
+     "Lo que queda adelante es la raíz",
+     "La terminación que sacaste es la desinencia"
+    ],
+    "nota": "Las dos partes se obtienen del infinitivo: cantar → cant- + -ar."
+   },
+   {
+    "c": 2,
+    "titulo": "Ordená las personas gramaticales del singular",
+    "items": [
+     "yo",
+     "tú",
+     "él"
+    ],
+    "nota": "Primera, segunda y tercera. En plural: nosotros, ustedes, ellos."
+   },
+   {
+    "c": 2,
+    "titulo": "Ordená las personas gramaticales del plural",
+    "items": [
+     "nosotros",
+     "ustedes",
+     "ellos"
+    ],
+    "nota": "Mismo orden que en singular: primera, segunda y tercera."
+   },
+   {
+    "c": 2,
+    "titulo": "Ordená: primero la que informa, después la que desea, al final la que ordena",
+    "items": [
+     "Pedro canta en el bar",
+     "Ojalá Pedro cante en el bar",
+     "¡Cantá en el bar!"
+    ],
+    "nota": "Indicativo (afirma un hecho real o posible), subjuntivo (deseo, duda o posibilidad) e imperativo (orden afirmativa)."
+   },
+   {
+    "c": 3,
+    "titulo": "Ordená los pasos para reconocer un tiempo compuesto",
+    "items": [
+     "Ver si la forma verbal tiene dos palabras",
+     "Buscar una forma del verbo haber",
+     "Comprobar que la otra palabra sea un participio",
+     "Si se cumple todo, el tiempo es compuesto"
+    ],
+    "nota": "Compuesto = auxiliar haber conjugado + participio (he cantado). Si es una sola palabra, es simple."
+   }
+  ],
+  "clasif": [
+   {
+    "c": 3,
+    "titulo": "¿El tiempo es simple o compuesto?",
+    "cats": [
+     "Simple",
+     "Compuesto"
+    ],
+    "items": [
+     {
+      "t": "canté",
+      "k": 0
+     },
+     {
+      "t": "cantaba",
+      "k": 0
+     },
+     {
+      "t": "cantaré",
+      "k": 0
+     },
+     {
+      "t": "he cantado",
+      "k": 1
+     },
+     {
+      "t": "había cantado",
+      "k": 1
+     },
+     {
+      "t": "habré cantado",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 2,
+    "titulo": "¿En qué modo está cada oración?",
+    "cats": [
+     "Indicativo",
+     "Subjuntivo",
+     "Imperativo"
+    ],
+    "items": [
+     {
+      "t": "Pedro canta en el bar",
+      "k": 0
+     },
+     {
+      "t": "Pedro no canta en el bar",
+      "k": 0
+     },
+     {
+      "t": "Ojalá Pedro cante en el bar",
+      "k": 1
+     },
+     {
+      "t": "Quizás Pedro cante en el bar",
+      "k": 1
+     },
+     {
+      "t": "¡Cantá en el bar!",
+      "k": 2
+     },
+     {
+      "t": "¡Cantá más fuerte!",
+      "k": 2
+     }
+    ]
+   },
+   {
+    "c": 1,
+    "titulo": "¿Qué expresa el verbo en cada caso?",
+    "cats": [
+     "Acción",
+     "Estado",
+     "Proceso"
+    ],
+    "items": [
+     {
+      "t": "él corre",
+      "k": 0
+     },
+     {
+      "t": "ella escribe una carta",
+      "k": 0
+     },
+     {
+      "t": "yo soy argentino",
+      "k": 1
+     },
+     {
+      "t": "estamos cansados",
+      "k": 1
+     },
+     {
+      "t": "las plantas crecen",
+      "k": 2
+     },
+     {
+      "t": "el hielo se derrite",
+      "k": 2
+     }
+    ]
+   },
+   {
+    "c": 1,
+    "titulo": "¿Es raíz o es desinencia?",
+    "cats": [
+     "Raíz",
+     "Desinencia"
+    ],
+    "items": [
+     {
+      "t": "cant-",
+      "k": 0
+     },
+     {
+      "t": "corr-",
+      "k": 0
+     },
+     {
+      "t": "part-",
+      "k": 0
+     },
+     {
+      "t": "-ar",
+      "k": 1
+     },
+     {
+      "t": "-er",
+      "k": 1
+     },
+     {
+      "t": "-ir",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 2,
+    "titulo": "¿La forma verbal está en singular o en plural?",
+    "cats": [
+     "Singular",
+     "Plural"
+    ],
+    "items": [
+     {
+      "t": "interpretaba",
+      "k": 0
+     },
+     {
+      "t": "canto",
+      "k": 0
+     },
+     {
+      "t": "corre",
+      "k": 0
+     },
+     {
+      "t": "interpretábamos",
+      "k": 1
+     },
+     {
+      "t": "cantamos",
+      "k": 1
+     },
+     {
+      "t": "corren",
+      "k": 1
+     }
+    ]
+   },
+   {
+    "c": 3,
+    "titulo": "¿Para qué se usa el condicional en cada caso?",
+    "cats": [
+     "Cortesía",
+     "Información no confirmada",
+     "Suposición o cálculo"
+    ],
+    "items": [
+     {
+      "t": "¿Prepararías el informe?",
+      "k": 0
+     },
+     {
+      "t": "¿Me alcanzarías el vaso?",
+      "k": 0
+     },
+     {
+      "t": "El delincuente habría entrado por la ventana",
+      "k": 1
+     },
+     {
+      "t": "El accidente habría ocurrido de madrugada",
+      "k": 1
+     },
+     {
+      "t": "El cantante tendría alrededor de treinta años",
+      "k": 2
+     },
+     {
+      "t": "Serían las tres cuando llegó",
+      "k": 2
+     }
+    ]
+   }
+  ]
  }
 };
   let CURRENT_SUBJECT = null;
@@ -17188,7 +18339,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 03:14";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 11:01";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -17721,7 +18872,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
-     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}} se inyectan al compilar,
+     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
   var ST_CAT = {
     bio: {
@@ -17821,7 +18972,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       ]
     }
   };          /* niveles y logros POR MATERIA */
-  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}};
+  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
