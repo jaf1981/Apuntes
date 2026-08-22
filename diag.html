@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diagnóstico</title>
+<style>
+  body { margin:0; background:#14161a; color:#e9e4d8; padding:20px 16px 40px;
+         font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:15px; }
+  h1 { font-size:19px; margin:0 0 4px; }
+  .sub { opacity:.6; font-size:13px; margin-bottom:18px; }
+  .f { border:1px solid rgba(128,128,128,.3); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
+  .k { font-size:12px; text-transform:uppercase; letter-spacing:.5px; opacity:.55; }
+  .v { font-family:ui-monospace,Menlo,monospace; font-size:13px; word-break:break-all; margin-top:4px; }
+  .ok { color:#7bc47b; font-weight:800; } .mal { color:#e0654f; font-weight:800; }
+</style>
+</head>
+<body>
+<h1>Diagnóstico del cierre</h1>
+<div class="sub">Esta página no toca nada: solo muestra lo que ve la app en este teléfono.</div>
+<div id="salida">Midiendo…</div>
+<script>
+/* Pagina suelta para ver por que el cierre no dispara en un telefono concreto.
+   No modifica nada: solo lee. Se abre a mano y se saca una captura. */
+(function () {
+  function lget(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function aMin(h) { var p = String(h || '').split(':'); return (Number(p[0])||0)*60 + (Number(p[1])||0); }
+  function minutosAR(ms) { var m = Math.floor(ms/60000) - 180; return ((m%1440)+1440)%1440; }
+  function hhmm(m) { return (m<600?'0':'') + Math.floor(m/60) + ':' + (m%60<10?'0':'') + (m%60); }
+
+  var out = [];
+  function fila(k, v, clase) {
+    out.push('<div class="f"><div class="k">' + k + '</div><div class="v ' +
+             (clase||'') + '">' + v + '</div></div>');
+  }
+
+  var ahora = Date.now();
+  fila('Hora del teléfono', new Date(ahora).toString().slice(0, 33));
+  fila('Hora Argentina calculada', hhmm(minutosAR(ahora)));
+
+  var reloj = lget('apuntes_reloj');
+  fila('apuntes_reloj', reloj || '(vacío)');
+  if (reloj) {
+    try {
+      var st = JSON.parse(reloj);
+      if (typeof st.desf === 'number' && Math.abs(st.desf) > 300000)
+        fila('⚠ desfase guardado', Math.round(st.desf/60000) + ' minutos — versión vieja del código', 'mal');
+      if (typeof st.visto === 'number')
+        fila('Última hora confiable', new Date(st.visto).toString().slice(0, 33));
+    } catch (e) {}
+  }
+
+  var bloq = lget('apuntes_bloq');
+  fila('apuntes_bloq (copia local)', bloq ? bloq.slice(0, 300) : '(vacío)');
+
+  fetch('index.html?d=' + ahora, { cache: 'no-store' })
+    .then(function (r) { return r.text(); })
+    .then(function (t) {
+      var mv = t.match(/name="apuntes-version" content="([^"]+)"/);
+      fila('Versión servida por GitHub', mv ? mv[1] : '(no encontrada)');
+      var mr = t.match(/REGLAS_BASE = (\{.*?\});/);
+      fila('Reglas horneadas en esa versión', mr ? mr[1] : '(NO están: versión vieja)',
+           mr ? '' : 'mal');
+      var tieneP = t.indexOf('apCierrePanel') !== -1;
+      fila('¿Tiene el arreglo del panel?', tieneP ? 'SÍ' : 'NO — versión vieja',
+           tieneP ? 'ok' : 'mal');
+
+      /* ¿deberia cerrar ahora, segun las reglas horneadas? */
+      var deberia = false;
+      if (mr) {
+        try {
+          var reglas = JSON.parse(mr[1]).bloqueos || [];
+          var m = minutosAR(ahora);
+          for (var i = 0; i < reglas.length; i++) {
+            var d = reglas[i].diario;
+            if (d) {
+              var a = aMin(d.desde), z = aMin(d.hasta);
+              if (a <= z ? (m >= a && m < z) : (m >= a || m < z)) deberia = true;
+            }
+          }
+        } catch (e) {}
+      }
+      fila('¿Debería estar cerrada ahora?', deberia ? 'SÍ' : 'NO',
+           deberia ? 'ok' : '');
+      document.getElementById('salida').innerHTML = out.join('');
+    })
+    .catch(function (e) {
+      fila('No pude leer index.html', String(e), 'mal');
+      document.getElementById('salida').innerHTML = out.join('');
+    });
+})();
+</script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 01:58">
+<meta name="apuntes-version" content="22/08 02:02">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2317,18 +2317,23 @@ body {
     return dentroDe(REGLAS_BASE, ms) || dentroDe(r, ms);
   }
 
-  /* Hora confiable. Con conexion manda el servidor y ademas se guarda el DESFASE
-     contra el reloj del telefono, para poder corregirlo despues sin conexion. */
+  /* Hora confiable.
+
+     PROBADO Y DESCARTADO (22/08): guardar un DESFASE contra el reloj del telefono
+     y sumarlo despues sin conexion. La idea era corregir un reloj corrido, pero
+     si ese desfase se calculaba mal una sola vez —por ejemplo con una respuesta
+     servida desde el cache, que trae una cabecera Date vieja— la hora efectiva
+     quedaba corrida HORAS y el cierre nocturno simplemente no disparaba, en
+     silencio y para siempre. Un dato guardado mal no puede desactivar el cierre.
+     Ahora: con conexion manda el servidor; sin conexion se usa el reloj del
+     telefono TAL CUAL, y de los saltos se ocupa relojRaro(). */
   function guardarServidor(ms) {
-    lset(K_RELOJ, JSON.stringify({ visto: ms, desf: ms - Date.now() }));
+    lset(K_RELOJ, JSON.stringify({ visto: ms }));
   }
   function estado() {
     try { return JSON.parse(lget(K_RELOJ) || 'null'); } catch (e) { return null; }
   }
-  function ahoraLocalCorregida() {
-    var st = estado();
-    return Date.now() + ((st && typeof st.desf === 'number') ? st.desf : 0);
-  }
+  function ahoraLocalCorregida() { return Date.now(); }
   /* Solo tiene sentido SIN conexion: con servidor, el servidor manda y no hay nada
      que sospechar. La tolerancia es amplia a proposito — un telefono con el reloj
      20 minutos corrido es comun y no puede quedar afuera por eso. */
@@ -2416,7 +2421,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 01:58', detalle: 'CIERRE ' + motivo });
+                                    ver: '22/08 02:02', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -17164,7 +17169,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 01:58";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/08 02:02";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
