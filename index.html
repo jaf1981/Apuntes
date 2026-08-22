@@ -2267,7 +2267,7 @@ body {
      una copia vieja (o nunca lo leyo), la app abria igual. Paso el 21/08 a la
      noche con el corte de las 22:00. Ahora la regla viaja adentro del propio
      index.html y funciona desde la primera carga. */
-  var REGLAS_BASE = {"bloqueos": [{"diario": {"desde": "04:00", "hasta": "07:00"}}]};
+  var REGLAS_BASE = {"bloqueos":[{"diario":{"desde":"04:00","hasta":"07:00"}}]};
 
   function reglas() {
     try { return JSON.parse(lget(K_REGLAS) || 'null'); } catch (e) { return null; }
