@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/08 19:29">
+<meta name="apuntes-version" content="02/09 16:26">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1213,6 +1213,44 @@ body {
   margin-bottom: 22px;
   letter-spacing: -0.01em;
 }
+/* Figura del problema (Olimpiada). El SVG usa stroke="currentColor", asi que
+   hereda el color del texto y funciona igual en claro y en oscuro. */
+.quiz-fig { margin: 0 0 14px; text-align: center; color: var(--text); }
+.quiz-fig svg { width: 100%; max-width: 300px; height: auto; }
+/* Respuesta numerica: se escribe el numero, no hay opciones para adivinar */
+.quiz-num { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; }
+.quiz-num-in {
+  flex: 1 1 150px; min-width: 0; padding: 13px 15px; font-size: 17px;
+  border: 2px solid var(--border); border-radius: 12px;
+  background: var(--bg-elev); color: var(--text); font-family: inherit;
+}
+.quiz-num-in:focus { outline: none; border-color: var(--accent); }
+.quiz-num-in.correct { border-color: #4a9c5d; }
+.quiz-num-in.wrong { border-color: #c25b5b; }
+.quiz-num-in:disabled { opacity: 1; }
+.quiz-num .start-btn { flex: 0 0 auto; }
+.quiz-num-hint { flex: 1 0 100%; font-size: 13px; opacity: .7; margin-top: -2px; }
+.quiz-num-sol { margin-top: 7px; }
+/* Pistas: se piden de a una. Pedirlas baja el XP pero no lo anula — la idea es
+   que intentarlo con ayuda siga siendo mejor que no intentarlo. */
+.quiz-pistas { margin-top: 14px; }
+.quiz-pista-btn {
+  background: none; border: 1.5px dashed var(--border); color: var(--text);
+  padding: 9px 14px; border-radius: 11px; font-size: 14px; font-family: inherit;
+  cursor: pointer; opacity: .85;
+}
+.quiz-pista-btn:hover { opacity: 1; }
+.quiz-pista-btn:disabled { opacity: .45; cursor: default; border-style: solid; }
+.quiz-pista {
+  margin-top: 10px; padding: 11px 14px; border-radius: 11px;
+  background: var(--bg-elev); border-left: 3px solid var(--accent);
+  font-size: 15px; line-height: 1.5;
+}
+.quiz-pista-n {
+  display: inline-block; font-size: 12px; font-weight: 700;
+  color: var(--accent); margin-right: 5px; text-transform: uppercase;
+  letter-spacing: .04em;
+}
 .quiz-opts { display: grid; gap: 10px; }
 .quiz-opt {
   padding: 14px 18px;
@@ -1792,6 +1830,8 @@ body {
 [data-theme="dark"] .sp-card.geo { --card-tint: #7fb3d4; }
 .sp-card.his { --card-tint: #b08d57; }
 [data-theme="dark"] .sp-card.his { --card-tint: #c9a877; }
+.sp-card.oma { --card-tint: #7a6f9c; }
+[data-theme="dark"] .sp-card.oma { --card-tint: #a99ccc; }
 .sp-card.tec { --card-tint: #8a8f98; }
 [data-theme="dark"] .sp-card.tec { --card-tint: #a8b0bc; }
 .sp-card.len { --card-tint: #6d5b9e; }
@@ -2488,7 +2528,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '22/08 19:29', detalle: 'CIERRE ' + motivo });
+                                    ver: '02/09 16:26', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -2818,6 +2858,7 @@ body {
         <span class="quiz-prog-text" id="quizProgText">1 / 10</span>
       </div>
       <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-fig" id="quizFig" style="display:none"></div>
       <div class="quiz-opts" id="quizOpts"></div>
       <div id="quizFeedbackWrap"></div>
       <div class="quiz-actions" id="quizActions" style="display:none">
@@ -3079,6 +3120,19 @@ body {
           <div class="sp-card-progress">
             <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="lenProgressFill" style="width:0%"></div></div>
             <div class="sp-card-progress-text" id="lenProgressText">0 XP</div>
+          </div>
+        </div>
+        <span class="sp-card-arrow">›</span>
+      </button>
+
+      <button class="sp-card oma" data-subject="oma">
+        <span class="sp-card-emoji">🧭</span>
+        <div class="sp-card-body">
+          <div class="sp-card-title">Olimpíada</div>
+          <div class="sp-card-stats" id="omaStats">Problemas de la OMA · Nivel 1</div>
+          <div class="sp-card-progress">
+            <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="omaProgressFill" style="width:0%"></div></div>
+            <div class="sp-card-progress-text" id="omaProgressText">0 XP</div>
           </div>
         </div>
         <span class="sp-card-arrow">›</span>
@@ -14305,6 +14359,648 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ]
    }
   ]
+ },
+ "oma": {
+  "name": "Olimpíada",
+  "emoji": "🧭",
+  "storage_key": "biologia_ebook_v4_oma",
+  "pages": [
+   {
+    "title": "Ángulos en triángulos",
+    "html": "<p>Un problema de olimpíada de geometría casi nunca se resuelve midiendo. Se resuelve <strong>encadenando igualdades de ángulos</strong> hasta llegar al que te piden. Estas son las piezas de la cadena.</p>\n<p><strong>Los tres ángulos de un triángulo suman 180°.</strong> Es el punto de partida de todo.</p>\n<p><strong>El ángulo exterior.</strong> Si prolongás un lado, el ángulo que queda por fuera es igual a la <strong>suma de los dos ángulos no adyacentes</strong>. Sirve para saltar de un triángulo al de al lado sin volver a sumar 180.</p>\n<h3>El triángulo isósceles: la herramienta número uno</h3>\n<div class=\"callout\"><strong>Si dos lados son iguales, los dos ángulos opuestos a esos lados también.</strong> Y al revés: si dos ángulos son iguales, los lados opuestos también.</div>\n<p>Parece poco y es casi todo. En el Nivel 1, la mayoría de los problemas de geometría se resuelven <strong>encontrando un triángulo isósceles que no estaba a la vista</strong>. Cada vez que el enunciado te diga <em>AB = AC</em>, o <em>DE = CE</em>, o <em>todos los radios de una circunferencia</em>, ahí hay dos ángulos iguales esperándote.</p>\n<h3>El equilátero</h3>\n<p>Los tres lados iguales, los tres ángulos de <strong>60°</strong>. Cuando en un problema aparece un equilátero pegado a un cuadrado, el 60 y el 90 se combinan y salen ángulos como 150° o 30° casi solos.</p>\n<h3>Entre paralelas</h3>\n<p>Cuando una recta corta a dos paralelas, los ángulos <strong>alternos internos</strong> son iguales y los <strong>correspondientes</strong> también. El truco de siempre: si tenés una figura en zig-zag entre dos paralelas, <strong>trazá una paralela auxiliar por el vértice del medio</strong> y el ángulo de ahí se parte en dos pedazos que ya conocés.</p>",
+    "image_keys": [],
+    "chap_idx": 0
+   },
+   {
+    "title": "Polígonos regulares y circunferencia",
+    "html": "<p>Un polígono regular tiene todos los lados iguales y todos los ángulos iguales. Eso lo vuelve muy predecible, y por eso aparece tanto.</p>\n<h3>Las tres fórmulas</h3>\n<p>Para un polígono regular de <strong>n</strong> lados:</p>\n<div class=\"tbl-wrap\"><table><thead><tr><th>Qué</th><th>Cuánto mide</th></tr></thead><tbody><tr><td>Ángulo <strong>interior</strong> (en cada vértice)</td><td>180(n − 2) / n</td></tr><tr><td>Ángulo <strong>central</strong> (desde el centro, entre dos vértices vecinos)</td><td>360 / n</td></tr><tr><td>Ángulo <strong>exterior</strong> (al prolongar un lado)</td><td>360 / n</td></tr></tbody></table></div>\n<p>Que el central y el exterior den lo mismo no es casualidad, y es muy útil: <strong>cada vez que avanzás un lado, girás 360/n</strong>. Si dos rectas del polígono se cruzan fuera de él, el ángulo que forman se calcula contando <strong>cuántos lados hay entre ellas</strong> y multiplicando por 360/n.</p>\n<h3>El truco del giro completo</h3>\n<p>Cuando en un punto se juntan varias figuras, <strong>todos los ángulos alrededor de ese punto suman 360°</strong>. Con eso, un ángulo que no sabés calcular se despeja restando los que sí sabés. Es la forma más rápida de resolver los problemas de figuras encastradas.</p>\n<h3>La circunferencia</h3>\n<div class=\"callout\"><strong>Todos los radios miden lo mismo.</strong></div>\n<p>De ahí sale todo lo demás: cada vez que unís el centro con dos puntos de la circunferencia, te queda un <strong>triángulo isósceles</strong>. Volvés a la herramienta del capítulo 1.</p>\n<p>Y el <strong>ángulo inscripto</strong> mide la <strong>mitad</strong> del ángulo central que abarca el mismo arco. Si dos cuerdas se cortan adentro, el ángulo que forman es la <strong>semisuma</strong> de los dos arcos que abarcan.</p>",
+    "image_keys": [],
+    "chap_idx": 1
+   },
+   {
+    "title": "Cuadriláteros",
+    "html": "<p>Los cuatro ángulos de un cuadrilátero suman <strong>360°</strong>. Es el equivalente del 180 del triángulo, y muchas veces alcanza: si sabés tres, el cuarto sale por resta.</p>\n<h3>Lo que te regala cada figura</h3>\n<div class=\"tbl-wrap\"><table><thead><tr><th>Figura</th><th>Lo que podés usar</th></tr></thead><tbody><tr><td><strong>Cuadrado</strong></td><td>Cuatro ángulos de 90°, cuatro lados iguales, y las diagonales que cortan cada ángulo por la mitad (<strong>45°</strong>)</td></tr><tr><td><strong>Rombo</strong></td><td>Cuatro lados iguales, ángulos opuestos iguales, y los consecutivos suman 180°</td></tr><tr><td><strong>Paralelogramo</strong></td><td>Lados opuestos paralelos e iguales, ángulos opuestos iguales</td></tr><tr><td><strong>Trapecio</strong></td><td>Dos lados paralelos: entran todas las reglas de ángulos entre paralelas</td></tr></tbody></table></div>\n<h3>La estrategia que más rinde</h3>\n<p>Un cuadrilátero casi nunca se ataca entero: se <strong>parte en dos triángulos</strong> con una diagonal. Ahí volvés a terreno conocido — 180°, isósceles, ángulo exterior.</p>\n<p>Y prestá atención a los lados iguales que el enunciado desliza como al pasar (<em>BC = CD</em>, <em>CE = CD</em>). No están de adorno: cada uno es un triángulo isósceles que todavía no dibujaste.</p>\n<div class=\"callout\">📌 Un cuadrado más un triángulo equilátero apoyado en un lado es una combinación que aparece una y otra vez. Alrededor del vértice compartido: 90 + 60 + 60 = 210, así que lo que sobra hasta 360 es <strong>150°</strong>.</div>",
+    "image_keys": [],
+    "chap_idx": 2
+   }
+  ],
+  "toc": [
+   {
+    "num": 1,
+    "name": "Triángulos",
+    "icon": "📐",
+    "pages": [
+     {
+      "idx": 0,
+      "title": "Ángulos en triángulos"
+     }
+    ]
+   },
+   {
+    "num": 2,
+    "name": "Polígonos y circunferencia",
+    "icon": "⭕",
+    "pages": [
+     {
+      "idx": 1,
+      "title": "Polígonos regulares y circunferencia"
+     }
+    ]
+   },
+   {
+    "num": 3,
+    "name": "Cuadriláteros",
+    "icon": "🔷",
+    "pages": [
+     {
+      "idx": 2,
+      "title": "Cuadriláteros"
+     }
+    ]
+   }
+  ],
+  "imgs": {},
+  "quiz": [
+   {
+    "c": 1,
+    "q": "El triángulo isósceles ABC tiene AB = AC y ∠BAC = 20°. Sea D el punto del lado AB tal que AD = BC. Sea E en la recta BC tal que CE = CA, con B entre C y E, y sea F tal que ACEF es un rombo de lados AC, CE, EF y FA. Calcular la medida de los ángulos ∠FDE y ∠EDC.",
+    "tipo": "num",
+    "ans": [
+     60,
+     70
+    ],
+    "ansTxt": "∠FDE = 60°   y   ∠EDC = 70°",
+    "svg": "<svg viewBox=\"0 0 310 273\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"74.0\" y1=\"40.0\" x2=\"108.1\" y2=\"233.0\"/><line x1=\"108.1\" y1=\"233.0\" x2=\"40.0\" y2=\"233.0\"/><line x1=\"40.0\" y1=\"233.0\" x2=\"74.0\" y2=\"40.0\"/><line x1=\"40.0\" y1=\"233.0\" x2=\"236.0\" y2=\"233.0\"/><line x1=\"74.0\" y1=\"40.0\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"40.0\" x2=\"236.0\" y2=\"233.0\"/><line x1=\"85.8\" y1=\"107.0\" x2=\"236.0\" y2=\"233.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"85.8\" y1=\"107.0\" x2=\"270.0\" y2=\"40.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"85.8\" y1=\"107.0\" x2=\"40.0\" y2=\"233.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><path d=\"M 77.9 61.7 A 22 22 0 0 1 70.2 61.7\" opacity=\".75\"/><text x=\"74.0\" y=\"79.0\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">20°</text><circle cx=\"74.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"74.0\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"108.1\" cy=\"233.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"114.1\" y=\"245.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"40.0\" cy=\"233.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"32.0\" y=\"245.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"85.8\" cy=\"107.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"96.8\" y=\"109.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"236.0\" cy=\"233.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"247.0\" y=\"239.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"270.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"282.0\" y=\"40.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">F</text></svg>",
+    "exp": "Lo que hace andar el problema: DEF resulta EQUILÁTERO. Verificado, los tres lados miden exactamente el lado del rombo (DE = EF = FD = AC). De ahí ∠FDE = 60°. Y como además DE = CE, el triángulo CDE es isósceles y ∠EDC = ∠ECD = 70°.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Regional 2013 · Problema 3",
+    "pistas": [
+     "Empezá calculando los ángulos del triángulo ABC: es isósceles con 20° en A, así que los de la base miden 80° cada uno.",
+     "Medí DE, EF y FD: los tres dan lo mismo, el triángulo DEF es equilátero. Y por otro lado DE = CE, que te da un segundo isósceles para el otro ángulo."
+    ],
+    "id": 0
+   },
+   {
+    "c": 1,
+    "q": "Sea ABC un triángulo isósceles con ∠B = ∠C y ∠A mayor que 90°. La bisectriz del ángulo ∠C corta al lado AB en D. Sean E en BC tal que DE = BE y F en BE tal que DF es la bisectriz del ángulo ∠BDE. Si ∠FDC = 116°, calcular la medida del ángulo ∠ABC.",
+    "tipo": "num",
+    "ans": 32,
+    "ansTxt": "∠ABC = 32°",
+    "svg": "<svg viewBox=\"0 0 310 152\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"155.0\" y1=\"40.0\" x2=\"40.0\" y2=\"111.9\"/><line x1=\"40.0\" y1=\"111.9\" x2=\"270.0\" y2=\"111.9\"/><line x1=\"270.0\" y1=\"111.9\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"111.9\" x2=\"112.3\" y2=\"66.7\"/><line x1=\"112.3\" y1=\"66.7\" x2=\"90.3\" y2=\"111.9\"/><line x1=\"112.3\" y1=\"66.7\" x2=\"71.6\" y2=\"111.9\"/><path d=\"M 135.4 73.3 A 24 24 0 0 1 96.3 84.5\" opacity=\".75\"/><text x=\"122.5\" y=\"106.2\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">116°</text><circle cx=\"40.0\" cy=\"111.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"32.0\" y=\"121.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"270.0\" cy=\"111.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"280.0\" y=\"121.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"155.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"112.3\" cy=\"66.7\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"101.3\" y=\"66.7\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"90.3\" cy=\"111.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"90.3\" y=\"126.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"71.6\" cy=\"111.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"71.6\" y=\"126.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">F</text></svg>",
+    "exp": "Con ∠ABC = β: ∠BDC = 180° − β − β/2. Como EB = ED, ∠BDE = β, y DF la bisecta, ∠BDF = β/2. Entonces ∠FDC = 180° − 2β = 116° → β = 32°. Se comprueba ∠A = 116° > 90°, como pide el enunciado.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Zonal 2021 · Problema 3",
+    "pistas": [
+     "Llamale β al ángulo ∠ABC. Como el triángulo es isósceles, ∠ACB también vale β, y la bisectriz de C aporta β/2. Escribí ∠BDC en función de β.",
+     "DE = BE hace que ∠BDE = β, y DF lo parte al medio. Restale ese pedazo a ∠BDC: lo que queda es 116°. Ahí despejás β."
+    ],
+    "id": 1
+   },
+   {
+    "c": 1,
+    "q": "Sea ABC un triángulo isósceles con AB = AC y ∠BAC = 40°. Sean M el punto medio de BC y D un punto del lado AB, con D ≠ A y D ≠ B. Si E es un punto del segmento AM que satisface DE = CE, calcular la medida del ángulo ∠DEC.",
+    "tipo": "num",
+    "ans": 140,
+    "ansTxt": "∠DEC = 140°",
+    "svg": "<svg viewBox=\"0 0 310 330\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"131.0\" y1=\"40.0\" x2=\"222.0\" y2=\"290.0\"/><line x1=\"222.0\" y1=\"290.0\" x2=\"40.0\" y2=\"290.0\"/><line x1=\"40.0\" y1=\"290.0\" x2=\"131.0\" y2=\"40.0\"/><line x1=\"131.0\" y1=\"40.0\" x2=\"131.0\" y2=\"290.0\"/><line x1=\"176.5\" y1=\"165.0\" x2=\"131.0\" y2=\"252.3\"/><line x1=\"131.0\" y1=\"252.3\" x2=\"40.0\" y2=\"290.0\"/><path d=\"M 141.3 68.2 A 30 30 0 0 1 120.7 68.2\" opacity=\".75\"/><text x=\"131.0\" y=\"87.0\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">40°</text><path d=\"M 117.1 258.1 A 15 15 0 0 1 137.9 239.0\" opacity=\".75\"/><text x=\"112.1\" y=\"235.7\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"131.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"131.0\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"222.0\" cy=\"290.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"233.0\" y=\"296.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"40.0\" cy=\"290.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"29.0\" y=\"296.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"131.0\" cy=\"290.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"131.0\" y=\"305.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">M</text><circle cx=\"176.5\" cy=\"165.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"187.5\" y=\"165.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"131.0\" cy=\"252.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"141.0\" y=\"248.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text></svg>",
+    "exp": "AM es la mediatriz de BC, así que EB = EC. Con ED = EC, el punto E es el circuncentro de B, C y D, y ∠DEC = 2·∠DBC = 2·70° = 140°. No depende de dónde esté D: verificado con D a 1/4, 1/2 y 3/4 de AB.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Regional 2023 · Problema 3",
+    "pistas": [
+     "El triángulo es isósceles y M es el punto medio de BC, así que la recta AM es la mediatriz de BC. ¿Qué te dice eso de las distancias EB y EC?",
+     "Si EB = EC y además ED = EC, entonces E está a la misma distancia de B, de C y de D: es el centro de la circunferencia que pasa por los tres. Y el ángulo central es el doble del inscripto."
+    ],
+    "id": 2
+   },
+   {
+    "c": 1,
+    "q": "Los puntos D y E dividen al lado AB del triángulo equilátero ABC en tres partes iguales; D está entre A y E. El punto F del lado BC es tal que CF = AD. Hallar el valor de la suma de los ángulos ∠CDF + ∠CEF.",
+    "tipo": "num",
+    "ans": 30,
+    "ansTxt": "∠CDF + ∠CEF = 30°",
+    "svg": "<svg viewBox=\"0 0 310 279\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"40.0\" y1=\"239.2\" x2=\"270.0\" y2=\"239.2\"/><line x1=\"270.0\" y1=\"239.2\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"155.0\" y1=\"40.0\" x2=\"40.0\" y2=\"239.2\"/><line x1=\"155.0\" y1=\"40.0\" x2=\"116.7\" y2=\"239.2\"/><line x1=\"155.0\" y1=\"40.0\" x2=\"193.3\" y2=\"239.2\"/><line x1=\"116.7\" y1=\"239.2\" x2=\"193.3\" y2=\"106.4\"/><line x1=\"193.3\" y1=\"239.2\" x2=\"193.3\" y2=\"106.4\"/><circle cx=\"40.0\" cy=\"239.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"249.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"270.0\" cy=\"239.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"249.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"155.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"116.7\" cy=\"239.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"116.7\" y=\"253.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"193.3\" cy=\"239.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"193.3\" y=\"253.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"193.3\" cy=\"106.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"204.3\" y=\"108.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">F</text></svg>",
+    "exp": "La palanca es una congruencia: los triángulos ADC y CFA son iguales, porque AD = CF (dato), AC = CA y ∠DAC = ∠FCA = 60°. De ahí ∠ACD = ∠CAF, y también DC = FA (verificado: ambos 2,6458 con lado 3). Con eso los dos ángulos que pide el problema se acomodan y suman 30°.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Nacional 2015 · Problema 2",
+    "pistas": [
+     "Anotá todas las medidas: si el lado es 3, entonces AD = DE = EB = 1, y el dato CF = AD te da CF = 1.",
+     "Compará los triángulos ADC y CFA: tienen AD = CF, el lado AC en común, y el ángulo de 60° justo entre esos dos lados. Son iguales, y de ahí salen ángulos iguales que podés reacomodar."
+    ],
+    "id": 3
+   },
+   {
+    "c": 1,
+    "q": "En el triángulo equilátero ABC se marcaron los puntos D y E en BC y AC respectivamente, de modo que al doblar siguiendo el segmento DE el punto C se apoya sobre el lado AB en el punto C′ y ∠DC′B = 90°. Calcular las medidas de los ángulos del triángulo CED.",
+    "tipo": "num",
+    "ans": [
+     60,
+     45,
+     75
+    ],
+    "ansTxt": "∠ECD = 60°,  ∠CED = 45°,  ∠CDE = 75°",
+    "svg": "<svg viewBox=\"0 0 310 279\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"40.0\" y1=\"239.2\" x2=\"270.0\" y2=\"239.2\"/><line x1=\"270.0\" y1=\"239.2\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"155.0\" y1=\"40.0\" x2=\"40.0\" y2=\"239.2\"/><line x1=\"208.4\" y1=\"132.4\" x2=\"82.1\" y2=\"166.3\"/><line x1=\"208.4\" y1=\"132.4\" x2=\"208.4\" y2=\"239.2\"/><line x1=\"82.1\" y1=\"166.3\" x2=\"208.4\" y2=\"239.2\"/><path d=\"M 208.4 224.2 A 15 15 0 0 1 223.4 239.2\" opacity=\".75\"/><text x=\"228.2\" y=\"223.4\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">90°</text><circle cx=\"40.0\" cy=\"239.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"249.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"270.0\" cy=\"239.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"249.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"155.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"208.4\" cy=\"132.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"219.4\" y=\"134.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"208.4\" cy=\"239.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"208.4\" y=\"254.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C'</text><circle cx=\"82.1\" cy=\"166.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"71.1\" y=\"168.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text></svg>",
+    "exp": "Al doblar, ∠DC′E = 60°. Con ∠DC′B = 90°, queda ∠AC′E = 30°. En el triángulo BDC′: ∠BDC′ = 30°, y DE es eje de simetría → ∠CDE = 75°. En el triángulo AEC′: ∠AEC′ = 90° → ∠CED = 45°.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Zonal 2022 · Problema 3",
+    "pistas": [
+     "Doblar es reflejar: DC′ = DC, EC′ = EC, y el ángulo de 60° del vértice C viaja entero hasta C′.",
+     "Con ∠DC′B = 90° y ∠DC′E = 60°, lo que queda para ∠AC′E es 30°. Ahora resolvé los triángulos BDC′ y AEC′, y acordate de que DE y EC son ejes de simetría."
+    ],
+    "id": 4
+   },
+   {
+    "c": 1,
+    "q": "Sea ABCD un cuadrado y sean E y F dos puntos exteriores al cuadrado tales que CDF y BCE son triángulos equiláteros. Sea G el punto tal que el cuadrilátero ECFG es un rombo. Calcular las medidas de los ángulos del rombo ECFG.",
+    "tipo": "num",
+    "ans": [
+     150,
+     30,
+     150,
+     30
+    ],
+    "ansTxt": "∠ECF = 150°,  ∠CFG = 30°,  ∠FGE = 150°,  ∠GEC = 30°",
+    "svg": "<svg viewBox=\"0 0 310 310\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><polygon points=\"270.0,208.4 163.3,146.7 101.6,40.0 208.4,101.6\" fill=\"currentColor\" opacity=\".13\" stroke=\"none\"/><line x1=\"40.0\" y1=\"270.0\" x2=\"163.3\" y2=\"270.0\"/><line x1=\"163.3\" y1=\"270.0\" x2=\"163.3\" y2=\"146.7\"/><line x1=\"163.3\" y1=\"146.7\" x2=\"40.0\" y2=\"146.7\"/><line x1=\"40.0\" y1=\"146.7\" x2=\"40.0\" y2=\"270.0\"/><line x1=\"163.3\" y1=\"270.0\" x2=\"270.0\" y2=\"208.4\"/><line x1=\"163.3\" y1=\"146.7\" x2=\"270.0\" y2=\"208.4\"/><line x1=\"163.3\" y1=\"146.7\" x2=\"101.6\" y2=\"40.0\"/><line x1=\"40.0\" y1=\"146.7\" x2=\"101.6\" y2=\"40.0\"/><line x1=\"101.6\" y1=\"40.0\" x2=\"208.4\" y2=\"101.6\"/><line x1=\"208.4\" y1=\"101.6\" x2=\"270.0\" y2=\"208.4\"/><circle cx=\"40.0\" cy=\"270.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"280.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"163.3\" cy=\"270.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"172.3\" y=\"280.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"163.3\" cy=\"146.7\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"154.3\" y=\"142.7\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"40.0\" cy=\"146.7\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"142.7\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"270.0\" cy=\"208.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"281.0\" y=\"212.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"101.6\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"101.6\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">F</text><circle cx=\"208.4\" cy=\"101.6\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"219.4\" y=\"99.6\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">G</text></svg>",
+    "exp": "Alrededor de C: 90° (el cuadrado) + 60° + 60° (los dos equiláteros) + ∠ECF = 360°.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Intercolegial 2023 · Problema 3",
+    "pista": "Los 4 ángulos del rombo, separados por coma. El orden no importa.",
+    "pistas": [
+     "No calcules el rombo por dentro: mirá todo lo que se junta alrededor del vértice C.",
+     "El cuadrado aporta 90° y cada equilátero aporta 60°. Todo lo que rodea a C tiene que sumar 360°."
+    ],
+    "id": 5
+   },
+   {
+    "c": 1,
+    "q": "En el cuadrado ABCD de lados AB = BC = CD = DA = 2, sea P el punto en su interior tal que el triángulo ABP es equilátero y sea Q el punto afuera del cuadrado tal que el triángulo ADQ es equilátero. Calcular la medida de los ángulos del triángulo APQ y calcular el área del triángulo APQ.",
+    "tipo": "num",
+    "ans": [
+     90,
+     45,
+     45,
+     2
+    ],
+    "ansTxt": "∠PAQ = 90°,  ∠APQ = 45°,  ∠AQP = 45°.  Área = 2",
+    "svg": "<svg viewBox=\"0 0 310 203\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"146.7\" y1=\"163.3\" x2=\"270.0\" y2=\"163.3\"/><line x1=\"270.0\" y1=\"163.3\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"40.0\" x2=\"146.7\" y2=\"40.0\"/><line x1=\"146.7\" y1=\"40.0\" x2=\"146.7\" y2=\"163.3\"/><line x1=\"146.7\" y1=\"163.3\" x2=\"208.4\" y2=\"56.5\"/><line x1=\"270.0\" y1=\"163.3\" x2=\"208.4\" y2=\"56.5\"/><line x1=\"146.7\" y1=\"163.3\" x2=\"40.0\" y2=\"101.6\"/><line x1=\"146.7\" y1=\"40.0\" x2=\"40.0\" y2=\"101.6\"/><line x1=\"208.4\" y1=\"56.5\" x2=\"40.0\" y2=\"101.6\"/><path d=\"M 129.4 153.3 A 20 20 0 0 1 156.7 145.9\" opacity=\".75\"/><text x=\"138.2\" y=\"135.4\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"146.7\" cy=\"163.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"137.7\" y=\"173.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"270.0\" cy=\"163.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"173.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"270.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"146.7\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"154.7\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"208.4\" cy=\"56.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"217.4\" y=\"60.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">P</text><circle cx=\"40.0\" cy=\"101.6\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"29.0\" y=\"101.6\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">Q</text></svg>",
+    "exp": "AP = AQ = 2 (lados de los equiláteros). ∠PAB = 60° y ∠QAD = 60°, así que ∠PAQ = 60° + 90° + 60° − 120° = 90°. Área = ½·2·2 = 2.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Zonal 2024 · Problema 3",
+    "pista": "Escribí 4 valores separados por coma: los tres ángulos y el área.",
+    "pistas": [
+     "AP y AQ son lados de triángulos equiláteros construidos sobre lados del cuadrado, así que los dos miden 2. El triángulo APQ es isósceles.",
+     "Sumá todo lo que rodea al vértice A: ∠PAB = 60°, el ángulo del cuadrado 90°, ∠QAD = 60°. Fijate cuánto queda para ∠PAQ."
+    ],
+    "id": 6
+   },
+   {
+    "c": 1,
+    "q": "Sean ABC un triángulo equilátero y D el punto del lado BC tal que ∠CAD = 21°. Consideramos el punto E de la recta AD tal que AB = BE. Calcular la medida de los ángulos del triángulo BCE.\nAclaración: el punto D está ubicado entre A y E.",
+    "tipo": "num",
+    "ans": [
+     42,
+     69,
+     69
+    ],
+    "ansTxt": "∠CBE = 42°,  ∠BCE = 69°,  ∠BEC = 69°",
+    "svg": "<svg viewBox=\"0 0 310 266\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"40.0\" y1=\"226.3\" x2=\"230.4\" y2=\"226.3\"/><line x1=\"230.4\" y1=\"226.3\" x2=\"135.2\" y2=\"61.3\"/><line x1=\"135.2\" y1=\"61.3\" x2=\"40.0\" y2=\"226.3\"/><line x1=\"40.0\" y1=\"226.3\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"230.4\" y1=\"226.3\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"135.2\" y1=\"61.3\" x2=\"270.0\" y2=\"40.0\"/><path d=\"M 60.0 191.6 A 40 40 0 0 1 71.1 201.1\" opacity=\".75\"/><text x=\"74.4\" y=\"189.9\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">21°</text><circle cx=\"40.0\" cy=\"226.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"236.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"230.4\" cy=\"226.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"239.4\" y=\"236.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"135.2\" cy=\"61.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"135.2\" y=\"53.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"169.7\" cy=\"121.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"180.7\" y=\"121.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"270.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"278.0\" y=\"34.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text></svg>",
+    "exp": "∠BAD = 60° − 21° = 39°. Como AB = BE, el triángulo ABE es isósceles y ∠ABE = 102°, de donde ∠CBE = 102° − 60° = 42°. Como BC = AB = BE, el triángulo BCE es isósceles: los otros dos ángulos miden (180° − 42°)/2 = 69°.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Zonal 2025 · Problema 3",
+    "pistas": [
+     "∠BAD = 60° − 21° = 39°. Y como AB = BE, el triángulo ABE es isósceles.",
+     "Sacá ∠ABE del triángulo isósceles y restale los 60° de ∠ABC: eso te da ∠CBE. Después usá que BC = AB = BE para el resto."
+    ],
+    "id": 7
+   },
+   {
+    "c": 1,
+    "q": "Las rectas PQ y RS son paralelas, con A en PQ y B en RS. El segmento AC baja desde A y el segmento CB llega a B, formando una zeta. Se sabe que ∠ACB = 68° y ∠CBS = 27°. ¿Cuál es el valor del ángulo ∠QAC?",
+    "tipo": "num",
+    "ans": 41,
+    "ansTxt": "∠QAC = 41°",
+    "svg": "<svg viewBox=\"0 0 310 217\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"91.8\" y1=\"40.0\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"40.0\" y1=\"177.1\" x2=\"218.2\" y2=\"177.1\"/><line x1=\"180.9\" y1=\"40.0\" x2=\"190.2\" y2=\"146.0\"/><line x1=\"190.2\" y1=\"146.0\" x2=\"129.1\" y2=\"177.1\"/><path d=\"M 175.0 153.7 A 17.0 17.0 0 0 1 188.7 129.0\" opacity=\".75\"/><text x=\"163.9\" y=\"135.4\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">68°</text><path d=\"M 144.2 169.4 A 17.0 17.0 0 0 1 146.1 177.1\" opacity=\".75\"/><text x=\"158.3\" y=\"174.1\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">27°</text><path d=\"M 197.9 40.0 A 17.0 17.0 0 0 1 182.4 56.9\" opacity=\".75\"/><text x=\"203.0\" y=\"64.3\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"129.1\" cy=\"177.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"129.1\" y=\"192.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"190.2\" cy=\"146.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"201.2\" y=\"152.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"180.9\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"180.9\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"91.8\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"91.8\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">P</text><circle cx=\"270.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"270.0\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">Q</text><circle cx=\"40.0\" cy=\"177.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"40.0\" y=\"192.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">R</text><circle cx=\"218.2\" cy=\"177.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"218.2\" y=\"192.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">S</text></svg>",
+    "exp": "Trazando por C una paralela a las dos rectas, el ángulo de 68° se parte en dos: uno igual a ∠QAC y otro igual a los 27°. Entonces ∠QAC = 68° − 27° = 41°.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Zonal 2020 · Problema 3",
+    "pistas": [
+     "Trazá por C una recta paralela a PQ y a RS. Es el truco de siempre para las figuras en zig-zag.",
+     "Esa paralela parte el ángulo de 68° en dos pedazos: uno es igual al ángulo que buscás y el otro es igual a los 27° de abajo."
+    ],
+    "id": 8
+   },
+   {
+    "c": 2,
+    "q": "Se tiene un polígono regular P de n lados. Sean A, B, C, D y E cinco vértices consecutivos de P. Las rectas AB y DE se cortan en K, de modo que ∠BKD = 150°. Calcular la cantidad n de lados del polígono P.",
+    "tipo": "num",
+    "ans": 36,
+    "ansTxt": "n = 36",
+    "svg": "<svg viewBox=\"0 0 310 328\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"40.0\" y1=\"169.3\" x2=\"57.4\" y2=\"112.3\"/><line x1=\"57.4\" y1=\"112.3\" x2=\"101.0\" y2=\"71.7\"/><line x1=\"101.0\" y1=\"71.7\" x2=\"159.0\" y2=\"58.3\"/><line x1=\"159.0\" y1=\"58.3\" x2=\"216.0\" y2=\"75.7\"/><line x1=\"216.0\" y1=\"75.7\" x2=\"256.6\" y2=\"119.3\"/><line x1=\"256.6\" y1=\"119.3\" x2=\"270.0\" y2=\"177.3\"/><line x1=\"270.0\" y1=\"177.3\" x2=\"252.6\" y2=\"234.3\"/><line x1=\"252.6\" y1=\"234.3\" x2=\"209.0\" y2=\"274.9\"/><line x1=\"209.0\" y1=\"274.9\" x2=\"151.0\" y2=\"288.3\"/><line x1=\"209.0\" y1=\"274.9\" x2=\"151.0\" y2=\"288.3\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"151.0\" y1=\"288.3\" x2=\"94.0\" y2=\"270.9\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"94.0\" y1=\"270.9\" x2=\"53.4\" y2=\"227.3\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"53.4\" y1=\"227.3\" x2=\"40.0\" y2=\"169.3\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"40.0\" y1=\"169.3\" x2=\"57.4\" y2=\"112.3\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"159.0\" y1=\"58.3\" x2=\"238.3\" y2=\"40.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"256.6\" y1=\"119.3\" x2=\"238.3\" y2=\"40.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><path d=\"M 242.8 59.5 A 20 20 0 0 1 218.8 44.5\" opacity=\".75\"/><text x=\"220.8\" y=\"72.0\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">150°</text><circle cx=\"101.0\" cy=\"71.7\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"93.5\" y=\"61.6\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"159.0\" cy=\"58.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"159.6\" y=\"46.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"216.0\" cy=\"75.7\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"224.5\" y=\"66.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"256.6\" cy=\"119.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"270.7\" y=\"115.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"270.0\" cy=\"177.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"286.0\" y=\"181.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"238.3\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"238.3\" y=\"56.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">K</text></svg>",
+    "exp": "Al ir de la recta AB a la recta DE se giran 3 ángulos exteriores, 3·(360°/n). Entonces 180° − 3·(360°/n) = 150° → n = 36. Verificado por barrido de n entre 5 y 199: el único que da 150° es 36.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Regional 2012 · Problema 3",
+    "pista": "Acá no se pide un ángulo: se pide cuántos lados tiene el polígono.",
+    "pistas": [
+     "Cada vez que avanzás un lado en un polígono regular, la dirección de la recta gira un ángulo exterior, que mide 360/n.",
+     "De la recta AB a la recta DE hay 3 lados de diferencia, así que la dirección giró 3·(360/n). El ángulo en K es 180° menos ese giro."
+    ],
+    "id": 9
+   },
+   {
+    "c": 2,
+    "q": "En un hexágono regular ABCDEF (los vértices en ese orden) trazamos las diagonales AE y BD. Sean H en AE y G en BD tales que ABGH es un cuadrado. Calcular la medida del ángulo ∠FHE.",
+    "tipo": "num",
+    "ans": 105,
+    "ansTxt": "∠FHE = 105°",
+    "svg": "<svg viewBox=\"0 0 310 330\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"148.3\" y1=\"40.0\" x2=\"256.5\" y2=\"102.5\"/><line x1=\"256.5\" y1=\"102.5\" x2=\"256.5\" y2=\"227.5\"/><line x1=\"256.5\" y1=\"227.5\" x2=\"148.3\" y2=\"290.0\"/><line x1=\"148.3\" y1=\"290.0\" x2=\"40.0\" y2=\"227.5\"/><line x1=\"40.0\" y1=\"227.5\" x2=\"40.0\" y2=\"102.5\"/><line x1=\"40.0\" y1=\"102.5\" x2=\"148.3\" y2=\"40.0\"/><line x1=\"148.3\" y1=\"40.0\" x2=\"40.0\" y2=\"227.5\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"256.5\" y1=\"102.5\" x2=\"148.3\" y2=\"290.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"148.3\" y1=\"40.0\" x2=\"256.5\" y2=\"102.5\"/><line x1=\"256.5\" y1=\"102.5\" x2=\"194.0\" y2=\"210.8\"/><line x1=\"194.0\" y1=\"210.8\" x2=\"85.8\" y2=\"148.3\"/><line x1=\"85.8\" y1=\"148.3\" x2=\"148.3\" y2=\"40.0\"/><path d=\"M 77.3 163.0 A 17.0 17.0 0 0 1 73.7 136.2\" opacity=\".75\"/><text x=\"56.0\" y=\"156.2\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"148.3\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"148.3\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"256.5\" cy=\"102.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"267.5\" y=\"102.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"256.5\" cy=\"227.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"267.5\" y=\"235.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"148.3\" cy=\"290.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"148.3\" y=\"306.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"40.0\" cy=\"227.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"28.0\" y=\"235.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"40.0\" cy=\"102.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"28.0\" y=\"102.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">F</text><circle cx=\"85.8\" cy=\"148.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"74.8\" y=\"152.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">H</text><circle cx=\"194.0\" cy=\"210.8\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"205.0\" y=\"214.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">G</text></svg>",
+    "exp": "Ojo: hay DOS cuadrados posibles sobre el lado AB. Sólo uno tiene H en el segmento AE y G en el segmento BD, que es lo que pide el enunciado.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Zonal 2014 · Problema 2",
+    "pistas": [
+     "Ojo con una trampa: sobre el lado AB se pueden dibujar DOS cuadrados, uno para cada lado. El que sirve es el que deja H adentro del segmento AE y G adentro de BD.",
+     "Con el hexágono de lado 1, el cuadrado apoyado en AB tiene su vértice H sobre AE. Ubicalo y mirá qué ángulo forman ahí los segmentos HF y HE."
+    ],
+    "id": 10
+   },
+   {
+    "c": 2,
+    "q": "Sean A, B, C, D, E, F y G siete vértices consecutivos de un polígono regular de 15 lados. Las diagonales AE y CG se cortan en P. Calcular la medida del ángulo ∠APG.",
+    "tipo": "num",
+    "ans": 132,
+    "ansTxt": "∠APG = 132°",
+    "svg": "<svg viewBox=\"0 0 310 309\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"155.0\" y1=\"40.0\" x2=\"202.0\" y2=\"50.0\"/><line x1=\"202.0\" y1=\"50.0\" x2=\"240.9\" y2=\"78.3\"/><line x1=\"240.9\" y1=\"78.3\" x2=\"265.0\" y2=\"119.9\"/><line x1=\"265.0\" y1=\"119.9\" x2=\"270.0\" y2=\"167.7\"/><line x1=\"270.0\" y1=\"167.7\" x2=\"255.1\" y2=\"213.5\"/><line x1=\"255.1\" y1=\"213.5\" x2=\"223.0\" y2=\"249.2\"/><line x1=\"223.0\" y1=\"249.2\" x2=\"179.0\" y2=\"268.7\"/><line x1=\"179.0\" y1=\"268.7\" x2=\"131.0\" y2=\"268.7\"/><line x1=\"131.0\" y1=\"268.7\" x2=\"87.0\" y2=\"249.2\"/><line x1=\"87.0\" y1=\"249.2\" x2=\"54.9\" y2=\"213.5\"/><line x1=\"54.9\" y1=\"213.5\" x2=\"40.0\" y2=\"167.7\"/><line x1=\"40.0\" y1=\"167.7\" x2=\"45.0\" y2=\"119.9\"/><line x1=\"45.0\" y1=\"119.9\" x2=\"69.1\" y2=\"78.3\"/><line x1=\"69.1\" y1=\"78.3\" x2=\"108.0\" y2=\"50.0\"/><line x1=\"108.0\" y1=\"50.0\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"155.0\" y1=\"40.0\" x2=\"270.0\" y2=\"167.7\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"240.9\" y1=\"78.3\" x2=\"223.0\" y2=\"249.2\" stroke-dasharray=\"5 4\" opacity=\".55\"/><path d=\"M 233.8 146.4 A 17.0 17.0 0 0 1 224.2 116.8\" opacity=\".75\"/><text x=\"207.0\" y=\"142.7\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"155.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"29.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"202.0\" cy=\"50.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"208.1\" y=\"40.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"240.9\" cy=\"78.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"252.1\" y=\"72.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"265.0\" cy=\"119.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.2\" y=\"119.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"270.0\" cy=\"167.7\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"284.9\" y=\"173.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"255.1\" cy=\"213.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"268.1\" y=\"225.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">F</text><circle cx=\"223.0\" cy=\"249.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"231.8\" y=\"265.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">G</text><circle cx=\"235.6\" cy=\"129.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"235.6\" y=\"121.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">P</text></svg>",
+    "exp": "Dos cuerdas que se cortan adentro forman un ángulo igual a la semisuma de los arcos que abarcan. Cada lado del polígono de 15 lados abarca 24°.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Regional 2014 · Problema 3",
+    "pistas": [
+     "En un polígono regular de 15 lados, cada lado abarca un arco de 360/15 = 24°.",
+     "Dos cuerdas que se cortan adentro forman un ángulo igual a la SEMISUMA de los dos arcos que abarcan. Contá cuántos lados abarca cada arco y multiplicá por 24°."
+    ],
+    "id": 11
+   },
+   {
+    "c": 2,
+    "q": "Se tienen cuatro vértices consecutivos de un polígono regular de 10 lados: A, B, C y D. Sea P el punto interior al polígono tal que el triángulo BPC es equilátero. Calcular la medida del ángulo ∠BPD.",
+    "tipo": "num",
+    "ans": 108,
+    "ansTxt": "∠BPD = 108°",
+    "svg": "<svg viewBox=\"0 0 310 322\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"155.0\" y1=\"40.0\" x2=\"226.1\" y2=\"63.1\"/><line x1=\"226.1\" y1=\"63.1\" x2=\"270.0\" y2=\"123.6\"/><line x1=\"270.0\" y1=\"123.6\" x2=\"270.0\" y2=\"198.3\"/><line x1=\"270.0\" y1=\"198.3\" x2=\"226.1\" y2=\"258.7\"/><line x1=\"226.1\" y1=\"258.7\" x2=\"155.0\" y2=\"281.8\"/><line x1=\"155.0\" y1=\"281.8\" x2=\"83.9\" y2=\"258.7\"/><line x1=\"83.9\" y1=\"258.7\" x2=\"40.0\" y2=\"198.3\"/><line x1=\"40.0\" y1=\"198.3\" x2=\"40.0\" y2=\"123.6\"/><line x1=\"40.0\" y1=\"123.6\" x2=\"83.9\" y2=\"63.1\"/><line x1=\"83.9\" y1=\"63.1\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"226.1\" y1=\"63.1\" x2=\"195.7\" y2=\"131.4\"/><line x1=\"195.7\" y1=\"131.4\" x2=\"270.0\" y2=\"123.6\"/><line x1=\"195.7\" y1=\"131.4\" x2=\"270.0\" y2=\"198.3\" stroke-dasharray=\"5 4\" opacity=\".55\"/><path d=\"M 204.6 111.3 A 22 22 0 0 1 212.0 146.1\" opacity=\".75\"/><text x=\"229.9\" y=\"128.1\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"155.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"29.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"226.1\" cy=\"63.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"234.9\" y=\"55.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"270.0\" cy=\"123.6\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"284.3\" y=\"122.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"270.0\" cy=\"198.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"284.3\" y=\"206.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"195.7\" cy=\"131.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"195.7\" y=\"123.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">P</text></svg>",
+    "exp": "El ángulo interior del decágono es 144°, así que ∠PCD = 144° − 60° = 84°. Como CP = CB = lado = CD, el triángulo PCD es isósceles y ∠CPD = 48°. ∠BPD = 60° + 48° = 108°.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Intercolegial 2016 · Problema 3",
+    "pistas": [
+     "El ángulo interior de un polígono regular de 10 lados mide 180·(10−2)/10 = 144°.",
+     "En el vértice C, el equilátero se lleva 60°, así que a ∠PCD le quedan 84°. Y como CP = CB = lado = CD, el triángulo PCD también es isósceles."
+    ],
+    "id": 12
+   },
+   {
+    "c": 2,
+    "q": "Sea ABCDE un pentágono tal que AB = BC = CA = AD = DE = EA y ∠CAD = 40°. Calcular la medida del ángulo ∠ABE.\nAclaración: los lados del pentágono ABCDE son AB, BC, CD, DE y EA.",
+    "tipo": "num",
+    "ans": 10,
+    "ansTxt": "∠ABE = 10°",
+    "svg": "<svg viewBox=\"0 0 310 197\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"151.4\" y1=\"156.8\" x2=\"270.0\" y2=\"156.8\"/><line x1=\"270.0\" y1=\"156.8\" x2=\"210.7\" y2=\"54.1\"/><line x1=\"210.7\" y1=\"54.1\" x2=\"130.8\" y2=\"40.0\"/><line x1=\"130.8\" y1=\"40.0\" x2=\"40.0\" y2=\"116.2\"/><line x1=\"40.0\" y1=\"116.2\" x2=\"151.4\" y2=\"156.8\"/><line x1=\"151.4\" y1=\"156.8\" x2=\"210.7\" y2=\"54.1\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"151.4\" y1=\"156.8\" x2=\"130.8\" y2=\"40.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"270.0\" y1=\"156.8\" x2=\"40.0\" y2=\"116.2\" stroke-dasharray=\"5 4\" opacity=\".55\"/><path d=\"M 144.5 117.4 A 40 40 0 0 1 171.4 122.1\" opacity=\".75\"/><text x=\"160.6\" y=\"108.6\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">40°</text><circle cx=\"151.4\" cy=\"156.8\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"151.4\" y=\"171.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"270.0\" cy=\"156.8\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"281.0\" y=\"160.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"210.7\" cy=\"54.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"220.7\" y=\"50.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"130.8\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"130.8\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"40.0\" cy=\"116.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"29.0\" y=\"116.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text></svg>",
+    "exp": "Hay dos posiciones posibles para E; sólo una da un pentágono ABCDE que no se cruza a sí mismo. Verificado con test de auto-intersección.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Zonal 2017 · Problema 3",
+    "pistas": [
+     "AB = BC = CA dice que ABC es equilátero, y AD = DE = EA dice que ADE también lo es. Los dos comparten el vértice A.",
+     "Poné en orden los cuatro rayos que salen de A: AB, después AC a 60°, después AD a 40° más, y después AE a 60° más. Con eso ubicás E y mirás el triángulo ABE."
+    ],
+    "id": 13
+   },
+   {
+    "c": 2,
+    "q": "Cuatro pentágonos regulares e iguales están ubicados como en la figura. Calcular el valor de los ángulos del cuadrilátero sombreado.",
+    "tipo": "num",
+    "ans": [
+     36,
+     144,
+     36,
+     144
+    ],
+    "ansTxt": "36°, 144°, 36° y 144°",
+    "svg": "<svg viewBox=\"0 0 310 299\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><polygon points=\"133.0,149.4 155.0,81.8 177.0,149.4 155.0,217.0\" fill=\"currentColor\" opacity=\".13\" stroke=\"none\"/><line x1=\"133.0\" y1=\"149.4\" x2=\"155.0\" y2=\"81.8\"/><line x1=\"155.0\" y1=\"81.8\" x2=\"97.5\" y2=\"40.0\"/><line x1=\"97.5\" y1=\"40.0\" x2=\"40.0\" y2=\"81.8\"/><line x1=\"40.0\" y1=\"81.8\" x2=\"62.0\" y2=\"149.4\"/><line x1=\"62.0\" y1=\"149.4\" x2=\"133.0\" y2=\"149.4\"/><line x1=\"133.0\" y1=\"149.4\" x2=\"155.0\" y2=\"217.0\"/><line x1=\"155.0\" y1=\"217.0\" x2=\"97.5\" y2=\"258.7\"/><line x1=\"97.5\" y1=\"258.7\" x2=\"40.0\" y2=\"217.0\"/><line x1=\"40.0\" y1=\"217.0\" x2=\"62.0\" y2=\"149.4\"/><line x1=\"62.0\" y1=\"149.4\" x2=\"133.0\" y2=\"149.4\"/><line x1=\"155.0\" y1=\"81.8\" x2=\"177.0\" y2=\"149.4\"/><line x1=\"177.0\" y1=\"149.4\" x2=\"248.0\" y2=\"149.4\"/><line x1=\"248.0\" y1=\"149.4\" x2=\"270.0\" y2=\"81.8\"/><line x1=\"270.0\" y1=\"81.8\" x2=\"212.5\" y2=\"40.0\"/><line x1=\"212.5\" y1=\"40.0\" x2=\"155.0\" y2=\"81.8\"/><line x1=\"155.0\" y1=\"217.0\" x2=\"177.0\" y2=\"149.4\"/><line x1=\"177.0\" y1=\"149.4\" x2=\"248.0\" y2=\"149.4\"/><line x1=\"248.0\" y1=\"149.4\" x2=\"270.0\" y2=\"217.0\"/><line x1=\"270.0\" y1=\"217.0\" x2=\"212.5\" y2=\"258.7\"/><line x1=\"212.5\" y1=\"258.7\" x2=\"155.0\" y2=\"217.0\"/><line x1=\"133.0\" y1=\"149.4\" x2=\"155.0\" y2=\"81.8\"/><line x1=\"155.0\" y1=\"81.8\" x2=\"177.0\" y2=\"149.4\"/><line x1=\"177.0\" y1=\"149.4\" x2=\"155.0\" y2=\"217.0\"/><line x1=\"155.0\" y1=\"217.0\" x2=\"133.0\" y2=\"149.4\"/></svg>",
+    "exp": "En el vértice izquierdo del rombo se juntan los dos pentágonos de la izquierda y el rombo, y el giro cierra en 360°: 108° + 108° + 144° = 360°. En el vértice de arriba los dos pentágonos superiores se tocan sólo en ese punto y queda una muesca abierta de 108°: 108° + 108° + 36° + 108° = 360°.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Intercolegial 2018 · Problema 3",
+    "pista": "Los 4 ángulos del cuadrilátero, separados por coma. El orden no importa.",
+    "pistas": [
+     "El ángulo interior de un pentágono regular mide 108°. Y los cuatro lados del cuadrilátero sombreado son lados de pentágono, así que es un rombo.",
+     "Mirá el vértice IZQUIERDO del rombo: ahí se juntan los dos pentágonos de la izquierda y el rombo, y los tres ángulos tienen que cerrar 360°."
+    ],
+    "id": 14
+   },
+   {
+    "c": 2,
+    "q": "Sean A y B puntos en una circunferencia de centro O tales que ∠AOB = 90°. La perpendicular a AO trazada por su punto medio corta al menor arco AB en K, y los segmentos AB y KO se cortan en L. Calcular la medida de los ángulos del triángulo BKL.",
+    "tipo": "num",
+    "ans": [
+     30,
+     75,
+     75
+    ],
+    "ansTxt": "∠KBL = 30°,  ∠BKL = 75°,  ∠BLK = 75°",
+    "svg": "<svg viewBox=\"0 0 310 310\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><circle cx=\"155.0\" cy=\"155.0\" r=\"115.0\"/><line x1=\"155.0\" y1=\"155.0\" x2=\"270.0\" y2=\"155.0\"/><line x1=\"155.0\" y1=\"155.0\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"155.0\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"212.5\" y1=\"55.4\" x2=\"155.0\" y2=\"155.0\"/><line x1=\"212.5\" y1=\"155.0\" x2=\"212.5\" y2=\"55.4\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"212.5\" y1=\"55.4\" x2=\"155.0\" y2=\"40.0\"/><path d=\"M 155.0 129.0 A 26 26 0 0 1 181.0 155.0\" opacity=\".75\"/><text x=\"182.6\" y=\"131.4\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">90°</text><circle cx=\"155.0\" cy=\"155.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"145.0\" y=\"163.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">O</text><circle cx=\"270.0\" cy=\"155.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"282.0\" y=\"159.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"155.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"212.5\" cy=\"55.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"221.5\" y=\"49.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">K</text><circle cx=\"197.1\" cy=\"82.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"208.1\" y=\"88.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">L</text></svg>",
+    "exp": "K está en la mediatriz de OA, así que KO = KA; y KO = OA por ser radios. Entonces OKA es EQUILÁTERO y ∠AOK = 60°, de donde ∠KOB = 30°. Como OK = OB, ∠OBK = 75°. Y OAB es rectángulo isósceles, así que ∠OBA = 45°: ∠KBL = 75° − 45° = 30°, y en el triángulo BOL queda ∠BLK = 75°.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Regional 2018 · Problema 3",
+    "pistas": [
+     "K está sobre la mediatriz de OA, así que KO = KA. Y KO = OA porque los dos son radios de la misma circunferencia.",
+     "Tres lados iguales: OKA es equilátero, ∠AOK = 60° y queda ∠KOB = 30°. Sumale que OAB es rectángulo isósceles (∠AOB = 90° con OA = OB)."
+    ],
+    "id": 15
+   },
+   {
+    "c": 2,
+    "q": "En una semicircunferencia de centro O y diámetro AE se marcan los puntos B, C y D, en ese orden, de modo que ∠AOB = (1/5)·∠BOC = (1/4)·∠COD = (1/2)·∠DOE. Determinar las medidas de los ángulos ∠AOB, ∠BOC, ∠COD y ∠DOE.",
+    "tipo": "num",
+    "ans": [
+     15,
+     75,
+     60,
+     30
+    ],
+    "ansTxt": "∠AOB = 15°,  ∠BOC = 75°,  ∠COD = 60°,  ∠DOE = 30°",
+    "svg": "<svg viewBox=\"0 0 310 201\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"155.0\" y1=\"155.0\" x2=\"270.0\" y2=\"155.0\"/><line x1=\"155.0\" y1=\"155.0\" x2=\"254.6\" y2=\"97.5\"/><line x1=\"155.0\" y1=\"155.0\" x2=\"125.2\" y2=\"43.9\"/><line x1=\"155.0\" y1=\"155.0\" x2=\"43.9\" y2=\"125.2\"/><line x1=\"155.0\" y1=\"155.0\" x2=\"40.0\" y2=\"155.0\"/><line x1=\"40.0\" y1=\"155.0\" x2=\"270.0\" y2=\"155.0\"/><line x1=\"270.0\" y1=\"155.0\" x2=\"269.8\" y2=\"149.0\"/><line x1=\"269.8\" y1=\"149.0\" x2=\"269.4\" y2=\"143.0\"/><line x1=\"269.4\" y1=\"143.0\" x2=\"268.6\" y2=\"137.0\"/><line x1=\"268.6\" y1=\"137.0\" x2=\"267.5\" y2=\"131.1\"/><line x1=\"267.5\" y1=\"131.1\" x2=\"266.1\" y2=\"125.2\"/><line x1=\"266.1\" y1=\"125.2\" x2=\"264.4\" y2=\"119.5\"/><line x1=\"264.4\" y1=\"119.5\" x2=\"262.4\" y2=\"113.8\"/><line x1=\"262.4\" y1=\"113.8\" x2=\"260.1\" y2=\"108.2\"/><line x1=\"260.1\" y1=\"108.2\" x2=\"257.5\" y2=\"102.8\"/><line x1=\"257.5\" y1=\"102.8\" x2=\"254.6\" y2=\"97.5\"/><line x1=\"254.6\" y1=\"97.5\" x2=\"251.4\" y2=\"92.4\"/><line x1=\"251.4\" y1=\"92.4\" x2=\"248.0\" y2=\"87.4\"/><line x1=\"248.0\" y1=\"87.4\" x2=\"244.4\" y2=\"82.6\"/><line x1=\"244.4\" y1=\"82.6\" x2=\"240.5\" y2=\"78.0\"/><line x1=\"240.5\" y1=\"78.0\" x2=\"236.3\" y2=\"73.7\"/><line x1=\"236.3\" y1=\"73.7\" x2=\"232.0\" y2=\"69.5\"/><line x1=\"232.0\" y1=\"69.5\" x2=\"227.4\" y2=\"65.6\"/><line x1=\"227.4\" y1=\"65.6\" x2=\"222.6\" y2=\"62.0\"/><line x1=\"222.6\" y1=\"62.0\" x2=\"217.6\" y2=\"58.6\"/><line x1=\"217.6\" y1=\"58.6\" x2=\"212.5\" y2=\"55.4\"/><line x1=\"212.5\" y1=\"55.4\" x2=\"207.2\" y2=\"52.5\"/><line x1=\"207.2\" y1=\"52.5\" x2=\"201.8\" y2=\"49.9\"/><line x1=\"201.8\" y1=\"49.9\" x2=\"196.2\" y2=\"47.6\"/><line x1=\"196.2\" y1=\"47.6\" x2=\"190.5\" y2=\"45.6\"/><line x1=\"190.5\" y1=\"45.6\" x2=\"184.8\" y2=\"43.9\"/><line x1=\"184.8\" y1=\"43.9\" x2=\"178.9\" y2=\"42.5\"/><line x1=\"178.9\" y1=\"42.5\" x2=\"173.0\" y2=\"41.4\"/><line x1=\"173.0\" y1=\"41.4\" x2=\"167.0\" y2=\"40.6\"/><line x1=\"167.0\" y1=\"40.6\" x2=\"161.0\" y2=\"40.2\"/><line x1=\"161.0\" y1=\"40.2\" x2=\"155.0\" y2=\"40.0\"/><line x1=\"155.0\" y1=\"40.0\" x2=\"149.0\" y2=\"40.2\"/><line x1=\"149.0\" y1=\"40.2\" x2=\"143.0\" y2=\"40.6\"/><line x1=\"143.0\" y1=\"40.6\" x2=\"137.0\" y2=\"41.4\"/><line x1=\"137.0\" y1=\"41.4\" x2=\"131.1\" y2=\"42.5\"/><line x1=\"131.1\" y1=\"42.5\" x2=\"125.2\" y2=\"43.9\"/><line x1=\"125.2\" y1=\"43.9\" x2=\"119.5\" y2=\"45.6\"/><line x1=\"119.5\" y1=\"45.6\" x2=\"113.8\" y2=\"47.6\"/><line x1=\"113.8\" y1=\"47.6\" x2=\"108.2\" y2=\"49.9\"/><line x1=\"108.2\" y1=\"49.9\" x2=\"102.8\" y2=\"52.5\"/><line x1=\"102.8\" y1=\"52.5\" x2=\"97.5\" y2=\"55.4\"/><line x1=\"97.5\" y1=\"55.4\" x2=\"92.4\" y2=\"58.6\"/><line x1=\"92.4\" y1=\"58.6\" x2=\"87.4\" y2=\"62.0\"/><line x1=\"87.4\" y1=\"62.0\" x2=\"82.6\" y2=\"65.6\"/><line x1=\"82.6\" y1=\"65.6\" x2=\"78.0\" y2=\"69.5\"/><line x1=\"78.0\" y1=\"69.5\" x2=\"73.7\" y2=\"73.7\"/><line x1=\"73.7\" y1=\"73.7\" x2=\"69.5\" y2=\"78.0\"/><line x1=\"69.5\" y1=\"78.0\" x2=\"65.6\" y2=\"82.6\"/><line x1=\"65.6\" y1=\"82.6\" x2=\"62.0\" y2=\"87.4\"/><line x1=\"62.0\" y1=\"87.4\" x2=\"58.6\" y2=\"92.4\"/><line x1=\"58.6\" y1=\"92.4\" x2=\"55.4\" y2=\"97.5\"/><line x1=\"55.4\" y1=\"97.5\" x2=\"52.5\" y2=\"102.8\"/><line x1=\"52.5\" y1=\"102.8\" x2=\"49.9\" y2=\"108.2\"/><line x1=\"49.9\" y1=\"108.2\" x2=\"47.6\" y2=\"113.8\"/><line x1=\"47.6\" y1=\"113.8\" x2=\"45.6\" y2=\"119.5\"/><line x1=\"45.6\" y1=\"119.5\" x2=\"43.9\" y2=\"125.2\"/><line x1=\"43.9\" y1=\"125.2\" x2=\"42.5\" y2=\"131.1\"/><line x1=\"42.5\" y1=\"131.1\" x2=\"41.4\" y2=\"137.0\"/><line x1=\"41.4\" y1=\"137.0\" x2=\"40.6\" y2=\"143.0\"/><line x1=\"40.6\" y1=\"143.0\" x2=\"40.2\" y2=\"149.0\"/><line x1=\"40.2\" y1=\"149.0\" x2=\"40.0\" y2=\"155.0\"/><line x1=\"40.0\" y1=\"155.0\" x2=\"40.2\" y2=\"161.0\"/><circle cx=\"155.0\" cy=\"155.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"171.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">O</text><circle cx=\"270.0\" cy=\"155.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"285.0\" y=\"159.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"254.6\" cy=\"97.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"267.6\" y=\"94.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"125.2\" cy=\"43.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"121.4\" y=\"33.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"43.9\" cy=\"125.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"29.4\" y=\"125.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"40.0\" cy=\"155.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"25.0\" y=\"159.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text></svg>",
+    "exp": "Los cuatro ángulos cubren la semicircunferencia: x + 5x + 4x + 2x = 180° → x = 15°.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Intercolegial 2022 · Problema 3",
+    "pista": "Los 4 ángulos, separados por coma. El orden no importa.",
+    "pistas": [
+     "Llamale x al más chico de los cuatro y escribí los otros tres en función de x. Cuidado con la dirección de las fracciones.",
+     "Los cuatro ángulos juntos cubren toda la semicircunferencia, así que suman 180°."
+    ],
+    "id": 16
+   },
+   {
+    "c": 3,
+    "q": "Se tiene un cuadrilátero ABCD, de lados AB, BC, CD, DA, con BC = CD, ∠ABC = 70° y ∠BCD = 170°. Además, hay un punto E en el lado AD tal que ∠ABE = 10° y CE = CD. Calcular las medidas de los ángulos ∠BAD y ∠ADC.",
+    "tipo": "num",
+    "ans": [
+     85,
+     35
+    ],
+    "ansTxt": "∠BAD = 85°   y   ∠ADC = 35°",
+    "svg": "<svg viewBox=\"0 0 310 189\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"230.4\" y1=\"40.0\" x2=\"270.0\" y2=\"148.9\"/><line x1=\"270.0\" y1=\"148.9\" x2=\"154.1\" y2=\"148.9\"/><line x1=\"154.1\" y1=\"148.9\" x2=\"40.0\" y2=\"128.8\"/><line x1=\"40.0\" y1=\"128.8\" x2=\"230.4\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"148.9\" x2=\"212.1\" y2=\"48.5\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"154.1\" y1=\"148.9\" x2=\"212.1\" y2=\"48.5\" stroke-dasharray=\"5 4\" opacity=\".55\"/><path d=\"M 248.0 148.9 A 22 22 0 0 1 262.5 128.2\" opacity=\".75\"/><text x=\"241.3\" y=\"132.8\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">70°</text><path d=\"M 128.5 144.4 A 26 26 0 0 1 180.1 148.9\" opacity=\".75\"/><text x=\"157.5\" y=\"114.0\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">170°</text><circle cx=\"154.1\" cy=\"148.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"154.1\" y=\"164.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"270.0\" cy=\"148.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"281.0\" y=\"154.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"40.0\" cy=\"128.8\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"29.0\" y=\"130.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"212.1\" cy=\"48.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"222.1\" y=\"56.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">E</text><circle cx=\"230.4\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"230.4\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text></svg>",
+    "exp": "CB = CD = CE, así que B, D y E están en una circunferencia de centro C. Como ∠EBC = 70° − 10° = 60° y CB = CE, el triángulo BCE es equilátero: ∠BCE = 60°. Entonces ∠ECD = 170° − 60° = 110°, y CED es isósceles: ∠CDE = 35°. Como E está en AD, ∠ADC = 35°, y ∠BAD = 360° − 70° − 170° − 35° = 85°.",
+    "page": "Cuadriláteros",
+    "fuente": "Intercolegial 2013 · Problema 2",
+    "pistas": [
+     "Fijate qué segmentos miden lo mismo: BC = CD, y además CE = CD. Los tres salen del mismo punto C, así que B, D y E están todos a la misma distancia de C.",
+     "El ángulo ∠EBC mide 70° − 10° = 60°. Si además CB = CE, ¿qué clase de triángulo es BCE? Una vez que sepas ∠BCE, restalo de los 170°."
+    ],
+    "id": 17
+   },
+   {
+    "c": 3,
+    "q": "Sea ABCD un rectángulo. Se consideran un punto P del lado AB y un punto Q del lado AD tales que ∠BPC = ∠CPQ y ∠PQC = ∠CQD. Calcular la medida del ángulo ∠PCQ.",
+    "tipo": "num",
+    "ans": 45,
+    "ansTxt": "∠PCQ = 45°",
+    "svg": "<svg viewBox=\"0 0 310 310\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"40.0\" y1=\"270.0\" x2=\"270.0\" y2=\"270.0\"/><line x1=\"270.0\" y1=\"270.0\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"40.0\" x2=\"40.0\" y2=\"40.0\"/><line x1=\"40.0\" y1=\"40.0\" x2=\"40.0\" y2=\"270.0\"/><line x1=\"174.7\" y1=\"270.0\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"40.0\" y1=\"135.3\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"174.7\" y1=\"270.0\" x2=\"40.0\" y2=\"135.3\"/><path d=\"M 258.5 67.7 A 30 30 0 0 1 242.3 51.5\" opacity=\".75\"/><text x=\"239.6\" y=\"74.4\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"40.0\" cy=\"270.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"280.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"270.0\" cy=\"270.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"280.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"270.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"40.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"174.7\" cy=\"270.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"174.7\" y=\"284.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">P</text><circle cx=\"40.0\" cy=\"135.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"29.0\" y=\"139.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">Q</text></svg>",
+    "exp": "PC y QC bisecan los ángulos exteriores en P y en Q del triángulo APQ, así que C es el excentro opuesto a A y ∠PCQ = 90° − ∠A/2 = 45°. Dato no menor: el excentro está sobre la bisectriz de ∠A, o sea sobre la diagonal del rectángulo desde A — las condiciones OBLIGAN a que ABCD sea un cuadrado. Verificado: para 3×2, 5×2, 7×1.5 y 1.2×9 no existen P y Q; para 4×4 sí, y da 45°.",
+    "page": "Cuadriláteros",
+    "fuente": "Zonal 2015 · Problema 3",
+    "pistas": [
+     "∠BPC = ∠CPQ quiere decir que PC parte al medio el ángulo que PQ forma con la prolongación de AP. En Q pasa exactamente lo mismo con QC.",
+     "Dos bisectrices de ángulos exteriores del triángulo APQ se cortan en C: eso hace de C el excentro opuesto a A. Y ese ángulo siempre vale 90° − ∠A/2. ¿Cuánto mide ∠A en un rectángulo?"
+    ],
+    "id": 18
+   },
+   {
+    "c": 3,
+    "q": "En el cuadrado ABCD sea P un punto en su interior tal que BP = AB y ∠PAD = 27°. Sea O el punto de intersección de la diagonal AC con BP. Calcular la medida del ángulo ∠BOC.",
+    "tipo": "num",
+    "ans": 99,
+    "ansTxt": "∠BOC = 99°",
+    "svg": "<svg viewBox=\"0 0 310 310\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"40.0\" y1=\"270.0\" x2=\"270.0\" y2=\"270.0\"/><line x1=\"270.0\" y1=\"270.0\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"40.0\" x2=\"40.0\" y2=\"40.0\"/><line x1=\"40.0\" y1=\"40.0\" x2=\"40.0\" y2=\"270.0\"/><line x1=\"40.0\" y1=\"270.0\" x2=\"270.0\" y2=\"40.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"270.0\" y1=\"270.0\" x2=\"134.8\" y2=\"83.9\"/><line x1=\"40.0\" y1=\"270.0\" x2=\"134.8\" y2=\"83.9\"/><path d=\"M 40.0 240.0 A 30 30 0 0 1 53.6 243.3\" opacity=\".75\"/><text x=\"50.0\" y=\"232.2\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">27°</text><path d=\"M 183.8 126.2 A 15 15 0 0 1 182.0 148.9\" opacity=\".75\"/><text x=\"201.1\" y=\"143.0\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"40.0\" cy=\"270.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"280.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"270.0\" cy=\"270.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"280.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"270.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"40.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"134.8\" cy=\"83.9\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"126.8\" y=\"79.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">P</text><circle cx=\"173.2\" cy=\"136.8\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"183.2\" y=\"144.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">O</text></svg>",
+    "exp": "∠PAB = 90° − 27° = 63°; como AB = BP el triángulo ABP es isósceles y ∠ABP = 54°. La diagonal AC forma 45° con AB, así que ∠AOB = 180° − 45° − 54° = 81° y ∠BOC = 180° − 81° = 99°.",
+    "page": "Cuadriláteros",
+    "fuente": "Intercolegial 2021 · Problema 3",
+    "pistas": [
+     "∠PAB = 90° − 27° = 63°. Y como BP = AB, el triángulo ABP es isósceles: dos de sus ángulos son iguales.",
+     "La diagonal AC forma 45° con AB. Mirá el triángulo ABO: ya tenés dos de sus ángulos. El que te piden es el suplementario de ∠AOB."
+    ],
+    "id": 19
+   },
+   {
+    "c": 3,
+    "q": "Sea ABCD un trapecio de lados AB, BC, CD y DA con BC paralelo a AD, tal que ∠CAD = 30°. Se sabe que la diagonal BD satisface BD = (BC + AD)/2. Si las diagonales AC y BD se cortan en M, calcular el ángulo ∠AMB.",
+    "tipo": "num",
+    "ans": 90,
+    "ansTxt": "∠AMB = 90°",
+    "svg": "<svg viewBox=\"0 0 310 213\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><line x1=\"40.0\" y1=\"172.8\" x2=\"140.4\" y2=\"40.0\"/><line x1=\"140.4\" y1=\"40.0\" x2=\"270.0\" y2=\"40.0\"/><line x1=\"270.0\" y1=\"40.0\" x2=\"217.1\" y2=\"172.8\"/><line x1=\"217.1\" y1=\"172.8\" x2=\"40.0\" y2=\"172.8\"/><line x1=\"40.0\" y1=\"172.8\" x2=\"270.0\" y2=\"40.0\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"140.4\" y1=\"40.0\" x2=\"217.1\" y2=\"172.8\" stroke-dasharray=\"5 4\" opacity=\".55\"/><path d=\"M 69.4 155.8 A 34 34 0 0 1 74.0 172.8\" opacity=\".75\"/><text x=\"85.4\" y=\"164.6\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">30°</text><path d=\"M 159.8 103.6 A 15 15 0 0 1 165.3 83.1\" opacity=\".75\"/><text x=\"145.7\" y=\"92.9\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-style=\"normal\" font-size=\"11\">?</text><circle cx=\"40.0\" cy=\"172.8\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"182.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"217.1\" cy=\"172.8\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"226.1\" y=\"182.8\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">D</text><circle cx=\"270.0\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"280.0\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"140.4\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"131.4\" y=\"36.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"172.8\" cy=\"96.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"182.8\" y=\"106.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">M</text></svg>",
+    "exp": "La condición BD = (BC + AD)/2 es exactamente el MÍNIMO posible de BD: la función BD − (BC+AD)/2 toca el cero en un solo punto. Ahí BD forma 60° con AD, y como AC forma 30°, las diagonales se cortan a 90°. Verificado con 6 trapecios distintos: siempre 90,000000°.",
+    "page": "Cuadriláteros",
+    "fuente": "Nacional 2023 · Problema 3",
+    "pistas": [
+     "Probá con un trapecio cualquiera: escribí BD y (BC + AD)/2 y compará. Vas a ver que BD nunca queda por debajo.",
+     "La igualdad del enunciado es el MÍNIMO exacto de BD, no un caso más. En ese mínimo BD forma 60° con AD, y AC forma 30°."
+    ],
+    "id": 20
+   },
+   {
+    "c": 3,
+    "q": "En el triángulo ABC, con ∠A = 70°, ∠B = 60°, ∠C = 50°, sean K y L los puntos medios de los lados BC y AC respectivamente. La recta perpendicular a BC trazada por K corta al lado AC en M y la recta perpendicular a AC trazada por L corta al lado BC en N. Además, los segmentos KM y LN se cortan en O y los segmentos AN y BM se cortan en P. Calcular la medida de los ángulos del cuadrilátero MONP.",
+    "tipo": "num",
+    "ans": [
+     40,
+     130,
+     40,
+     150
+    ],
+    "ansTxt": "∠NMP = 40°,  ∠MON = 130°,  ∠ONP = 40°,  ∠MPN = 150°",
+    "svg": "<svg viewBox=\"0 0 310 242\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-style=\"italic\"><polygon points=\"155.0,65.3 155.0,160.5 105.1,202.4 122.4,104.1\" fill=\"currentColor\" opacity=\".13\" stroke=\"none\"/><line x1=\"133.7\" y1=\"40.0\" x2=\"40.0\" y2=\"202.4\"/><line x1=\"40.0\" y1=\"202.4\" x2=\"270.0\" y2=\"202.4\"/><line x1=\"270.0\" y1=\"202.4\" x2=\"133.7\" y2=\"40.0\"/><line x1=\"155.0\" y1=\"202.4\" x2=\"155.0\" y2=\"65.3\"/><line x1=\"201.9\" y1=\"121.2\" x2=\"105.1\" y2=\"202.4\"/><line x1=\"133.7\" y1=\"40.0\" x2=\"105.1\" y2=\"202.4\" stroke-dasharray=\"5 4\" opacity=\".55\"/><line x1=\"40.0\" y1=\"202.4\" x2=\"155.0\" y2=\"65.3\" stroke-dasharray=\"5 4\" opacity=\".55\"/><circle cx=\"40.0\" cy=\"202.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"31.0\" y=\"212.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">B</text><circle cx=\"270.0\" cy=\"202.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"279.0\" y=\"212.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">C</text><circle cx=\"133.7\" cy=\"40.0\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"133.7\" y=\"32.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">A</text><circle cx=\"155.0\" cy=\"202.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"155.0\" y=\"217.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">K</text><circle cx=\"201.9\" cy=\"121.2\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"212.9\" y=\"119.2\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">L</text><circle cx=\"155.0\" cy=\"65.3\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"166.0\" y=\"67.3\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">M</text><circle cx=\"105.1\" cy=\"202.4\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"105.1\" y=\"217.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">N</text><circle cx=\"155.0\" cy=\"160.5\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"145.0\" y=\"164.5\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">O</text><circle cx=\"122.4\" cy=\"104.1\" r=\"2.4\" fill=\"currentColor\" stroke=\"none\"/><text x=\"132.4\" y=\"110.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\">P</text></svg>",
+    "exp": "Verificado además que MONP no se cruza y que M cae en AC y N en BC.",
+    "page": "Cuadriláteros",
+    "fuente": "Regional 2024 · Problema 3",
+    "pista": "Los 4 ángulos del cuadrilátero, separados por coma. El orden no importa.",
+    "pistas": [
+     "KM pasa por el punto medio de BC y es perpendicular a BC: es la mediatriz de BC. LN es la mediatriz de AC por la misma razón.",
+     "Dos mediatrices se cortan en el circuncentro, así que O equidista de A, B y C. Y M está en la mediatriz de BC (MB = MC) y N en la de AC (NA = NC): cada uno te da un triángulo isósceles para encadenar ángulos."
+    ],
+    "id": 21
+   }
+  ],
+  "flashcards": [
+   {
+    "c": 1,
+    "t": "Suma de los ángulos de un triángulo",
+    "d": "Siempre 180°, en cualquier triángulo.",
+    "id": 0
+   },
+   {
+    "c": 1,
+    "t": "Ángulo exterior",
+    "d": "Es igual a la suma de los dos ángulos interiores no adyacentes.",
+    "id": 1
+   },
+   {
+    "c": 1,
+    "t": "Triángulo isósceles",
+    "d": "A lados iguales, ángulos opuestos iguales. Y al revés. Es la herramienta más usada del Nivel 1.",
+    "id": 2
+   },
+   {
+    "c": 1,
+    "t": "Triángulo equilátero",
+    "d": "Tres lados iguales, tres ángulos de 60°.",
+    "id": 3
+   },
+   {
+    "c": 1,
+    "t": "Alternos internos",
+    "d": "Una recta que corta dos paralelas deja ángulos alternos internos iguales.",
+    "id": 4
+   },
+   {
+    "c": 1,
+    "t": "Paralela auxiliar",
+    "d": "En una figura en zig-zag entre paralelas, trazar una paralela por el vértice del medio parte el ángulo en dos pedazos conocidos.",
+    "id": 5
+   },
+   {
+    "c": 2,
+    "t": "Ángulo interior de un polígono regular",
+    "d": "180(n − 2) / n",
+    "id": 6
+   },
+   {
+    "c": 2,
+    "t": "Ángulo central de un polígono regular",
+    "d": "360 / n. Es lo mismo que el ángulo exterior.",
+    "id": 7
+   },
+   {
+    "c": 2,
+    "t": "Giro completo",
+    "d": "Todos los ángulos alrededor de un punto suman 360°. Sirve para despejar el que falta.",
+    "id": 8
+   },
+   {
+    "c": 2,
+    "t": "Todos los radios miden igual",
+    "d": "Por eso unir el centro con dos puntos de la circunferencia da siempre un triángulo isósceles.",
+    "id": 9
+   },
+   {
+    "c": 2,
+    "t": "Ángulo inscripto",
+    "d": "Mide la mitad del ángulo central que abarca el mismo arco.",
+    "id": 10
+   },
+   {
+    "c": 2,
+    "t": "Dos cuerdas que se cortan",
+    "d": "El ángulo que forman es la semisuma de los dos arcos que abarcan.",
+    "id": 11
+   },
+   {
+    "c": 3,
+    "t": "Suma de los ángulos de un cuadrilátero",
+    "d": "Siempre 360°.",
+    "id": 12
+   },
+   {
+    "c": 3,
+    "t": "Diagonal del cuadrado",
+    "d": "Corta el ángulo de 90° por la mitad: deja 45°.",
+    "id": 13
+   },
+   {
+    "c": 3,
+    "t": "Ángulos del rombo",
+    "d": "Los opuestos son iguales; dos consecutivos suman 180°.",
+    "id": 14
+   },
+   {
+    "c": 3,
+    "t": "Partir en triángulos",
+    "d": "Un cuadrilátero difícil se vuelve fácil cortándolo con una diagonal.",
+    "id": 15
+   },
+   {
+    "c": 3,
+    "t": "Cuadrado más equilátero",
+    "d": "En el vértice compartido: 90 + 60 + 60 = 210, así que el ángulo que sobra es 150°.",
+    "id": 16
+   }
+  ],
+  "glossary": [
+   {
+    "t": "Ángulo central",
+    "d": "El que se forma en el centro entre dos vértices vecinos: mide 360/n.",
+    "c": 2
+   },
+   {
+    "t": "Ángulo exterior",
+    "d": "El que queda al prolongar un lado. Es igual a la suma de los dos interiores no adyacentes.",
+    "c": 1
+   },
+   {
+    "t": "Ángulo inscripto",
+    "d": "El que tiene el vértice sobre la circunferencia. Mide la mitad del central que abarca el mismo arco.",
+    "c": 2
+   },
+   {
+    "t": "Arco",
+    "d": "Pedazo de circunferencia entre dos puntos.",
+    "c": 2
+   },
+   {
+    "t": "Bisectriz",
+    "d": "Recta que parte un ángulo en dos partes iguales.",
+    "c": 1
+   },
+   {
+    "t": "Cuerda",
+    "d": "Segmento que une dos puntos de una circunferencia.",
+    "c": 2
+   },
+   {
+    "t": "Diagonal",
+    "d": "Segmento que une dos vértices no consecutivos.",
+    "c": 3
+   },
+   {
+    "t": "Equilátero",
+    "d": "Triángulo con los tres lados iguales y los tres ángulos de 60°.",
+    "c": 1
+   },
+   {
+    "t": "Isósceles",
+    "d": "Triángulo con dos lados iguales. Los ángulos opuestos a esos lados también son iguales.",
+    "c": 1
+   },
+   {
+    "t": "Mediatriz",
+    "d": "Recta perpendicular a un segmento por su punto medio. Todos sus puntos equidistan de los extremos.",
+    "c": 1
+   },
+   {
+    "t": "Polígono regular",
+    "d": "Polígono con todos los lados y todos los ángulos iguales.",
+    "c": 2
+   },
+   {
+    "t": "Punto medio",
+    "d": "El que divide un segmento en dos partes iguales.",
+    "c": 3
+   },
+   {
+    "t": "Rombo",
+    "d": "Cuadrilátero con los cuatro lados iguales.",
+    "c": 3
+   },
+   {
+    "t": "Trapecio",
+    "d": "Cuadrilátero con un par de lados paralelos.",
+    "c": 3
+   }
+  ],
+  "secuencias": [],
+  "clasif": []
  }
 };
   let CURRENT_SUBJECT = null;
@@ -14942,6 +15638,33 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
         {id:"master_proc",   em:"✍️", name:"Maestro del verbo",     desc:"Todas del cap. 1 acertadas"},
         {id:"master_euk",    em:"🔤", name:"Maestro de los modos",  desc:"Todas del cap. 2 acertadas"},
         {id:"master_biom",   em:"⏳", name:"Maestro de los tiempos",desc:"Todas del cap. 3 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
+    },
+    oma: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",       icon: "🌱"},
+        {xp: 50,   name: "Estudiante",     icon: "🪴"},
+        {xp: 150,  name: "Avanzado",       icon: "🌿"},
+        {xp: 350,  name: "Experto",        icon: "🌳"},
+        {xp: 700,  name: "Maestro",        icon: "🏆"},
+        {xp: 1200, name: "Olímpico",       icon: "🧭"},
+      ],
+      // Olimpiada arranca con 1 bloque (Geometria de angulos). Los tres logros de
+      // maestria van a 1/2/3 igual que en Lengua; si no, quedarian inalcanzables.
+      masterCaps: [1, 2, 3],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"📐", name:"Maestro de ángulos",     desc:"Todas del cap. 1 acertadas"},
+        {id:"master_euk",    em:"⭕", name:"Maestro de polígonos",   desc:"Todas del cap. 2 acertadas"},
+        {id:"master_biom",   em:"🧭", name:"Maestro olímpico",       desc:"Todas del cap. 3 acertadas"},
         {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
         {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
         {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
@@ -16017,6 +16740,24 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     $("quizProgFill").style.width = (100 * (quizSession.currentIdx) / quizSession.questions.length) + "%";
     $("quizProgText").textContent = (quizSession.currentIdx + 1) + " / " + quizSession.questions.length;
     $("quizQ").textContent = q.q;
+    // Figura del problema (Olimpiada). El SVG lo genera el build a partir de la
+    // construccion verificada, NO lo escribe nadie a mano ni viene del usuario:
+    // por eso se puede inyectar como HTML.
+    const _fig = $("quizFig");
+    if (_fig) {
+      _fig.innerHTML = q.svg || "";
+      _fig.style.display = q.svg ? "" : "none";
+    }
+    $("quizFeedbackWrap").innerHTML = "";
+    $("quizActions").style.display = "none";
+    // Los problemas de olimpiada piden un numero, no una opcion: si se ofrecieran
+    // cuatro alternativas se resolverian mirando cual es "razonable" en vez de
+    // resolviendo, que es justo lo que el ejercicio entrena.
+    if (q.tipo === "num") {
+      renderQuizNum(q);
+      quizSession.tPregunta = Date.now();
+      return;
+    }
     // Mezclar opciones manteniendo track de cuál es correcta
     const optsWithIdx = q.opts.map((opt, i) => ({opt, i}));
     const shuffledOpts = shuffleArray(optsWithIdx);
@@ -16029,8 +16770,6 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       </button>`;
     });
     $("quizOpts").innerHTML = oh;
-    $("quizFeedbackWrap").innerHTML = "";
-    $("quizActions").style.display = "none";
 
     $("quizOpts").querySelectorAll(".quiz-opt").forEach(el => {
       el.addEventListener("click", () => handleQuizAnswer(el, q));
@@ -16038,6 +16777,99 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     // reloj de la pregunta: el tiempo efectivo se acredita por lo que de verdad
     // tardó, no por un valor fijo (si no, tocar rápido lo ya sabido fabrica racha)
     quizSession.tPregunta = Date.now();
+  }
+
+  // --- RESPUESTA NUMERICA (problemas de olimpiada) ---------------------------
+  // Devuelve la lista de numeros que escribio el chico, o null si no escribio
+  // nada usable. Tolera lo que de verdad tipea una persona: "42°", "42 grados",
+  // coma decimal, y varios numeros separados por coma, "y" o espacios.
+  function leerNums(txt) {
+    const limpio = String(txt || "")
+      .replace(/[°º]/g, " ")
+      .replace(/\bgrados?\b/gi, " ")
+      .replace(/,(\d)/g, ".$1")          // coma decimal: 2,5 -> 2.5
+      .replace(/[^0-9.\-\s]/g, " ");
+    const nums = limpio.split(/\s+/)
+      .filter(s => s && /\d/.test(s))
+      .map(Number)
+      .filter(n => isFinite(n));
+    return nums.length ? nums : null;
+  }
+
+  // La respuesta esperada puede ser un numero ("calcular el angulo") o varios
+  // ("calcular los angulos del triangulo"). Cuando son varios NO importa el
+  // orden: el chico los descubre en el orden en que le salen.
+  function numsOk(escritos, esperados) {
+    const esp = Array.isArray(esperados) ? esperados.slice() : [esperados];
+    if (!escritos || escritos.length !== esp.length) return false;
+    const a = escritos.slice().sort((x, y) => x - y);
+    const b = esp.sort((x, y) => x - y);
+    return a.every((v, i) => Math.abs(v - b[i]) < 1e-6);
+  }
+
+  function renderQuizNum(q) {
+    const varios = Array.isArray(q.ans) && q.ans.length > 1;
+    const pistas = Array.isArray(q.pistas) ? q.pistas : [];
+    quizSession.pistas = 0;
+    $("quizOpts").innerHTML =
+      '<div class="quiz-num">' +
+        '<input id="quizNumIn" class="quiz-num-in" type="text" inputmode="decimal" ' +
+               'autocomplete="off" autocorrect="off" spellcheck="false" ' +
+               'placeholder="' + (varios ? "los " + q.ans.length + " valores" : "tu respuesta") + '">' +
+        '<button class="start-btn" id="quizNumBtn">Comprobar</button>' +
+        (q.pista ? '<div class="quiz-num-hint">' + escapeHtml(q.pista) + '</div>'
+         : (varios ? '<div class="quiz-num-hint">Escribí los ' + q.ans.length +
+                     ' valores separados por coma. El orden no importa.</div>' : '')) +
+      '</div>' +
+      (pistas.length ? '<div class="quiz-pistas" id="quizPistas">' +
+         '<button type="button" class="quiz-pista-btn" id="quizPistaBtn">💡 Pedir una pista</button>' +
+         '<div id="quizPistaLista"></div></div>' : '');
+    const inp = $("quizNumIn"), btn = $("quizNumBtn");
+
+    // --- pistas: se piden de a una y NO se pueden "des-pedir"
+    const btP = $("quizPistaBtn");
+    if (btP) btP.addEventListener("click", () => {
+      const i = quizSession.pistas;
+      if (i >= pistas.length) return;
+      const d = document.createElement("div");
+      d.className = "quiz-pista";
+      d.innerHTML = '<span class="quiz-pista-n">Pista ' + (i + 1) + '</span> ' + escapeHtml(pistas[i]);
+      $("quizPistaLista").appendChild(d);
+      quizSession.pistas = i + 1;
+      if (quizSession.pistas >= pistas.length) {
+        btP.disabled = true;
+        btP.textContent = "No quedan más pistas";
+      } else {
+        btP.textContent = "💡 Pedir otra pista";
+      }
+      d.scrollIntoView({behavior: "smooth", block: "nearest"});
+    });
+
+    let enviado = false;
+    const enviar = () => {
+      if (enviado) return;
+      const escritos = leerNums(inp.value);
+      if (!escritos) { try { inp.focus(); } catch (e) {} return; }   // vacio: no cuenta como error
+      enviado = true;
+      btn.disabled = true; inp.disabled = true;
+      if (btP) btP.disabled = true;
+      const ok = numsOk(escritos, q.ans);
+      inp.classList.add(ok ? "correct" : "wrong");
+      // Si erro pero habia pistas sin leer, se muestran todas: la explicacion
+      // sola no siempre alcanza para entender por donde iba.
+      if (!ok && quizSession.pistas < pistas.length && $("quizPistaLista")) {
+        for (let i = quizSession.pistas; i < pistas.length; i++) {
+          const d = document.createElement("div");
+          d.className = "quiz-pista";
+          d.innerHTML = '<span class="quiz-pista-n">Pista ' + (i + 1) + '</span> ' + escapeHtml(pistas[i]);
+          $("quizPistaLista").appendChild(d);
+        }
+        if (btP) btP.textContent = "Por dónde iba";
+      }
+      puntuarRespuesta(ok, btn, q);
+    };
+    btn.addEventListener("click", enviar);
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); enviar(); } });
   }
 
   function handleQuizAnswer(btn, q) {
@@ -16053,7 +16885,13 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
         if (parseInt(el.dataset.origIdx, 10) === q.ans) el.classList.add("correct");
       });
     }
+    puntuarRespuesta(isCorrect, btn, q);
+  }
 
+  // Todo lo que sigue (XP, racha, maestria, estudio efectivo, medallas, feedback)
+  // es IDENTICO para opcion multiple y para respuesta numerica, asi que vive en
+  // un solo lugar y no se duplica.
+  function puntuarRespuesta(isCorrect, btn, q) {
     // Vibración
     if (navigator.vibrate) try { navigator.vibrate(isCorrect ? 30 : [40, 40, 40]); } catch(e) {}
 
@@ -16089,7 +16927,13 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       // XP decreciente por repetición: repetir lo que ya sabés sigue estando
       // permitido (es buena práctica de recuperación) pero paga cada vez menos,
       // así el multiplicador no se puede farmear con un cuestionario sabido.
-      const xp = vecesPrevias === 0 ? 10 : (vecesPrevias === 1 ? 5 : 2);
+      // Un problema de olimpiada lleva 20-40 minutos y muchas veces no sale. Si
+      // paga lo mismo que una pregunta de opcion multiple, lo racional para el
+      // chico es no intentarlo. Tres escalones: intentarlo en serio (abajo, en el
+      // else), resolverlo con pistas, resolverlo sin pistas.
+      // El decaimiento por repeticion se mantiene igual: no se puede farmear.
+      const base = (q.tipo === "num") ? ((quizSession.pistas || 0) > 0 ? 10 : 20) : 10;
+      const xp = vecesPrevias === 0 ? base : (vecesPrevias === 1 ? Math.round(base / 2) : 2);
       quizSession.xpAciertos = (quizSession.xpAciertos || 0) + xp;
       addXp(xp, btn, quizSession && quizSession.chapter === "repaso" ? "quizRepaso" : "quiz");
       if (!state.quizCorrectIds.includes(q.id)) state.quizCorrectIds.push(q.id);
@@ -16100,7 +16944,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       checkChapterMastery(q.c);
     } else {
       state.streak = 0;
-      addXp(2, btn, quizSession && quizSession.chapter === "repaso" ? "quizRepaso" : "quiz");  // consolación
+      // Errar un problema de olimpiada NO es lo mismo que errar una pregunta de
+      // opcion multiple: hubo que escribir un numero, no tocar una de cuatro.
+      // Se paga el intento (solo la primera vez, para que no se pueda repetir a
+      // proposito para juntar XP).
+      const xpMal = (q.tipo === "num" && vecesPrevias === 0) ? 5 : 2;
+      addXp(xpMal, btn, quizSession && quizSession.chapter === "repaso" ? "quizRepaso" : "quiz");  // consolación
     }
     // Festejo sonoro/visual (módulo aditivo; si no está, no pasa nada)
     if (window.apuntesFX) try { window.apuntesFX.answer(isCorrect, state.streak, btn); } catch (e) {}
@@ -16110,7 +16959,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     // Feedback con explicación
     const fb = document.createElement("div");
     fb.className = "quiz-feedback " + (isCorrect ? "correct" : "wrong");
-    fb.innerHTML = `<strong>${isCorrect ? "¡Correcto!" : "No era esa."}</strong> ${escapeHtml(q.exp || "")}`;
+    // En opcion multiple la correcta se ve marcada en verde; con respuesta
+    // numerica no hay nada que marcar, asi que hay que decirla.
+    const solNum = (!isCorrect && q.tipo === "num" && q.ansTxt)
+      ? `<div class="quiz-num-sol">Respuesta: <b>${escapeHtml(q.ansTxt)}</b></div>` : "";
+    fb.innerHTML = `<strong>${isCorrect ? "¡Correcto!" : (q.tipo === "num" ? "No es ese número." : "No era esa.")}</strong> ${escapeHtml(q.exp || "")}${solNum}`;
     $("quizFeedbackWrap").appendChild(fb);
     $("quizActions").style.display = "flex";
     // Scroll a feedback
@@ -18201,7 +19054,10 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
           : `${subj.pages.length} páginas`;
         const quizInfo = ` · ${subj.quiz.length} preguntas`;
         const accuracyInfo = totalAnswered > 0 ? ` · ${accuracy}% precisión` : '';
-        statsEl.textContent = `${pagesInfo}${quizInfo}${accuracyInfo} · examen ${subj.exam_date}`;
+        // Olimpiada no tiene fecha de examen: sin este guard la tarjeta decia
+        // "examen undefined". El slot de repaso ya la excluye solo (filtra dias!==null).
+        const examInfo = subj.exam_date ? ` · examen ${subj.exam_date}` : '';
+        statsEl.textContent = `${pagesInfo}${quizInfo}${accuracyInfo}${examInfo}`;
       }
     }
   }
@@ -18233,6 +19089,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       'biologia_ebook_v4_his',
       'biologia_ebook_v4_tec',
       'biologia_ebook_v4_len',
+      'biologia_ebook_v4_oma',
       'biologia_ebook_v3',
       'biologia_ebook_v2',
       'apuntes_avatar',      // monedas gastadas, compras y look
@@ -18457,7 +19314,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/08 19:29";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "02/09 16:26";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -18563,7 +19420,8 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
             : (card.classList.contains('geo') ? 'Geografía'
             : (card.classList.contains('his') ? 'Historia'
             : (card.classList.contains('tec') ? 'Tecnología'
-            : (card.classList.contains('len') ? 'Lengua' : 'otra'))));
+            : (card.classList.contains('len') ? 'Lengua'
+            : (card.classList.contains('oma') ? 'Olimpíada' : 'otra')))));
       sendDiario('materia_' + m, 'abre_materia', { materia: m });
     }
     var fab = e.target && e.target.closest ? e.target.closest('#fabPractice') : null;
@@ -18574,7 +19432,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   }, true);
 
   /* ---- resumen de sesión (sesion_fin): foto del progreso al entrar, delta al salir ---- */
-  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his', 'Tecnología': 'biologia_ebook_v4_tec', 'Lengua': 'biologia_ebook_v4_len' };
+  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his', 'Tecnología': 'biologia_ebook_v4_tec', 'Lengua': 'biologia_ebook_v4_len', 'Olimpíada': 'biologia_ebook_v4_oma' };
 
   function fotoProgreso() {
     var out = {};
@@ -18991,7 +19849,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
-     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}} se inyectan al compilar,
+     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "Olimpíada": {"key": "oma", "emoji": "🧭", "pag": 3, "quiz": 22, "fc": 17}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
   var ST_CAT = {
     bio: {
@@ -19116,9 +19974,36 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
         {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
       ]
+    },
+    oma: {
+      levels: [
+        {xp: 0,    name: "Aprendiz",       icon: "🌱"},
+        {xp: 50,   name: "Estudiante",     icon: "🪴"},
+        {xp: 150,  name: "Avanzado",       icon: "🌿"},
+        {xp: 350,  name: "Experto",        icon: "🌳"},
+        {xp: 700,  name: "Maestro",        icon: "🏆"},
+        {xp: 1200, name: "Olímpico",       icon: "🧭"},
+      ],
+      // Olimpiada arranca con 1 bloque (Geometria de angulos). Los tres logros de
+      // maestria van a 1/2/3 igual que en Lengua; si no, quedarian inalcanzables.
+      masterCaps: [1, 2, 3],
+      badges: [
+        {id:"first_correct", em:"🎯", name:"Primer acierto", desc:"Acertaste tu primera pregunta"},
+        {id:"streak5",       em:"🔥", name:"En llamas",       desc:"5 respuestas correctas seguidas"},
+        {id:"streak10",      em:"⚡", name:"Velocidad",       desc:"10 respuestas correctas seguidas"},
+        {id:"perfect",       em:"💯", name:"Perfecto",        desc:"100% en un cuestionario"},
+        {id:"master_proc",   em:"📐", name:"Maestro de ángulos",     desc:"Todas del cap. 1 acertadas"},
+        {id:"master_euk",    em:"⭕", name:"Maestro de polígonos",   desc:"Todas del cap. 2 acertadas"},
+        {id:"master_biom",   em:"🧭", name:"Maestro olímpico",       desc:"Todas del cap. 3 acertadas"},
+        {id:"fc_25",         em:"🎴", name:"Repasador",       desc:"25 flashcards revisadas"},
+        {id:"fc_all",        em:"📚", name:"Estudioso",       desc:"Revisaste todas las flashcards"},
+        {id:"reader",        em:"📖", name:"Lector dedicado", desc:"Visitaste todas las páginas"},
+        {id:"gloss_20",      em:"🔍", name:"Curioso",         desc:"20+ términos consultados"},
+        {id:"level5",        em:"🎓", name:"Graduado",        desc:"Llegaste a nivel Maestro"},
+      ]
     }
   };          /* niveles y logros POR MATERIA */
-  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}};
+  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "Olimpíada": {"key": "oma", "emoji": "🧭", "pag": 3, "quiz": 22, "fc": 17}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
