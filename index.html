@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="02/09 19:55">
+<meta name="apuntes-version" content="02/09 20:30">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1033,6 +1033,7 @@ body {
   font-family: "Manrope", sans-serif;
 }
 .dash-action:active { transform: scale(0.97); border-color: var(--accent); }
+.dash-action[hidden] { display: none !important; }
 .dash-action .ico { font-size: 28px; display: block; margin-bottom: 8px; }
 .dash-action .name {
   font-family: "Fraunces", serif;
@@ -2555,7 +2556,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '02/09 19:55', detalle: 'CIERRE ' + motivo });
+                                    ver: '02/09 20:30', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -2807,42 +2808,42 @@ body {
       <div class="dash-sug" id="dashSug"></div>
 
       <div class="dash-actions">
-        <button class="dash-action" data-go="quiz-setup">
+        <button class="dash-action" data-act="quiz" data-go="quiz-setup">
           <span class="ico">🎯</span>
           <div class="name">Cuestionario</div>
           <div class="sub">Ponete a prueba</div>
         </button>
-        <button class="dash-action" data-go="fc-setup">
+        <button class="dash-action" data-act="fc" data-go="fc-setup">
           <span class="ico">🎴</span>
           <div class="name">Flashcards</div>
           <div class="sub">Repasar conceptos</div>
         </button>
-        <button class="dash-action" id="examActionBtn">
+        <button class="dash-action" data-act="examen" id="examActionBtn">
           <span class="ico">📝</span>
           <div class="name">Examen final</div>
           <div class="sub">Todas las preguntas</div>
         </button>
-        <button class="dash-action" data-go="blancos">
+        <button class="dash-action" data-act="blancos" data-go="blancos">
           <span class="ico">✏️</span>
           <div class="name">Completar</div>
           <div class="sub">Elegí la palabra que falta</div>
         </button>
-        <button class="dash-action" data-go="pares">
+        <button class="dash-action" data-act="pares" data-go="pares">
           <span class="ico">🔗</span>
           <div class="name">Unir pares</div>
           <div class="sub">Cada término con su definición</div>
         </button>
-        <button class="dash-action" data-go="ordenar">
+        <button class="dash-action" data-act="ordenar" data-go="ordenar">
           <span class="ico">🔢</span>
           <div class="name">Ordenar</div>
           <div class="sub">Poné los pasos en orden</div>
         </button>
-        <button class="dash-action" data-go="clasificar">
+        <button class="dash-action" data-act="clasificar" data-go="clasificar">
           <span class="ico">🗂️</span>
           <div class="name">Clasificar</div>
           <div class="sub">Cada cosa en su columna</div>
         </button>
-        <button class="dash-action" data-go="glossary">
+        <button class="dash-action" data-act="glosario" data-go="glossary">
           <span class="ico">📖</span>
           <div class="name">Glosario</div>
           <div class="sub" id="glossCount">— términos</div>
@@ -3155,7 +3156,7 @@ body {
       <button class="sp-card oma" data-subject="oma">
         <span class="sp-card-emoji">🧭</span>
         <div class="sp-card-body">
-          <div class="sp-card-title">Olimpíada</div>
+          <div class="sp-card-title">O.M.A.</div>
           <div class="sp-card-stats" id="omaStats">Problemas de la OMA · Nivel 1</div>
           <div class="sp-card-progress">
             <div class="sp-card-progress-bar"><div class="sp-card-progress-fill" id="omaProgressFill" style="width:0%"></div></div>
@@ -14388,7 +14389,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   ]
  },
  "oma": {
-  "name": "Olimpíada",
+  "name": "O.M.A.",
   "emoji": "🧭",
   "storage_key": "biologia_ebook_v4_oma",
   "pages": [
@@ -15028,7 +15029,29 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
    }
   ],
   "secuencias": [],
-  "clasif": []
+  "clasif": [],
+  "labels": {
+   "unidad": {
+    "sing": "problema",
+    "plur": "problemas",
+    "corto": "probl."
+   },
+   "quiz": {
+    "n": "Problemas",
+    "s": "Uno por vez, con pistas",
+    "i": "📐"
+   },
+   "examen": {
+    "n": "Maratón",
+    "s": "Todos los que tengas abiertos, de corrido",
+    "i": "🏁"
+   },
+   "fc": {
+    "n": "Herramientas",
+    "s": "Las reglas que más se usan",
+    "i": "🧰"
+   }
+  }
  }
 };
   let CURRENT_SUBJECT = null;
@@ -16431,9 +16454,15 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     if (quedan) {
       btn.textContent = propio;
       delete btn.dataset.ir;
-    } else {
+    } else if (actividadHay(otro)) {
       btn.textContent = otroTxt;
       btn.dataset.ir = otro;
+      $(ayudaId).textContent += "  ·  Ya hiciste todas las de esta materia por ahora.";
+    } else {
+      // la materia no tiene la otra actividad: mandarla ahi seria el mismo
+      // callejon sin salida que se acaba de sacar del panel
+      btn.textContent = "Volver al inicio →";
+      btn.dataset.ir = "dashboard";
       $(ayudaId).textContent += "  ·  Ya hiciste todas las de esta materia por ahora.";
     }
   }
@@ -16599,6 +16628,88 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     $("clActions").style.display = "";
   }
 
+  /* ====== CADA MATERIA LLAMA A LAS COSAS POR SU NOMBRE ======================
+     Javier, 02/09: *"si son problemas no son cuestionarios. Si no hay ejercicios
+     de cierto tipo que desaparezca el icono directamente en lugar de dejarlo ahi
+     y que al clickearlo te diga que no hay"*.
+
+     Dos reglas, las dos genericas (no hay nada de O.M.A. hardcodeado aca):
+     1) Los textos por defecto viven en el HTML. `SUBJECT_DATA.labels[act]` los
+        pisa por materia: {n: nombre, s: subtitulo, i: icono}. Lo que la materia
+        no pisa, queda como esta.
+     2) Una actividad SIN CONTENIDO no se muestra. Antes se mostraba igual y al
+        tocarla saltaba un cartel de "esta materia todavia no tiene..." — o sea,
+        se le hacia gastar un toque al chico para decirle que no habia nada.
+        Los carteles siguen existiendo como red de seguridad (se llega a estas
+        pantallas tambien desde el enlace cruzado del final de una tanda).       */
+  const PR_ACT = {
+    "quiz-setup": "quiz", "quiz-session": "quiz", "quiz-result": "quiz",
+    "fc-setup": "fc", "fc-session": "fc", "fc-result": "fc",
+    "blancos": "blancos", "pares": "pares", "ordenar": "ordenar",
+    "clasificar": "clasificar", "glossary": "glosario",
+  };
+
+  // Se calcula UNA vez por materia: generarBlancos() recorre todas las paginas
+  // frase por frase, y esto corre en cada vuelta al panel de practica.
+  let _blancosHay = null;
+  function hayBlancos() {
+    if (_blancosHay === null) {
+      try { _blancosHay = generarBlancos(3).length >= 3; } catch (e) { _blancosHay = false; }
+    }
+    return _blancosHay;
+  }
+
+  function actividadHay(act) {
+    switch (act) {
+      case "quiz": case "examen": return QUIZ_BANK.length > 0;
+      case "fc":                  return FC_BANK.length > 0;
+      case "glosario":            return GLOSSARY.length > 0;
+      case "blancos":             return hayBlancos();
+      case "pares":
+        // el mismo filtro que usa iniciarPares(): definiciones de 20 a 120
+        return GLOSSARY.filter(g => {
+          const d = (g.d || "").split("\n")[0].trim();
+          return d.length >= 20 && d.length <= 120;
+        }).length >= 4;
+      case "ordenar":    return (((SUBJECT_DATA || {}).secuencias) || []).length > 0;
+      case "clasificar": return (((SUBJECT_DATA || {}).clasif) || []).length > 0;
+    }
+    return true;
+  }
+
+  function etiqueta(act) { return (((SUBJECT_DATA || {}).labels) || {})[act] || {}; }
+
+  /* "10 preguntas" en Biologia, "10 problemas" en O.M.A. Sale de
+     labels.unidad = {sing, plur, corto}; sin eso, "pregunta/preguntas". */
+  function palabraPreg(n, corto) {
+    const u = (((SUBJECT_DATA || {}).labels) || {}).unidad;
+    if (!u) return corto ? "preg." : (n === 1 ? "pregunta" : "preguntas");
+    return corto ? (u.corto || u.plur) : (n === 1 ? u.sing : u.plur);
+  }
+
+  function ajustarActividades() {
+    document.querySelectorAll(".dash-action[data-act]").forEach(el => {
+      const act = el.dataset.act;
+      const hay = actividadHay(act);
+      el.hidden = !hay;
+      if (!hay) return;
+      if (!el.dataset.base) {          // los textos del HTML son el default
+        const s = el.querySelector(".sub");
+        el.dataset.base = JSON.stringify({
+          n: el.querySelector(".name").textContent,
+          s: s ? s.textContent : "",
+          i: el.querySelector(".ico").textContent,
+        });
+      }
+      const base = JSON.parse(el.dataset.base), o = etiqueta(act);
+      el.querySelector(".name").textContent = o.n || base.n;
+      el.querySelector(".ico").textContent = o.i || base.i;
+      const sub = el.querySelector(".sub");
+      // el subtitulo del glosario lo escribe renderDashboard con el conteo real
+      if (sub && sub.id !== "glossCount") sub.textContent = o.s || base.s;
+    });
+  }
+
   const PR_TITLES = {
     "dashboard": "Práctica",
     "blancos": "Completar",
@@ -16622,7 +16733,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     const target = $("screen-" + name);
     if (target) target.classList.add("active");
     currentScreen = name;
-    $("prTitle").textContent = PR_TITLES[name] || "Práctica";
+    const _act = PR_ACT[name];
+    $("prTitle").textContent = (_act && etiqueta(_act).n) || PR_TITLES[name] || "Práctica";
     $("prBody").scrollTop = 0;
     if (name === "dashboard") renderDashboard();
     if (name === "quiz-setup") renderQuizSetup();
@@ -16684,8 +16796,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       let h = "";
       const nd = poolDebiles().length;
       const nl = poolLeidoHoy().length;
-      if (nd >= 3) h += `<button class="sug-btn" id="sugDebiles">🔁 Practicar lo que te cuesta <span class="sug-n">${Math.min(15, nd)} preg.</span></button>`;
-      if (nl >= 3) h += `<button class="sug-btn" id="sugLeido">📖 Preguntas de lo que leíste hoy <span class="sug-n">${Math.min(15, nl)} preg.</span></button>`;
+      if (nd >= 3) h += `<button class="sug-btn" id="sugDebiles">🔁 Practicar lo que te cuesta <span class="sug-n">${Math.min(15, nd)} ${palabraPreg(Math.min(15, nd), true)}</span></button>`;
+      if (nl >= 3) h += `<button class="sug-btn" id="sugLeido">📖 Preguntas de lo que leíste hoy <span class="sug-n">${Math.min(15, nl)} ${palabraPreg(Math.min(15, nl), true)}</span></button>`;
       sug.innerHTML = h;
       const bd = $("sugDebiles");
       if (bd) bd.addEventListener("click", () => startQuizEspecial(poolDebiles(), false, "debiles"));
@@ -16710,6 +16822,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       ? Math.round(100 * state.totalCorrect / state.totalAnswered) + "%"
       : "—";
     $("glossCount").textContent = GLOSSARY.length + " términos";
+    ajustarActividades();
 
     // Badges
     let bh = "";
@@ -16821,15 +16934,15 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     const n = Math.min(10, pool.length);
     const btn = $("quizStartBtn");
     if (!btn) return;
-    btn.textContent = n === 0 ? "🎯 Sin preguntas en esta selección"
-      : "🎯 Empezar (" + n + (n === 1 ? " pregunta)" : " preguntas)");
+    btn.textContent = n === 0 ? ("🎯 Sin " + palabraPreg(2, false) + " en esta selección")
+      : "🎯 Empezar (" + n + " " + palabraPreg(n, false) + ")";
   }
 
   function renderQuizSetup() {
     selectedQuizChap = "all";
     selectedQuizPages = null;
     const BANCO = bancoDisponible();
-    let h = escBanner() + '<button class="chap-pick-opt selected" data-c="all"><span class="ico">✨</span><span class="name">Todos los capítulos</span><span class="count">' + BANCO.length + ' preg.</span></button>';
+    let h = escBanner() + '<button class="chap-pick-opt selected" data-c="all"><span class="ico">✨</span><span class="name">Todos los capítulos</span><span class="count">' + BANCO.length + ' ' + palabraPreg(BANCO.length, true) + '</span></button>';
     for (const chap of TOC) {
       const chapQs = BANCO.filter(q => q.c === chap.num);
       if (chapQs.length === 0) continue;
@@ -16837,7 +16950,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       const pages = [];
       for (const q of chapQs) if (q.page && !pages.includes(q.page)) pages.push(q.page);
       const expandible = pages.length > 1;
-      h += `<button class="chap-pick-opt" data-c="${chap.num}"><span class="ico">${chap.icon}</span><span class="name">${escapeHtml(chap.name)}</span><span class="count">${chapQs.length} preg.</span>${expandible ? `<span class="chap-exp" data-exp="${chap.num}" role="button" aria-label="Elegir subtemas">▸</span>` : ""}</button>`;
+      h += `<button class="chap-pick-opt" data-c="${chap.num}"><span class="ico">${chap.icon}</span><span class="name">${escapeHtml(chap.name)}</span><span class="count">${chapQs.length} ${palabraPreg(chapQs.length, true)}</span>${expandible ? `<span class="chap-exp" data-exp="${chap.num}" role="button" aria-label="Elegir subtemas">▸</span>` : ""}</button>`;
       if (expandible) {
         h += `<div class="chap-sub" data-sub="${chap.num}">`;
         for (const p of pages) {
@@ -16955,7 +17068,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       pool = pool.filter(q => selectedQuizPages.includes(q.page));
     }
     pool = elegirPonderado(pool, 10);
-    if (pool.length === 0) { showToast("⚠️", "No hay preguntas para esta selección"); return; }
+    if (pool.length === 0) { showToast("⚠️", "No hay " + palabraPreg(2, false) + " para esta selección"); return; }
     quizSession = {
       questions: pool,
       answered: [],
@@ -17614,8 +17727,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
 
   // Modo examen: todas las preguntas mezcladas
   function startExam() {
-    // pool completo, mezclado
-    let pool = shuffleArray(QUIZ_BANK.slice());
+    // pool completo, mezclado — pero SOLO lo desbloqueado: si el examen final
+    // trajera los 4 escalones de una, la escalera de instancias seria decorativa.
+    let pool = shuffleArray(bancoDisponible().slice());
     quizSession = {
       questions: pool,
       answered: [],
@@ -17660,6 +17774,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     FC_BANK = subj.flashcards;
     GLOSSARY = subj.glossary;
     glossChapFilter = 0;   // el filtro del glosario no arrastra entre materias
+    _blancosHay = null;    // se recalcula: depende de las paginas de ESTA materia
     STORAGE_KEY = subj.storage_key;
     
     // Recalcular PAGE_TEXTS
@@ -19317,7 +19432,13 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         const pagesInfo = pagesVisited > 0 
           ? `${pagesVisited}/${subj.pages.length} páginas leídas`
           : `${subj.pages.length} páginas`;
-        const quizInfo = ` · ${subj.quiz.length} preguntas`;
+        // "21 problemas" en O.M.A., "92 preguntas" en Biologia. Se lee de
+        // subj.labels.unidad, no del SUBJECT_DATA activo: aca se recorren TODAS
+        // las materias, no solo la abierta.
+        const _u = (subj.labels || {}).unidad;
+        const _pal = _u ? (subj.quiz.length === 1 ? _u.sing : _u.plur)
+                        : (subj.quiz.length === 1 ? 'pregunta' : 'preguntas');
+        const quizInfo = ` · ${subj.quiz.length} ${_pal}`;
         const accuracyInfo = totalAnswered > 0 ? ` · ${accuracy}% precisión` : '';
         // Olimpiada no tiene fecha de examen: sin este guard la tarjeta decia
         // "examen undefined". El slot de repaso ya la excluye solo (filtra dias!==null).
@@ -19579,7 +19700,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "02/09 19:55";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "02/09 20:30";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -19686,7 +19807,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
             : (card.classList.contains('his') ? 'Historia'
             : (card.classList.contains('tec') ? 'Tecnología'
             : (card.classList.contains('len') ? 'Lengua'
-            : (card.classList.contains('oma') ? 'Olimpíada' : 'otra')))));
+            : (card.classList.contains('oma') ? 'O.M.A.' : 'otra')))));
       sendDiario('materia_' + m, 'abre_materia', { materia: m });
     }
     var fab = e.target && e.target.closest ? e.target.closest('#fabPractice') : null;
@@ -19697,7 +19818,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   }, true);
 
   /* ---- resumen de sesión (sesion_fin): foto del progreso al entrar, delta al salir ---- */
-  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his', 'Tecnología': 'biologia_ebook_v4_tec', 'Lengua': 'biologia_ebook_v4_len', 'Olimpíada': 'biologia_ebook_v4_oma' };
+  var PROG_KEYS = { 'Biología': 'biologia_ebook_v4_bio', 'Geografía': 'biologia_ebook_v4_geo', 'Historia': 'biologia_ebook_v4_his', 'Tecnología': 'biologia_ebook_v4_tec', 'Lengua': 'biologia_ebook_v4_len', 'O.M.A.': 'biologia_ebook_v4_oma' };
 
   function fotoProgreso() {
     var out = {};
@@ -20114,7 +20235,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
-     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "Olimpíada": {"key": "oma", "emoji": "🧭", "pag": 3, "quiz": 21, "fc": 17}} se inyectan al compilar,
+     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "O.M.A.": {"key": "oma", "emoji": "🧭", "pag": 3, "quiz": 21, "fc": 17}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
   var ST_CAT = {
     bio: {
@@ -20268,7 +20389,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       ]
     }
   };          /* niveles y logros POR MATERIA */
-  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "Olimpíada": {"key": "oma", "emoji": "🧭", "pag": 3, "quiz": 21, "fc": 17}};
+  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "O.M.A.": {"key": "oma", "emoji": "🧭", "pag": 3, "quiz": 21, "fc": 17}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
