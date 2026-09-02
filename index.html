@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="02/09 16:26">
+<meta name="apuntes-version" content="02/09 16:49">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2528,7 +2528,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '02/09 16:26', detalle: 'CIERRE ' + motivo });
+                                    ver: '02/09 16:49', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -16783,18 +16783,34 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   // Devuelve la lista de numeros que escribio el chico, o null si no escribio
   // nada usable. Tolera lo que de verdad tipea una persona: "42°", "42 grados",
   // coma decimal, y varios numeros separados por coma, "y" o espacios.
-  function leerNums(txt) {
-    const limpio = String(txt || "")
+  function _nums(txt, comaDecimal) {
+    let t = String(txt || "")
       .replace(/[°º]/g, " ")
-      .replace(/\bgrados?\b/gi, " ")
-      .replace(/,(\d)/g, ".$1")          // coma decimal: 2,5 -> 2.5
-      .replace(/[^0-9.\-\s]/g, " ");
-    const nums = limpio.split(/\s+/)
+      .replace(/\bgrados?\b/gi, " ");
+    t = comaDecimal ? t.replace(/,(\d)/g, ".$1")   // 2,5 -> 2.5
+                    : t.replace(/,/g, " ");        // 60,45,75 -> tres numeros
+    t = t.replace(/[^0-9.\-\s]/g, " ");
+    const nums = t.split(/\s+/)
       .filter(s => s && /\d/.test(s))
       .map(Number)
       .filter(n => isFinite(n));
     return nums.length ? nums : null;
   }
+
+  // La coma es AMBIGUA en castellano: en "60,45,75" separa tres angulos, pero en
+  // "2,5" es la coma decimal. Adivinar una sola lectura estaba mal: la version
+  // anterior asumia siempre decimal y entonces "60,45,75" devolvia null (no se
+  // podia responder) y "42°,69°,69°" se leia como [42, 0.69, 0.69].
+  // Se leen LAS DOS formas y vale la que coincida con la respuesta.
+  function lecturas(txt) {
+    const sep = _nums(txt, false), dec = _nums(txt, true);
+    const out = [];
+    if (sep) out.push(sep);
+    if (dec && (!sep || dec.join("|") !== sep.join("|"))) out.push(dec);
+    return out;
+  }
+
+  function leerNums(txt) { return _nums(txt, false) || _nums(txt, true); }
 
   // La respuesta esperada puede ser un numero ("calcular el angulo") o varios
   // ("calcular los angulos del triangulo"). Cuando son varios NO importa el
@@ -16848,12 +16864,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     let enviado = false;
     const enviar = () => {
       if (enviado) return;
-      const escritos = leerNums(inp.value);
-      if (!escritos) { try { inp.focus(); } catch (e) {} return; }   // vacio: no cuenta como error
+      const opciones = lecturas(inp.value);
+      if (!opciones.length) { try { inp.focus(); } catch (e) {} return; }   // vacio: no cuenta como error
       enviado = true;
       btn.disabled = true; inp.disabled = true;
       if (btP) btP.disabled = true;
-      const ok = numsOk(escritos, q.ans);
+      const ok = opciones.some(v => numsOk(v, q.ans));
       inp.classList.add(ok ? "correct" : "wrong");
       // Si erro pero habia pistas sin leer, se muestran todas: la explicacion
       // sola no siempre alcanza para entender por donde iba.
@@ -18915,12 +18931,29 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     slot.innerHTML = '';
     const infos = Object.keys(SUBJECTS).map(infoRepasoMateria).filter(Boolean);
     const hecho = infos.find(i => i.hechoHoy);
-    const cand = infos
-      .filter(i => i.debiles >= 3 && i.dias !== null && i.dias >= 0 && i.dias <= 7 && !i.hechoHoy)
+    // (02/09) EL SLOT SE APAGABA SOLO. Solo aparecia si faltaban 0..7 dias para
+    // un examen. Pasado el ultimo examen (25/08) ningun candidato calificaba y el
+    // desafio de +200 XP —el motivo principal para volver a abrir la app—
+    // desaparecio en silencio. No se rompio nada: se cumplio una condicion que ya
+    // no se puede cumplir. Las metricas lo confirman: 2 repasos completados en
+    // toda la vida de la app.
+    const listos = infos.filter(i => i.debiles >= 3 && !i.hechoHoy);
+    const porExamen = listos
+      .filter(i => i.dias !== null && i.dias >= 0 && i.dias <= 7)
       .sort((a, b) => a.dias - b.dias)[0];
+    // Con un examen cerca manda el examen, que es el mejor motivo posible. Sin
+    // examen a la vista (lo normal fuera de epoca de pruebas) se ofrece la materia
+    // donde MAS cuesta, para que el slot siga teniendo sentido todo el ano.
+    const porDebiles = listos.slice().sort((a, b) => b.debiles - a.debiles)[0];
+    // UN repaso por dia en TODA la app, no uno por materia. Antes el limite real
+    // lo ponia la ventana de examen; sin esa ventana, 200 XP por materia por dia
+    // seria la forma mas rentable de juntar XP sin estudiar.
+    const cand = hecho ? null : (porExamen || porDebiles);
     if (cand) {
-      const cuando = cand.dias === 0 ? '¡el examen es hoy!'
-        : (cand.dias === 1 ? 'el examen es mañana' : 'examen el ' + cand.examen);
+      const cuando = (cand === porExamen)
+        ? (cand.dias === 0 ? '¡el examen es hoy!'
+           : (cand.dias === 1 ? 'el examen es mañana' : 'examen el ' + cand.examen))
+        : 'son ' + cand.debiles + ' preguntas que ya te costaron una vez.';
       slot.innerHTML = `<button class="sp-slot" id="spSlotBtn">
         <span class="sp-slot-ico">🎯</span>
         <span><strong>REPASO (+200 XP)</strong> · ${escapeHtml(cand.nombre)}<br>
@@ -19314,7 +19347,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "02/09 16:26";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "02/09 16:49";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
