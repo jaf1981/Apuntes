@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="02/09 20:52">
+<meta name="apuntes-version" content="02/09 21:14">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1232,9 +1232,19 @@ body {
 .quiz-num .start-btn { flex: 0 0 auto; }
 .quiz-num-hint { flex: 1 0 100%; font-size: 13px; opacity: .7; margin-top: -2px; }
 .quiz-num-sol { margin-top: 7px; }
+/* Errar un problema de olimpiada NO cierra el problema: se avisa y se vuelve a
+   intentar. Este es el renglon que lo dice. */
+.quiz-reintento {
+  flex: 1 0 100%; margin-top: 8px; font-size: 13.5px; line-height: 1.45;
+  color: var(--text); background: var(--bg-elev); border: 1.5px solid #c25b5b55;
+  border-radius: 10px; padding: 9px 11px;
+}
+.quiz-reintento b { color: #c25b5b; }
 /* Pistas: se piden de a una. Pedirlas baja el XP pero no lo anula — la idea es
    que intentarlo con ayuda siga siendo mejor que no intentarlo. */
-.quiz-pistas { margin-top: 14px; }
+.quiz-pistas { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.quiz-pistas > div { flex: 1 0 100%; }
+#quizVerSol { border-style: solid; border-color: #c25b5b55; }
 .quiz-pista-btn {
   background: none; border: 1.5px dashed var(--border); color: var(--text);
   padding: 9px 14px; border-radius: 11px; font-size: 14px; font-family: inherit;
@@ -2556,7 +2566,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '02/09 20:52', detalle: 'CIERRE ' + motivo });
+                                    ver: '02/09 21:14', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -17197,14 +17207,15 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
          : (varios ? '<div class="quiz-num-hint">Escribí los ' + q.ans.length +
                      ' valores separados por coma. El orden no importa.</div>' : '')) +
       '</div>' +
-      (pistas.length ? '<div class="quiz-pistas" id="quizPistas">' +
-         '<button type="button" class="quiz-pista-btn" id="quizPistaBtn">💡 Pedir una pista</button>' +
-         '<div id="quizPistaLista"></div></div>' : '');
+      '<div class="quiz-pistas" id="quizPistas">' +
+         (pistas.length ? '<button type="button" class="quiz-pista-btn" id="quizPistaBtn">💡 Pedir una pista</button>' : '') +
+         '<button type="button" class="quiz-pista-btn" id="quizVerSol" hidden>🏳️ Ver la solución</button>' +
+         '<div id="quizPistaLista"></div></div>';
     const inp = $("quizNumIn"), btn = $("quizNumBtn");
 
     // --- pistas: se piden de a una y NO se pueden "des-pedir"
     const btP = $("quizPistaBtn");
-    if (btP) btP.addEventListener("click", () => {
+    function mostrarPista() {
       const i = quizSession.pistas;
       if (i >= pistas.length) return;
       const d = document.createElement("div");
@@ -17212,38 +17223,77 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       d.innerHTML = '<span class="quiz-pista-n">Pista ' + (i + 1) + '</span> ' + escapeHtml(pistas[i]);
       $("quizPistaLista").appendChild(d);
       quizSession.pistas = i + 1;
-      if (quizSession.pistas >= pistas.length) {
-        btP.disabled = true;
-        btP.textContent = "No quedan más pistas";
-      } else {
-        btP.textContent = "💡 Pedir otra pista";
+      if (btP) {
+        if (quizSession.pistas >= pistas.length) {
+          btP.disabled = true; btP.textContent = "No quedan más pistas";
+        } else {
+          btP.textContent = "💡 Pedir otra pista";
+        }
       }
       d.scrollIntoView({behavior: "smooth", block: "nearest"});
-    });
+    }
+    if (btP) btP.addEventListener("click", mostrarPista);
 
-    let enviado = false;
-    const enviar = () => {
-      if (enviado) return;
-      const opciones = lecturas(inp.value);
-      if (!opciones.length) { try { inp.focus(); } catch (e) {} return; }   // vacio: no cuenta como error
-      enviado = true;
+    /* ---- ERRAR NO CIERRA EL PROBLEMA (Javier, 03/09) --------------------
+       Antes, un numero equivocado disparaba TODO de una: las dos pistas sin
+       leer, la explicacion completa y la respuesta, con el campo bloqueado. O
+       sea que el camino mas barato para el chico era escribir cualquier cosa y
+       leer la solucion — justo lo contrario de lo que un problema de olimpiada
+       tiene que entrenar.
+       Ahora: cada error abre UNA pista mas y devuelve el turno. La solucion
+       aparece cuando se acaban los intentos o cuando el chico decide mirarla
+       ("Ver la solución"), que es una decision suya y no un castigo automatico. */
+    const MAX_INTENTOS = 3;
+    let cerrado = false;
+    quizSession.fallos = 0;
+
+    const cerrar = (ok) => {
+      if (cerrado) return;
+      cerrado = true;
       btn.disabled = true; inp.disabled = true;
       if (btP) btP.disabled = true;
-      const ok = opciones.some(v => numsOk(v, q.ans));
+      const bs = $("quizVerSol"); if (bs) bs.hidden = true;
+      inp.classList.remove("wrong");
       inp.classList.add(ok ? "correct" : "wrong");
-      // Si erro pero habia pistas sin leer, se muestran todas: la explicacion
-      // sola no siempre alcanza para entender por donde iba.
-      if (!ok && quizSession.pistas < pistas.length && $("quizPistaLista")) {
-        for (let i = quizSession.pistas; i < pistas.length; i++) {
-          const d = document.createElement("div");
-          d.className = "quiz-pista";
-          d.innerHTML = '<span class="quiz-pista-n">Pista ' + (i + 1) + '</span> ' + escapeHtml(pistas[i]);
-          $("quizPistaLista").appendChild(d);
-        }
-        if (btP) btP.textContent = "Por dónde iba";
-      }
+      const av = $("quizReintento"); if (av) av.remove();
       puntuarRespuesta(ok, btn, q);
     };
+
+    const enviar = () => {
+      if (cerrado) return;
+      const opciones = lecturas(inp.value);
+      if (!opciones.length) { try { inp.focus(); } catch (e) {} return; }   // vacio: no cuenta como error
+      if (opciones.some(v => numsOk(v, q.ans))) { cerrar(true); return; }
+
+      quizSession.fallos++;
+      inp.classList.add("wrong");
+      if (navigator.vibrate) try { navigator.vibrate([40, 40, 40]); } catch (e) {}
+      const quedanIntentos = quizSession.fallos < MAX_INTENTOS;
+      // una pista MAS, no todas
+      let abrio = false;
+      if (quedanIntentos && quizSession.pistas < pistas.length) { mostrarPista(); abrio = true; }
+      const bs = $("quizVerSol");
+      if (bs) bs.hidden = false;          // rendirse ya es una opcion, pero elegida
+      if (!quedanIntentos) { cerrar(false); return; }
+      let av = $("quizReintento");
+      if (!av) {
+        av = document.createElement("div");
+        av.className = "quiz-reintento"; av.id = "quizReintento";
+        $("quizOpts").querySelector(".quiz-num").appendChild(av);
+      }
+      av.innerHTML = "<b>No es ese número.</b> " +
+        (abrio ? "Te dejo una pista nueva acá abajo. " : "") +
+        "Te " + (MAX_INTENTOS - quizSession.fallos === 1 ? "queda 1 intento" :
+                 "quedan " + (MAX_INTENTOS - quizSession.fallos) + " intentos") + ".";
+      try { inp.focus(); inp.select(); } catch (e) {}
+    };
+
+    const bSol = $("quizVerSol");
+    if (bSol) bSol.addEventListener("click", () => {
+      while (quizSession.pistas < pistas.length) mostrarPista();   // ver la solucion incluye las pistas
+      cerrar(false);
+    });
+    inp.addEventListener("input", () => inp.classList.remove("wrong"));
     btn.addEventListener("click", enviar);
     inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); enviar(); } });
   }
@@ -17308,7 +17358,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       // chico es no intentarlo. Tres escalones: intentarlo en serio (abajo, en el
       // else), resolverlo con pistas, resolverlo sin pistas.
       // El decaimiento por repeticion se mantiene igual: no se puede farmear.
-      const base = (q.tipo === "num") ? ((quizSession.pistas || 0) > 0 ? 10 : 20) : 10;
+      // 20 sale solo si lo resolvio SIN pistas y SIN errores. Pedir una pista o
+      // errar un intento y despues acertar valen lo mismo: 10.
+      const base = (q.tipo === "num")
+        ? (((quizSession.pistas || 0) > 0 || (quizSession.fallos || 0) > 0) ? 10 : 20)
+        : 10;
       const xp = vecesPrevias === 0 ? base : (vecesPrevias === 1 ? Math.round(base / 2) : 2);
       quizSession.xpAciertos = (quizSession.xpAciertos || 0) + xp;
       addXp(xp, btn, quizSession && quizSession.chapter === "repaso" ? "quizRepaso" : "quiz");
@@ -19715,7 +19769,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "02/09 20:52";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "02/09 21:14";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
