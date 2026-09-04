@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="04/09 07:45">
+<meta name="apuntes-version" content="04/09 09:29">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2580,7 +2580,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '04/09 07:45', detalle: 'CIERRE ' + motivo });
+                                    ver: '04/09 09:29', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -18374,21 +18374,14 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   "glossary": [
    {
     "t": "Acotar",
-    "d": "Mostrar que un valor no puede pasar de cierto número (o no puede bajar de él). Es la mitad que falta en los problemas de mínimo y máximo.",
-    "c": 0,
-    "fig": "tipos"
-   },
-   {
-    "t": "Acotar",
     "d": "Mostrar que un valor no puede pasar de cierto número, o no puede bajar de él.",
     "c": 9,
-    "fig": "acotar"
-   },
-   {
-    "t": "Acotar",
-    "d": "Demostrar que una cantidad no puede pasar de cierto valor, o no puede bajar de él.",
-    "c": 13,
-    "fig": "ej13_p2"
+    "fig": "acotar",
+    "caps": [
+     0,
+     9,
+     13
+    ]
    },
    {
     "t": "Altura",
@@ -18465,14 +18458,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
    {
     "t": "Cateto",
     "d": "Cada uno de los dos lados que forman el ángulo recto de un triángulo rectángulo.",
-    "c": 5,
-    "fig": "pitagoras"
-   },
-   {
-    "t": "Cateto",
-    "d": "Cada uno de los dos lados que forman el ángulo recto de un triángulo rectángulo.",
     "c": 11,
-    "fig": "pitagoras"
+    "fig": "pitagoras",
+    "caps": [
+     5,
+     11
+    ]
    },
    {
     "t": "Cifra",
@@ -18494,15 +18485,13 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
    },
    {
     "t": "Contraejemplo",
-    "d": "Un caso que muestra que una afirmación es falsa. Con uno solo alcanza para contestar que no.",
-    "c": 0,
-    "fig": "tipos"
-   },
-   {
-    "t": "Contraejemplo",
     "d": "Un caso concreto que muestra que una afirmación es falsa. Con uno solo alcanza para contestar que no.",
     "c": 9,
-    "fig": "sino"
+    "fig": "sino",
+    "caps": [
+     0,
+     9
+    ]
    },
    {
     "t": "Cota",
@@ -18596,15 +18585,13 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
    },
    {
     "t": "Hipotenusa",
-    "d": "El lado de enfrente del ángulo recto, el más largo del triángulo rectángulo.",
-    "c": 5,
-    "fig": "pitagoras"
-   },
-   {
-    "t": "Hipotenusa",
     "d": "En un triángulo rectángulo, el lado opuesto al ángulo de 90°. Es el más largo de los tres.",
     "c": 11,
-    "fig": "pitagoras"
+    "fig": "pitagoras",
+    "caps": [
+     5,
+     11
+    ]
    },
    {
     "t": "Incógnita",
@@ -21535,12 +21522,28 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   // ============================================================
   let glossChapFilter = 0;   // 0 = todos los capítulos
 
+  /* ---- UN TERMINO, UNA ENTRADA (Javier, 04/09) -------------------------
+     En O.M.A. las palabras del glosario son herramientas que se usan en varios
+     capitulos: "Acotar" estaba tres veces, una por capitulo. Ahora hay UNA
+     entrada, con 'c' = el capitulo que ensena el concepto (es el que se mira
+     primero al buscar el pasaje) y 'caps' = todos los capitulos donde vive, que
+     es lo que decide el filtro y lo que se le muestra al chico.
+     Sin esto, unificar habria hecho desaparecer el termino del filtro de los
+     otros capitulos: la unica cosa que de verdad se rompia.                */
+  function capsDe(g) { return (g.caps && g.caps.length) ? g.caps : [g.c]; }
+  function enCapitulo(g, num) { return capsDe(g).indexOf(num) !== -1; }
+  function etiquetaCaps(g) {
+    const cs = capsDe(g);
+    if (cs.length === 1) return "Cap. " + cs[0];
+    return "Caps. " + cs.slice(0, -1).join(", ") + " y " + cs[cs.length - 1];
+  }
+
   function renderGlossChips() {
     const wrap = $("glossChips");
     if (!wrap) return;
     let html = `<button class="gloss-chip ${glossChapFilter === 0 ? "active" : ""}" data-chap="0">Todos</button>`;
     for (const c of TOC) {
-      const n = GLOSSARY.filter(g => g.c === c.num).length;
+      const n = GLOSSARY.filter(g => enCapitulo(g, c.num)).length;
       if (n === 0) continue;
       html += `<button class="gloss-chip ${glossChapFilter === c.num ? "active" : ""}" data-chap="${c.num}" title="${escapeHtml(c.name)}">${c.icon} Cap. ${c.num} (${n})</button>`;
     }
@@ -21586,7 +21589,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     query = (query || "").trim().toLowerCase();
     renderGlossChips();
     let items = GLOSSARY;
-    if (glossChapFilter) items = items.filter(g => g.c === glossChapFilter);
+    if (glossChapFilter) items = items.filter(g => enCapitulo(g, glossChapFilter));
     if (query) {
       // buscar sin tildes: "orfebreria" tiene que encontrar "Orfebrería" (16/08)
       const q = sinTildes(query);
@@ -21620,7 +21623,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
         const chapInfo = (TOC.find(c => c.num === g.c) || {icon: "📖", name: ""});
         const id = "gloss_" + g.t.replace(/\s/g, "_");
         html += `<div class="gloss-item" data-term="${escapeHtml(g.t)}" data-chap="${g.c}">
-          <div class="gloss-item-term"><span class="gloss-term-txt">${highlight(g.t)}</span> <span class="chap-tag">${chapInfo.icon} Cap. ${g.c}</span></div>
+          <div class="gloss-item-term"><span class="gloss-term-txt">${highlight(g.t)}</span> <span class="chap-tag">${chapInfo.icon} ${etiquetaCaps(g)}</span></div>
           <div class="gloss-item-def">${highlight(g.d)}${figuraDe(g) ? `<div class="gloss-fig">${figuraDe(g)}</div>` : ""}<button class="gloss-ctx-btn" type="button">📄 Ver en el capítulo</button><div class="gloss-ctx"></div></div>
         </div>`;
       }
@@ -23692,7 +23695,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "04/09 07:45";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "04/09 09:29";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
