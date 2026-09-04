@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="04/09 17:27">
+<meta name="apuntes-version" content="04/09 17:48">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1277,6 +1277,9 @@ body {
   line-height: 1.3;
   margin-bottom: 22px;
   letter-spacing: -0.01em;
+  /* Los enunciados traen renglones propios (aclaraciones, ecuaciones sueltas,
+     la pregunta final del capitulo 0). Sin esto se pegaban todos en un parrafo. */
+  white-space: pre-line;
 }
 /* Figura del problema (Olimpiada). El SVG usa stroke="currentColor", asi que
    hereda el color del texto y funciona igual en claro y en oscuro. */
@@ -1415,9 +1418,12 @@ body {
   background: var(--bg-elev);
   border-left: 3px solid var(--accent);
   font-family: "Crimson Pro", serif;
-  font-size: 15px;
+  /* Atada al ajuste de tamano igual que el resto de la practica: 15px a 19. */
+  font-size: calc(var(--reader-fontsize, 19px) * 0.79);
   line-height: 1.45;
   animation: slideUp 0.3s ease;
+  /* Las explicaciones vienen en varios parrafos. */
+  white-space: pre-line;
 }
 .quiz-feedback.correct { border-left-color: var(--success); }
 .quiz-feedback.wrong { border-left-color: var(--error); }
@@ -2678,7 +2684,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '04/09 17:27', detalle: 'CIERRE ' + motivo });
+                                    ver: '04/09 17:48', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -20691,7 +20697,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      el HTML. Por eso son dos funciones y no una.                          */
   function txtHTML(s) {
     return escapeHtml(String(s == null ? "" : s))
-      .replace(/([A-Za-z])\u0302/g, '<span class="ang">$1</span>');
+      .replace(/([A-Za-z])\u0302/g, '<span class="ang">$1</span>')
+      .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
   }
   /* Para los lugares que escriben con textContent y hay que pasar a innerHTML. */
   function ponTexto(el, s) { if (el) el.innerHTML = txtHTML(s); }
@@ -25179,7 +25187,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "04/09 17:27";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "04/09 17:48";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
