@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="04/09 13:50">
+<meta name="apuntes-version" content="04/09 14:01">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1235,7 +1235,10 @@ body {
 .ang::after {
   /* medidas elegidas comparando cuatro variantes contra el original de la OMA:
      apoyado sobre la letra, no flotando. */
-  content: ""; position: absolute; left: 50%; top: -0.22em;
+  /* 04/09, segunda pasada: Javier lo vio todavia alto. Comparado contra el
+     escaneo de la OMA, el gorro se APOYA sobre la letra en vez de flotar:
+     -0.22em -> -0.10em. Se probaron cinco alturas contra el original. */
+  content: ""; position: absolute; left: 50%; top: -0.10em;
   width: .34em; height: .34em;
   border-top: .09em solid currentColor;
   border-left: .09em solid currentColor;
@@ -2606,7 +2609,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '04/09 13:50', detalle: 'CIERRE ' + motivo });
+                                    ver: '04/09 14:01', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -23935,7 +23938,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "04/09 13:50";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "04/09 14:01";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
