@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="04/09 18:02">
+<meta name="apuntes-version" content="04/09 18:11">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1281,6 +1281,23 @@ body {
      la pregunta final del capitulo 0). Sin esto se pegaban todos en un parrafo. */
   white-space: pre-line;
 }
+/* CUANDO EL ENUNCIADO ES UN PARRAFO Y NO UNA ETIQUETA (Javier, 04/09).
+   .quiz-q nacio para "¿Que es la mitocondria?" —45 caracteres— y usa la misma
+   tipografia y el mismo tamaño que un h3 de los apuntes: Fraunces 600 a 1,16x.
+   Medido: en las otras 5 materias la pregunta entra en 3 renglones SIEMPRE (389
+   de 389); en la Olimpiada la mediana es 10 renglones y el maximo 27. Un parrafo
+   de 16 renglones en tipografia de titulo es lo que Javier vio como "ENORME".
+   No se decide por materia ni por cantidad de caracteres: se mide cuantos
+   renglones ocupa de verdad, que es la propiedad que molesta y ademas se adapta
+   sola al tamaño de letra elegido y al ancho de la pantalla. */
+.quiz-q.parrafo {
+  font-family: "Crimson Pro", Georgia, serif;
+  font-weight: 400;
+  font-size: var(--reader-fontsize, 19px);   /* igual que el cuerpo de la leccion */
+  line-height: 1.55;
+  letter-spacing: normal;
+}
+.quiz-q.parrafo strong { font-weight: 600; }
 /* De donde salio el problema (Javier, 04/09: "cada vez que muestres un enunciado
    deci de que instancia, nivel y año es"). Va DEBAJO del enunciado y en voz baja:
    es procedencia, no parte de la consigna. Solo la Olimpiada trae este dato; en
@@ -2696,7 +2713,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '04/09 18:02', detalle: 'CIERRE ' + motivo });
+                                    ver: '04/09 18:11', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -22643,7 +22660,22 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     const q = quizSession.questions[quizSession.currentIdx];
     $("quizProgFill").style.width = (100 * (quizSession.currentIdx) / quizSession.questions.length) + "%";
     $("quizProgText").textContent = (quizSession.currentIdx + 1) + " / " + quizSession.questions.length;
-    ponTexto($("quizQ"), q.q);
+    // El enunciado. Se escribe SIEMPRE en el estilo de titulo, se mide cuantos
+    // renglones ocupa asi, y recien ahi se decide: mas de 3 renglones es un
+    // parrafo, no una etiqueta, y pasa a tipografia de lectura. Se mide cada vez
+    // porque el resultado depende del tamaño de letra y del ancho de pantalla.
+    const _qEl = $("quizQ");
+    _qEl.classList.remove("parrafo");
+    ponTexto(_qEl, q.q);
+    const _mideEnunciado = () => {
+      const lh = parseFloat(getComputedStyle(_qEl).lineHeight) || 1;
+      const alto = _qEl.getBoundingClientRect().height;
+      // Si todavia no esta dibujado el alto da 0 y no se puede decidir nada:
+      // se vuelve a mirar en el cuadro siguiente en vez de adivinar.
+      if (!alto) { requestAnimationFrame(_mideEnunciado); return; }
+      _qEl.classList.toggle("parrafo", Math.round(alto / lh) > 3);
+    };
+    _mideEnunciado();
     // De donde salio el enunciado. Solo la Olimpiada lo trae; si no hay dato, el
     // renglon no se dibuja (no queda un hueco ni un "·" suelto).
     const _fu = $("quizFuente");
@@ -25414,7 +25446,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "04/09 18:02";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "04/09 18:11";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
