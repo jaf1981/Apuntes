@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="04/09 17:48">
+<meta name="apuntes-version" content="04/09 18:02">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1280,6 +1280,18 @@ body {
   /* Los enunciados traen renglones propios (aclaraciones, ecuaciones sueltas,
      la pregunta final del capitulo 0). Sin esto se pegaban todos en un parrafo. */
   white-space: pre-line;
+}
+/* De donde salio el problema (Javier, 04/09: "cada vez que muestres un enunciado
+   deci de que instancia, nivel y año es"). Va DEBAJO del enunciado y en voz baja:
+   es procedencia, no parte de la consigna. Solo la Olimpiada trae este dato; en
+   las otras materias el renglon queda oculto. */
+.quiz-fuente {
+  margin-top: -14px;
+  margin-bottom: 20px;
+  font-family: "Crimson Pro", serif;
+  font-size: calc(var(--reader-fontsize, 19px) * 0.68);   /* 13px a 19 */
+  color: var(--text-soft);
+  letter-spacing: 0.01em;
 }
 /* Figura del problema (Olimpiada). El SVG usa stroke="currentColor", asi que
    hereda el color del texto y funciona igual en claro y en oscuro. */
@@ -2684,7 +2696,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '04/09 17:48', detalle: 'CIERRE ' + motivo });
+                                    ver: '04/09 18:02', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -3035,6 +3047,7 @@ body {
         <span class="quiz-prog-text" id="quizProgText">1 / 10</span>
       </div>
       <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-fuente" id="quizFuente" hidden></div>
       <div class="quiz-fig" id="quizFig" style="display:none"></div>
       <div class="quiz-opts" id="quizOpts"></div>
       <div id="quizFeedbackWrap"></div>
@@ -14803,7 +14816,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Empezá calculando los ángulos del triángulo ABC: es isósceles con 20° en A, así que los de la base miden 80° cada uno.",
      "Medí DE, EF y FD: los tres dan lo mismo, el triángulo DEF es equilátero. Y por otro lado DE = CE, que te da un segundo isósceles para el otro ángulo."
     ],
-    "id": 0
+    "id": 0,
+    "niv": 1
    },
    {
     "c": 1,
@@ -14820,7 +14834,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Llamale β al ángulo AB̂C. Como el triángulo es isósceles, AĈB también vale β, y la bisectriz de C aporta β/2. Escribí BD̂C en función de β.",
      "DE = BE hace que BD̂E = β, y DF lo parte al medio. Restale ese pedazo a BD̂C: lo que queda es 116°. Ahí despejás β."
     ],
-    "id": 1
+    "id": 1,
+    "niv": 1
    },
    {
     "c": 1,
@@ -14837,7 +14852,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "El triángulo es isósceles y M es el punto medio de BC, así que la recta AM es la mediatriz de BC. ¿Qué te dice eso de las distancias EB y EC?",
      "Si EB = EC y además ED = EC, entonces E está a la misma distancia de B, de C y de D: es el centro de la circunferencia que pasa por los tres. Y el ángulo central es el doble del inscripto."
     ],
-    "id": 2
+    "id": 2,
+    "niv": 1
    },
    {
     "c": 1,
@@ -14854,7 +14870,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Anotá todas las medidas: si el lado es 3, entonces AD = DE = EB = 1, y el dato CF = AD te da CF = 1.",
      "Compará los triángulos ADC y CFA: tienen AD = CF, el lado AC en común, y el ángulo de 60° justo entre esos dos lados. Son iguales, y de ahí salen ángulos iguales que podés reacomodar."
     ],
-    "id": 3
+    "id": 3,
+    "niv": 1
    },
    {
     "c": 1,
@@ -14875,7 +14892,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Doblar es reflejar: DC′ = DC, EC′ = EC, y el ángulo de 60° del vértice C viaja entero hasta C′.",
      "Con DĈ′B = 90° y DĈ′E = 60°, lo que queda para AĈ′E es 30°. Ahora resolvé los triángulos BDC′ y AEC′, y acordate de que DE y EC son ejes de simetría."
     ],
-    "id": 4
+    "id": 4,
+    "niv": 1
    },
    {
     "c": 1,
@@ -14898,7 +14916,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No calcules el rombo por dentro: mirá todo lo que se junta alrededor del vértice C.",
      "El cuadrado aporta 90° y cada equilátero aporta 60°. Todo lo que rodea a C tiene que sumar 360°."
     ],
-    "id": 5
+    "id": 5,
+    "niv": 1
    },
    {
     "c": 1,
@@ -14921,7 +14940,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "AP y AQ son lados de triángulos equiláteros construidos sobre lados del cuadrado, así que los dos miden 2. El triángulo APQ es isósceles.",
      "Sumá todo lo que rodea al vértice A: PÂB = 60°, el ángulo del cuadrado 90°, QÂD = 60°. Fijate cuánto queda para PÂQ."
     ],
-    "id": 6
+    "id": 6,
+    "niv": 1
    },
    {
     "c": 1,
@@ -14938,7 +14958,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Trazá por C una recta paralela a PQ y a RS. Es el truco de siempre para las figuras en zig-zag.",
      "Esa paralela parte el ángulo de 68° en dos pedazos: uno es igual al ángulo que buscás y el otro es igual a los 27° de abajo."
     ],
-    "id": 8
+    "id": 8,
+    "niv": 1
    },
    {
     "c": 2,
@@ -14956,7 +14977,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Cada vez que avanzás un lado en un polígono regular, la dirección de la recta gira un ángulo exterior, que mide 360/n.",
      "De la recta AB a la recta DE hay 3 lados de diferencia, así que la dirección giró 3·(360/n). El ángulo en K es 180° menos ese giro."
     ],
-    "id": 9
+    "id": 9,
+    "niv": 1
    },
    {
     "c": 2,
@@ -14973,7 +14995,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Ojo con una trampa: sobre el lado AB se pueden dibujar DOS cuadrados, uno para cada lado. El que sirve es el que deja H adentro del segmento AE y G adentro de BD.",
      "Con el hexágono de lado 1, el cuadrado apoyado en AB tiene su vértice H sobre AE. Ubicalo y mirá qué ángulo forman ahí los segmentos HF y HE."
     ],
-    "id": 10
+    "id": 10,
+    "niv": 1
    },
    {
     "c": 2,
@@ -14990,7 +15013,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "En un polígono regular de 15 lados, cada lado abarca un arco de 360/15 = 24°.",
      "Dos cuerdas que se cortan adentro forman un ángulo igual a la SEMISUMA de los dos arcos que abarcan. Contá cuántos lados abarca cada arco y multiplicá por 24°."
     ],
-    "id": 11
+    "id": 11,
+    "niv": 1
    },
    {
     "c": 2,
@@ -15007,7 +15031,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "El ángulo interior de un polígono regular de 10 lados mide 180·(10−2)/10 = 144°.",
      "En el vértice C, el equilátero se lleva 60°, así que a PĈD le quedan 84°. Y como CP = CB = lado = CD, el triángulo PCD también es isósceles."
     ],
-    "id": 12
+    "id": 12,
+    "niv": 1
    },
    {
     "c": 2,
@@ -15024,7 +15049,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "AB = BC = CA dice que ABC es equilátero, y AD = DE = EA dice que ADE también lo es. Los dos comparten el vértice A.",
      "Poné en orden los cuatro segmentos que salen de A: AB, después AC a 60°, después AD a 40° más, y después AE a 60° más. Con eso ubicás E y mirás el triángulo ABE."
     ],
-    "id": 13
+    "id": 13,
+    "niv": 1
    },
    {
     "c": 2,
@@ -15047,7 +15073,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "El ángulo interior de un pentágono regular mide 108°. Y los cuatro lados del cuadrilátero sombreado son lados de pentágono, así que es un rombo.",
      "Mirá el vértice IZQUIERDO del rombo: ahí se juntan los dos pentágonos de la izquierda y el rombo, y los tres ángulos tienen que cerrar 360°."
     ],
-    "id": 14
+    "id": 14,
+    "niv": 1
    },
    {
     "c": 2,
@@ -15068,7 +15095,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "K está sobre la mediatriz de OA, así que KO = KA. Y KO = OA porque los dos son radios de la misma circunferencia.",
      "Tres lados iguales: OKA es equilátero, AÔK = 60° y queda KÔB = 30°. Sumale que OAB es rectángulo isósceles (AÔB = 90° con OA = OB)."
     ],
-    "id": 15
+    "id": 15,
+    "niv": 1
    },
    {
     "c": 2,
@@ -15091,7 +15119,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Llamale x al más chico de los cuatro y escribí los otros tres en función de x. Cuidado con la dirección de las fracciones.",
      "Los cuatro ángulos juntos cubren toda la semicircunferencia, así que suman 180°."
     ],
-    "id": 16
+    "id": 16,
+    "niv": 1
    },
    {
     "c": 3,
@@ -15111,7 +15140,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Fijate qué segmentos miden lo mismo: BC = CD, y además CE = CD. Los tres salen del mismo punto C, así que B, D y E están todos a la misma distancia de C.",
      "El ángulo EB̂C mide 70° − 10° = 60°. Si además CB = CE, ¿qué clase de triángulo es BCE? Una vez que sepas BĈE, restalo de los 170°."
     ],
-    "id": 17
+    "id": 17,
+    "niv": 1
    },
    {
     "c": 3,
@@ -15128,7 +15158,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "BP̂C = CP̂Q quiere decir que PC parte al medio el ángulo que PQ forma con la prolongación de AP. En Q pasa exactamente lo mismo con QC.",
      "Dos bisectrices de ángulos exteriores del triángulo APQ se cortan en C. Desde ese punto, el ángulo PĈQ siempre vale 90° − Â/2, estén donde estén P y Q. ¿Cuánto mide Â en un rectángulo?"
     ],
-    "id": 18
+    "id": 18,
+    "niv": 1
    },
    {
     "c": 3,
@@ -15145,7 +15176,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "PÂB = 90° − 27° = 63°. Y como BP = AB, el triángulo ABP es isósceles: dos de sus ángulos son iguales.",
      "La diagonal AC forma 45° con AB. Mirá el triángulo ABO: ya tenés dos de sus ángulos. El que te piden es el suplementario de AÔB."
     ],
-    "id": 19
+    "id": 19,
+    "niv": 1
    },
    {
     "c": 3,
@@ -15162,7 +15194,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Probá con un trapecio cualquiera: escribí BD y (BC + AD)/2 y compará. Vas a ver que BD nunca queda por debajo.",
      "La igualdad del enunciado es el MÍNIMO exacto de BD, no un caso más. En ese mínimo BD forma 60° con AD, y AC forma 30°."
     ],
-    "id": 20
+    "id": 20,
+    "niv": 1
    },
    {
     "c": 3,
@@ -15185,7 +15218,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "KM pasa por el punto medio de BC y es perpendicular a BC: es la mediatriz de BC. LN es la mediatriz de AC por la misma razón.",
      "Dos mediatrices se cortan en un punto que queda a la misma distancia de A, B y C. Y M está en la mediatriz de BC (MB = MC) y N en la de AC (NA = NC): cada uno te da un triángulo isósceles para encadenar ángulos."
     ],
-    "id": 21
+    "id": 21,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15202,7 +15236,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Escribí cada número en función de a: si a3 son dos dígitos, vale 10·a + 3. Hacé lo mismo con 3aa y con a34.",
      "Te queda una sola ecuación con una sola incógnita. Sacá denominador común 66 y acordate de que a tiene que ser un dígito: solo hay diez candidatos para probar."
     ],
-    "id": 22
+    "id": 22,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15225,7 +15260,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Llamá c, d, u a las centenas, decenas y unidades. Intercambiar dos dígitos no cambia los otros: escribí el número nuevo y restale el viejo.",
      "Intercambiar decenas con unidades cambia el número en 9·(u − d), y centenas con unidades lo cambia en 99·(u − c). De ahí salen u − d y u − c; después fijate qué dígitos son posibles."
     ],
-    "id": 23
+    "id": 23,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15242,7 +15278,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Un reloj de agujas vuelve a marcar la hora correcta cuando se adelantó una vuelta entera. ¿Cuántos segundos son una vuelta entera?",
      "Una vuelta entera son 12 horas. Uno se adelanta 1 segundo por hora y el otro 1,5 segundos por hora: calculá cuántas horas tarda cada uno en adelantarse esas 12 horas, pasalo a días, y buscá el primer día en que los dos plazos caen juntos."
     ],
-    "id": 24
+    "id": 24,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15259,7 +15296,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Si nació en el año N, en 1898 cumplió 1898 − N. Y eso tiene que ser igual a la suma de los dígitos de N.",
      "La suma de los dígitos de un año de cuatro cifras no pasa de 36, así que la edad es chica y el año de nacimiento anda cerca de 1898. Probá los años del 1860 en adelante."
     ],
-    "id": 25
+    "id": 25,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15276,7 +15314,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Si a A le llegaron antes tantos como después, A está justo en el medio. Eso ya te dice algo sobre si el total es par o impar.",
      "Llamá N al total. A está en la posición (N+1)/2. Para B, «antes es el triple de después» te da otra posición en función de N. Entre los dos hay 10 corredores, o sea que las posiciones se llevan 11."
     ],
-    "id": 26
+    "id": 26,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15293,7 +15332,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No cuentes números: contá POSICIONES. El 7 puede estar en las unidades, en las decenas o en las centenas, y cada caso se cuenta por separado.",
      "De 1 a 976, en las unidades hay un 7 cada 10 números. En las decenas, aparece de a diez seguidos (70 a 79, 170 a 179...). Hacé las tres cuentas y sumá."
     ],
-    "id": 27
+    "id": 27,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15311,7 +15351,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Llamá M al número de cinco cifras abcde. Entonces 1abcde es 100000 + M. ¿Y cómo se escribe abcde1 usando M?",
      "abcde1 es 10·M + 1: correr las cifras un lugar a la izquierda es multiplicar por 10. Planteá 3·(100000 + M) = 10·M + 1 y despejá M."
     ],
-    "id": 28
+    "id": 28,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15328,7 +15369,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Mirá la segunda fila: es la única con una sola letra repetida cuatro veces. Empezá por ahí.",
      "De la segunda fila sale b, y con la primera sale a. Con esos dos, la cuarta fila te da c. Recién ahí usá la tercera para despejar x."
     ],
-    "id": 29
+    "id": 29,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15345,7 +15387,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Para que el número sea lo más chico posible querés la menor cantidad de dígitos, y para eso los dígitos tienen que ser lo más grandes posible.",
      "Con 9 en todos lados, cinco dígitos suman como mucho 45: no alcanza. Con seis dígitos sí. Ahora, entre los de seis dígitos que suman 49, buscá el más chico que además sea múltiplo de 7."
     ],
-    "id": 30
+    "id": 30,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15366,7 +15409,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Se vuelven a encontrar cuando pasa una cantidad de días que es múltiplo de 4, de 5 y de 8 a la vez.",
      "El menor de esos múltiplos comunes es 40. Ahora contá 40 días desde el 1 de mayo, sin olvidarte de cuántos días tiene mayo."
     ],
-    "id": 31
+    "id": 31,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15383,7 +15427,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Llamá a, b, c, d a las cuatro cifras del número abcd. Escribí las dos condiciones del enunciado usando esas letras.",
      "Las condiciones son c = a y d + b = 5. Contá por separado cuántos valores puede tomar a (ojo: no puede ser 0) y cuántos pares (b, d) suman 5. Después multiplicá."
     ],
-    "id": 32
+    "id": 32,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15400,7 +15445,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Ponele nombre a lo que tiene el menor y escribí lo de cada uno de los otros tres en función de ese nombre, uno a la vez y en orden de edad.",
      "El segundo tiene la mitad del primero más 5; el tercero, la mitad de lo que tienen los dos primeros juntos más 5; y así. Sumando los cuatro te queda una sola ecuación. Ojo: las cuatro cantidades tienen que dar enteras."
     ],
-    "id": 33
+    "id": 33,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15417,7 +15463,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No listes las maneras: son demasiadas. Preguntate de dónde puede venir el último paso que lo deja arriba.",
      "Para llegar al escalón 7 tuvo que venir del 6, del 5 o del 4. Entonces las maneras de llegar al 7 son la suma de las maneras de llegar a esos tres. Armá la cuenta desde abajo: escalón 1, escalón 2, escalón 3, y seguí."
     ],
-    "id": 34
+    "id": 34,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15434,7 +15481,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No hace falta ninguna regla extra sobre qué números se pueden usar: con que las ocho líneas sumen lo mismo alcanza. Llamale S a esa suma y escribí las casillas vacías en función de S.",
      "La fila de abajo ya tiene el 10 y el 3, así que la esquina de abajo a la izquierda vale S − 13. Metela en la diagonal que pasa por el 7 y la casilla del centro queda despejada. De ahí sale S, y con S sale todo lo demás."
     ],
-    "id": 35
+    "id": 35,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15451,7 +15499,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Un número es múltiplo de 3 cuando la suma de sus cifras lo es. Así que las dos condiciones hablan de lo mismo: la suma de las cifras.",
      "La suma de las cifras tiene que ser múltiplo de 3 y de 7 a la vez, o sea múltiplo de 21. Con tres cifras esa suma no puede pasar de 27, así que hay un solo valor posible. Contá cuántos números de hasta tres cifras lo alcanzan."
     ],
-    "id": 36
+    "id": 36,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15474,7 +15523,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Ponele un nombre a lo de Alex y escribí lo de los otros tres en función de ese nombre, en el orden en que los da el enunciado.",
      "Lo de Bruno es lo de Alex menos 7. Lo de Carlos es la suma de esos dos menos 7, así que también queda en función de Alex. Lo mismo Dani. Sumá los cuatro, igualá a 47 y despejá."
     ],
-    "id": 37
+    "id": 37,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15495,7 +15545,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Numerá los días desde el 1 de enero de 2016. Bruno descansa cada 4 días y Mateo descansa 3 de cada 10: escribí qué números de día le tocan a cada uno.",
      "Bruno descansa en los días múltiplos de 4. Mateo descansa en los días que terminan de cierta manera dentro de su ciclo de 10. Buscá el primer día que cumple las dos cosas y que además caiga ya en 2020: acordate de contar los días de los cuatro años, uno de ellos bisiesto."
     ],
-    "id": 38
+    "id": 38,
+    "niv": 1
    },
    {
     "c": 4,
@@ -15514,7 +15565,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No sabés a quién le tocó cada error, pero sí que los tres errores son 22, 20 y 9, y que cada uno puede ser de más o de menos.",
      "Las tres respuestas están cerca entre sí. Fijate en las diferencias entre ellas: 205 − 192 = 13 y 192 − 163 = 29. Eso te obliga a acomodar los errores de una sola manera posible."
     ],
-    "id": 39
+    "id": 39,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15535,7 +15587,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Mirá el cuadrado chico del medio: su lado es la DIFERENCIA entre el lado largo y el lado corto del rectángulo. Fijate en el dibujo por qué.",
      "El cuadrado sombreado tiene área 36, así que su lado mide 6: el lado largo del rectángulo es 6 más que el corto. Y los dos lados multiplicados dan 720. Con esas dos cosas, probá pares de números que se lleven 6."
     ],
-    "id": 40
+    "id": 40,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15552,7 +15605,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Los dos ángulos rectos están apoyados en el mismo segmento: trazá AC y mirá qué te queda a cada lado.",
      "AC es la hipotenusa del triángulo ABC y a la vez un cateto del triángulo ACD. Calculá AC primero; te va a dar un número redondo. Con ese número, AD sale igual de fácil."
     ],
-    "id": 41
+    "id": 41,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15569,7 +15623,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Cada rectangulito tiene por área el ancho de su columna por el alto de su fila. Ponele nombre a los tres anchos y a los tres altos.",
      "El de arriba a la izquierda es ancho1·alto1 = 8 y el de arriba a la derecha es ancho3·alto1 = 10: dividiendo, sabés cuántas veces más ancha es la tercera columna que la primera. Y esa misma proporción vale abajo."
     ],
-    "id": 42
+    "id": 42,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15586,7 +15641,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No calcules el área pedazo por pedazo: metelo adentro del rectángulo más chico que lo contenga y fijate qué le sobra a ese rectángulo.",
      "El rectángulo que lo contiene mide 14 de ancho (11 + 3, y también 8 + 6) por 12 de alto (5 + 7, y también 9 + 3). Al polígono le faltan dos pedazos rectangulares respecto de ese rectángulo: restáselos."
     ],
-    "id": 43
+    "id": 43,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15603,7 +15659,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Los seis ángulos son iguales, así que cada lado va girando siempre lo mismo. Pensá el contorno como seis pasos que tienen que volver al punto de partida.",
      "En un hexágono con todos los ángulos iguales, los lados opuestos se compensan: el primero más el segundo es igual al cuarto más el quinto, y así con los otros dos pares. Con eso salen los dos lados que faltan."
     ],
-    "id": 44
+    "id": 44,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15620,7 +15677,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "El pentágono es casi todo el triángulo: fijate qué pedacito le falta, cerca de P.",
      "Lo que le falta es el cuadrilátero PBAF, y ese cuadrilátero son dos triangulitos iguales. Calculá cuánto vale el hexágono respecto del triángulo y de ahí sale el tamaño de esos triangulitos."
     ],
-    "id": 45
+    "id": 45,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15644,7 +15702,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "El segmento sale de un vértice, así que la región A es un triángulo. Escribí su área y la del rectángulo entero usando a, b y la altura.",
      "El triángulo mide a·altura/2 y el rectángulo entero (a+b)·altura. B es la resta de los dos. Al plantear la razón, la altura se simplifica y te queda una ecuación con a y b sola."
     ],
-    "id": 46
+    "id": 46,
+    "niv": 1
    },
    {
     "c": 5,
@@ -15668,7 +15727,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "ADE es un triángulo apoyado en el lado AD, y ABCE es todo el rectángulo menos ese triángulo. Ponele nombre a DC y a DE.",
      "Con DC = base y DE = d, el triángulo mide d·AD/2 y el resto es base·AD − d·AD/2. Reemplazando en la condición, AD se simplifica y queda una relación entre base y d. Y ojo: te piden CE, que es base − d, no d."
     ],
-    "id": 47
+    "id": 47,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15687,7 +15747,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "El cartel da dos formas de comprar: de a 3 y de a 4. Paula compró 10, así que tuvo que combinarlas de alguna manera. Anotá todas las combinaciones posibles.",
      "Llamá p al precio de lista. Un paquete de 3 sale 3·p y uno de 4 sale 3·p + 7. Escribí lo que sale cada combinación y quedate con la que puede dar $102 con p entero."
     ],
-    "id": 48
+    "id": 48,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15706,7 +15767,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "La primera mujer conoce a 16 varones, la segunda a 17, la tercera a 18… ¿cuántos conoce la que hace número m?",
      "La última conoce a 15 + m varones, y el enunciado dice que conoce a todos: eso te da una igualdad entre m y n. Con la otra igualdad, la de las 47 personas, tenés dos ecuaciones y dos incógnitas."
     ],
-    "id": 49
+    "id": 49,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15725,7 +15787,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No pongas tres incógnitas. Elegí una sola —conviene la de Bibi, porque las otras dos se calculan a partir de ella— y escribí las tres en función de esa.",
      "Si Bibi resolvió b, Ana resolvió 2/5 de b y Ceci 3/4 de lo de Ana. Sumá las tres y va a darte una fracción de b: igualala a lo que dice el enunciado."
     ],
-    "id": 50
+    "id": 50,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15748,7 +15811,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Empezá por el final. Carlos se llevó lo que quedaba después de Bruno, y Bruno se llevó la cuarta parte de lo que dejó Agus. Entonces lo de Carlos son las tres cuartas partes de lo que dejó Agus.",
      "Con eso ya sabés cuánto dejó Agus. Y lo que dejó Agus es el total menos su tercera parte menos los 4 caramelos de más."
     ],
-    "id": 51
+    "id": 51,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15767,7 +15831,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Los cuatro tienen lo mismo. Llamá x a lo que tiene cada uno: ¿cuánto tienen los otros tres juntos?",
      "Los otros tres tienen 3·x. Entonces la frase del enunciado se escribe como una igualdad con una sola incógnita: x es igual a 18 más un quinto de 3·x."
     ],
-    "id": 52
+    "id": 52,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15791,7 +15856,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Fijate en uno solo de los chicos. Da una parte de lo suyo y recibe la parte del que tiene a su izquierda. Si termina con lo mismo que tenía, ¿qué relación hay entre lo que da y lo que recibe?",
      "Lo que entrega cada uno es igual a lo que recibe. Eso ata a cada chico con el anterior: escribí a los cinco en función de lo que tiene Ana y usá el total."
     ],
-    "id": 53
+    "id": 53,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15814,7 +15880,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Mirá la fila de abajo: te da tres sumas con la misma letra, z. Restando dos de ellas se va la z y te queda cuánto se llevan entre sí las letras de arriba.",
      "De la última fila sacás a − b y a − c. Con eso, cualquier casilla de la fila de arriba se corre a la de al lado sin saber cuánto vale ninguna letra por separado."
     ],
-    "id": 54
+    "id": 54,
+    "niv": 1
    },
    {
     "c": 6,
@@ -15837,7 +15904,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No trabajes con a, b, c, d: trabajá con a+1, b+1, c+1 y d+1, que son las que aparecen en las tres multiplicaciones.",
      "Las tres multiplicaciones comparten factores en cadena. Descomponé 525, 147 y 105 en primos: b+1 tiene que dividir a 525 y a 147 a la vez, y eso deja muy pocos candidatos para probar."
     ],
-    "id": 55
+    "id": 55,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15856,7 +15924,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "No los listes. Pensá el número como cuatro casillas y contá cuántas opciones hay para cada casilla por separado.",
      "La última casilla está atada a que sea múltiplo de 5, y la primera a que no empiece con 0. Las dos del medio son libres dentro de los dígitos permitidos. Después se multiplican las cuatro cantidades."
     ],
-    "id": 56
+    "id": 56,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15875,7 +15944,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Un triángulo isósceles tiene dos lados iguales. Acá el lado distinto es 221 y es el más largo, así que los dos iguales miden lo mismo y son más cortos.",
      "Con dos lados iguales de longitud L, para que el triángulo exista los dos juntos tienen que superar al lado largo. Eso te da desde dónde empieza L; que 221 sea el más largo te da hasta dónde llega. Contá los múltiplos de 3 que quedan adentro."
     ],
-    "id": 57
+    "id": 57,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15894,7 +15964,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Contá por separado los de 1×1, los de 2×2, los de 3×3, y así. Para cada tamaño la pregunta es la misma: ¿en cuántos lugares se puede poner ese cuadrado de modo que tape la casilla roja?",
      "Un cuadrado queda determinado por dónde arranca. Contá en cuántas filas puede arrancar y en cuántas columnas: como las dos cosas son independientes, se multiplican."
     ],
-    "id": 58
+    "id": 58,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15913,7 +15984,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Una suma es par cuando la cantidad de sumandos impares es par. Entre el 1 y el 9 hay cinco impares y cuatro pares.",
      "Con tres números elegidos, la suma da par en dos situaciones: los tres pares, o uno par y dos impares. Contá cada situación por separado y sumá, porque no se pisan entre sí."
     ],
-    "id": 59
+    "id": 59,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15932,7 +16004,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Primero olvidate del orden: buscá qué conjuntos de dígitos distintos, todos entre 1 y 9, tienen sus cuadrados sumando 50.",
      "Los cuadrados de los dígitos son 1, 4, 9, 16, 25, 36, 49, 64 y 81: los últimos ya se pasan solos o casi. Una vez que tenés cada conjunto, cada orden distinto de sus dígitos da un número distinto."
     ],
-    "id": 60
+    "id": 60,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15954,7 +16027,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Los impares están en orden, así que el lugar del 57 sale de una cuenta directa: ¿qué impar es el 57 si el 1 es el primero?",
      "Los grupos tienen 1, 3, 5, 7… números. Sumando esas cantidades vas viendo dónde termina cada grupo: los cortes caen en 1, 4, 9, 16… Fijate entre qué dos cortes cae el lugar del 57."
     ],
-    "id": 61
+    "id": 61,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15977,7 +16051,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Llamá n al número de la primera casilla de abajo. Toda la fila de abajo se escribe con n, porque cada uno es el doble del anterior.",
      "Cada fila de arriba también se escribe con n, sumando de a dos. Escribí las diez casillas en función de n, sumalas y vas a tener una sola ecuación."
     ],
-    "id": 62
+    "id": 62,
+    "niv": 1
    },
    {
     "c": 7,
@@ -15996,7 +16071,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Una multiplicación de dos dígitos da impar solamente cuando los dos son impares. En cualquier otro caso da par.",
      "La suma de las dos multiplicaciones es par cuando las dos son pares o las dos son impares. Contá cuántos pares de dígitos dan producto impar y cuántos par, y combinalos."
     ],
-    "id": 63
+    "id": 63,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16020,7 +16096,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Buscá la última oración: casi siempre ahí está la pregunta. ¿Con qué palabra arranca lo que te piden?",
      "Dice «determinar cuántas veces». La palabra «cuántas» es la señal más clara que hay: te están pidiendo una cantidad, y para eso hay que contar."
     ],
-    "id": 64
+    "id": 64,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16044,7 +16121,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Leé la última oración del enunciado. Son solo cuatro palabras, y cambian todo el trabajo que hay que hacer.",
      "«Dar todas las posibilidades» quiere decir que encontrar UNA solución no termina el problema: hay que encontrarlas todas y además saber que no quedó ninguna afuera."
     ],
-    "id": 65
+    "id": 65,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16068,7 +16146,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Este enunciado te pide dos cosas, no una. Buscá dónde termina la primera y empieza la segunda.",
      "«Hacerlo con el número mínimo» es una. «Justificar que el número hallado es mínimo» es la otra, y es la que casi todos se olvidan."
     ],
-    "id": 66
+    "id": 66,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16092,7 +16171,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Las dos preguntas empiezan con la misma palabra. Esa palabra dice qué forma tiene que tener la respuesta.",
      "«Decidir si se puede afirmar» pide una respuesta de tipo sí/no **con su razón**. Un número no contesta nada acá."
     ],
-    "id": 67
+    "id": 67,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16116,7 +16196,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Fijate en el verbo con el que arranca la última oración. No dice «calcular» ni «determinar».",
      "«Dar una secuencia de pasos con la que se logre» significa que con exhibir **una** que funcione, el problema está contestado. No hay que buscar la mejor ni contarlas."
     ],
-    "id": 68
+    "id": 68,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16140,7 +16221,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Buscá las tres palabras del medio del enunciado que dicen cuánto hay que esforzarse: no es «formar fracciones», es formar algo «…» de fracciones.",
      "«La mayor cantidad posible» es un máximo. Y como todo máximo, se contesta con dos cosas: un ejemplo que llegue a ese número, y la razón de por qué no se puede llegar a uno más."
     ],
-    "id": 69
+    "id": 69,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16164,7 +16246,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "El único dato numérico del enunciado es el área del triángulo entero. Todo lo demás son puntos medios. Eso ya te dice que la respuesta va a ser una fracción de 24, no una cuenta con lados.",
      "Cuando un enunciado te da puntos medios, lo que te está regalando son PROPORCIONES: qué parte del total ocupa cada pedazo. Y las proporciones se usan sin conocer ni un lado."
     ],
-    "id": 70
+    "id": 70,
+    "niv": 1
    },
    {
     "c": 0,
@@ -16188,7 +16271,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      "Fijate en la forma del enunciado: hay una situación inicial, una regla que se aplica muchas veces, y una pregunta sobre lo que puede pasar al final.",
      "Cuando una operación se repite muchas veces y no sabés cuántas, no se simula: se busca alguna cantidad que **quede igual** después de cada aplicación. Esa cantidad se mantiene desde el principio hasta el final y limita lo que puede pasar."
     ],
-    "id": 71
+    "id": 71,
+    "niv": 1
    },
    {
     "c": 8,
@@ -16205,7 +16289,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 124,
     "ansTxt": "124 fósforos",
-    "id": 72
+    "id": 72,
+    "niv": 1
    },
    {
     "c": 8,
@@ -16222,7 +16307,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 114,
     "ansTxt": "114 veces",
-    "id": 73
+    "id": 73,
+    "niv": 1
    },
    {
     "c": 8,
@@ -16246,7 +16332,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "ansTxt": "Cuántas monedas tiene cada pirata en total",
-    "id": 74
+    "id": 74,
+    "niv": 1
    },
    {
     "c": 8,
@@ -16270,7 +16357,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "ansTxt": "Nada: la cantidad de encendidas cambia de par a impar en cada paso",
-    "id": 75
+    "id": 75,
+    "niv": 1
    },
    {
     "c": 8,
@@ -16294,7 +16382,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "ansTxt": "El resto que deja al dividir por 5 la suma de los exponentes",
-    "id": 76
+    "id": 76,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16311,7 +16400,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 100,
     "ansTxt": "100 participantes",
-    "id": 77
+    "id": 77,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16328,7 +16418,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 9,
     "ansTxt": "9 números",
-    "id": 78
+    "id": 78,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16352,7 +16443,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "ansTxt": "Porque cada corte agrega 5 o 7 pedazos y desde 1 no se llega a 24",
-    "id": 79
+    "id": 79,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16376,7 +16468,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "ansTxt": "Explicar por qué no se pueden formar 9 o 10",
-    "id": 80
+    "id": 80,
+    "niv": 1
    },
    {
     "c": 10,
@@ -16396,7 +16489,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      91269
     ],
     "ansTxt": "81828 y 91269",
-    "id": 81
+    "id": 81,
+    "niv": 1
    },
    {
     "c": 10,
@@ -16413,7 +16507,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "ansTxt": "4 de los 5",
-    "id": 82
+    "id": 82,
+    "niv": 1
    },
    {
     "c": 10,
@@ -16437,7 +16532,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "ansTxt": "Según el resto de cada número al dividir por 3",
-    "id": 83
+    "id": 83,
+    "niv": 1
    },
    {
     "c": 10,
@@ -16454,7 +16550,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1485100,
     "ansTxt": "1485100",
-    "id": 84
+    "id": 84,
+    "niv": 1
    },
    {
     "c": 11,
@@ -16471,7 +16568,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 621,
     "ansTxt": "621 (el rectángulo es de 27 × 23)",
-    "id": 85
+    "id": 85,
+    "niv": 1
    },
    {
     "c": 11,
@@ -16488,7 +16586,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "ansTxt": "2",
-    "id": 86
+    "id": 86,
+    "niv": 1
    },
    {
     "c": 11,
@@ -16508,7 +16607,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      67.5
     ],
     "ansTxt": "45° y 67,5°",
-    "id": 87
+    "id": 87,
+    "niv": 1
    },
    {
     "c": 11,
@@ -16525,7 +16625,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 21.5,
     "ansTxt": "21,5 los dos (BE = CF = 21,5)",
-    "id": 88
+    "id": 88,
+    "niv": 1
    },
    {
     "c": 12,
@@ -16549,7 +16650,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "ansTxt": "No: en un 6×6 Martín siempre encuentra dos vecinas que suman múltiplo de 4",
-    "id": 89
+    "id": 89,
+    "niv": 1
    },
    {
     "c": 12,
@@ -16573,7 +16675,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "ansTxt": "Brian: le alcanza con copiar en otra pila lo que haga Ana",
-    "id": 90
+    "id": 90,
+    "niv": 1
    },
    {
     "c": 12,
@@ -16597,7 +16700,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "ansTxt": "Beto: se lleva siempre un naipe par y se queda con el que a Ana le serviría",
-    "id": 91
+    "id": 91,
+    "niv": 1
    },
    {
     "c": 12,
@@ -16621,7 +16725,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "ansTxt": "No: entre las cuatro sumas siempre hay una que es producto de tres factores",
-    "id": 92
+    "id": 92,
+    "niv": 1
    },
    {
     "c": 13,
@@ -16638,7 +16743,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 27,
     "ansTxt": "27",
-    "id": 93
+    "id": 93,
+    "niv": 1
    },
    {
     "c": 10,
@@ -16666,7 +16772,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      14
     ],
     "ansTxt": "Los 10 números son 5, 6, 7, 9, 10, 11, 12, 13, 13 y 14 (suman 100). El valor que se repite entre las sumas es 87.",
-    "id": 94
+    "id": 94,
+    "niv": 1
    },
    {
     "c": 8,
@@ -16683,7 +16790,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 816487,
     "ansTxt": "816487",
-    "id": 95
+    "id": 95,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16700,7 +16808,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 440,
     "ansTxt": "440",
-    "id": 96
+    "id": 96,
+    "niv": 1
    },
    {
     "c": 13,
@@ -16723,7 +16832,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      8
     ],
     "ansTxt": "Ana debe elegir x = 2, 3, 4, 5 u 8. Para x = 1, 6 y 7 el coloreo es imposible. (El caso x = 8 sale sólo con el tablero entero de un mismo color, que es el único coloreo que lo cumple; si se exige usar los dos colores, los valores posibles son x = 2, 3, 4 y 5.)",
-    "id": 97
+    "id": 97,
+    "niv": 1
    },
    {
     "c": 11,
@@ -16740,7 +16850,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 135,
     "ansTxt": "El ángulo AM̂B mide 135° (y M es el punto donde se cortan las tres bisectrices del triángulo ABC).",
-    "id": 98
+    "id": 98,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16757,7 +16868,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 9,
     "ansTxt": "n = 9. Un tablero que sirve (filas de arriba hacia abajo):\n3 7 8 5 5 3 2 6 8 9 3 7 9 6 5 1 9\n7 7 2 1 5 3 2 4 8 4 6 6 9 6 4 1 4\n3 9 8 5 1 1 9 7 4 4 7 7 9 6 1 1 2\n5 6 5 3 5 4 4 6 8 4 3 7 9 1 1 2 2\n5 9 4 3 6 6 2 8 1 4 7 6 8 1 8 8 8\n7 6 5 9 2 4 9 1 8 2 3 2 2 2 2 1 2\n4 1 1 3 1 6 8 8 5 4 2 7 9 5 2 5 5\n9 8 8 3 6 5 4 7 9 2 1 1 1 1 5 9 9\n2 6 7 7 2 3 1 7 5 9 4 8 1 4 8 4 4\n6 4 1 6 8 3 8 4 6 6 7 5 5 6 5 9 2\n5 3 6 6 2 1 4 3 3 9 8 7 8 3 3 3 3\n8 2 4 1 7 3 2 9 7 5 5 7 8 6 9 9 5\n1 2 9 8 7 9 5 6 9 1 4 1 3 8 5 8 3\n2 8 3 5 9 4 6 1 6 7 9 9 7 9 9 3 7\n2 8 9 4 4 7 1 4 7 3 5 3 6 3 6 6 6\n6 5 9 1 3 8 3 5 2 8 8 7 4 3 2 4 5\n5 3 6 2 1 2 7 2 9 2 8 4 4 7 7 7 7",
-    "id": 99
+    "id": 99,
+    "niv": 1
    },
    {
     "c": 4,
@@ -16774,7 +16886,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 19,
     "ansTxt": "19 (se alcanza con 199 y con 199² = 39601).",
-    "id": 100
+    "id": 100,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16791,7 +16904,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 14,
     "ansTxt": "14",
-    "id": 101
+    "id": 101,
+    "niv": 1
    },
    {
     "c": 10,
@@ -16813,7 +16927,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      41
     ],
     "ansTxt": "21, 25, 29 y 41",
-    "id": 102
+    "id": 102,
+    "niv": 1
    },
    {
     "c": 12,
@@ -16830,7 +16945,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 16,
     "ansTxt": "16",
-    "id": 103
+    "id": 103,
+    "niv": 1
    },
    {
     "c": 9,
@@ -16847,7 +16963,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 677,
     "ansTxt": "El menor valor posible del menor de los 53 números es 677. Para ese valor, los 53 números son 677 junto con 52 enteros consecutivos m, m+1, ..., m+51, donde m puede ser cualquier entero con 678 ≤ m ≤ 1966 (hay 1289 posibilidades).",
-    "id": 104
+    "id": 104,
+    "niv": 1
    },
    {
     "c": 4,
@@ -16867,7 +16984,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      46
     ],
     "ansTxt": "En total hay 180 alumnos y 46 de ellos se inscribieron en los dos ritmos.",
-    "id": 105
+    "id": 105,
+    "niv": 1
    },
    {
     "c": 4,
@@ -16884,7 +17002,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 24,
     "ansTxt": "24",
-    "id": 106
+    "id": 106,
+    "niv": 1
    },
    {
     "c": 6,
@@ -16906,7 +17025,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      196
     ],
     "ansTxt": "Alex mide 160 cm, Beto 172 cm, César 184 cm y Dany 196 cm.",
-    "id": 107
+    "id": 107,
+    "niv": 1
    },
    {
     "c": 4,
@@ -16923,7 +17043,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 88,
     "ansTxt": "88",
-    "id": 108
+    "id": 108,
+    "niv": 1
    },
    {
     "c": 4,
@@ -16950,7 +17071,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      8721
     ],
     "ansTxt": "A = 7432, 7542, 7632, 8321, 8431, 8521, 8541, 8631, 8721 (nueve valores)",
-    "id": 109
+    "id": 109,
+    "niv": 1
    },
    {
     "c": 13,
@@ -16967,7 +17089,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 29,
     "ansTxt": "29",
-    "id": 110
+    "id": 110,
+    "niv": 1
    },
    {
     "c": 4,
@@ -16984,7 +17107,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 12,
     "ansTxt": "12",
-    "id": 111
+    "id": 111,
+    "niv": 1
    },
    {
     "c": 13,
@@ -17001,7 +17125,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "ansTxt": "El menor valor posible es P = 1.",
-    "id": 112
+    "id": 112,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17018,7 +17143,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 11,
     "ansTxt": "11 gramos (y cada bolita blanca pesa 8 gramos)",
-    "id": 113
+    "id": 113,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17035,7 +17161,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 150,
     "ansTxt": "150",
-    "id": 114
+    "id": 114,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17052,7 +17179,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 174,
     "ansTxt": "174",
-    "id": 115
+    "id": 115,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17069,7 +17197,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 33,
     "ansTxt": "33 alumnos",
-    "id": 116
+    "id": 116,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17095,7 +17224,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      29
     ],
     "ansTxt": "S puede valer 22, 23, 24, 25, 26, 27, 28 o 29. El menor es S = 22, que se logra por ejemplo con los vértices, en orden alrededor del polígono, 1, 5, 7, 4, 3, 6, 2, 12 y los lados (entre cada par de vértices consecutivos) 16, 10, 11, 15, 13, 14, 8, 9.",
-    "id": 117
+    "id": 117,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17112,7 +17242,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 13,
     "ansTxt": "13",
-    "id": 118
+    "id": 118,
+    "niv": 1
    },
    {
     "c": 8,
@@ -17129,7 +17260,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "ansTxt": "1 cm. Por ejemplo: 1 arriba, 2 derecha, 3 arriba, 4 derecha, 5 arriba, 6 izquierda, 7 arriba, 8 derecha, 9 arriba, 10 izquierda, 11 abajo, 12 izquierda, 13 abajo, 14 derecha (termina 1cm arriba del punto de partida).",
-    "id": 119
+    "id": 119,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17146,7 +17278,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 13,
     "ansTxt": "13 tarjetas. Ejemplo: 1, 1, 1, 1, 2, 2, 3, 4, 4, 5, 5, 5, 5.",
-    "id": 120
+    "id": 120,
+    "niv": 1
    },
    {
     "c": 4,
@@ -17173,7 +17306,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      88888
     ],
     "ansTxt": "22, 55, 88, 1111, 4444, 7777, 22222, 55555 y 88888",
-    "id": 121
+    "id": 121,
+    "niv": 1
    },
    {
     "c": 13,
@@ -17190,7 +17324,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 11,
     "ansTxt": "n = 11",
-    "id": 122
+    "id": 122,
+    "niv": 1
    },
    {
     "c": 11,
@@ -17207,7 +17342,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2.25,
     "ansTxt": "2,25 m (225 cm)",
-    "id": 123
+    "id": 123,
+    "niv": 1
    },
    {
     "c": 4,
@@ -17229,7 +17365,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      9
     ],
     "ansTxt": "a = 1, b = 0, c = 8, d = 9 (es decir 1089 × 9 = 9801)",
-    "id": 124
+    "id": 124,
+    "niv": 1
    },
    {
     "c": 4,
@@ -17246,7 +17383,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 10101,
     "ansTxt": "10101",
-    "id": 125
+    "id": 125,
+    "niv": 1
    },
    {
     "c": 7,
@@ -17263,7 +17401,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 256,
     "ansTxt": "256",
-    "id": 126
+    "id": 126,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17280,7 +17419,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 14,
     "ansTxt": "14",
-    "id": 127
+    "id": 127,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17297,7 +17437,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 21,
     "ansTxt": "21",
-    "id": 128
+    "id": 128,
+    "niv": 1
    },
    {
     "c": 10,
@@ -17314,7 +17455,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 10,
     "ansTxt": "10",
-    "id": 129
+    "id": 129,
+    "niv": 1
    },
    {
     "c": 4,
@@ -17418,7 +17560,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      99
     ],
     "ansTxt": "Todos los enteros de 14 a 99 inclusive (86 valores).",
-    "id": 130
+    "id": 130,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17435,7 +17578,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 7,
     "ansTxt": "7",
-    "id": 131
+    "id": 131,
+    "niv": 1
    },
    {
     "c": 10,
@@ -17465,7 +17609,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      125
     ],
     "ansTxt": "Hay 12 valores: 85, 89, 95, 97, 101, 103, 107, 109, 113, 115, 121 y 125.",
-    "id": 132
+    "id": 132,
+    "niv": 1
    },
    {
     "c": 4,
@@ -17485,7 +17630,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      75
     ],
     "ansTxt": "a) El número en la posición 44 es 4488. b) Sí, 12768 está en la lista y ocupa la posición 75.",
-    "id": 133
+    "id": 133,
+    "niv": 1
    },
    {
     "c": 4,
@@ -17502,7 +17648,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 5,
     "ansTxt": "5",
-    "id": 134
+    "id": 134,
+    "niv": 1
    },
    {
     "c": 7,
@@ -17519,7 +17666,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 32,
     "ansTxt": "32",
-    "id": 135
+    "id": 135,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17540,7 +17688,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      12
     ],
     "ansTxt": "Juli tiene 30 monedas (15 chicas y 15 grandes); cada moneda chica pesa 8 gramos y cada moneda grande pesa 12 gramos.",
-    "id": 136
+    "id": 136,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17557,7 +17706,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 203,
     "ansTxt": "203",
-    "id": 137
+    "id": 137,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17574,7 +17724,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 7,
     "ansTxt": "7",
-    "id": 138
+    "id": 138,
+    "niv": 1
    },
    {
     "c": 4,
@@ -17598,7 +17749,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      9999
     ],
     "ansTxt": "1111, 1155, 3333, 5555, 7777 y 9999",
-    "id": 139
+    "id": 139,
+    "niv": 1
    },
    {
     "c": 7,
@@ -17615,7 +17767,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 240,
     "ansTxt": "240",
-    "id": 140
+    "id": 140,
+    "niv": 1
    },
    {
     "c": 13,
@@ -17632,7 +17785,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "ansTxt": "1",
-    "id": 141
+    "id": 141,
+    "niv": 1
    },
    {
     "c": 3,
@@ -17649,7 +17803,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 18,
     "ansTxt": "18",
-    "id": 142
+    "id": 142,
+    "niv": 1
    },
    {
     "c": 3,
@@ -17672,7 +17827,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ansTxt": "A = 50°, B = 100°, C = 80°, D = 130°",
     "pista": "Los 4 ángulos del cuadrilátero, separados por coma. El orden no importa.",
-    "id": 143
+    "id": 143,
+    "niv": 1
    },
    {
     "c": 5,
@@ -17689,7 +17845,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 26,
     "ansTxt": "26",
-    "id": 144
+    "id": 144,
+    "niv": 1
    },
    {
     "c": 1,
@@ -17712,7 +17869,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ansTxt": "CD = 12, CE = 12√3 ≈ 20,78 y DE = 24",
     "aprox": true,
     "pista": "Escribí las 3 medidas separadas por coma, el orden no importa. La que no da entera, con dos decimales.",
-    "id": 145
+    "id": 145,
+    "niv": 1
    },
    {
     "c": 3,
@@ -17731,7 +17889,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ansTxt": "El área del trapecio ABCD es 8√3 ≈ 13,86.",
     "aprox": true,
     "pista": "Escribí el valor con dos decimales (por ejemplo 3,46). No hace falta la raíz.",
-    "id": 146
+    "id": 146,
+    "niv": 1
    },
    {
     "c": 5,
@@ -17748,7 +17907,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2.5,
     "ansTxt": "5/2 = 2,5",
-    "id": 147
+    "id": 147,
+    "niv": 1
    },
    {
     "c": 5,
@@ -17772,7 +17932,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ansTxt": "BD=8, DF=12, FA=12, CE=13, AE=26",
     "pista": "Escribí las 5 medidas separadas por coma. El orden no importa.",
-    "id": 148
+    "id": 148,
+    "niv": 1
    },
    {
     "c": 5,
@@ -17791,7 +17952,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ansTxt": "1/6",
     "aprox": true,
     "pista": "Escribí el valor con dos decimales (por ejemplo 3,46). No hace falta la raíz.",
-    "id": 149
+    "id": 149,
+    "niv": 1
    },
    {
     "c": 1,
@@ -17808,7 +17970,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 45,
     "ansTxt": "45°",
-    "id": 150
+    "id": 150,
+    "niv": 1
    },
    {
     "c": 1,
@@ -17825,7 +17988,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 45,
     "ansTxt": "45°",
-    "id": 151
+    "id": 151,
+    "niv": 1
    },
    {
     "c": 2,
@@ -17844,7 +18008,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ansTxt": "8 + 3√3 ≈ 13,196",
     "aprox": true,
     "pista": "Escribí el valor con dos decimales (por ejemplo 3,46). No hace falta la raíz.",
-    "id": 152
+    "id": 152,
+    "niv": 1
    },
    {
     "c": 1,
@@ -17861,7 +18026,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 45,
     "ansTxt": "45º",
-    "id": 153
+    "id": 153,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17878,7 +18044,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3.4,
     "ansTxt": "3,4 cm",
-    "id": 154
+    "id": 154,
+    "niv": 1
    },
    {
     "c": 5,
@@ -17900,7 +18067,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ansTxt": "El cuadradito chico mide 1,6 de lado y el cuadrado grande mide 2,4. El rectángulo gris mide 8 × 9,6 y su área es 76,8.",
     "pista": "Tres valores, separados por coma: el lado chico, el lado grande y el área del gris.",
-    "id": 155
+    "id": 155,
+    "niv": 1
    },
    {
     "c": 9,
@@ -17917,7 +18085,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 24,
     "ansTxt": "24",
-    "id": 156
+    "id": 156,
+    "niv": 1
    },
    {
     "c": 10,
@@ -17944,7 +18113,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ansTxt": "a = 61, b = 59, c = 37, d = 43, e = 71, f = 53 y g = 31 (cada línea suma 204)",
     "orden": true,
     "pista": "Las 7 letras están en el dibujo, en el sentido de las agujas del reloj arrancando por la que sigue al 29. Escribí a, b, c, d, e, f, g en ese orden, separados por coma.",
-    "id": 157
+    "id": 157,
+    "niv": 1
    },
    {
     "c": 6,
@@ -17968,7 +18138,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ansTxt": "▲ = 7, ⊕ = 6, □ = 10 y ● = 5",
     "orden": true,
     "pista": "Escribí los cuatro valores en este orden: ▲, ⊕, □, ● (separados por coma).",
-    "id": 158
+    "id": 158,
+    "niv": 1
    },
    {
     "c": 11,
@@ -17987,7 +18158,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ansTxt": "√26 ≈ 5,10",
     "aprox": true,
     "pista": "Escribí el valor con dos decimales (no hace falta la raíz).",
-    "id": 159
+    "id": 159,
+    "niv": 1
    },
    {
     "c": 7,
@@ -18004,7 +18176,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1396,
     "ansTxt": "1396",
-    "id": 160
+    "id": 160,
+    "niv": 1
    },
    {
     "c": 11,
@@ -18021,7 +18194,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 13,
     "ansTxt": "13",
-    "id": 161
+    "id": 161,
+    "niv": 1
    },
    {
     "c": 5,
@@ -18038,7 +18212,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 12.5,
     "ansTxt": "12,5",
-    "id": 162
+    "id": 162,
+    "niv": 1
    },
    {
     "c": 9,
@@ -18055,7 +18230,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 68,
     "ansTxt": "68",
-    "id": 163
+    "id": 163,
+    "niv": 1
    },
    {
     "c": 4,
@@ -18080,7 +18256,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "Debajo de cada número n va 16 − n, o sea 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3: así las trece sumas dan 16 y ningún número se repite en la segunda fila. Es la única forma. -> el error de aplicar el complemento a 16 a todas las casillas sin mirar el rango: debajo del 1 y del 2 quedarían 15 y 14, que no están entre 1 y 13. | Debajo de 1, 2 y 3 van 3, 2 y 1, que dan suma 4 en las tres casillas, y del 4 al 13 va el complemento a 16, o sea 12, 11, 10, 9, 8, 7, 6, 5, 4, 3. Es la única forma. -> el error de olvidarse de la condición de no repetir: el 3 queda escrito dos veces, debajo del 1 y debajo del 13, y el 13 no se usa nunca. | Debajo de 12 y de 13 van 13 y 12, que dan 25 en esas dos casillas, y en las once restantes va el complemento a 16: así se aprovechan también los cuadrados grandes. Es la única forma. -> el error de gastar el 12 y el 13 en las sumas 25 y no ver que entonces el 3 se queda sin su complemento a 16, que era justo el 13. | No se puede: las sumas van de 1 + 1 hasta 13 + 13, así que los únicos cuadrados disponibles son 4, 9, 16 y 25, y cuatro valores distintos son muy pocos para las trece casillas de la tercera fila. -> el error de creer que las trece sumas tienen que ser cuadrados distintos, cuando el enunciado sólo pide que cada una sea un cuadrado y pueden repetirse.",
-    "id": 164
+    "id": 164,
+    "niv": 1
    },
    {
     "c": 6,
@@ -18105,7 +18282,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "L=1, A=25, R=72, E=4, C=41, T=3, O=83, N=9, D=7, S=34, G=5, U=98, P=2, y ésa es la única manera de partir los ocho números en letras. El código queda determinado por completo, sin ambigüedades. -> el error de parar en la primera manera de cortar GU y PU que cierra, sin probar la otra (G=59, U=8, P=29), que reconstruye igual de bien los ocho números. | L=12, A=5, R=72, E=4, C=41, T=3, O=83, N=9, D=7, S=34, G=5, U=98, P=2: el 125 de LA se parte como 12 y 5, y con esa primera decisión todas las demás palabras se van cortando igual. -> el error de partir LA = 125 sin controlarlo contra AL = 251, que tiene las mismas dos letras al revés y obliga a L = 1 y A = 25. | L=1, A=25, R=72, E=4, C=4, T=13, O=83, N=9, D=7, S=34, G=5, U=98, P=2: en RECTA = 72441325 el pedazo 413 se corta como C=4 y T=13, que también es un número de dos dígitos. -> el error de fijar C y T mirando sólo RECTA y no verificar ese corte en CORTA = 418372325, donde únicamente encaja con C = 41 y T = 3. | L=1, A=25, R=7, E=24, C=41, T=3, O=83, N=9, D=7, S=34, G=5, U=98, P=2: en RECTA = 72441325 el corte natural es 7, 24, 41, 3 y 25, que reconstruye exactamente ese número. -> el error de cortar RECTA sin usar antes EN = 49, que ya obliga a E = 4 y por lo tanto impide que E valga 24.",
-    "id": 165
+    "id": 165,
+    "niv": 1
    },
    {
     "c": 8,
@@ -18130,7 +18308,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "Hay 32 secuencias. Yendo para atrás desde 4/5, cada posición tiene siempre dos antecesores posibles, la mitad o el inverso, y con cinco pasos hacia atrás quedan 2 · 2 · 2 · 2 · 2 = 32 caminos distintos. -> el error de creer que toda posición tiene dos antecesores: las mayores que 2 no tienen ninguno y las de entre 1 y 2 tienen uno solo, así que muchas ramas se cortan. | Hay 12 secuencias. Yendo para atrás desde 4/5 aparecen 6 sucesiones de distancias, y cada una se puede recorrer con el grillo arrancando a la izquierda de P o arrancando a la derecha, o sea el doble de posibilidades. -> el error de creer que el lado inicial se elige libre, cuando el grillo alterna de lado y terminar a la derecha después de 5 saltos ya obliga a haber arrancado a la izquierda. | Hay 4 secuencias. Los puntos de partida son 1/40, 5/64, 2/5 y 5/4, porque el grillo tiene que empezar a menos de un metro de P para que su primer salto se pueda hacer con la regla de duplicar la distancia. -> el error de agregar una condición que el enunciado no pide, que el grillo empiece cerca de P, y perder los arranques 20 y 32/5, en los que el primer salto usa la regla del inverso. | Hay una sola secuencia, 2/5 → 4/5 → 8/5 → 5/8 → 5/4 → 4/5, que es la que sale aplicando las reglas hacia adelante desde 2/5 y llega justo a 4/5 a la derecha de P después de los cinco saltos. -> el error de probar un único punto de partida hacia adelante en vez de ir hacia atrás desde 4/5 abriendo todas las ramas que llegan a esa posición.",
-    "id": 166
+    "id": 166,
+    "niv": 1
    },
    {
     "c": 9,
@@ -18155,7 +18334,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "No se puede. Con tres pesadas de una balanza de platos se distinguen a lo sumo 2 · 2 · 2 = 8 situaciones, porque cada pesada dice solamente si el plato izquierdo pesa más o pesa menos que el derecho, y hay 19 posiciones posibles para la pareja de monedas raras. Como 8 es bastante menor que 19, siempre quedan casos sin separar. -> el error de contar dos resultados por pesada y olvidarse del equilibrio, que es la tercera respuesta posible y acá es justo la que más información da. | No se puede. La moneda de 9 gramos y la de 11 gramos juntas pesan 20 gramos, lo mismo que dos monedas normales, así que se compensan siempre y cualquier pesada que las contenga termina dando equilibrio. La balanza nunca llega a informar dónde están y las tres pesadas se desperdician sin decir nada. -> el error de generalizar el caso en que las dos raras caen en el mismo plato; si la pesada las separa, una de cada lado, la balanza se inclina y sí informa. | Sí se puede. Se parten las 20 monedas en tres grupos de consecutivas, 1 a 7, 8 a 14 y 15 a 20, y se pesan dos grupos entre sí; el grupo que contiene a las dos monedas raras se delata enseguida porque pesa distinto de los otros. Repitiendo la idea adentro del grupo elegido se llega en tres pesadas a la moneda de 11 gramos. -> el error de meter las dos monedas raras juntas en un mismo grupo de consecutivas, donde el gramo de más y el de menos se anulan y el grupo pesa exactamente lo normal. | Sí se puede. Como la de 9 gramos y la de 11 gramos son vecinas, alcanza con pesar de a pares consecutivos: primero la 1 contra la 2, después la 3 contra la 4 y después la 5 contra la 6. La pesada que se inclina marca el par de monedas raras, y la moneda de 11 gramos es la que está en el plato que baja. -> el error de probar de a un par por vez, que con tres pesadas toca sólo 6 de las 20 monedas y deja sin decidir la enorme mayoría de los 19 casos.",
-    "id": 167
+    "id": 167,
+    "niv": 1
    },
    {
     "c": 12,
@@ -18180,7 +18360,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "Gana B. Apenas A empieza a juntar unas cuantas marcas seguidas, B le borra el bloque entero de un solo saque, así que A nunca logra pasar de unas pocas marcas consecutivas. Como B siempre puede deshacer lo que A viene armando, las 10 marcas seguidas quedan fuera de alcance. -> el error de mirar sólo la estrategia ingenua de A, que amontona todo en un lugar; A gana justamente porque reparte el trabajo en varias zonas separadas a la vez. | Gana B. A pone dos marcas por movida y B borra un bloque entero, que puede tener muchas más de dos marcas, así que en cada ronda B saca más marcas de las que A acaba de poner. Con esa cuenta a favor, la cantidad total de marcas en la tira nunca crece y A no llega nunca a 10. -> el error de comparar cantidad de marcas borradas contra marcas puestas, cuando lo que decide es que B ataca un solo lugar por movida y A avanza en dos. | Gana A. La estrategia es concentrarse: A marca siempre las dos casillas libres pegadas a su bloque más largo, y como pone dos marcas por movida y B le borra una sola, el bloque crece de a una marca por ronda. Repitiendo unas diez rondas A consigue las 10 marcas consecutivas. -> el error de creer que B borra una sola marca por movida, cuando la regla le permite borrar todo un bloque de marcas consecutivas de una vez. | Gana A si el objetivo son 10 marcas, pero si el objetivo fuera 100 ganaría B, porque las zonas que A necesita armar serían tan grandes que B siempre llegaría a romper alguna antes de que A la termine. La estrategia de A depende de que el número pedido sea chico. -> el error de creer que el argumento depende del número 10; la construcción por niveles funciona igual para cualquier cantidad de marcas consecutivas.",
-    "id": 168
+    "id": 168,
+    "niv": 1
    },
    {
     "c": 12,
@@ -18205,7 +18386,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "a) gana Bea, b) gana Alan, c) gana Alan, d) gana Alan. Bea gana solamente cuando a y b son los dos impares, porque ahí le alcanza con pintar los pares de un color y los impares del otro. En todos los demás casos gana Alan. -> el error de quedarse con el caso de los impares y no ver que el mismo truco sirve pintando bloques de 2^k números seguidos cuando a y b tienen la misma cantidad de factores 2. | a) gana Bea, b) gana Alan, c) gana Bea, d) gana Bea. Bea gana cuando a y b son los dos impares y también cuando son los dos pares, porque en ese caso pinta según la paridad de n dividido 2 y las diferencias caen siempre entre colores distintos. -> el error de confundir ser pares con tener la misma cantidad de factores 2: 8 y 12 son los dos pares, pero uno tiene tres factores 2 y el otro dos, y ahí gana Alan. | a) gana Bea, b) gana Bea, c) gana Alan, d) gana Alan. Bea gana cuando el máximo común divisor de a y b es 1, porque con dos diferencias sin factores comunes puede repartir los colores libremente; si a y b comparten un divisor, gana Alan. -> el error de mirar el máximo común divisor en lugar de la cantidad de factores 2: con 13 y 20 el mcd es 1 y gana Alan, y con 24 y 40 el mcd es 8 y gana Bea. | a) gana Alan, b) gana Alan, c) gana Alan, d) gana Alan. Alan gana siempre: con dos diferencias distintas siempre se puede armar un paseo de saltos que vuelve al punto de partida, y un paseo cerrado hace imposible pintar los enteros con dos colores. -> el error de olvidarse de contar cuántos saltos tiene el paseo cerrado: sólo estorba si es impar, y con a y b impares el paseo tiene una cantidad par de saltos y el coloreo existe.",
-    "id": 169
+    "id": 169,
+    "niv": 1
    },
    {
     "c": 6,
@@ -18230,7 +18412,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "Sábado. La frase «yo miento el sábado» es verdadera, así que Alex resulta ser el que miente los jueves, viernes y sábados. Brian avisa que mentirá mañana, que sería domingo, y con eso las tres frases encajan sin problema y la conversación tuvo lugar un sábado. -> el error de tomar por buena la primera frase de Alex sin mirar la tercera, que ya obliga a que hoy Alex esté mintiendo; si hoy fuera sábado Alex mentiría y no podría decir esa verdad. | Domingo. Las dos frases de Alex hablan del sábado y del domingo, y el domingo resulta ser el único día en que los dos chicos dicen la verdad, así que las tres afirmaciones pueden convivir sin contradecirse. Por eso la conversación tuvo lugar un domingo. -> el error de confundir el día del que habla la frase con el día en que se dice: el domingo Alex diría la verdad, y ahí «yo miento el domingo» sería falsa. | Jueves. La frase sobre el domingo es falsa, así que hoy Alex miente, y el que miente los jueves es el de jueves, viernes y sábado, o sea Alex. Brian hoy dice la verdad y mañana viernes miente, tal como él mismo anuncia, así que la conversación fue un jueves. -> el error de repartir los roles al revés: si Alex fuera el de jueves, viernes y sábado, su frase «yo miento el sábado» sería verdadera, y hoy Alex está mintiendo. | Lunes. La frase sobre el domingo es falsa, así que hoy Alex miente y es el que miente los lunes, martes y miércoles. Como la conversación pudo ser en cualquiera de esos tres días y no hay nada más que los distinga, queda el primero de la semana, el lunes. -> el error de no usar la frase de Brian sobre el día de mañana, que es justo la que separa el miércoles de los otros dos días posibles.",
-    "id": 170
+    "id": 170,
+    "niv": 1
    },
    {
     "c": 4,
@@ -18255,7 +18438,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "Hay una sola solución: a = 76, b = 82, c = 91, d = 71, e = 80. Las sumas parciales quedan 158, 249, 320 y 400, que son múltiplos de 2, de 3, de 4 y de 5 respectivamente, y ningún otro orden de los cinco números cumple todo. -> el error de no notar que la condición sobre a y b sólo mira la suma a+b, así que dar vuelta el 76 y el 82 da una segunda solución igual de válida. | Hay cuatro soluciones: c = 91 siempre, a y b son 76 y 82 en cualquier orden, y d y e son 71 y 80 también en cualquier orden, porque las condiciones miran sumas parciales y no importa el orden adentro de cada pareja. -> el error de creer que d y e también se pueden intercambiar: a+b+c+d tiene que ser múltiplo de 4 y eso fija d = 71, porque con d = 80 daría 329, que ni siquiera es par. | Hay una sola solución: a = 71, b = 91, c = 76, d = 82, e = 80. Como 71 + 91 = 162 es par, la primera condición se cumple, y con los tres números pares que quedan se completan las demás sumas parciales pedidas. -> el error de elegir la pareja de impares para a y b sin chequear la condición del 3: 162 más 76, más 80 o más 82 nunca da un múltiplo de 3. | Hay dos soluciones: c = 91, d = 71, e = 76, y a y b son 80 y 82 en cualquiera de los dos órdenes, porque 80 + 82 = 162 es par y con eso la primera condición ya queda cumplida sin importar el orden. -> el error de quedarse con la primera pareja de pares que suma par y no verificar el paso siguiente: 162 + 91 = 253 y 162 + 71 = 233, y ninguno es múltiplo de 3.",
-    "id": 171
+    "id": 171,
+    "niv": 1
    },
    {
     "c": 8,
@@ -18280,7 +18464,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "Se puede llegar a 10⁹ pero no a 9876543210: empezando en 1 nunca aparece un múltiplo de 5, porque duplicando el 1 sólo salen potencias de 2, y 9876543210 termina en 0, así que es múltiplo de 5. -> el error de elegir una propiedad invariante que en realidad la operación b) sí rompe: 512 se reordena como 125, que es múltiplo de 5, así que la conclusión es correcta pero el argumento es falso. | Se puede llegar a los dos: para 9876543210 alcanza con duplicar hasta tener un número con esos diez dígitos y después acomodarlos en el orden que uno quiera, que es justo lo que permite la operación b). -> el error de dar por hecho que se puede llegar a algún anagrama del número buscado, sin controlar si hay algo que las operaciones nunca cambian. | No se puede llegar a ninguno de los dos: todos los números del pizarrón son potencias de 2 o reordenamientos de una potencia de 2, y ninguno de esos números termina en una tira larga de ceros. -> el error de abandonar la construcción: se olvida que después de reordenar se sigue duplicando, y que 512 → 125 → 250 → 500 → 1000 rompe justamente esa idea. | Se puede llegar a 9876543210 pero no a 10⁹: los diez dígitos distintos se consiguen reordenando, mientras que los nueve ceros del final son imposibles porque duplicar nunca agrega ceros al final. -> el error de invertir cuál de los dos se puede, creyendo que los ceros del final son el obstáculo y que los dígitos distintos se acomodan solos.",
-    "id": 172
+    "id": 172,
+    "niv": 1
    },
    {
     "c": 2,
@@ -18305,7 +18490,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "Sí: el ángulo interior del polígono mide 162° y el del pentágono 108°, así que en D sobran 54°, y esos 54° son el ángulo ∠CDP porque el triángulo DCP tiene sus tres lados iguales a 1, con lo cual DP pasa por T. -> el error de suponer que DCP es equilátero: como el ángulo en C mide 72° y no 60°, el lado DP no mide 1, y el 54° aparece por otro motivo. | No: en C queda ∠PCD = 162° − 90° = 72° y, como el triángulo DCP es isósceles, el ángulo ∠CDP también mide 72°, así que ∠PDE = 90°, distinto de los 108° que mide el ángulo TDE del pentágono. -> el error de creer que en un triángulo isósceles el ángulo distinto también vale lo mismo que los iguales, en lugar de repartir (180° − 72°) entre 2. | No: en C queda ∠PCD = 72° y del triángulo isósceles DCP sale ∠CDP = 54°, o sea ∠PDE = 108°, pero el ángulo interior de un pentágono regular mide 120°, así que TDE no coincide con PDE. -> el error de equivocar el ángulo interior del pentágono regular y usar 120°, que es el del hexágono, en vez de 108°. | No: los ángulos ∠PDE y ∠TDE miden los dos 108°, pero DT = 1 y DP ≈ 1,18 son distintos, y para que T estuviera en la recta DP las dos distancias desde D tendrían que ser iguales. -> el error de confundir “T está en la recta DP” con “T coincide con P”: dos puntos de una misma semirrecta pueden estar a distancias distintas del origen.",
-    "id": 173
+    "id": 173,
+    "niv": 1
    },
    {
     "c": 4,
@@ -18330,7 +18516,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "Sí: alcanza con escribir toda la segunda fila al revés, o sea el 6666 debajo del 1, el 6665 debajo del 2 y así hasta el final; de esa forma las 6666 columnas suman todas lo mismo, 6667, y el problema queda resuelto. -> el error de usar un solo tramo dado vuelta y no controlar el resultado: 6667 no es cuadrado perfecto, así que ninguna columna cumple lo que pide el problema. | Sí: debajo de cada número i se escribe k² − i, donde k² es el primer cuadrado que supera a i; así cada columna da un cuadrado perfecto por construcción y la segunda fila se completa columna por columna. -> el error de armar la segunda fila columna por columna sin controlar que los 6666 números salgan todos distintos: así se repiten valores y algunos se van fuera del rango. | No: si todas las columnas dan cuadrados, la suma de las dos primeras filas es 2·(1 + 2 + ... + 6666) = 6666·6667, y como 6667 no es un cuadrado perfecto, esa distribución no puede existir. -> el error de suponer que todas las columnas tienen que sumar el mismo cuadrado, cuando el enunciado permite que en la tercera fila haya cuadrados diferentes. | No: las sumas de la tercera fila van entre 2 y 13332, y los cuadrados perfectos de ese rango son solamente 4, 9, 16, ..., 11664, poco más de cien valores, muy pocos para llenar las 6666 columnas. -> el error de creer que los cuadrados de la tercera fila no se pueden repetir, cuando el enunciado dice expresamente que ahí sí puede haber repeticiones.",
-    "id": 174
+    "id": 174,
+    "niv": 1
    },
    {
     "c": 13,
@@ -18355,7 +18542,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "Exactamente los n pares, o sea n = 4, 6, 8, 10, ...: los productos de las aristas verticales van alternando +1, −1, +1, ..., y para que la alternancia cierre alrededor del prisma hace falta que n sea par. -> el error de quedarse con la mitad del razonamiento: la alternancia obliga a que n sea par, pero falta usar que las dos bases también valen −1, y eso descarta n = 6, 10, 14, ... | Solamente n = 4: el caso del cubo se arma a mano sin problemas, y para cualquier n mayor las condiciones de las n caras rectangulares ya se contradicen con las de las dos bases. -> el error de verificar el caso chico y suponer que es el único, sin probar el n = 8, que también se puede armar. | Ningún n ≥ 3: cada vértice pertenece a tres caras, así que el producto de todas las caras es un cubo y da +1, pero las n+2 caras valen −1 cada una y la cuenta no cierra nunca. -> el error de armar un conteo global de paridad mal hecho y concluir que es imposible siempre, cuando el caso del cubo se construye a mano en dos minutos. | Todos los n ≥ 3: alcanza con poner un −1 en un vértice de cada cara y +1 en todos los demás, y de esa forma cada cara del prisma queda con un solo −1 y su producto vale −1. -> el error de acomodar los signos cara por cara, sin ver que cada vértice es compartido por tres caras y no se puede elegir su signo de manera independiente.",
-    "id": 175
+    "id": 175,
+    "niv": 1
    },
    {
     "c": 10,
@@ -18380,7 +18568,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "Las dos son ciertas: la receta de separar los dígitos de posiciones pares e impares funciona igual en los dos sentidos, así que todo número de un tipo se parte siempre en dos números del otro tipo. -> el error de suponer que los dos tipos son simétricos y que lo que sirve en un sentido sirve en el otro, sin buscar un contraejemplo. | a) es falso: 19293 es de tipo 1 y al separarlo aparece el sumando 9090, cuyos nueves siguen ocupando las posiciones pares que tenían en 19293, así que no es de tipo 2. b) es cierto con la misma receta. -> el error de no renumerar las posiciones al sacar el cero de adelante: en 9090 el primer 9 pasa a estar en posición 1 y el segundo en posición 3, así que sí es de tipo 2. | a) es cierto con la receta de separar posiciones pares e impares. b) es falso, y el contraejemplo más chico es 10: es de tipo 2 y no hay ninguna manera de escribirlo como suma de dos números de tipo 1. -> el error de olvidarse del caso de borde: los números de un dígito son de tipo 1 y de tipo 2 a la vez, y 10 = 1 + 9 sirve como descomposición. | Las dos son falsas: el mismo 109 alcanza como contraejemplo para los dos ítems a la vez, porque no se puede escribir ni como suma de dos números de tipo 1 ni como suma de dos números de tipo 2. -> el error de usar el contraejemplo en el ítem equivocado, sin fijarse de qué tipo es 109 ni probar la descomposición 109 = 100 + 9.",
-    "id": 176
+    "id": 176,
+    "niv": 1
    },
    {
     "c": 13,
@@ -18405,7 +18594,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "Sí: cada ficha tapa 3 casillas, así que 1226·3 = 3678 ≤ n² y el lado tiene que ser n ≥ 61; y en un cuadrado de lado 61 o más siempre entran las 1250 fichas que dice Facundo, sin tocarse. -> el error de contar solamente las 3 casillas que tapa la ficha e ignorar el espacio libre que obliga a dejar la condición de no tocarse ni en un vértice. | Sí: como 8·1250 = 10000 y 8·1226 = 9808 son los dos menores o iguales que (n+1)², la misma cota de las 8 casillas que le alcanza a Bruno para sus 1226 fichas le alcanza también a Facundo para las 1250. -> el error de tomar una cota superior como si fuera una garantía: que el número entre en la cuenta no significa que exista un acomodo, hay que exhibirlo. | No: como no se conocen las dimensiones de Q, lo que dice Facundo resulta verdadero si el cuadrado es grande y falso si es chico, así que sin ese dato no se puede afirmar nada con certeza. -> el error de no ver que el propio dato de las 1226 fichas ya obliga a un tamaño mínimo de Q, así que no hace falta conocer las dimensiones. | No: aunque el lado del cuadrado sea 99 o más, las 1226 fichas de Bruno ya están colocadas, y agregar las 24 que faltan para llegar a 1250 puede ser imposible según cómo las haya ubicado él. -> el error de creer que hay que ampliar la configuración de Bruno, cuando lo que se afirma es que las 1250 se pueden ubicar, empezando de cero si hace falta.",
-    "id": 177
+    "id": 177,
+    "niv": 1
    },
    {
     "c": 6,
@@ -18430,7 +18620,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "a = 6, b = 3, c = 4, d = 1 -> el error de invertir los dos miembros de la igualdad: acá 6/3 = 2 y 4/1 + 2 = 6, o sea que el +2 quedó del lado equivocado. | a = 5, b = 2, c = 6, d = 3 -> el error de dar vuelta la fracción: quería usar 1/2 y escribió 6/3 en lugar de 3/6, con lo cual el lado derecho da 4 y no 5/2. | a = 4, b = 1, c = 4, d = 2 -> el error de olvidarse de que los cuatro números tienen que ser distintos: la igualdad 4/1 = 4/2 + 2 es cierta, pero el 4 aparece dos veces. | a = 8, b = 2, c = 6, d = 3 -> el error de olvidarse del rango: la igualdad 8/2 = 6/3 + 2 es cierta, pero el 8 se pasa del 6 que pone el enunciado como máximo.",
-    "id": 178
+    "id": 178,
+    "niv": 1
    },
    {
     "c": 8,
@@ -18455,7 +18646,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "En los dos casos sí: cada tiro cambia el coeficiente muy poquito, así que si arranca por debajo del valor y termina por arriba, en algún momento tuvo que valer exactamente ese número, sea 3/4 o 3/5. -> el error de tratar el coeficiente como si cambiara de a poquito y pasara por todos los valores intermedios, cuando en realidad salta de una fracción a otra. | En los dos casos no: el coeficiente da saltos, y el salto de 1/2 a 2/3 en un solo tiro muestra que tanto el 3/4 como el 3/5 se pueden esquivar sin tomar nunca ese valor exacto. -> el error de dar un ejemplo que ni siquiera cruza el valor discutido: 1/2 y 2/3 son los dos menores que 3/4, así que ese salto no prueba nada sobre 3/4. | Con 3/4 no y con 3/5 sí: el 3/5 está justo entre 1/2 y 2/3, así que ese salto no lo puede evitar, mientras que el 3/4 queda fuera de ese salto y por eso sí se lo puede esquivar. -> el error de leer el ejemplo al revés: que 3/5 caiga entre 1/2 y 2/3 es justamente lo que muestra que se lo puede saltear en un solo tiro. | Con 3/4 sí, por la cuenta de los enteros entre 3n−1 y 3n. Con 3/5 no, porque para que el coeficiente valga 3/5 el jugador tiene que haber ejecutado exactamente 5 tiros, y puede terminar el partido con otra cantidad. -> el error de confundir el valor de la fracción con la cantidad de tiros: 6/10 y 9/15 también valen 3/5, así que la conclusión es correcta pero el motivo no.",
-    "id": 179
+    "id": 179,
+    "niv": 1
    },
    {
     "c": 8,
@@ -18480,7 +18672,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "Sí puede, arrancando con las cajas muy separadas -> el error de creer que las diferencias no se pueden achicar: una caja se queda quieta durante muchos pasos mientras otra crece, y así se alcanzan. | Sí puede, con una caja par y otra impar -> el error de suponer que la paridad es un invariante: apenas una caja suma una ficha cambia de paridad, así que esa diferencia no se conserva. | Sí puede, poniendo un primo grande -> el error de mirar sólo un tramo finito: la caja queda distinta un rato, pero el objetivo es que haya dos distintas siempre, y después del paso p se acopla al resto. | No puede, porque en el paso k todas son divisibles por k -> el error de sostener la conclusión correcta con una afirmación falsa: no toda caja es divisible por el número de paso, justamente hay cajas que se quedan quietas.",
-    "id": 180
+    "id": 180,
+    "niv": 1
    },
    {
     "c": 12,
@@ -18505,7 +18698,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "Los coprimos con 1000, 400 valores -> el error de contar 1000 estados en vez de 1001: el 0 también es un valor posible, el ciclo tiene 1001 lugares y el número que manda es 1001, no 1000. | Los múltiplos de 7, 11 o 13, 280 valores -> el error de invertir la condición: esos k son justamente los que dejan fija la suma módulo un primo y por eso hacen perder a Alex. | Los impares coprimos con 1001, 360 valores -> el error de agregar una condición de paridad que no hace falta: como 1001 es impar, la paridad de la suma no queda congelada y no traba nada. | Todos los k, 1000 valores -> el error de mirar cada número por separado: en cada jugada hay que tocar exactamente k números, y eso ata entre sí lo que les pasa a todos.",
-    "id": 181
+    "id": 181,
+    "niv": 1
    },
    {
     "c": 10,
@@ -18530,7 +18724,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "a) Sí borrando un solo número -> el error de saltearse la condición del enunciado: hay que elegir dos o más filas y dos o más columnas, no una de cada una. | a) y b) No porque todo es par -> el error de inventar una paridad que no existe: con las filas 1 y 2 y las columnas 1 y 4 lo borrado es 3·5 = 15, que es impar. | a) y b) No porque lo que queda también factoriza -> el error de creer que el complemento de un rectángulo es otro rectángulo: lo que sobra no se puede sacar como producto de dos sumas. | a) No porque suma de compuestos es compuesto -> el error de usar una regla falsa aunque la conclusión salga bien: 4 y 9 son compuestos y 4 + 9 = 13 es primo.",
-    "id": 182
+    "id": 182,
+    "niv": 1
    },
    {
     "c": 4,
@@ -18555,7 +18750,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "No se puede porque obliga a repetir -> el error de creer que igualar las sumas fuerza repeticiones: partir un total en cuatro pedazos iguales no dice nada sobre qué números forman cada pedazo. | Sí, con el cuadrado mágico del 1 al 16 -> el error de suponer que lo que vale para las sumas vale para los productos: en el cuadrado mágico las columnas suman lo mismo, pero multiplican distinto. | Sí, con cada columna formada por un número y sus múltiplos por 2, 4 y 8 -> el error de arreglar una condición y dar por hecho que la otra sale sola: esas columnas ni siquiera dan el mismo producto, porque cada una depende del número con el que arrancó. | Sí, reordenando dentro de las filas -> el error de creer que sólo importa la ubicación: los productos de columna dependen de qué números elegiste, así que reordenar no siempre alcanza.",
-    "id": 183
+    "id": 183,
+    "niv": 1
    },
    {
     "c": 4,
@@ -18580,7 +18776,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "Cima 13 -> el error de sumar en vez de restar arriba de todo: pone 4 + 9 = 13 en la cima, y encima el 13 le queda escrito dos veces. | Base 6, 14, 13, 1 y 11 -> el error de quedarse con la otra rama de la resta al bajar: pone 14 − 1 = 13 donde iba 14 + 1 = 15, y así repite el 1 y el 11 y se queda sin usar el 15. | Cima 1 y fila de 3 con 3, 7 y 2 -> el error de poner debajo del 9 el resultado de 9 − 2 = 7, en lugar del número que está a distancia 9 del 2; a partir de ahí el 9 del dibujo ya no se respeta. | Fila de 4 con 5, 12, 1 y 3 -> el error de elegir en cada resta el valor más chico posible sin ir tachando los usados: le quedan repetidos el 5, el 1 y el 12.",
-    "id": 184
+    "id": 184,
+    "niv": 1
    },
    {
     "c": 9,
@@ -18605,7 +18802,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "a) Sí y b) Sí por el mismo argumento -> el error de trasladar el razonamiento del caso chico sin mirar por qué funcionaba: con 8 se duplica 2, 4, 8 porque 8 es potencia de 2, y 10 no lo es. | a) No y b) No por la paridad -> el error de creer que la paridad traba siempre: las parejas las elegís vos, y con total par siempre hay dos niños de la misma paridad para juntar. | a) Sí y b) Nunca -> el error de confundir 'no siempre se puede' con 'nunca se puede': hay repartos de 10 niños que sí se igualan, lo que falla es que alguno queda trabado. | a) Sí y b) Sí con el mayor y el menor -> el error de confiar en el procedimiento goloso sin probar los casos que se traban: con 46 y 1 la suma da 47, es impar y no se puede hacer nada.",
-    "id": 185
+    "id": 185,
+    "niv": 1
    },
    {
     "c": 9,
@@ -18630,7 +18828,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "Sí, preguntando todas las ternas -> el error de creer que preguntar mucho siempre alcanza: Bruno elige qué tapar después de ver la terna y puede sostener dos historias distintas a la vez. | Sí, comparando ternas que se solapan -> el error de suponer que se recupera el dato tapado: Bruno no tapa al azar ni siempre el mismo, elige a propósito para que las comparaciones no revelen nada. | No, por conteo de información -> el error de usar una cota de información que no aplica: se pueden hacer todas las preguntas que uno quiera, así que los bits no están acotados y el argumento se cae. | No, porque Bruno tapa siempre uno auténtico -> el error de imaginar que Bruno engaña: Bruno dice siempre la verdad, y lo que hay que mostrar es que dos escenarios distintos dan exactamente las mismas respuestas.",
-    "id": 186
+    "id": 186,
+    "niv": 1
    },
    {
     "c": 9,
@@ -18655,7 +18854,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "b) Sí porque 3168 es menor que 3800 -> el error de usar la cuenta al revés: la contradicción aparece cuando el mínimo se pasa del total, no cuando le queda por debajo. | a) No y b) No -> el error de creer que el ejemplo de la parte b) también sirve para la parte a): con a lo sumo 5 repeticiones el mínimo ya es 3900 y no hay manera de bajar a 3800. | a) Sí porque el promedio es 19 -> el error de justificar con el promedio: que salgan 19 pasajes por ciudad no dice nada sobre cuántas ciudades comparten un mismo valor. | b) No siempre, con los valores del 0 al 199 -> el error de dar un ejemplo sin verificar el dato del enunciado: esos valores suman 19900 pasajes, muy lejos de los 3800 que se vendieron.",
-    "id": 187
+    "id": 187,
+    "niv": 1
    },
    {
     "c": 5,
@@ -18680,7 +18880,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "Ana el trozo 6, Bea el trozo 3, Ceci los trozos 1, 5 y 7, Dany el trozo 4 y Ema el trozo 2. -> el error de invertir los papeles: el enunciado dice que Bea comió tres trozos y Ceci uno solo, y acá está al revés. | Ana el trozo 6, Bea los trozos 1, 4 y 5, Ceci el trozo 2, Dany el trozo 7 y Ema el trozo 3. -> el error de leer 1/7 del total como el trozo número 7 (o el más chiquito) en vez de calcular 28 dividido 7, que da 4. | Ana el trozo 3, Bea los trozos 1, 5 y 7, Ceci el trozo 2, Dany el trozo 4 y Ema el trozo 6. -> el error de contar cada triángulo como si fuera el rectángulo entero, olvidando dividir por 2, y creer entonces que el trozo más grande es el 3. | Ana el trozo 6, Bea los trozos 1, 5 y 7, Ceci el trozo 2, Dany el trozo 4 y Ema el trozo 3. -> el error de darle a Ceci el trozo grande que sobraba sin comprobar la condición clave: los trozos 1, 5 y 7 suman 5 y el trozo 2 vale 6, así que Bea y Ceci no comieron lo mismo.",
-    "id": 188
+    "id": 188,
+    "niv": 1
    },
    {
     "c": 12,
@@ -18705,7 +18906,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "La partida está forzada y las jugadas son las restas de Euclides entre 2000 y 19, que en total son 112 ... gana Beto. -> el error de contar mal las restas, saltearse un paso del final y quedarse con la paridad opuesta, que es justo lo que decide quién gana. | La partida se termina cuando los tres números llegan al máximo común divisor de 2000 y 19 ... gana Ana. -> el error de creer que el juego se termina al llegar al máximo común divisor, cuando en realidad sigue hasta que uno de los números vale 0, y contar sólo las 105 restas del primer tramo. | En cada turno Ana tiene varias jugadas posibles para elegir ... gana Ana. -> el error de suponer que hay libertad de elección y aplicar la estrategia de copiar la jugada del otro, cuando en este juego todas las jugadas están forzadas y nadie elige nada. | Para algunos valores de n la partida vuelve a una posición ya vista ... queda empatada. -> el error de no ver que el mayor de los tres números nunca crece y baja en cuanto la partida avanza, así que el juego es finito y no puede haber empate.",
-    "id": 189
+    "id": 189,
+    "niv": 1
    },
    {
     "c": 11,
@@ -18730,7 +18932,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "Como D menos B es igual a menos t por el vector AB ... MN queda paralela a la bisectriz. -> el error de no achicar los vectores a longitud 1: la suma AB + AC es la diagonal de un paralelogramo cualquiera y sólo parte el ángulo por la mitad cuando AB y AC miden lo mismo. | Como M y N son los puntos medios de BC y de DE ... así que MN es paralela a ella. -> el error de aplicar el teorema de la base media donde no corresponde, porque M y N no son puntos medios de dos lados de un mismo triángulo, y de confundir segmentos iguales con direcciones iguales. | Como BD = CE, los puntos D y E quedan a la misma distancia de A ... MN es exactamente la bisectriz. -> el error de confundir BD = CE con AD = AE, que sólo es cierto si AB = AC, y además de concluir que MN es la bisectriz en vez de una recta paralela a ella. | Alcanza con mirar el caso AB = AC ... porque al estirar los paralelismos no se pierden. -> el error de demostrar sólo el caso particular simétrico y suponer que deformando la figura la propiedad se conserva sola.",
-    "id": 190
+    "id": 190,
+    "niv": 1
    },
    {
     "c": 4,
@@ -18755,7 +18958,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "a) Sí: alcanza con que los diez dejen todos resto 1 ... la suma de seis cualesquiera deja resto 6. -> el error de olvidar que resto 6 es lo mismo que resto 0: seis números de resto 1 suman justo un múltiplo de 6, así que ese ejemplo hace ganar a Uriel siempre. | a) Sí: cinco múltiplos de 6 y cinco de resto 3 ... la suma queda con resto 3. -> el error de mirar un solo caso y no todos: si Uriel toma dos (o cuatro) del grupo de resto 3, la suma deja resto 0 y es múltiplo de 6. | b) Sí: Nico agrega un sexto número de resto 1 y con esos once ... Uriel tampoco puede ganar. -> el error de estirar el ejemplo de la parte a) sin revisarlo: con seis números de resto 1 disponibles, Uriel los toma a los seis y su suma es múltiplo de 6. | a) No: de 10 números también salen 5 parejas de suma par ... Uriel gana siempre. -> el error de creer que de 10 números se sacan 5 parejas de suma par: sacando de a tres se garantizan sólo 4 parejas y sobran 2 números sueltos, y por eso el once es imprescindible.",
-    "id": 191
+    "id": 191,
+    "niv": 1
    },
    {
     "c": 4,
@@ -18780,7 +18984,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "(a) Sí: ... se arman seis conjuntos que sumen 55 y seis que sumen 56, y el promedio queda igual. -> el error de conformarse con que el promedio dé bien: el problema pide que todos los conjuntos sumen exactamente lo mismo, no que se repartan en dos valores parecidos. | (b) No: ... el 39 obliga a que los otros dos sumen 21 y esos números hacen falta en otras ternas. -> el error de concluir que algo es imposible porque no salió al primer intento: la divisibilidad sólo dice que no hay obstáculo, y después hay que buscar el ejemplo, que existe. | (a) Sí: los 36 números se reparten justo en 12 grupos de 3 ... aparear el más chico con el más grande. -> el error de mirar sólo que la cantidad de números alcance para armar los grupos, cuando lo que decide es si la suma total se puede repartir en partes iguales. | (a) Sí: separá los números en los bloques 1 a 12, 13 a 24 y 25 a 36 ... igual que en la parte (b). -> el error de copiar la receta de los tres bloques que funciona en (b) sin revisar antes la cuenta de la suma total, que en (a) ya cierra la puerta.",
-    "id": 192
+    "id": 192,
+    "niv": 1
    },
    {
     "c": 8,
@@ -18805,7 +19010,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "Azul: el billete 123123123 es distinto del 122222222 ... el único color que le queda es el azul. -> el error de leer no coinciden en ninguna cifra como simplemente son distintos, cuando la regla pide que difieran en las nueve posiciones a la vez. | Verde: ... como coincide más veces con el verde que con el rojo, la regla lo obliga a llevar el mismo color. -> el error de dar vuelta la regla: el enunciado sólo dice algo de los billetes que no coinciden en ninguna cifra, y no obliga a nada a los que coinciden en alguna. | Azul: se buscan un rojo y un verde totalmente distintos ... aparecen el 311311311 y el 211311311. -> el error de asignarle mal el color al billete auxiliar: el 311311311 no es rojo sino azul, justamente porque es totalmente distinto del rojo y del verde que da el enunciado. | No se puede determinar: ... con los datos que da el problema no hay forma de decidir si es rojo o azul. -> el error de frenar a mitad de camino con un solo billete totalmente distinto, sin buscar también uno azul, que es el que descarta el tercer color.",
-    "id": 193
+    "id": 193,
+    "niv": 1
    },
    {
     "c": 11,
@@ -18830,7 +19036,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "X está a 2/3 de la distancia que va de AB a DC y también a 2/3 de la que va de AD a BC. -> el error de suponer que las dos condiciones dan el mismo número: es la trampa clásica del problema, porque en ese punto el triángulo BXC queda con la mitad del área que debería. | X está a 1/3 de la distancia que va de AB a DC y a 1/3 de la que va de AD a BC. -> el error de traducir un tercio del área como un tercio de la distancia, olvidando que el área del triángulo lleva dividido por 2 y que ese 2 es el que convierte el 1/3 en 2/3. | X está a 1/3 de la distancia que va de AB a DC y a 2/3 de la que va de AD a BC. -> el error de cruzar las dos condiciones: usar para el triángulo AXB la distancia que le corresponde al BXC y al revés, con lo que las dos fracciones quedan intercambiadas. | X es el centro del paralelogramo, o sea el punto donde se cruzan las diagonales. -> el error de creer que el centro reparte todo en partes iguales: ahí cada triángulo se lleva un cuarto del área y el cuadrilátero se lleva la mitad, no un tercio cada uno.",
-    "id": 194
+    "id": 194,
+    "niv": 1
    },
    {
     "c": 13,
@@ -18855,7 +19062,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "No. ... dos casillas vecinas siempre terminan con la misma suma. -> el error de creer que si la movida trata igual a las cuatro casillas de un cuadrado entonces las vecinas quedan atadas para siempre: cada casilla pertenece a varios cuadrados distintos y por eso las cuentas se pueden separar. | No. El tablero de 6 por 6 se parte en 9 cuadrados de 2 por 2, que son los que se pueden usar. -> el error de quedarse sólo con los 9 bloques de la partición, cuando el cuadrado de 2 por 2 se puede apoyar en cualquiera de las 25 posiciones del tablero y los cuadrados se superponen. | Sí. ... Como 60 dividido 4 da 15, con 15 movidas bien elegidas el tablero queda como se pide. -> el error de conformarse con que la cuenta global cierre sin revisar si el reparto casilla por casilla es posible: el recorrido casilla por casilla muestra que hacen falta 30 movidas, no 15. | Sí. ... alcanza con usar cada uno de esos 25 cuadrados exactamente una vez. -> el error de suponer que todas las casillas están en la misma cantidad de cuadrados: las del borde están en menos y una esquina está en uno solo, así que no reciben todas lo mismo.",
-    "id": 195
+    "id": 195,
+    "niv": 1
    },
    {
     "c": 9,
@@ -18880,7 +19088,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "No se puede, porque tres pesadas dan 9 resultados -> el error de sumar los resultados de las pesadas en vez de multiplicarlos: son 3 × 3 × 3 = 27 resultados, y 27 alcanza para 20 casos. | Sí, con dos pesadas alcanza -> el error de no contar las ramas: dos pesadas dan 3 × 3 = 9 resultados distintos y hay 20 casos, así que es imposible separarlos todos. | Sí, con una sola pesada de las 5 azules contra las 5 blancas -> el error de no ver que el gramo de más y el gramo de menos se cancelan: esa pesada siempre empata y no informa absolutamente nada. | Sí, pesando b1, b2 y b3 contra una blanca -> el error de olvidarse del caso de borde: si las tres pesadas empatan sabés que las falsas son b4 y b5, pero no cuál pesa más y cuál pesa menos.",
-    "id": 196
+    "id": 196,
+    "niv": 1
    },
    {
     "c": 10,
@@ -18905,7 +19114,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "a) {1, 2, …, 10} -> el error de agarrar el conjunto más obvio sin mirar los restos: por ejemplo 1 + 2 + 3 + 4 + 5 + 9 = 24, que sí es múltiplo de 6. | a) diez números de resto 1 -> el error de usar un solo resto y no notar que seis números de resto 1 suman resto 1 + 1 + 1 + 1 + 1 + 1 = 6, o sea múltiplo de 6. | b) sí es posible con 11 -> el error de estirar la construcción sin revisar el caso de borde: con seis números de resto 1 ya se arma un grupo de suma múltiplo de 6. | b) no es posible, por paridad -> el error de confundir par con múltiplo de 6: la suma sale par, pero falta asegurar que también sea múltiplo de 3.",
-    "id": 197
+    "id": 197,
+    "niv": 1
    },
    {
     "c": 7,
@@ -18930,7 +19140,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "Sí, siempre, por la simetría central -> el error de tomar la simetría como demostración, y de paso suponer que la distancia hasta el punto opuesto no depende de dónde esté parada la araña. | Sí, siempre, con distancia √5 -> el error de usar el valor del caso en que la araña está en un vértice como si valiera para cualquier posición de la araña. | No, porque todo está a lo sumo a 2 -> el error de dar por hecho un máximo que no revisó (de vértice a vértice opuesto ya da √5) y de confundir no es el único con no es el mejor. | No, conviene el centro de la cara opuesta -> el error de sumar los tramos cara por cara en vez de desplegar el cubo y medir el camino derecho con Pitágoras.",
-    "id": 198
+    "id": 198,
+    "niv": 1
    },
    {
     "c": 2,
@@ -18955,7 +19166,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 0,
     "idea": "Sólo los cuatro cuartos de circunferencia -> el error de resolver únicamente el caso en que P y Q están en lados que se cortan y olvidarse del caso de lados opuestos, que aporta las dos medianas. | Sólo las dos medianas -> el error de quedarse con el caso fácil, P y Q en lados opuestos con PQ perpendicular, y no mirar el caso de dos lados que concurren en un vértice. | Cuartos de circunferencia de radio 1 -> el error de usar como radio la hipotenusa entera en vez de su mitad: la mediana que sale del ángulo recto mide la mitad de la hipotenusa. | Circunferencia centrada en el centro del cuadrado -> el error de poner el centro donde no va: el centro es el vértice en el que se cortan los dos lados donde están P y Q, no el centro del cuadrado.",
-    "id": 199
+    "id": 199,
+    "niv": 1
    },
    {
     "c": 13,
@@ -18980,7 +19192,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 1,
     "idea": "Colorear de a uno eligiendo un color libre -> el error de mirar una sola de las dos condiciones: el método goloso cuida a los vecinos pero no garantiza que al final queden exactamente 96 rectángulos de cada color. | Los primeros 96 de un color, los 96 siguientes de otro -> el error inverso: asegura el reparto parejo pero rompe la condición de vecinos, porque en el medio de un bloque de un solo color hay rectángulos con tres o más vecinos iguales. | Colorear según la orientación del rectángulo -> el error de basar la receta en algo que decide Matías: si él pone todas las fichas de la misma orientación, el reparto en tres grupos de 96 se cae solo. | No siempre se puede -> el error de confundir se me rompe esta coloración con no existe ninguna coloración: la receta de las diagonales funciona también en ese caso particular.",
-    "id": 200
+    "id": 200,
+    "niv": 1
    },
    {
     "c": 7,
@@ -19005,7 +19218,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 2,
     "idea": "a) sí se puede, porque hay siete valores para siete segmentos -> el error de contar que alcanzan los valores disponibles y suponer que el emparejamiento existe, sin revisar la paridad que lo impide. | b) tampoco se puede con 8 -> el error de repetir el argumento sin rehacer la cuenta: con 8 los corrimientos suman 0 + 1 + … + 7 = 28, que es par, y ahí no hay ninguna contradicción. | a) no se puede, porque los corrimientos son sólo seis -> el error de olvidarse del corrimiento 0, que es el segmento vertical que une un punto con el corazón que tiene justo abajo. | a) sí y b) no -> el error de invertir las dos respuestas suponiendo que cuantos más segmentos hay más difícil es, cuando en realidad la paridad traba el caso de 7 y libera el de 8.",
-    "id": 201
+    "id": 201,
+    "niv": 1
    },
    {
     "c": 8,
@@ -19030,7 +19244,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 3,
     "idea": "No puede, porque reordenar no cambia el tamaño -> el error de creer que si los dígitos son los mismos el número vale lo mismo: 327 se reordena como 237 y baja noventa unidades. | No puede, por la finitud de los múltiplos de 3 -> el error de usar la finitud al revés: que se repita un valor ya visitado es justamente lo que garantiza que la vuelta se pueda repetir para siempre. | Sí, esperando a llegar a 999 y ahí reordenar -> el error de suponer que cualquier número se achica reordenando: 999 sólo se reordena en sí mismo, y el minuto siguiente ya da 1101. | Sí, pero sólo reordenando cada minuto -> el error de creer que hay que intervenir siempre, cuando en la vuelta que funciona pasan varios minutos seguidos sin tocar nada y el número igual no se escapa.",
-    "id": 202
+    "id": 202,
+    "niv": 1
    },
    {
     "c": 4,
@@ -19047,7 +19262,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ansTxt": "49894",
     "ans": 49894,
-    "id": 203
+    "id": 203,
+    "niv": 1
    },
    {
     "c": 7,
@@ -19064,7 +19280,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ansTxt": "Máximo: 2695 segmentos verdes. Ejemplo: repartir los 77 puntos en 11 clases de 7 puntos cada una y pintar de verde todos los segmentos que unen puntos de clases distintas (los segmentos dentro de una misma clase quedan azules). Son C(77,2) − 11·C(7,2) = 2926 − 231 = 2695 segmentos verdes.",
     "ans": 2695,
-    "id": 204
+    "id": 204,
+    "niv": 1
    },
    {
     "c": 6,
@@ -19081,7 +19298,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ansTxt": "Como máximo 10 de las 11 fracciones pueden ser enteras. Un ejemplo: 13/1, 4/2, 21/3, 15/5, 12/6, 14/7, 16/8, 18/9, 20/10, 22/11 (las 10 enteras) y 17/19 (la única que no lo es).",
     "ans": 10,
-    "id": 205
+    "id": 205,
+    "niv": 1
    },
    {
     "c": 10,
@@ -19106,7 +19324,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     ],
     "ans": 4,
     "idea": "(3,3) -> no ver que 3+6 = 9 no es primo | p y q al reves -> confundir cual lleva el +6 y el +10 | q = 7 -> mirar solo q+4 y q+10 y olvidar p+q+1 | infinitos -> olvidar la cota \"menores que 100\" del enunciado",
-    "id": 206
+    "id": 206,
+    "niv": 1
    }
   ],
   "flashcards": [
@@ -22425,6 +22644,14 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     $("quizProgFill").style.width = (100 * (quizSession.currentIdx) / quizSession.questions.length) + "%";
     $("quizProgText").textContent = (quizSession.currentIdx + 1) + " / " + quizSession.questions.length;
     ponTexto($("quizQ"), q.q);
+    // De donde salio el enunciado. Solo la Olimpiada lo trae; si no hay dato, el
+    // renglon no se dibuja (no queda un hueco ni un "·" suelto).
+    const _fu = $("quizFuente");
+    if (_fu) {
+      const _partes = [q.fuente, q.niv ? "Nivel " + q.niv : ""].filter(Boolean);
+      _fu.textContent = _partes.length ? "O.M.A. · " + _partes.join(" · ") : "";
+      _fu.hidden = !_partes.length;
+    }
     // Figura del problema (Olimpiada). El SVG lo genera el build a partir de la
     // construccion verificada, NO lo escribe nadie a mano ni viene del usuario:
     // por eso se puede inyectar como HTML.
@@ -25187,7 +25414,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "04/09 17:48";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "04/09 18:02";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
