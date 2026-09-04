@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="03/09 22:22">
+<meta name="apuntes-version" content="04/09 07:45">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2580,7 +2580,7 @@ body {
       var id = lget('apuntes_device') || '';
       var ap = lget('apuntes_apodo') || '';
       var cuerpo = JSON.stringify({ ev: 'visita', device: id, apodo: ap,
-                                    ver: '03/09 22:22', detalle: 'CIERRE ' + motivo });
+                                    ver: '04/09 07:45', detalle: 'CIERRE ' + motivo });
       var ok = false;
       try { ok = !!(navigator.sendBeacon && navigator.sendBeacon(URL_BUZON, cuerpo)); } catch (e) {}
       if (!ok) {
@@ -17508,6 +17508,235 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     "ans": 1,
     "ansTxt": "1",
     "id": 141
+   },
+   {
+    "c": 3,
+    "q": "En el pizarrón está dibujado un cuadrilátero no convexo ABCD de lados AB, BC, CD, DA, con todos sus lados distintos y A = B = C = 45º. Beto midió uno solo de los seis segmentos AB, BC, CD, DA, AC, BD, a su elección, y obtuvo el valor 6. Él afirma que con esta información se puede calcular el área del cuadrilátero ABCD. Calcular dicha área.\nACLARACIÓN: Un cuadrilátero es no convexo si uno de sus ángulos es mayor que 180º.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Los ángulos de un cuadrilátero suman 360°, así que D = 360° − 3·45° = 225°: el ángulo entrante está en D.\n\nPoné A = (0,0) y B sobre el eje x. Como el ángulo en A es de 45°, D está sobre la recta que sale de A a 45°: si AD = p, entonces D = (p/√2, p/√2). Como el ángulo en B también es de 45°, C está sobre la recta que sale de B a 135°: si BC = q, entonces C = (AB − q/√2, q/√2).\n\nFalta usar que el ángulo en C mide 45°. El lado CB apunta en la dirección −45°; para que el ángulo en C sea de 45°, CD tiene que apuntar en la dirección 0° o en la −90°. La dirección 0° obliga a que D y C estén a la misma altura, o sea p = q, y entonces AD = BC: no sirve, porque los lados tienen que ser distintos. Queda la otra: D está justo debajo de C. Entonces D y C tienen la misma abscisa, y de ahí AB = (p+q)/√2, C = (p/√2, q/√2) y CD = (q−p)/√2 (con q > p).\n\nAhora calculá con esas coordenadas:\n  área = (p² + q²)/4,\n  AC = BD = √((p² + q²)/2).\n¡Las dos diagonales son iguales y su cuadrado es el doble del área! O sea, área = AC²/2 = BD²/2, y eso vale para todos los cuadriláteros de la familia, sin importar p y q. En cambio, si Beto hubiera medido AB, BC, CD o DA el área no quedaría determinada (cambiando p y q se consiguen áreas distintas con esa misma medida).\n\nAsí que el segmento que midió Beto es una de las diagonales, y vale 6: el área es 6²/2 = 18.\n\nLa respuesta es 18.",
+    "page": "Cuadriláteros",
+    "fuente": "Nacional 2013 · Problema 3",
+    "esc": 4,
+    "pistas": [
+     "Como A + B + C = 135°, el ángulo D mide 225°: el pico entrante está en D. Poné A en el origen y B sobre el eje x; los 45° en A y en B te dan las direcciones de AD y de BC.",
+     "El cuadrilátero no queda determinado: hay toda una familia (que depende de dos medidas). Escribí el área y las seis longitudes en función de AD y BC, y buscá cuál de los seis segmentos guarda siempre la misma relación con el área: ese tiene que ser el que midió Beto."
+    ],
+    "ans": 18,
+    "ansTxt": "18",
+    "id": 142
+   },
+   {
+    "c": 3,
+    "q": "Sea ABCD un cuadrilátero tal que AB = AD, ABD = 65°, DBC = 35° y la diagonal BD es bisectriz del ángulo ADC. Calcular las medidas de los ángulos del cuadrilátero ABCD.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Dibujá el cuadrilátero ABCD y su diagonal BD, que lo parte en los triángulos ABD y BDC.\n\nEmpezá por el triángulo ABD. Como AB = AD, es isósceles y los ángulos de la base son iguales: el ángulo ADB mide lo mismo que el ángulo ABD, o sea 65°. Entonces el ángulo A del cuadrilátero (que es el ángulo BAD) mide 180° − 65° − 65° = 50°.\n\nAhora usá que BD es bisectriz del ángulo ADC: eso significa que parte a ese ángulo en dos partes iguales, ADB y BDC. Como ADB = 65°, también BDC = 65°, y el ángulo D del cuadrilátero mide 65° + 65° = 130°.\n\nPasá al triángulo BDC: ya tenés DBC = 35° y BDC = 65°, así que el ángulo C mide 180° − 35° − 65° = 80°.\n\nY el ángulo B del cuadrilátero es la suma de las dos partes en que lo corta la diagonal: ABD + DBC = 65° + 35° = 100°.\n\nControlá: 50 + 100 + 80 + 130 = 360, como tiene que dar en todo cuadrilátero.",
+    "page": "Cuadriláteros",
+    "fuente": "Intercolegial 2015 · Problema 3",
+    "esc": 1,
+    "pistas": [
+     "La diagonal BD parte al cuadrilátero en dos triángulos. Mirá primero el triángulo ABD: el dato AB = AD te dice algo sobre dos de sus ángulos.",
+     "Una vez que sepas cuánto mide el ángulo ADB, la palabra «bisectriz» te regala el ángulo BDC, y con eso el triángulo BDC queda completamente determinado."
+    ],
+    "ans": [
+     50,
+     100,
+     80,
+     130
+    ],
+    "ansTxt": "A = 50°, B = 100°, C = 80°, D = 130°",
+    "pista": "Los 4 ángulos del cuadrilátero, separados por coma. El orden no importa.",
+    "id": 143
+   },
+   {
+    "c": 5,
+    "q": "Un rectángulo, que no es un cuadrado, y que está cuadriculado en cuadritos de 1×1 se divide en exactamente 8 figuras poligonales distintas siguiendo líneas de la cuadrícula. Determinar cuál es el menor valor posible del área del rectángulo inicial.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Las piezas son figuras hechas de cuadritos pegados (poliominós) y tienen que ser las 8 distintas entre sí. Contá cuántas hay de cada tamaño: de 1 cuadrito hay 1 (el cuadradito), de 2 hay 1 (el dominó), de 3 hay 2 (la tira y la L) y de 4 hay 5. O sea que si querés 8 piezas distintas y que ocupen lo menos posible, lo más barato es usar la de 1, la de 2, las dos de 3 y cuatro de las de 4: eso ya son 1+2+3+3+4+4+4+4 = 25 cuadritos. Así que el área es por lo menos 25. Los rectángulos de área 25 son 5×5 y 1×25: el 5×5 está prohibido porque es cuadrado, y en una tira de 1×25 todas las piezas son tiras 1×k, así que sus largos tendrían que ser 8 números distintos, y el mínimo de 1+2+3+4+5+6+7+8 ya da 36, que es más que 25. Con área 26 quedan 1×26 (mismo problema de la tira) y 2×13, y ahí sí se puede. Por ejemplo, en un tablero de 2 filas y 13 columnas:\n\n  A B B C C C D D E F F G G\n  H H H H H D D E E E F G G\n\nA es un cuadradito, B un dominó, C una tira de 3, F una L de 3, D una S de 4, E una T de 4, G un cuadrado de 4 y H una tira de 5: ocho figuras distintas que cubren los 26 cuadritos. Entonces el área mínima es 26.",
+    "page": "Áreas",
+    "fuente": "Nacional 2017 · Problema 1",
+    "esc": 4,
+    "pistas": [
+     "Antes de mirar rectángulos, mirá las piezas: contá cuántas figuras distintas hay que ocupen 1 cuadrito, cuántas de 2, cuántas de 3 y cuántas de 4. Como las 8 piezas tienen que ser distintas entre sí, eso te dice que el área no puede ser cualquiera de chica.",
+     "Ya sabiendo desde qué área conviene empezar, probá los rectángulos que no son cuadrados en orden de área creciente. Ojo con las tiras de ancho 1: ahí todas las piezas son tiras 1×k, y ocho tiras distintas necesitan ocho largos distintos."
+    ],
+    "ans": 26,
+    "ansTxt": "26",
+    "id": 144
+   },
+   {
+    "c": 1,
+    "q": "Sea ABC un triángulo rectángulo con Â = 90°, B̂ = 60° y AB = 6. Se considera el punto D tal que el triángulo BCD sea equilátero y sólo comparta con el triángulo ABC el lado BC. Las rectas BD y AC se cortan en E. Calcular las medidas de los lados del triángulo CDE.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Primero el triángulo ABC. Como Â = 90° y B̂ = 60°, queda Ĉ = 30°. En un triángulo de 30-60-90 el cateto opuesto a los 30° es la mitad de la hipotenusa: el cateto AB = 6 es el opuesto a Ĉ = 30°, así que BC = 12, y AC = 6√3.\n\nAhora D. Como BCD es equilátero de lado BC = 12, tenemos BD = CD = 12, y como sólo comparte con ABC el lado BC, D queda del otro lado de la recta BC (si estuviera del mismo lado que A, los dos triángulos se superpondrían).\n\nLo más cómodo es poner coordenadas: A = (0, 0), B = (6, 0) y C = (0, 6√3). Girando C 60° alrededor de B hacia el lado opuesto a A se obtiene D = (12, 6√3).\n\nFijate que C y D tienen la misma altura, o sea CD es horizontal y CD = 12. La recta AC es el eje vertical x = 0. La recta BD pasa por B = (6, 0) y D = (12, 6√3): avanzando 6 a la derecha sube 6√3, así que yendo 6 a la izquierda desde B baja 6√3, y corta al eje vertical en E = (0, −6√3).\n\nEntonces el triángulo CDE tiene el ángulo recto en C (CD es horizontal y CE es vertical), con:\n• CD = 12,\n• CE = 6√3 − (−6√3) = 12√3 ≈ 20,78,\n• DE = √(12² + (12√3)²) = √(144 + 432) = √576 = 24.\n\nEs otro triángulo 30-60-90: los lados son 12, 12√3 y 24.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Zonal 2018 · Problema 3",
+    "esc": 2,
+    "pistas": [
+     "Empezá por el triángulo ABC: con un ángulo de 60° y otro de 30° podés obtener BC y AC a partir de AB. Ojo con dónde cae D: tiene que quedar del lado de BC opuesto al de A.",
+     "Mirá el ángulo que forman BA y BD (el de ABC en B más el del equilátero) y fijate qué ángulos tiene el triángulo CDE: te va a quedar un triángulo con ángulos 30°, 60° y 90°. Si preferís, poné coordenadas con A en el origen."
+    ],
+    "ans": [
+     12,
+     20.784609690826528,
+     24
+    ],
+    "ansTxt": "CD = 12, CE = 12√3 ≈ 20,78 y DE = 24",
+    "aprox": true,
+    "pista": "Escribí las 3 medidas separadas por coma, el orden no importa. La que no da entera, con dos decimales.",
+    "id": 145
+   },
+   {
+    "c": 3,
+    "q": "Construir, utilizando exclusivamente una regla y un compás, un trapecio ABCD de bases AB y CD tal que si E es el punto medio del lado AD vale que EC = BC = 4, CD = 2 y EĈB = 120º. Indicar los pasos de la construcción y calcular el área del trapecio ABCD.\nNota. No es necesario explicar cómo se trazan paralelas y perpendiculares a una recta por un punto.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Lo lindo de este problema es que el área sale sin necesidad de construir nada, con un solo triángulo.\n\nLlamemos h a la altura del trapecio, o sea la distancia entre las rectas AB y CD. Como E es el punto medio de AD, y A está sobre la recta AB mientras que D está sobre la recta CD, E queda justo en el medio: está a distancia h/2 de la recta AB y también a h/2 de la recta CD.\n\nAhora partí el trapecio con los segmentos EB y EC: te quedan tres triángulos, ABE, EBC y ECD.\n- Área de ABE = (1/2) · AB · (h/2) = AB·h/4.\n- Área de ECD = (1/2) · CD · (h/2) = CD·h/4.\n- Área del trapecio = (AB + CD)·h/2.\nEntonces el área de EBC es lo que sobra: (AB+CD)·h/2 − AB·h/4 − CD·h/4 = (AB+CD)·h/4, que es justo la mitad del área del trapecio.\n\nO sea: el área del trapecio es el doble del área del triángulo EBC. Y de EBC sabés todo lo que hace falta: EC = BC = 4 y el ángulo entre esos dos lados es 120º, así que su área es (1/2)·4·4·sen(120º) = 8·(√3/2) = 4√3. Por lo tanto el área del trapecio es 8√3 ≈ 13,86.\n\nPara la construcción con regla y compás sirve este truco: llamá B' al simétrico de B respecto del punto E. Como E es el punto medio de AD y también de BB', los segmentos AB y B'D son iguales y paralelos, así que B' cae sobre la recta CD. Entonces:\n1) Trazá el ángulo de 120º con vértice en C (hacés un triángulo equilátero para tener 60º y tomás el ángulo que queda al lado).\n2) Con el compás marcá E sobre un lado y B sobre el otro, los dos a distancia 4 de C.\n3) Trazá la recta BE y marcá B' del otro lado de E, con EB' = EB.\n4) La recta CB' es la recta de la base CD: marcá D sobre el segmento CB' con CD = 2.\n5) Marcá A como el simétrico de D respecto de E (trazás la recta DE y llevás EA = ED).\nEl trapecio ABCD que queda cumple todo, y tiene AB ≈ 8,58 y altura ≈ 2,62.",
+    "page": "Cuadriláteros",
+    "fuente": "Nacional 2018 · Problema 3",
+    "esc": 4,
+    "pistas": [
+     "E es el punto medio de AD, o sea del lado que va de una base a la otra. Calculá a qué distancia queda E de la recta AB y a qué distancia de la recta CD, y compará esas dos distancias con la altura del trapecio.",
+     "Cortá el trapecio en tres triángulos: ABE, ECD y EBC. Escribí el área de los dos primeros en función de AB, CD y la altura. Del triángulo EBC conocés dos lados y el ángulo que forman."
+    ],
+    "ans": 13.856406460551018,
+    "ansTxt": "El área del trapecio ABCD es 8√3 ≈ 13,86.",
+    "aprox": true,
+    "pista": "Escribí el valor con dos decimales (por ejemplo 3,46). No hace falta la raíz.",
+    "id": 146
+   },
+   {
+    "c": 5,
+    "q": "Sea C una circunferencia de radio r = 4. El cuadrado ABCD tiene sus vértices sobre C. Otro cuadrado PQRS tiene dos vértices P y Q sobre C y los otros dos vértices, R y S sobre un diámetro de C.\nCalcular  área (ABCD) / área (PQRS).",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Poné el centro de la circunferencia en el origen y el diámetro donde se apoyan R y S sobre el eje x.\n\nCuadrado grande ABCD: como sus cuatro vértices están en la circunferencia, su diagonal es un diámetro, o sea mide 2r = 8. El área de un cuadrado en función de su diagonal d es d²/2, así que área(ABCD) = 8²/2 = 32.\n\nCuadrado chico PQRS: llamale s a su lado. Por simetría queda apoyado sobre el eje x con R y S en (-s/2, 0) y (s/2, 0), y P y Q arriba, en (-s/2, s) y (s/2, s). Como P está en la circunferencia, por Pitágoras:\n\n(s/2)² + s² = r² = 16\n\ns²/4 + s² = 16  →  5s²/4 = 16  →  s² = 64/5.\n\nEntonces área(PQRS) = 64/5.\n\nY la razón que te piden es:\n\n32 ÷ (64/5) = 32 · 5/64 = 5/2.\n\nDato lindo: la respuesta no depende del radio, siempre da 5/2.",
+    "page": "Áreas",
+    "fuente": "Regional 2019 · Problema 3",
+    "esc": 3,
+    "pistas": [
+     "Poné el centro de la circunferencia en el origen y el diámetro donde se apoyan R y S sobre el eje horizontal. Por simetría, el cuadrado PQRS queda centrado respecto del centro.",
+     "Marcá el lado del cuadrado chico como s: sus vértices de arriba están a altura s y a distancia s/2 del centro. Escribí que esos vértices están en la circunferencia (Pitágoras) y despejá s². Para el cuadrado grande, acordate que su diagonal es el diámetro."
+    ],
+    "ans": 2.5,
+    "ansTxt": "5/2 = 2,5",
+    "id": 147
+   },
+   {
+    "c": 5,
+    "q": "En el triángulo ABC, sean D un punto en AB, F un punto en AD y E un punto en AC tales que los triángulos BCD, CDE, DEF y FEA tienen áreas iguales. Si AB=32 y AC=39, determinar las longitudes de BD, DF, FA, CE y AE.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Primero fijate que los cuatro triángulos llenan justo el triángulo ABC: cortando ABC por CD queda BCD y ACD; cortando ACD por DE queda CDE y ADE; y cortando ADE por EF queda DEF y AEF. O sea que cada uno de los cuatro vale la cuarta parte del área de ABC. Llamemos S al área de ABC, así que cada pedacito mide S/4.\n\nAhora usá todo el tiempo la misma idea: si dos triángulos tienen la misma altura, sus áreas están en la misma proporción que sus bases.\n\n1) Los triángulos BCD y ABC tienen el mismo vértice C, y sus bases BD y AB están sobre la misma recta, así que tienen la misma altura. Entonces área(BCD)/área(ABC) = BD/AB. Como área(BCD) = S/4, sale BD/32 = 1/4, o sea BD = 8. Por lo tanto AD = 32 − 8 = 24.\n\n2) Ahora mirá el triángulo ACD, que mide S − S/4 = 3S/4. Los triángulos CDE y ACD comparten el vértice D y sus bases CE y AC están sobre la misma recta. Entonces área(CDE)/área(ACD) = CE/AC, o sea (S/4)/(3S/4) = CE/39. Eso da 1/3 = CE/39, así que CE = 13 y AE = 39 − 13 = 26.\n\n3) Por último, ADE mide 3S/4 − S/4 = S/2. Los triángulos AEF y ADE comparten el vértice E y sus bases AF y AD están sobre la misma recta. Entonces área(AEF)/área(ADE) = AF/AD, o sea (S/4)/(S/2) = AF/24. Eso da 1/2 = AF/24, así que FA = 12 y DF = 24 − 12 = 12.\n\nRespuesta: BD = 8, DF = 12, FA = 12, CE = 13 y AE = 26. Fijate que no importa cómo sea el triángulo: los valores salen iguales para cualquier forma de ABC con AB=32 y AC=39.",
+    "page": "Áreas",
+    "fuente": "Regional 2020 · Problema 3",
+    "esc": 3,
+    "pistas": [
+     "Fijate que esos cuatro triángulos cubren todo el triángulo ABC sin superponerse ni dejar huecos.",
+     "Dos triángulos que comparten la altura tienen áreas proporcionales a sus bases. Usá eso primero sobre AB mirando desde C, después sobre AC mirando desde D, y por último sobre AD mirando desde E."
+    ],
+    "ans": [
+     8,
+     12,
+     12,
+     13,
+     26
+    ],
+    "ansTxt": "BD=8, DF=12, FA=12, CE=13, AE=26",
+    "pista": "Escribí las 5 medidas separadas por coma. El orden no importa.",
+    "id": 148
+   },
+   {
+    "c": 5,
+    "q": "En el triángulo isósceles ABC sean D y E puntos en los lados AB y AC, respectivamente, tales que las rectas BE y CD se cortan en F. Además, los triángulos AEB y ADC son iguales y tienen AD=AE=10 y AB=AC=30.\nCalcular área(ADFE)/área(ABC).",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Como AD = 10 y AB = 30, tenés AD/AB = 1/3, y lo mismo AE/AC = 1/3. Entonces DE es paralela a BC y DE mide un tercio de BC.\n\nMirá los triángulos DFE y CFB: como DE ∥ BC, son semejantes (tienen los mismos ángulos, porque BE y CD son transversales). La razón de semejanza es 1/3, así que FE/FB = 1/3. O sea que F parte a BE en cuatro partes iguales: FE es la cuarta parte de BE, y BF son las otras tres cuartas partes.\n\nAhora armá el área. Tomá área(ABC) = 1.\n• área(ABE) = 1/3, porque el triángulo ABE tiene la misma altura desde B que ABC y su base AE es un tercio de AC.\n• Dentro de ABE, el triángulo DBE tiene base DB = 2/3 de AB, así que área(DBE) = 2/3 · 1/3 = 2/9.\n• Y el triángulo DBF es la parte de DBE que le toca a BF: como BF es 3/4 de BE, área(DBF) = 3/4 · 2/9 = 1/6.\n\nEl cuadrilátero ADFE es justo el triángulo ABE al que le sacás el triángulo DBF:\nárea(ADFE) = 1/3 − 1/6 = 1/6.\n\nComo habíamos puesto área(ABC) = 1, la respuesta es 1/6.",
+    "page": "Áreas",
+    "fuente": "Nacional 2020 · Problema 2",
+    "esc": 4,
+    "pistas": [
+     "Fijate que AD/AB = AE/AC = 1/3. ¿Qué le pasa entonces a la recta DE respecto del lado BC?",
+     "Con esas dos rectas paralelas te quedan dos triángulos semejantes que se tocan en F: eso te dice en qué proporción F parte al segmento BE. Después pensá el cuadrilátero ADFE como un triángulo grande al que le sacás uno chico."
+    ],
+    "ans": 0.16666666666666666,
+    "ansTxt": "1/6",
+    "aprox": true,
+    "pista": "Escribí el valor con dos decimales (por ejemplo 3,46). No hace falta la raíz.",
+    "id": 149
+   },
+   {
+    "c": 1,
+    "q": "En el rectángulo ABCD, sean P en el lado AB y Q en el lado AD tales que PC es la bisectriz de BP̂Q y QC es la bisectriz de DQ̂P. Calcular la medida del ángulo PĈQ.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Llamemos x al ángulo AP̂Q y llamemos y al ángulo AQ̂P. En el triángulo APQ el ángulo en A es el vértice del rectángulo, o sea 90°, y como los tres ángulos de un triángulo suman 180°, tenés\n\nx + y = 90°.\n\nAhora mirá el punto P: está sobre el lado AB, así que los ángulos AP̂Q y BP̂Q juntos forman un ángulo llano. Entonces BP̂Q = 180° − x. Como PC es la bisectriz de ese ángulo, lo parte en dos partes iguales, y la parte que da hacia PQ es\n\nCP̂Q = (180° − x)/2 = 90° − x/2.\n\nCon Q pasa exactamente lo mismo: Q está sobre AD, así que DQ̂P = 180° − y, y como QC es su bisectriz,\n\nCQ̂P = (180° − y)/2 = 90° − y/2.\n\nY ahora fijate en el triángulo PCQ: sus tres ángulos suman 180°, así que\n\nPĈQ = 180° − CP̂Q − CQ̂P = 180° − (90° − x/2) − (90° − y/2) = x/2 + y/2 = (x + y)/2.\n\nPero ya sabías que x + y = 90°. Entonces\n\nPĈQ = 90°/2 = 45°.\n\nLo lindo es que no hiciste falta saber ni dónde están exactamente P y Q ni cuánto miden los lados: el ángulo siempre da 45°. (Como dato extra: la condición de las dos bisectrices obliga a que el rectángulo sea en realidad un cuadrado, porque C tiene que quedar a la misma distancia de AB, de AD y de PQ.)",
+    "page": "Ángulos en triángulos",
+    "fuente": "Regional 2021 · Problema 3",
+    "esc": 3,
+    "pistas": [
+     "En el triángulo APQ el ángulo en A mide 90°, así que los otros dos ángulos suman 90°. Anotá el ángulo AP̂Q y el ángulo AQ̂P y mirá cómo se relacionan con BP̂Q y DQ̂P.",
+     "BP̂Q y AP̂Q son suplementarios (juntos forman el ángulo llano sobre la recta AB), y lo mismo pasa en Q. Como PC y QC son bisectrices, escribí CP̂Q y CQ̂P en función de AP̂Q y AQ̂P, y después usá que los tres ángulos del triángulo PCQ suman 180°."
+    ],
+    "ans": 45,
+    "ansTxt": "45°",
+    "id": 150
+   },
+   {
+    "c": 1,
+    "q": "Sea ABC un triángulo isósceles y rectángulo en A con AB=AC. Sean M y N en el lado BC, con M entre B y N, tal que BM² + NC² = MN². Determinar la medida del ángulo MÂN.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Como el triángulo es rectángulo isósceles en A, los ángulos en B y en C miden 45° cada uno.\n\nGirá el triángulo ABM 90° alrededor de A, en el sentido que lleva B hasta C (se puede porque AB = AC). El punto M va a parar a un punto M'. Por ser un giro: AM' = AM, CM' = BM y el ángulo M'ĈA es igual al ángulo MB̂A = 45°.\n\nAhora mirá el ángulo M'ĈN: es el ángulo M'ĈA (45°) más el ángulo AĈN (que es el ángulo del triángulo en C, o sea 45°). Total: 90°. ¡El triángulo M'CN es rectángulo en C! Entonces, por Pitágoras,\nM'N² = CM'² + CN² = BM² + NC².\nPero el dato dice que BM² + NC² = MN². Así que M'N = MN.\n\nComparemos ahora los triángulos AMN y AM'N: tienen AM = AM', MN = M'N y el lado AN en común. son iguales, así que el ángulo M'ÂN es igual al ángulo MÂN.\n\nPor último, el giro fue de 90°, así que el ángulo MÂM' mide 90°. Pero ese ángulo se parte en MÂN más NÂM', que son iguales. Entonces cada uno mide la mitad de 90°.\n\nRespuesta: el ángulo MÂN mide 45°.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Nacional 2021 · Problema 3",
+    "esc": 4,
+    "pistas": [
+     "La igualdad BM² + NC² = MN² tiene cara de Pitágoras: si armaras un triángulo rectángulo con catetos BM y NC, su hipotenusa mediría MN.",
+     "Girá el triángulo ABM 90° alrededor de A, de modo que B vaya a parar a C. Mirá dónde cae M y qué ángulo queda en C."
+    ],
+    "ans": 45,
+    "ansTxt": "45°",
+    "id": 151
+   },
+   {
+    "c": 2,
+    "q": "El heptágono ABCDEFG, de lados AB = BC = CD = DE = EF = FG = GA = 2, tiene ∠DEF = 120°, ∠GAB = ∠ABC = ∠CDE = ∠EFG y ∠BCD = ∠FGA = 90°. Además, hay un punto P en el interior del heptágono tal que PA = PB = PD = PE = PF = 2. Calcular el área del heptágono.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Primero, los ángulos. La suma de los ángulos interiores de un heptágono es (7 − 2) · 180° = 900°. Si llamás x al valor de los cuatro ángulos iguales, tenés 120° + 4x + 90° + 90° = 900°, o sea 4x = 600° y x = 150°. Entonces ∠GAB = ∠ABC = ∠CDE = ∠EFG = 150°.\n\nAhora uní P con A, B, D, E y F. Esos cinco segmentos miden 2, y los lados también miden 2, así que:\n• PAB tiene PA = PB = AB = 2: es equilátero, y ∠PAB = ∠PBA = 60°;\n• PDE tiene PD = PE = DE = 2: equilátero, ∠PDE = ∠PED = 60°;\n• PEF tiene PE = PF = EF = 2: equilátero, ∠PEF = ∠PFE = 60°.\nFijate que ∠DEF = 120° = 60° + 60° = ∠DEP + ∠PEF, o sea que P queda justo entre medio: todo cierra.\n\nAhora restá. En B: ∠ABC = 150° y ∠ABP = 60°, así que ∠PBC = 90°. En C ya sabés que el ángulo es 90°. En D: ∠CDE = 150° y ∠PDE = 60°, así que ∠CDP = 90°. Entonces el cuadrilátero PBCD tiene PB = BC = CD = DP = 2 y tres ángulos rectos: ¡es un cuadrado de lado 2!\n\nLo mismo del otro lado. En A: ∠GAB = 150° y ∠PAB = 60°, así que ∠GAP = 90°. En G el ángulo es 90°. En F: ∠EFG = 150° y ∠EFP = 60°, así que ∠PFG = 90°. Entonces PAGF también es un cuadrado de lado 2.\n\nControlá que todo dé la vuelta completa alrededor de P: 60° (APB) + 90° (BPD) + 60° (DPE) + 60° (EPF) + 90° (FPA) = 360°. Perfecto: las cinco piezas cubren el heptágono sin superponerse y sin dejar huecos.\n\nAsí que el área es la de 2 cuadrados de lado 2 más la de 3 triángulos equiláteros de lado 2. Cada cuadrado mide 2 · 2 = 4, y cada triángulo equilátero de lado 2 mide (√3/4) · 2² = √3.\n\nÁrea = 2 · 4 + 3 · √3 = 8 + 3√3 ≈ 13,196.",
+    "page": "Polígonos regulares y circunferencia",
+    "fuente": "Regional 2022 · Problema 3",
+    "esc": 3,
+    "pistas": [
+     "Sumá los ángulos interiores de un heptágono: eso te deja averiguar cuánto miden los cuatro ángulos iguales ∠GAB, ∠ABC, ∠CDE y ∠EFG.",
+     "Uní P con A, B, D, E y F. Como esos cinco segmentos miden 2, igual que los lados, aparecen triángulos equiláteros; restale sus 60° a los ángulos del heptágono y fijate qué figura queda entre P, B, C, D y entre P, A, G, F."
+    ],
+    "ans": 13.196152422706632,
+    "ansTxt": "8 + 3√3 ≈ 13,196",
+    "aprox": true,
+    "pista": "Escribí el valor con dos decimales (por ejemplo 3,46). No hace falta la raíz.",
+    "id": 152
+   },
+   {
+    "c": 1,
+    "q": "En un triángulo ABC con ∠ABC = 15º y ∠ACB = 30º, sea M el punto medio del lado BC.\nLa recta perpendicular a BC que pasa por A corta a BC en el punto D.\nCalcular la medida del ángulo ∠MAD.",
+    "tipo": "num",
+    "svg": "",
+    "exp": "Primero el ángulo que falta: ∠BAC = 180º − 15º − 30º = 135º.\n\nPara poder hacer cuentas, decidí que BC mide 1 (la respuesta es un ángulo, así que no depende del tamaño). Por el teorema del seno, en el triángulo ABC:\n\n  AB / sen(∠ACB) = BC / sen(∠BAC),  o sea  AB = sen(30º) / sen(135º) = (1/2) / (√2/2) = √2/2.\n\nAhora mirá el triángulo ABD, que tiene el ángulo recto en D. El ángulo en B es 15º, así que\n\n  AD = AB · sen(15º) = (√2/2) · (√6 − √2)/4 = (√12 − 2)/8 = (2√3 − 2)/8 = (√3 − 1)/4,\n  BD = AB · cos(15º) = (√2/2) · (√6 + √2)/4 = (√12 + 2)/8 = (2√3 + 2)/8 = (√3 + 1)/4.\n\nComo M es el punto medio de BC, tenés BM = 1/2 = 2/4. Y fijate que BD = (√3 + 1)/4 ≈ 0,683 es mayor que BM = 0,5: entonces D queda del lado de C, entre M y C. La distancia entre los dos es\n\n  DM = BD − BM = (√3 + 1)/4 − 2/4 = (√3 − 1)/4.\n\n¡Y eso es exactamente lo mismo que AD! Así que el triángulo ADM tiene el ángulo recto en D y los dos catetos iguales: es un triángulo rectángulo isósceles. Sus otros dos ángulos miden 45º cada uno.\n\nRespuesta: ∠MAD = 45º.",
+    "page": "Ángulos en triángulos",
+    "fuente": "Nacional 2025 · Problema 3",
+    "esc": 4,
+    "pistas": [
+     "Empezá calculando el tercer ángulo del triángulo. Después ubicá bien dónde cae D: ¿el pie de la altura queda entre B y M, o entre M y C?",
+     "El triángulo ADM tiene un ángulo recto en D, así que el ángulo que buscás cumple tan(∠MAD) = DM/AD. Poniéndole BC = 1, usá el teorema del seno para escribir AB, y de ahí AD = AB·sen(15º) y BD = AB·cos(15º). Te van a servir sen(15º) = (√6 − √2)/4 y cos(15º) = (√6 + √2)/4."
+    ],
+    "ans": 45,
+    "ansTxt": "45º",
+    "id": 153
    }
   ],
   "flashcards": [
@@ -20816,12 +21045,18 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   // La respuesta esperada puede ser un numero ("calcular el angulo") o varios
   // ("calcular los angulos del triangulo"). Cuando son varios NO importa el
   // orden: el chico los descubre en el orden en que le salen.
-  function numsOk(escritos, esperados) {
+  // Cuando la respuesta exacta es irracional o periodica (8√3, 1/6) el problema
+  // viene marcado con aprox:true y se aceptan dos decimales. Sin eso, esos
+  // problemas serian INCONTESTABLES: con 1e-6 habria que tipear 13.8564065.
+  // La tolerancia NO es global a proposito: aflojarla para todos convertiria en
+  // correcto un 17 escrito para una respuesta 17,004.
+  function numsOk(escritos, esperados, aprox) {
     const esp = Array.isArray(esperados) ? esperados.slice() : [esperados];
     if (!escritos || escritos.length !== esp.length) return false;
+    const tol = aprox ? 0.01 : 1e-6;
     const a = escritos.slice().sort((x, y) => x - y);
     const b = esp.sort((x, y) => x - y);
-    return a.every((v, i) => Math.abs(v - b[i]) < 1e-6);
+    return a.every((v, i) => Math.abs(v - b[i]) < tol);
   }
 
   /* ---- EL BLOQUE DE PISTAS, UNA SOLA VEZ -------------------------------
@@ -20909,7 +21144,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       if (cerrado) return;
       const opciones = lecturas(inp.value);
       if (!opciones.length) { try { inp.focus(); } catch (e) {} return; }   // vacio: no cuenta como error
-      if (opciones.some(v => numsOk(v, q.ans))) { cerrar(true); return; }
+      if (opciones.some(v => numsOk(v, q.ans, q.aprox))) { cerrar(true); return; }
 
       quizSession.fallos++;
       inp.classList.add("wrong");
@@ -23457,7 +23692,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "03/09 22:22";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "04/09 07:45";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -23992,7 +24227,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   });
 
   /* ---- estadísticas en el inicio: strip lúdico + panel "Tus estadísticas" ----
-     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "O.M.A.": {"key": "oma", "emoji": "🧭", "pag": 14, "quiz": 141, "fc": 90}} se inyectan al compilar,
+     Los catálogos __LEVELS__/__BADGES__/{"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "O.M.A.": {"key": "oma", "emoji": "🧭", "pag": 14, "quiz": 153, "fc": 90}} se inyectan al compilar,
      extraídos del propio HTML para que nunca queden desincronizados. */
   var ST_CAT = {
     bio: {
@@ -24169,7 +24404,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       ]
     }
   };          /* niveles y logros POR MATERIA */
-  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "O.M.A.": {"key": "oma", "emoji": "🧭", "pag": 14, "quiz": 141, "fc": 90}};
+  var ST_TOTALS = {"Biología": {"key": "bio", "emoji": "🦠", "pag": 35, "quiz": 92, "fc": 83}, "Geografía": {"key": "geo", "emoji": "🌍", "pag": 24, "quiz": 99, "fc": 85}, "Historia": {"key": "his", "emoji": "🏛️", "pag": 15, "quiz": 79, "fc": 28}, "Tecnología": {"key": "tec", "emoji": "⚙️", "pag": 19, "quiz": 83, "fc": 33}, "Lengua": {"key": "len", "emoji": "✍️", "pag": 6, "quiz": 36, "fc": 21}, "O.M.A.": {"key": "oma", "emoji": "🧭", "pag": 14, "quiz": 153, "fc": 90}};
 
   function leerMat(mat) {
     try { return JSON.parse(lsGet(PROG_KEYS[mat]) || 'null'); } catch (e) { return null; }
