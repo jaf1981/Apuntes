@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="07/10 08:00">
+<meta name="apuntes-version" content="07/10 16:10">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -27433,7 +27433,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "07/10 08:00";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "07/10 16:10";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -29034,6 +29034,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     var pr = paso.params && typeof paso.params === 'object' ? paso.params : {};
     if (paso.tool === 'ruleta') resumen = misToolRuleta(caja, pr, s);
     else if (paso.tool === 'cuotas') resumen = misToolCuotas(caja, pr, s);
+    else if (paso.tool === 'penales') resumen = misToolPenales(caja, pr, s);
     else caja.appendChild(misEl('p', 'mis-nota', 'Esta herramienta no está en esta versión de la app. Actualizala y volvé.'));
     var b = misEl('button', 'mis-btn', 'Al desafío →');
     b.addEventListener('click', function () {
@@ -29102,6 +29103,61 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     calc();
     return function () { return 'p=' + ult.p + ';n=' + ult.n + ';c=' + ult.c; };
   }
+  function misToolPenales(caja, pr, s) {
+    /* Simulador de penales (07/10, 2a tanda). Las frecuencias vienen de los params (fuente en
+       misiones_src.py: Bar-Eli et al. 2007, 286 penales). Modelo simplificado y declarado en la
+       mision: si el arquero va al mismo lugar que la pelota, ataja; si no, es gol. */
+    var LADOS = ['izquierda', 'medio', 'derecha'];
+    var pArq = Array.isArray(pr.arquero) && pr.arquero.length === 3 ? pr.arquero : [44.4, 6.3, 49.3];
+    var pPat = Array.isArray(pr.pateador) && pr.pateador.length === 3 ? pr.pateador : [39.2, 28.7, 32.2];
+    var st = (s.cur && s.cur.pen) ? s.cur.pen : { rol: 'patear', p: { n: 0, gol: 0, por: [0, 0, 0] }, a: { n: 0, ataj: 0, por: [0, 0, 0] } };
+    function sortear(pesos) { var r = Math.random() * (pesos[0] + pesos[1] + pesos[2]); return r < pesos[0] ? 0 : (r < pesos[0] + pesos[1] ? 1 : 2); }
+    var roles = misEl('div', 'mis-botones'); roles.style.gridTemplateColumns = '1fr 1fr';
+    var bPat = misEl('button', '', '⚽ Pateá vos'), bArq = misEl('button', '', '🧤 Atajá vos');
+    roles.appendChild(bPat); roles.appendChild(bArq); caja.appendChild(roles);
+    var txt = misEl('p', 'mis-nota'); caja.appendChild(txt);
+    var elec = misEl('div', 'mis-botones'); elec.style.gridTemplateColumns = '1fr 1fr 1fr'; caja.appendChild(elec);
+    var ult = misEl('p', 'mis-nota'); ult.style.minHeight = '2.6em'; caja.appendChild(ult);
+    var filas = misEl('div', 'mis-filas'); caja.appendChild(filas);
+    function fila(lbl, cls) { var l = misEl('span', '', lbl), v = misEl('b', '', ''); if (cls) { l.className = cls; v.className = cls; } filas.appendChild(l); filas.appendChild(v); return v; }
+    var vN = fila('Penales'), vR = fila('Resultado', 'mis-grande'), vD = fila('A dónde fuiste'), vC = fila('El otro: izquierda / medio / derecha');
+    function guardar() { var s2 = misEstado(); if (s2.cur) { s2.cur.pen = st; misGuardar(s2); } }
+    function pintar() {
+      var pat = st.rol === 'patear';
+      bPat.style.background = pat ? 'var(--highlight)' : 'transparent';
+      bArq.style.background = pat ? 'transparent' : 'var(--highlight)';
+      txt.textContent = pat ? 'Elegí a dónde patear. El arquero se tira como se tiran los profesionales en los datos.'
+                            : 'Elegí a dónde tirarte. El pateador patea como patean los profesionales en los datos.';
+      var d = pat ? st.p : st.a;
+      vN.textContent = misNum(d.n);
+      vR.textContent = pat ? (d.n ? misNum(d.gol) + ' goles · ' + misDec(100 * d.gol / d.n) + ' %' : '—')
+                           : (d.n ? misNum(d.ataj) + ' atajadas · ' + misDec(100 * d.ataj / d.n) + ' %' : '—');
+      vD.textContent = d.por.join(' / ');
+      vC.textContent = d.n ? d.otro.join(' / ') : '—';
+    }
+    if (!st.p.otro) st.p.otro = [0, 0, 0];
+    if (!st.a.otro) st.a.otro = [0, 0, 0];
+    LADOS.forEach(function (lado, i) {
+      var b = misEl('button', '', lado.charAt(0).toUpperCase() + lado.slice(1));
+      b.addEventListener('click', function () {
+        if (st.rol === 'patear') {
+          var arq = sortear(pArq); st.p.n++; st.p.por[i]++; st.p.otro[arq]++;
+          var gol = arq !== i; if (gol) st.p.gol++;
+          ult.textContent = 'Pateaste a la ' + lado + ', el arquero fue ' + (arq === 1 ? 'al medio' : 'a la ' + LADOS[arq]) + ': ' + (gol ? '¡GOL!' : 'atajó.');
+        } else {
+          var pat2 = sortear(pPat); st.a.n++; st.a.por[i]++; st.a.otro[pat2]++;
+          var ataj = pat2 === i; if (ataj) st.a.ataj++;
+          ult.textContent = 'Te tiraste a la ' + lado + ', patearon ' + (pat2 === 1 ? 'al medio' : 'a la ' + LADOS[pat2]) + ': ' + (ataj ? '¡ATAJASTE!' : 'gol.');
+        }
+        pintar(); guardar();
+      });
+      elec.appendChild(b);
+    });
+    bPat.addEventListener('click', function () { st.rol = 'patear'; ult.textContent = ''; pintar(); guardar(); });
+    bArq.addEventListener('click', function () { st.rol = 'atajar'; ult.textContent = ''; pintar(); guardar(); });
+    pintar();
+    return function () { return 'pat=' + st.p.n + '/' + st.p.gol + ';ataj=' + st.a.n + '/' + st.a.ataj + ';porPat=' + st.p.por.join('-') + ';porAtaj=' + st.a.por.join('-'); };
+  }
   function misPasoPreg(capa, m, paso, s, sig) {
     capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Desafío'));
     var items = Array.isArray(paso.items) ? paso.items : [], idx = 0, ok = 0;
@@ -29152,6 +29208,11 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     var ap = m.pasos[0], cur = s.cur || {};
     if (ap && Array.isArray(ap.ops) && cur.ap !== undefined && ap.ops[cur.ap] !== undefined) {
       var pa = misEl('p', 'mis-p'); pa.appendChild(misEl('strong', '', 'Tu apuesta: ')); pa.appendChild(document.createTextNode(ap.ops[cur.ap])); capa.appendChild(pa);
+    }
+    if (cur.pen && (cur.pen.p.n || cur.pen.a.n)) {
+      var pp = misEl('p', 'mis-p'); pp.appendChild(misEl('strong', '', 'En tu simulación: '));
+      pp.appendChild(document.createTextNode('pateaste ' + misNum(cur.pen.p.n) + ' (' + misNum(cur.pen.p.gol) + ' goles) y atajaste ' + misNum(cur.pen.a.n) + ' (' + misNum(cur.pen.a.ataj) + ' atajadas).'));
+      capa.appendChild(pp);
     }
     if (cur.rul && cur.rul.g) {
       var pr = misEl('p', 'mis-p'); pr.appendChild(misEl('strong', '', 'En tu simulación: '));

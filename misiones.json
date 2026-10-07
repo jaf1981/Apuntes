@@ -260,6 +260,86 @@
      "pregunta": "¿Alguna vez viste \"descuento por contado\" y \"cuotas sin interés\" en el mismo cartel? ¿Qué decía? (opcional)"
     }
    ]
+  },
+  {
+   "id": "m-penales-1",
+   "gancho": "penales",
+   "titulo": "¿Los penales se atajan o se adivinan?",
+   "sub": "10 minutos. Arrancás apostando.",
+   "nuevo": "Sesgo de acción",
+   "hecha": {
+    "titulo": "Ya sabés qué hace un arquero en un penal.",
+    "sub": "Se tira casi siempre. Aunque 3 de cada 10 pelotas van al medio.",
+    "chip": "Nuevo: Sesgo de acción"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "En un penal profesional, de cada **100 arqueros**, ¿cuántos creés que se **quedan en el medio** sin tirarse?",
+     "ops": [
+      "Casi ninguno: menos de 10",
+      "Pocos: entre 10 y 25",
+      "Bastantes: entre 25 y 40",
+      "Casi la mitad"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "Un estudio miró **286 penales** de ligas profesionales y anotó a dónde fue la pelota y a dónde fue el arquero.\n\nLos arqueros se tiraron a un lado el **44,4 %** de las veces, al otro el **49,3 %**, y se quedaron en el medio sólo el **6,3 %**: 6 de cada 100.\n\nLas pelotas, en cambio, fueron a un lado el 39,2 %, al otro el 32,2 % y **al medio el 28,7 %**: casi 3 de cada 10.\n\nO sea: el lugar al que van 3 de cada 10 penales es el lugar que el arquero deja libre 94 veces de cada 100.",
+     "fuente": "Bar-Eli y otros (2007), Journal of Economic Psychology, 286 penales. Cifras tomadas del gráfico de The Guardian (2023) que cita ese estudio."
+    },
+    {
+     "t": "herramienta",
+     "tool": "penales",
+     "titulo": "Probalo vos",
+     "txt": "Primero pateá: elegí a dónde, y el arquero se tira con las frecuencias de los datos. Después atajá: elegí a dónde tirarte, y patean con las frecuencias de los datos. Hacé 20 o 30 de cada uno.\n\n**Simplificación del simulador:** si el arquero va al mismo lugar que la pelota, ataja; si no, es gol. En la realidad ni siquiera acertar el lado garantiza la atajada, así que acá el arquero ataja más de lo que atajaría.",
+     "params": {
+      "arquero": [
+       44.4,
+       6.3,
+       49.3
+      ],
+      "pateador": [
+       39.2,
+       28.7,
+       32.2
+      ]
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "Los arqueros se quedan en el medio **6 de cada 100** veces; los tiros van al medio **29 de cada 100**. ¿Qué muestra eso?",
+       "ops": [
+        "Que el arquero deja libre el medio casi siempre, y muchos tiros van ahí",
+        "Que los pateadores profesionales casi nunca eligen patear al medio del arco",
+        "Que el arquero adivina el lado correcto en la gran mayoría de los penales",
+        "Que tirarse a un lado siempre ataja más que quedarse parado en el medio"
+       ],
+       "exp": "Los dos números no coinciden: los tiros van al medio 29 de cada 100 veces y el arquero sólo se queda ahí 6 de cada 100. El estudio dice justamente que los arqueros se tiran más de lo que les conviene."
+      },
+      {
+       "q": "Según el estudio, ¿por qué los arqueros se tiran igual, si quedarse les rendiría más?",
+       "ops": [
+        "Porque quedarse quieto y que sea gol queda peor que tirarse y fallar",
+        "Porque el reglamento del fútbol les exige moverse antes del remate",
+        "Porque tirarse a un lado ataja muchos más penales que quedarse en el medio",
+        "Porque los pateadores profesionales nunca patean al medio del arco"
+       ],
+       "exp": "A eso el estudio lo llama **sesgo de acción**: cuando pasa algo malo, hacer algo (aunque no sirva) se siente y se ve mejor que no hacer nada. El arquero que se tira y le hacen el gol \"hizo lo que pudo\"; el que se queda parado y le hacen el gol queda como que no hizo nada."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "El arquero no adivina: elige, y elige lo que queda mejor, no lo que rinde más. Eso pasa mucho más allá del fútbol: un médico que receta algo \"por hacer algo\", alguien que vende todo cuando la bolsa baja.\n\nY para el pateador hay otra lección: cuando todos esperan que hagas lo de siempre, lo raro rinde. Si pateás siempre al mismo lado, te leen; si mezclás, no. A eso se le llama **estrategia mixta**.",
+     "pregunta": "¿A dónde patearías vos un penal importante, y por qué? (opcional)"
+    }
+   ]
   }
  ]
 }
