@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="07/10 00:10">
+<meta name="apuntes-version" content="07/10 08:00">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2066,6 +2066,7 @@ body {
 }
 .pend-card .pend-otra { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .pend-card .pend-gracias { text-align: center; font-weight: 600; }
+.pend-card .pend-cuenta { font-family: "Manrope", sans-serif; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-bottom: 8px; }
 [data-theme="dark"] .pend-card { background: linear-gradient(135deg, #1f2a38, #243246); color: #d8e4f3; border-color: #4a6f9a; }
 [data-theme="dark"] .pend-card button { background: #16202c; color: #d8e4f3; border-color: #4a6f9a; }
 [data-theme="dark"] .pend-card button.pend-ok { background: #6f9ad0; color: #0f1720; }
@@ -27432,7 +27433,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "07/10 00:10";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "07/10 08:00";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -28694,6 +28695,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
      textContent: es un archivo publico y no se le cree nada. */
   var PEND_K = 'apuntes_pend_resp';
   var pendUltimoFetch = 0;
+  var pendItems = [];   /* ultima lista bajada, para encadenar las preguntas */
   function pendContestados() { return (lsGet(PEND_K) || '').split(',').filter(Boolean); }
   function pendMarcar(id) {
     var l = pendContestados();
@@ -28716,19 +28718,20 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     var card = pendEl('div', 'pend-card');
     card.appendChild(pendEl('div', 'pend-gracias', '¡Gracias! Ya lo anoté.'));
     slot.appendChild(card);
-    setTimeout(function () { if (slot.firstChild === card) slot.innerHTML = ''; }, 2500);
+    setTimeout(function () { if (slot.firstChild === card) { slot.innerHTML = ''; pendRender(pendItems); } }, 2500);
   }
   function pendRender(items) {
     var slot = document.getElementById('pendSlot');
     if (!slot) return;
-    var yo = deviceId(), hechos = pendContestados(), p = null;
+    var yo = deviceId(), hechos = pendContestados(), p = null, quedan = 0;
     for (var i = 0; i < items.length; i++) {
       var it = items[i];
-      if (it && typeof it.id === 'string' && it.device === yo && hechos.indexOf(it.id) === -1) { p = it; break; }
+      if (it && typeof it.id === 'string' && it.device === yo && hechos.indexOf(it.id) === -1) { if (!p) p = it; quedan++; }
     }
     slot.innerHTML = '';
     if (!p) return;
     var card = pendEl('div', 'pend-card');
+    if (quedan > 1) card.appendChild(pendEl('div', 'pend-cuenta', 'Quedan ' + quedan + ' preguntas'));
     var fila = pendEl('div', 'pend-txt');
     fila.appendChild(pendEl('span', 'pend-ico', '📷'));
     var txt = pendEl('span');
@@ -28772,7 +28775,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     try {
       fetch('pendientes.json?t=' + t0, { cache: 'no-store' })
         .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (j) { if (j && Array.isArray(j.pendientes)) pendRender(j.pendientes); })
+        .then(function (j) { if (j && Array.isArray(j.pendientes)) { pendItems = j.pendientes; pendRender(pendItems); } })
         .catch(function () {});
     } catch (e) {}
   }
