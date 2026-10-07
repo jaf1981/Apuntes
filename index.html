@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="06/10 23:21">
+<meta name="apuntes-version" content="07/10 00:10">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2071,6 +2071,73 @@ body {
 [data-theme="dark"] .pend-card button.pend-ok { background: #6f9ad0; color: #0f1720; }
 [data-theme="dark"] .pend-card select { background: #16202c; color: #d8e4f3; border-color: #4a6f9a; }
 
+/* ---- Misiones (07/10): ganchos propios, fuera de las materias. La banda vive arriba
+   de las tarjetas de materia; el jugador es una capa completa como la tienda. ---- */
+.mis-band {
+  margin: 0 0 16px; padding: 14px 16px; border-radius: 16px;
+  border: 1.5px solid var(--accent); color: var(--text); font-family: "Manrope", sans-serif;
+  background: linear-gradient(180deg, var(--highlight), transparent);
+}
+.mis-band.hecha { border-color: var(--border); background: var(--bg-elev); }
+.mis-band .mis-cab { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+.mis-band.hecha .mis-cab { color: var(--text-soft); }
+.mis-band .mis-racha { color: #b8862b; letter-spacing: .02em; }
+.mis-band .mis-gancho { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 19px; line-height: 1.25; margin: 0 0 4px; }
+.mis-band .mis-sub { font-size: 13.5px; color: var(--text-soft); margin: 0 0 12px; font-family: "Crimson Pro", Georgia, serif; }
+.mis-band .mis-chip { display: inline-block; background: var(--highlight); color: var(--accent); font-size: 11.5px;
+  font-weight: 600; padding: 4px 9px; border-radius: 7px; margin: 0 6px 8px 0; }
+.mis-btn { display: block; width: 100%; border: none; border-radius: 11px; padding: 12px; cursor: pointer;
+  background: var(--accent); color: var(--bg-elev); font-family: "Manrope", sans-serif; font-weight: 700; font-size: 14.5px; text-align: center; }
+.mis-btn.sec { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+.mis-btn:disabled { opacity: .45; cursor: default; }
+.mis-btn:active:not(:disabled) { transform: scale(.98); }
+.mis-link { display: block; margin-top: 8px; background: none; border: none; color: var(--text-soft); font-size: 12.5px;
+  text-decoration: underline; cursor: pointer; font-family: "Manrope", sans-serif; padding: 4px 0; }
+/* capa del jugador / elección */
+.mis-capa { position: fixed; inset: 0; z-index: 99995; background: var(--bg); color: var(--text);
+  overflow-y: auto; -webkit-overflow-scrolling: touch; padding: max(env(safe-area-inset-top), 16px) 16px 48px; }
+.mis-capa .mis-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px;
+  font-family: "Manrope", sans-serif; font-size: 12.5px; color: var(--text-soft); }
+.mis-capa .mis-top b { color: var(--text); font-size: 14px; }
+.mis-cerrar { border: none; background: rgba(128,128,128,0.15); border-radius: 50%; width: 36px; height: 36px; font-size: 17px; cursor: pointer; color: inherit; }
+.mis-prog { height: 4px; background: var(--border); border-radius: 2px; margin: 0 0 18px; overflow: hidden; }
+.mis-prog i { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+.mis-h { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 22px; line-height: 1.25; margin: 0 0 12px; }
+.mis-p { font-family: "Crimson Pro", Georgia, serif; font-size: 17.5px; line-height: 1.5; margin: 0 0 14px; white-space: pre-line; }
+.mis-fuente { font-family: "Manrope", sans-serif; font-size: 12px; color: var(--text-soft); margin: -4px 0 14px; line-height: 1.4; }
+.mis-op { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border: 1.5px solid var(--border); background: var(--bg-elev);
+  color: var(--text); border-radius: 12px; padding: 12px 13px; margin-bottom: 8px; font-family: "Crimson Pro", Georgia, serif; font-size: 16.5px; line-height: 1.3; cursor: pointer; }
+.mis-op.sel { border-color: var(--accent); background: var(--highlight); }
+.mis-op.ok { border-color: #3d8a3d; background: rgba(61,138,61,.14); }
+.mis-op.mal { border-color: #b84a3a; background: rgba(184,74,58,.12); }
+.mis-op:disabled { cursor: default; }
+.mis-op .mis-tic { width: 19px; height: 19px; border-radius: 50%; border: 1.5px solid var(--text-soft); flex: none; }
+.mis-op.sel .mis-tic { background: var(--accent); border-color: var(--accent); }
+.mis-exp { font-family: "Crimson Pro", Georgia, serif; font-size: 15.5px; line-height: 1.45; padding: 10px 12px; border-left: 3px solid var(--accent);
+  background: var(--bg-elev); border-radius: 0 10px 10px 0; margin: 4px 0 14px; }
+.mis-nota { font-family: "Manrope", sans-serif; font-size: 12.5px; color: var(--text-soft); margin: 10px 2px 14px; line-height: 1.45; }
+.mis-acc { margin-top: 18px; }
+/* herramientas */
+.mis-tool { border: 1.5px solid var(--border); background: var(--bg-elev); border-radius: 14px; padding: 14px; margin: 0 0 14px; font-family: "Manrope", sans-serif; }
+.mis-tool .mis-filas { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; font-size: 14px; margin-bottom: 12px; }
+.mis-tool .mis-filas b { font-variant-numeric: tabular-nums; text-align: right; }
+.mis-tool .mis-filas .mis-grande b { font-size: 20px; color: var(--accent); }
+.mis-tool .mis-botones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.mis-tool .mis-botones button { padding: 10px 4px; border-radius: 10px; border: 1.5px solid var(--accent); background: transparent; color: var(--accent);
+  font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer; }
+.mis-tool .mis-botones button:active { background: var(--highlight); }
+.mis-tool .mis-saldo { height: 10px; border-radius: 5px; background: var(--border); position: relative; margin: 6px 0 2px; overflow: hidden; }
+.mis-tool .mis-saldo i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); }
+.mis-tool .mis-saldo em { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--text); left: 50%; }
+.mis-tool .mis-leyenda { font-size: 11.5px; color: var(--text-soft); display: flex; justify-content: space-between; margin-bottom: 10px; }
+.mis-tool label { display: block; font-size: 12.5px; color: var(--text-soft); margin: 8px 0 3px; }
+.mis-tool input { width: 100%; font-family: inherit; font-size: 17px; padding: 9px 10px; border-radius: 10px; border: 1.5px solid var(--border);
+  background: var(--bg); color: var(--text); }
+.mis-tool .mis-res { margin-top: 12px; }
+.mis-capa textarea { width: 100%; min-height: 76px; font-family: "Crimson Pro", Georgia, serif; font-size: 16px; padding: 10px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--bg-elev); color: var(--text); resize: vertical; margin-bottom: 12px; }
+
 /* ---- Sugerencias dinámicas del panel de práctica ---- */
 .dash-sug { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .dash-sug:empty { display: none; }
@@ -3291,6 +3358,7 @@ body {
     <h1 class="sp-title" id="spTitleGreeting">Tus apuntes</h1>
     <p class="sp-subtitle">Elegí qué materia querés estudiar hoy.</p>
 
+    <div id="misSlot"></div>
     <div id="pendSlot"></div>
     <div id="spSlot"></div>
 
@@ -27364,7 +27432,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "06/10 23:21";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "07/10 00:10";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -28711,6 +28779,421 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   setTimeout(function () { pendBuscar(true); }, 1200);
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'visible') pendBuscar(false);
+  });
+
+  /* ---- Misiones (07/10) ----
+     Contenido propio, fuera de las materias: ganchos cortos que el chico elige (3 de 10)
+     y misiones de 5 pasos (apuesta -> dato -> herramienta -> desafio -> cierre) que vienen
+     de misiones.json (raiz del repo, mismo mecanismo que pendientes.json: siempre fresco).
+     No toca XP ni progreso de materias: tiene su propia racha semanal en localStorage.
+     Lo que hace el chico viaja por el evento 'desafio' (materia 'mision') que el Apps
+     Script ya acepta; el texto libre del cierre va por 'reporte' tipo 'mision'.
+     Todo lo que llega del JSON se pinta con textContent. */
+  var MIS_K = 'apuntes_mis';
+  var MIS_DATA = null;
+  var misUltimoFetch = 0;
+  var MIS_PASOS = ['apuesta', 'dato', 'herramienta', 'pregunta', 'cierre'];
+  function misEstado() {
+    var s = null;
+    try { s = JSON.parse(lsGet(MIS_K) || 'null'); } catch (e) {}
+    if (!s || typeof s !== 'object') s = {};
+    if (!Array.isArray(s.g)) s.g = [];
+    if (!s.h || typeof s.h !== 'object') s.h = {};
+    if (!s.r || typeof s.r !== 'object') s.r = { n: 0, w: '' };
+    return s;
+  }
+  function misGuardar(s) { lsSet(MIS_K, JSON.stringify(s)); }
+  function misEv(detalle) { send('desafio', { materia: 'mision', detalle: String(detalle).slice(0, 120) }); }
+  function misSemana(d) {
+    /* semana ISO: "2026-W41" */
+    var x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    var dia = x.getUTCDay() || 7;
+    x.setUTCDate(x.getUTCDate() + 4 - dia);
+    var y0 = new Date(Date.UTC(x.getUTCFullYear(), 0, 1));
+    var n = Math.ceil(((x - y0) / 86400000 + 1) / 7);
+    return x.getUTCFullYear() + '-W' + (n < 10 ? '0' : '') + n;
+  }
+  function misSemanaAnterior(w) {
+    var d = new Date(); d.setDate(d.getDate() - 7);
+    return misSemana(d) === w;
+  }
+  function misEl(tag, cls, txt) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt !== undefined && txt !== null) e.textContent = String(txt);
+    return e;
+  }
+  function misTxt(parent, str) {
+    /* **negrita** y nada mas; el resto es texto plano (white-space: pre-line hace los saltos) */
+    var partes = String(str || '').split('**');
+    for (var i = 0; i < partes.length; i++) {
+      if (!partes[i]) continue;
+      if (i % 2 === 1) parent.appendChild(misEl('strong', '', partes[i]));
+      else parent.appendChild(document.createTextNode(partes[i]));
+    }
+    return parent;
+  }
+  function misNum(n) {
+    n = Math.round(n);
+    var neg = n < 0; n = Math.abs(n);
+    var s = String(n), out = '';
+    while (s.length > 3) { out = '.' + s.slice(-3) + out; s = s.slice(0, -3); }
+    return (neg ? '-' : '') + s + out;
+  }
+  function misDec(x) { return x.toFixed(1).replace('.', ','); }
+  function misPorId(id) {
+    if (!MIS_DATA) return null;
+    for (var i = 0; i < MIS_DATA.misiones.length; i++) if (MIS_DATA.misiones[i].id === id) return MIS_DATA.misiones[i];
+    return null;
+  }
+  function misValida(m) {
+    if (!m || typeof m.id !== 'string' || typeof m.gancho !== 'string' || !Array.isArray(m.pasos) || m.pasos.length !== 5) return false;
+    for (var i = 0; i < 5; i++) if (!m.pasos[i] || m.pasos[i].t !== MIS_PASOS[i]) return false;
+    return true;
+  }
+  function misDisponible(s) {
+    /* primera mision no hecha de un gancho elegido; si no hay, la primera no hecha de cualquiera */
+    if (!MIS_DATA) return null;
+    var ms = MIS_DATA.misiones, i, m;
+    for (i = 0; i < ms.length; i++) { m = ms[i]; if (misValida(m) && !s.h[m.id] && s.g.indexOf(m.gancho) !== -1) return { m: m, propia: true }; }
+    for (i = 0; i < ms.length; i++) { m = ms[i]; if (misValida(m) && !s.h[m.id]) return { m: m, propia: false }; }
+    return null;
+  }
+  function misUltimaHecha(s) {
+    var mejor = null, f = '';
+    for (var id in s.h) { if (s.h[id] && s.h[id].f >= f) { f = s.h[id].f; mejor = id; } }
+    return mejor ? misPorId(mejor) : null;
+  }
+  function misRacha(s) { return s.r && s.r.n ? '🔥 ' + s.r.n + (s.r.n === 1 ? ' semana' : ' semanas') : ''; }
+
+  /* ---------- la banda en el inicio ---------- */
+  function misRender() {
+    var slot = document.getElementById('misSlot');
+    if (!slot || !MIS_DATA) return;
+    var s = misEstado();
+    slot.innerHTML = '';
+    var band = misEl('div', 'mis-band'), cab = misEl('div', 'mis-cab');
+    if (!s.g.length) {
+      cab.appendChild(misEl('span', '', '⚡ Misiones'));
+      band.appendChild(cab);
+      band.appendChild(misEl('p', 'mis-gancho', 'Hay preguntas que no se dan en el colegio.'));
+      band.appendChild(misEl('p', 'mis-sub', 'Elegí 3 temas. Cada misión son 10 minutos y arranca con una apuesta.'));
+      var b0 = misEl('button', 'mis-btn', 'Elegir 3 temas →');
+      b0.addEventListener('click', function () { misAbrirEleccion(false); });
+      band.appendChild(b0);
+      slot.appendChild(band);
+      return;
+    }
+    var disp = misDisponible(s);
+    if (disp) {
+      var m = disp.m;
+      var enCurso = s.cur && s.cur.id === m.id;
+      cab.appendChild(misEl('span', '', disp.propia ? '⚡ Misión de hoy' : '⚡ Mientras tanto'));
+      cab.appendChild(misEl('span', 'mis-racha', misRacha(s)));
+      band.appendChild(cab);
+      band.appendChild(misEl('p', 'mis-gancho', m.titulo));
+      band.appendChild(misEl('p', 'mis-sub', enCurso ? 'La dejaste en el paso ' + ((s.cur.p || 0) + 1) + ' de 5.' : (m.sub || '')));
+      var b1 = misEl('button', 'mis-btn', enCurso ? 'Seguir →' : 'Apostar →');
+      b1.addEventListener('click', function () { misAbrir(m.id); });
+      band.appendChild(b1);
+    } else {
+      var u = misUltimaHecha(s);
+      band.className = 'mis-band hecha';
+      cab.appendChild(misEl('span', '', '✓ Misión hecha'));
+      cab.appendChild(misEl('span', 'mis-racha', misRacha(s)));
+      band.appendChild(cab);
+      band.appendChild(misEl('p', 'mis-gancho', u && u.hecha && u.hecha.titulo ? u.hecha.titulo : 'Ya hiciste todas las misiones.'));
+      band.appendChild(misEl('p', 'mis-sub', u && u.hecha && u.hecha.sub ? u.hecha.sub : 'La próxima llega el domingo.'));
+      if (u && u.hecha && u.hecha.chip) band.appendChild(misEl('span', 'mis-chip', u.hecha.chip));
+      band.appendChild(misEl('p', 'mis-sub', 'La próxima llega el domingo.'));
+    }
+    var l = misEl('button', 'mis-link', 'Cambiar mis 3 temas');
+    l.addEventListener('click', function () { misAbrirEleccion(true); });
+    band.appendChild(l);
+    slot.appendChild(band);
+  }
+
+  /* ---------- elegir 3 de 10 ---------- */
+  function misCapa(titulo, derecha) {
+    var vieja = document.getElementById('misCapa');
+    if (vieja) vieja.remove();
+    var capa = misEl('div', 'mis-capa'); capa.id = 'misCapa';
+    var top = misEl('div', 'mis-top');
+    var cerrar = misEl('button', 'mis-cerrar', '✕'); cerrar.setAttribute('aria-label', 'Cerrar');
+    cerrar.addEventListener('click', function () { capa.remove(); misRender(); });
+    top.appendChild(cerrar);
+    top.appendChild(misEl('b', '', titulo));
+    top.appendChild(misEl('span', '', derecha || ''));
+    capa.appendChild(top);
+    document.body.appendChild(capa);
+    return capa;
+  }
+  function misAbrirEleccion(cambio) {
+    if (!MIS_DATA) return;
+    var s = misEstado(), sel = s.g.slice();
+    var capa = misCapa('Elegí 3', '');
+    var cont = capa.querySelector('.mis-top').lastChild;
+    capa.appendChild(misEl('p', 'mis-nota', 'De estas 10, ¿cuáles querés que te toquen? Después se cambian cuando quieras.'));
+    var conMision = {};
+    for (var k = 0; k < MIS_DATA.misiones.length; k++) conMision[MIS_DATA.misiones[k].gancho] = true;
+    var bOk = misEl('button', 'mis-btn', 'Listo');
+    function pintar() {
+      cont.textContent = sel.length + '/3';
+      bOk.disabled = sel.length !== 3;
+      var ops = capa.querySelectorAll('.mis-op');
+      for (var i = 0; i < ops.length; i++) ops[i].className = 'mis-op' + (sel.indexOf(ops[i].getAttribute('data-g')) !== -1 ? ' sel' : '');
+    }
+    MIS_DATA.ganchos.forEach(function (g) {
+      if (!g || typeof g.id !== 'string') return;
+      var op = misEl('button', 'mis-op'); op.setAttribute('data-g', g.id);
+      op.appendChild(misEl('span', 'mis-tic'));
+      var t = misEl('span', '', g.titulo || g.id);
+      op.appendChild(t);
+      if (conMision[g.id]) op.appendChild(misEl('span', 'mis-chip', 'lista'));
+      op.addEventListener('click', function () {
+        var i = sel.indexOf(g.id);
+        if (i !== -1) sel.splice(i, 1); else if (sel.length < 3) sel.push(g.id);
+        pintar();
+      });
+      capa.appendChild(op);
+    });
+    capa.appendChild(misEl('p', 'mis-nota', 'Los temas con "lista" ya tienen una misión armada. Los otros se arman según lo que elijan.'));
+    var acc = misEl('div', 'mis-acc'); acc.appendChild(bOk); capa.appendChild(acc);
+    bOk.addEventListener('click', function () {
+      if (sel.length !== 3) return;
+      s = misEstado(); s.g = sel.slice(); misGuardar(s);
+      misEv((cambio ? 'ganchos_cambio=' : 'ganchos=') + sel.join(','));
+      capa.remove(); misRender();
+    });
+    pintar();
+  }
+
+  /* ---------- el jugador ---------- */
+  function misAbrir(id) {
+    var m = misPorId(id);
+    if (!misValida(m)) return;
+    var s = misEstado();
+    if (!s.cur || s.cur.id !== id) { s.cur = { id: id, p: 0, t0: Date.now() }; misGuardar(s); misEv('abre=' + id); }
+    misPaso(m, s.cur.p || 0);
+  }
+  function misPaso(m, p) {
+    var s = misEstado();
+    if (!s.cur || s.cur.id !== m.id) s.cur = { id: m.id, p: 0, t0: Date.now() };
+    s.cur.p = p; misGuardar(s);
+    var paso = m.pasos[p];
+    var capa = misCapa(m.titulo, 'Paso ' + (p + 1) + ' de 5');
+    var prog = misEl('div', 'mis-prog'); var pi = misEl('i'); pi.style.width = ((p + 1) * 20) + '%'; prog.appendChild(pi); capa.appendChild(prog);
+    var sig = function (p2) { misEv('paso=' + m.id + ';' + (p2 + 1) + '/5'); misPaso(m, p2); };
+    if (paso.t === 'apuesta') misPasoApuesta(capa, m, paso, s, sig);
+    else if (paso.t === 'dato') misPasoDato(capa, m, paso, s, sig);
+    else if (paso.t === 'herramienta') misPasoHerr(capa, m, paso, s, sig);
+    else if (paso.t === 'pregunta') misPasoPreg(capa, m, paso, s, sig);
+    else misPasoCierre(capa, m, paso, s);
+    capa.scrollTop = 0;
+  }
+  function misPasoApuesta(capa, m, paso, s, sig) {
+    capa.appendChild(misEl('h2', 'mis-h', 'Tu apuesta'));
+    capa.appendChild(misTxt(misEl('p', 'mis-p'), paso.q));
+    var ops = Array.isArray(paso.ops) ? paso.ops : [], elegida = (s.cur.ap === undefined ? -1 : s.cur.ap);
+    var bOk = misEl('button', 'mis-btn', 'Apuesto →'); bOk.disabled = elegida < 0;
+    ops.forEach(function (o, i) {
+      var b = misEl('button', 'mis-op' + (i === elegida ? ' sel' : ''));
+      b.appendChild(misEl('span', 'mis-tic')); b.appendChild(misEl('span', '', o));
+      b.addEventListener('click', function () {
+        elegida = i; bOk.disabled = false;
+        var all = capa.querySelectorAll('.mis-op');
+        for (var k = 0; k < all.length; k++) all[k].className = 'mis-op' + (k === i ? ' sel' : '');
+      });
+      capa.appendChild(b);
+    });
+    capa.appendChild(misEl('p', 'mis-nota', 'No hay respuesta correcta todavía: es lo que vos creés. Al final lo comparamos.'));
+    var acc = misEl('div', 'mis-acc'); acc.appendChild(bOk); capa.appendChild(acc);
+    bOk.addEventListener('click', function () {
+      if (elegida < 0) return;
+      var s2 = misEstado(); s2.cur.ap = elegida; misGuardar(s2);
+      misEv('apuesta=' + m.id + ';op=' + (elegida + 1));
+      sig(1);
+    });
+  }
+  function misPasoDato(capa, m, paso, s, sig) {
+    capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'El dato'));
+    capa.appendChild(misTxt(misEl('p', 'mis-p'), paso.txt));
+    if (paso.fuente) capa.appendChild(misEl('p', 'mis-fuente', 'Fuente: ' + paso.fuente));
+    var b = misEl('button', 'mis-btn', 'Probalo →');
+    b.addEventListener('click', function () { sig(2); });
+    var acc = misEl('div', 'mis-acc'); acc.appendChild(b); capa.appendChild(acc);
+  }
+  function misPasoHerr(capa, m, paso, s, sig) {
+    capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Probalo'));
+    capa.appendChild(misTxt(misEl('p', 'mis-p'), paso.txt));
+    var caja = misEl('div', 'mis-tool'); capa.appendChild(caja);
+    var resumen = function () { return ''; };
+    var pr = paso.params && typeof paso.params === 'object' ? paso.params : {};
+    if (paso.tool === 'ruleta') resumen = misToolRuleta(caja, pr, s);
+    else if (paso.tool === 'cuotas') resumen = misToolCuotas(caja, pr, s);
+    else caja.appendChild(misEl('p', 'mis-nota', 'Esta herramienta no está en esta versión de la app. Actualizala y volvé.'));
+    var b = misEl('button', 'mis-btn', 'Al desafío →');
+    b.addEventListener('click', function () {
+      var s2 = misEstado(); s2.cur.herr = resumen(); misGuardar(s2);
+      misEv('herr=' + m.id + ';' + s2.cur.herr);
+      sig(3);
+    });
+    var acc = misEl('div', 'mis-acc'); acc.appendChild(b); capa.appendChild(acc);
+  }
+  function misToolRuleta(caja, pr, s) {
+    var inicio = Number(pr.inicio) || 1000, ap = Number(pr.apuesta) || 100;
+    var st = (s.cur && s.cur.rul) ? s.cur.rul : { g: 0, w: 0, saldo: inicio };
+    var filas = misEl('div', 'mis-filas');
+    function fila(lbl, cls) { var l = misEl('span', '', lbl), v = misEl('b', '', ''); if (cls) { l.className = cls; v.className = cls; } filas.appendChild(l); filas.appendChild(v); return v; }
+    var vG = fila('Giros'), vW = fila('Ganados / perdidos'), vA = fila('Apostado en total'), vS = fila('Tu saldo', 'mis-grande'), vC = fila('La casa se quedó con'), vE = fila('Lo esperado (2,7 % de lo apostado)');
+    caja.appendChild(filas);
+    var barra = misEl('div', 'mis-saldo'); var bi = misEl('i'); var marca = misEl('em'); barra.appendChild(bi); barra.appendChild(marca); caja.appendChild(barra);
+    var ley = misEl('div', 'mis-leyenda'); ley.appendChild(misEl('span', '', '0')); ley.appendChild(misEl('span', '', 'empezaste: ' + misNum(inicio))); ley.appendChild(misEl('span', '', misNum(inicio * 2))); caja.appendChild(ley);
+    var bts = misEl('div', 'mis-botones');
+    function pintar() {
+      vG.textContent = misNum(st.g); vW.textContent = misNum(st.w) + ' / ' + misNum(st.g - st.w);
+      vA.textContent = misNum(st.g * ap); vS.textContent = misNum(st.saldo) + (st.saldo < 0 ? ' (debés fichas)' : '');
+      var casa = inicio - st.saldo;
+      vC.textContent = (casa >= 0 ? misNum(casa) : '−' + misNum(-casa) + ' (vas ganando)') + (st.g ? ' · ' + misDec(100 * casa / (st.g * ap)) + ' %' : '');
+      vE.textContent = misNum(st.g * ap / 37);
+      bi.style.width = Math.max(0, Math.min(100, 100 * st.saldo / (inicio * 2))) + '%';
+    }
+    [1, 10, 100, 1000].forEach(function (n) {
+      var b = misEl('button', '', 'Girar ' + misNum(n));
+      b.addEventListener('click', function () {
+        for (var i = 0; i < n; i++) { st.g++; if (Math.random() * 37 < 18) { st.w++; st.saldo += ap; } else st.saldo -= ap; }
+        pintar();
+        var s2 = misEstado(); if (s2.cur) { s2.cur.rul = st; misGuardar(s2); }
+      });
+      bts.appendChild(b);
+    });
+    caja.appendChild(bts);
+    pintar();
+    return function () { return 'giros=' + st.g + ';saldo=' + st.saldo; };
+  }
+  function misToolCuotas(caja, pr, s) {
+    var ini = (s.cur && s.cur.cuo) ? s.cur.cuo : { p: Number(pr.precio) || 100000, n: Number(pr.cuotas) || 12, c: Number(pr.cuota) || 11500 };
+    function campo(lbl, val) { caja.appendChild(misEl('label', '', lbl)); var i = document.createElement('input'); i.type = 'number'; i.inputMode = 'numeric'; i.value = val; caja.appendChild(i); return i; }
+    var iP = campo('Precio al contado ($)', ini.p), iN = campo('Cantidad de cuotas', ini.n), iC = campo('Valor de cada cuota ($)', ini.c);
+    var res = misEl('div', 'mis-res'); var filas = misEl('div', 'mis-filas'); res.appendChild(filas); caja.appendChild(res);
+    function fila(lbl, cls) { var l = misEl('span', '', lbl), v = misEl('b', '', ''); if (cls) { l.className = cls; v.className = cls; } filas.appendChild(l); filas.appendChild(v); return v; }
+    var vT = fila('Total que pagás', 'mis-grande'), vR = fila('Recargo'), vM = fila('Tasa por mes'), vA = fila('Tasa por año');
+    var ult = { p: 0, n: 0, c: 0 };
+    function tasa(p, n, c) {
+      if (n * c <= p) return 0;
+      var lo = 0, hi = 2;
+      for (var k = 0; k < 80; k++) { var r = (lo + hi) / 2; var pv = c * (1 - Math.pow(1 + r, -n)) / r; if (pv > p) lo = r; else hi = r; }
+      return (lo + hi) / 2;
+    }
+    function calc() {
+      var p = Number(iP.value) || 0, n = Math.max(1, Math.round(Number(iN.value) || 0)), c = Number(iC.value) || 0;
+      ult = { p: p, n: n, c: c };
+      var tot = n * c, rec = tot - p, r = tasa(p, n, c);
+      vT.textContent = '$ ' + misNum(tot);
+      vR.textContent = (rec >= 0 ? '$ ' + misNum(rec) : '−$ ' + misNum(-rec)) + (p > 0 ? ' (' + misDec(100 * rec / p) + ' %)' : '');
+      vM.textContent = misDec(100 * r) + ' %';
+      vA.textContent = (100 * (Math.pow(1 + r, 12) - 1)).toFixed(0) + ' %';
+      var s2 = misEstado(); if (s2.cur) { s2.cur.cuo = ult; misGuardar(s2); }
+    }
+    [iP, iN, iC].forEach(function (i) { i.addEventListener('input', calc); });
+    calc();
+    return function () { return 'p=' + ult.p + ';n=' + ult.n + ';c=' + ult.c; };
+  }
+  function misPasoPreg(capa, m, paso, s, sig) {
+    capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Desafío'));
+    var items = Array.isArray(paso.items) ? paso.items : [], idx = 0, ok = 0;
+    var zona = misEl('div'); capa.appendChild(zona);
+    var acc = misEl('div', 'mis-acc'); capa.appendChild(acc);
+    function mostrar() {
+      zona.innerHTML = ''; acc.innerHTML = '';
+      if (idx >= items.length) {
+        zona.appendChild(misEl('p', 'mis-p', 'Acertaste ' + ok + ' de ' + items.length + '.'));
+        var b = misEl('button', 'mis-btn', 'Ver qué pasó →');
+        b.addEventListener('click', function () {
+          var s2 = misEstado(); s2.cur.ok = ok; s2.cur.tot = items.length; misGuardar(s2);
+          misEv('desafio=' + m.id + ';ok=' + ok + '/' + items.length);
+          sig(4);
+        });
+        acc.appendChild(b); return;
+      }
+      var it = items[idx];
+      zona.appendChild(misEl('p', 'mis-nota', 'Pregunta ' + (idx + 1) + ' de ' + items.length));
+      zona.appendChild(misTxt(misEl('p', 'mis-p'), it.q));
+      var ops = Array.isArray(it.ops) ? it.ops.slice(0, 4) : [];
+      var orden = ops.map(function (_, i) { return i; });
+      for (var i = orden.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = orden[i]; orden[i] = orden[j]; orden[j] = t; }
+      var contestada = false;
+      orden.forEach(function (oi) {
+        var b = misEl('button', 'mis-op'); b.appendChild(misEl('span', 'mis-tic')); b.appendChild(misEl('span', '', ops[oi]));
+        b.addEventListener('click', function () {
+          if (contestada) return; contestada = true;
+          if (oi === 0) ok++;
+          var all = zona.querySelectorAll('.mis-op');
+          for (var k = 0; k < all.length; k++) {
+            all[k].disabled = true;
+            if (all[k] === b) all[k].className = 'mis-op ' + (oi === 0 ? 'ok' : 'mal');
+            else if (all[k].lastChild.textContent === ops[0]) all[k].className = 'mis-op ok';
+          }
+          zona.appendChild(misTxt(misEl('div', 'mis-exp'), (oi === 0 ? '¡Correcto! ' : '') + (it.exp || '')));
+          var b2 = misEl('button', 'mis-btn', idx + 1 < items.length ? 'Siguiente →' : 'Seguir →');
+          b2.addEventListener('click', function () { idx++; mostrar(); capa.scrollTop = 0; });
+          acc.appendChild(b2);
+        });
+        zona.appendChild(b);
+      });
+    }
+    mostrar();
+  }
+  function misPasoCierre(capa, m, paso, s) {
+    capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Lo que pasó'));
+    var ap = m.pasos[0], cur = s.cur || {};
+    if (ap && Array.isArray(ap.ops) && cur.ap !== undefined && ap.ops[cur.ap] !== undefined) {
+      var pa = misEl('p', 'mis-p'); pa.appendChild(misEl('strong', '', 'Tu apuesta: ')); pa.appendChild(document.createTextNode(ap.ops[cur.ap])); capa.appendChild(pa);
+    }
+    if (cur.rul && cur.rul.g) {
+      var pr = misEl('p', 'mis-p'); pr.appendChild(misEl('strong', '', 'En tu simulación: '));
+      pr.appendChild(document.createTextNode(misNum(cur.rul.g) + ' giros, terminaste con ' + misNum(cur.rul.saldo) + ' fichas.'));
+      capa.appendChild(pr);
+    }
+    capa.appendChild(misTxt(misEl('p', 'mis-p'), paso.txt));
+    if (cur.tot) capa.appendChild(misEl('p', 'mis-nota', 'Desafío: ' + cur.ok + ' de ' + cur.tot + '.'));
+    var ta = null;
+    if (paso.pregunta) {
+      capa.appendChild(misEl('p', 'mis-nota', paso.pregunta));
+      ta = document.createElement('textarea'); ta.maxLength = 400; capa.appendChild(ta);
+    }
+    var b = misEl('button', 'mis-btn', 'Terminar ✓');
+    b.addEventListener('click', function () {
+      var s2 = misEstado();
+      var w = misSemana(new Date());
+      if (s2.r.w !== w) { s2.r.n = misSemanaAnterior(s2.r.w) ? (s2.r.n || 0) + 1 : 1; s2.r.w = w; }
+      s2.h[m.id] = { f: hoy(), ok: cur.ok || 0, ap: cur.ap };
+      var txt = ta && ta.value ? ta.value.trim() : '';
+      delete s2.cur; misGuardar(s2);
+      misEv('fin=' + m.id + ';ok=' + (cur.ok || 0) + '/' + (cur.tot || 0) + ';racha=' + s2.r.n + ';min=' + (cur.t0 ? Math.round((Date.now() - cur.t0) / 60000) : '?'));
+      if (txt) send('reporte', { tipo: 'mision', materia: 'mision', capitulo: m.gancho, pagina: m.id, texto: txt.slice(0, 400) });
+      capa.remove(); misRender();
+    });
+    var acc = misEl('div', 'mis-acc'); acc.appendChild(b); capa.appendChild(acc);
+  }
+
+  /* ---------- traer misiones.json ---------- */
+  function misBuscar(forzar) {
+    var t0 = Date.now();
+    if (!forzar && t0 - misUltimoFetch < 30 * 60 * 1000) return;
+    misUltimoFetch = t0;
+    try {
+      fetch('misiones.json?t=' + t0, { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (j && Array.isArray(j.ganchos) && Array.isArray(j.misiones)) { MIS_DATA = j; misRender(); }
+        })
+        .catch(function () {});
+    } catch (e) {}
+  }
+  setTimeout(function () { misBuscar(true); }, 1500);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') misBuscar(false);
   });
 })();
 
