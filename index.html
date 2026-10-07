@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="21/09 11:54">
+<meta name="apuntes-version" content="06/10 23:21">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2044,6 +2044,33 @@ body {
 }
 @media (prefers-reduced-motion: reduce) { .sp-slot { animation: none; } }
 
+/* ---- Confirmacion pendiente (07/10): el runner pregunta por una foto subida, el chico
+   contesta con un toque. Solo aparece en el dispositivo al que va dirigida. ---- */
+.pend-card {
+  margin: 0 0 16px; padding: 14px 16px; border-radius: 16px;
+  border: 1.5px solid #6f9ad0; background: linear-gradient(135deg, #eef4fd, #dce9fa);
+  color: #1f3550; font-size: 14px; line-height: 1.45; font-family: inherit;
+}
+.pend-card .pend-txt { display: flex; gap: 12px; align-items: flex-start; }
+.pend-card .pend-ico { font-size: 24px; flex-shrink: 0; }
+.pend-card .pend-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.pend-card button {
+  font-family: inherit; font-size: 13.5px; font-weight: 600; padding: 9px 13px;
+  border-radius: 10px; border: 1.5px solid #6f9ad0; background: #fff; color: #1f3550; cursor: pointer;
+}
+.pend-card button.pend-ok { background: #3f6f9e; color: #fff; }
+.pend-card button:active { transform: scale(0.97); }
+.pend-card select {
+  font-family: inherit; font-size: 14px; padding: 9px 10px; border-radius: 10px;
+  border: 1.5px solid #6f9ad0; background: #fff; color: #1f3550; max-width: 100%;
+}
+.pend-card .pend-otra { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.pend-card .pend-gracias { text-align: center; font-weight: 600; }
+[data-theme="dark"] .pend-card { background: linear-gradient(135deg, #1f2a38, #243246); color: #d8e4f3; border-color: #4a6f9a; }
+[data-theme="dark"] .pend-card button { background: #16202c; color: #d8e4f3; border-color: #4a6f9a; }
+[data-theme="dark"] .pend-card button.pend-ok { background: #6f9ad0; color: #0f1720; }
+[data-theme="dark"] .pend-card select { background: #16202c; color: #d8e4f3; border-color: #4a6f9a; }
+
 /* ---- Sugerencias dinámicas del panel de práctica ---- */
 .dash-sug { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .dash-sug:empty { display: none; }
@@ -3264,6 +3291,7 @@ body {
     <h1 class="sp-title" id="spTitleGreeting">Tus apuntes</h1>
     <p class="sp-subtitle">Elegí qué materia querés estudiar hoy.</p>
 
+    <div id="pendSlot"></div>
     <div id="spSlot"></div>
 
     <div class="sp-cards">
@@ -27336,7 +27364,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "21/09 11:54";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "06/10 23:21";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -28588,6 +28616,102 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       });
     }
   }
+
+  /* ---- Confirmaciones pendientes (07/10) ----
+     El runner deja preguntas en pendientes.json (raiz del repo, mismo mecanismo que
+     bloqueos.json: se baja siempre fresco, nunca del cache). Cada pregunta trae el
+     dispositivo al que va dirigida: se muestra solo ahi. La respuesta viaja por el
+     canal de reportes que ya existe (ev 'reporte', tipo 'confirmacion'), asi que no
+     hace falta tocar el Apps Script. Todo lo que llega del JSON se pinta con
+     textContent: es un archivo publico y no se le cree nada. */
+  var PEND_K = 'apuntes_pend_resp';
+  var pendUltimoFetch = 0;
+  function pendContestados() { return (lsGet(PEND_K) || '').split(',').filter(Boolean); }
+  function pendMarcar(id) {
+    var l = pendContestados();
+    if (l.indexOf(id) === -1) l.push(id);
+    lsSet(PEND_K, l.slice(-50).join(','));
+  }
+  function pendEl(tag, cls, txt) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt !== undefined) e.textContent = txt;
+    return e;
+  }
+  function pendResponder(p, respuesta, materia) {
+    send('reporte', { tipo: 'confirmacion', materia: p.materia || '', capitulo: p.tema || '', pagina: p.id,
+                      texto: 'id=' + p.id + '; respuesta=' + respuesta + '; materia=' + (materia || '') });
+    pendMarcar(p.id);
+    var slot = document.getElementById('pendSlot');
+    if (!slot) return;
+    slot.innerHTML = '';
+    var card = pendEl('div', 'pend-card');
+    card.appendChild(pendEl('div', 'pend-gracias', '¡Gracias! Ya lo anoté.'));
+    slot.appendChild(card);
+    setTimeout(function () { if (slot.firstChild === card) slot.innerHTML = ''; }, 2500);
+  }
+  function pendRender(items) {
+    var slot = document.getElementById('pendSlot');
+    if (!slot) return;
+    var yo = deviceId(), hechos = pendContestados(), p = null;
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (it && typeof it.id === 'string' && it.device === yo && hechos.indexOf(it.id) === -1) { p = it; break; }
+    }
+    slot.innerHTML = '';
+    if (!p) return;
+    var card = pendEl('div', 'pend-card');
+    var fila = pendEl('div', 'pend-txt');
+    fila.appendChild(pendEl('span', 'pend-ico', '📷'));
+    var txt = pendEl('span');
+    txt.appendChild(pendEl('strong', '', 'Subiste una foto' + (p.fecha ? ' el ' + String(p.fecha) : '') + '.'));
+    txt.appendChild(document.createTextNode(' La tomé como '));
+    txt.appendChild(pendEl('strong', '', String(p.materia || '?') + (p.tema ? ' · ' + String(p.tema) : '')));
+    txt.appendChild(document.createTextNode('. ¿Está bien?'));
+    fila.appendChild(txt);
+    card.appendChild(fila);
+    var btns = pendEl('div', 'pend-btns');
+    var bOk = pendEl('button', 'pend-ok', '✓ Está bien');
+    var bOtra = pendEl('button', '', 'Es de otra materia…');
+    var bNo = pendEl('button', '', 'No era para la app');
+    btns.appendChild(bOk); btns.appendChild(bOtra); btns.appendChild(bNo);
+    card.appendChild(btns);
+    bOk.addEventListener('click', function () { pendResponder(p, 'ok', p.materia); });
+    bNo.addEventListener('click', function () { pendResponder(p, 'descartar', ''); });
+    bOtra.addEventListener('click', function () {
+      if (card.querySelector('.pend-otra')) return;
+      var fila2 = pendEl('div', 'pend-otra');
+      var sel = document.createElement('select');
+      var ops = Array.isArray(p.opciones) ? p.opciones : [];
+      var vacio = pendEl('option', '', 'Elegí la materia…'); vacio.value = '';
+      sel.appendChild(vacio);
+      for (var k = 0; k < ops.length; k++) {
+        var m = String(ops[k]);
+        if (m === p.materia) continue;
+        var o = pendEl('option', '', m); o.value = m; sel.appendChild(o);
+      }
+      var bConf = pendEl('button', 'pend-ok', 'Confirmar');
+      bConf.addEventListener('click', function () { if (sel.value) pendResponder(p, 'otra', sel.value); });
+      fila2.appendChild(sel); fila2.appendChild(bConf);
+      card.appendChild(fila2);
+    });
+    slot.appendChild(card);
+  }
+  function pendBuscar(forzar) {
+    var t0 = Date.now();
+    if (!forzar && t0 - pendUltimoFetch < 5 * 60 * 1000) return;
+    pendUltimoFetch = t0;
+    try {
+      fetch('pendientes.json?t=' + t0, { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { if (j && Array.isArray(j.pendientes)) pendRender(j.pendientes); })
+        .catch(function () {});
+    } catch (e) {}
+  }
+  setTimeout(function () { pendBuscar(true); }, 1200);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') pendBuscar(false);
+  });
 })();
 
 </script>
