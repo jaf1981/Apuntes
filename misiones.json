@@ -187,6 +187,79 @@
      "pregunta": "¿Viste alguna oferta en cuotas últimamente? ¿Qué decía? (opcional)"
     }
    ]
+  },
+  {
+   "id": "m-cuotas-2",
+   "gancho": "cuotas",
+   "titulo": "\"Sin interés\"… ¿respecto de qué?",
+   "sub": "10 minutos. Arrancás apostando.",
+   "nuevo": "Precio de referencia",
+   "hecha": {
+    "titulo": "Ya sabés contra qué precio comparar.",
+    "sub": "\"Sin interés\" es cierto sólo contra el precio de lista.",
+    "chip": "Nuevo: Precio de referencia"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "Algo sale **$120.000 de lista**. Te ofrecen **contado con 20 % de descuento** o **12 cuotas sin interés de $10.000** (números de ejemplo). ¿Cuánto más pagás si vas en cuotas, comparado con el contado?",
+     "ops": [
+      "Nada: es sin interés",
+      "Unos 10.000 más",
+      "Unos 24.000 más",
+      "Más de 40.000 más"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "Contado: 120.000 menos el 20 % = **96.000**.\nCuotas: 12 × 10.000 = **120.000**.\n\nPagás **24.000 más** por ir en cuotas: un **25 %** sobre lo que pagarías hoy.\n\n\"Sin interés\" es verdad… **respecto del precio de lista**. Pero nadie paga el precio de lista: el que paga hoy paga 96.000. Contra ese precio, las 12 cuotas cobran **3,6 % por mes**, más de **50 % al año**. El descuento por contado y el interés de las cuotas son la misma cosa vista de dos lados.",
+     "fuente": "Cuentas propias con los números del ejemplo, con la misma fórmula que la calculadora del paso que sigue."
+    },
+    {
+     "t": "herramienta",
+     "tool": "cuotas",
+     "titulo": "Calculadora",
+     "txt": "Poné como precio al contado el precio **con descuento** (no el de lista), y en cuotas la oferta \"sin interés\". Mirá el recargo. Después probá con una oferta real: lista, descuento por contado y cuotas.",
+     "params": {
+      "precio": 96000,
+      "cuotas": 12,
+      "cuota": 10000
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "La oferta \"12 cuotas sin interés de $10.000\", ¿respecto de qué precio es sin interés?",
+       "ops": [
+        "Del precio de lista: 120.000",
+        "Del precio al contado: 96.000",
+        "De ninguno: siempre hay interés",
+        "Del total con recargo"
+       ],
+       "exp": "12 × 10.000 = 120.000, igual al precio de lista: contra ese número no hay interés. Contra los 96.000 del contado, hay 24.000 de recargo. Cuando te dicen \"sin interés\", preguntá: ¿respecto de qué precio?"
+      },
+      {
+       "q": "Una bici: lista **$200.000**. Contado con **15 % de descuento**, o **10 cuotas sin interés de $20.000**. ¿Cuánto más pagás en cuotas que al contado?",
+       "ops": [
+        "30.000 más",
+        "Nada: son sin interés",
+        "15.000 más",
+        "60.000 más"
+       ],
+       "exp": "Contado: 200.000 menos 15 % = 170.000. Cuotas: 10 × 20.000 = 200.000. La diferencia son 30.000, casi un 18 % sobre el contado. El \"sin interés\" sólo vale contra la lista."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "Toda comparación necesita un **precio de referencia**: el número contra el que medís. Si lo elige el vendedor, elige el precio de lista, y las cuotas parecen gratis.\n\nEl tuyo es lo que pagarías hoy. Contra ese, las cuotas siempre cuestan algo: lo que no te descuentan.",
+     "pregunta": "¿Alguna vez viste \"descuento por contado\" y \"cuotas sin interés\" en el mismo cartel? ¿Qué decía? (opcional)"
+    }
+   ]
   }
  ]
 }
