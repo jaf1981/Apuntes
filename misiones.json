@@ -69,7 +69,12 @@
      "t": "dato",
      "titulo": "El dato",
      "txt": "La ruleta europea tiene **37 casilleros**: 18 rojos, 18 negros y **un 0 verde**.\nSi apostás al rojo te pagan 1 a 1: ganás lo mismo que pusiste.\n\nGanás 18 de cada 37 veces. Perdés 19 de cada 37, porque **el 0 no es rojo ni negro**.\n\nPor cada 100 fichas que apostás, en promedio perdés 100 × 1/37 = **2,7 fichas**. Parece poco. Ese 2,7 % es toda la ganancia del casino, y le alcanza.",
-     "fuente": "Reglas de la ruleta europea. En la americana (0 y 00) la casa se queda con 5,26 %."
+     "fuente": "Reglas de la ruleta europea. En la americana (0 y 00) la casa se queda con 5,26 %.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "Muchos historiadores creen que la rueda viene de **Blaise Pascal**, un matemático francés del siglo XVII, que buscaba una máquina de movimiento perpetuo: una rueda que girara sola para siempre. No la logró (es imposible), pero la rueda quedó. En París se juega a la ruleta tal como hoy desde **1796**.\n\nEl 0 único es más nuevo: en **1843** dos hermanos franceses, François y Louis Blanc, abrieron un casino en Alemania con ruedas de **un solo cero**, para competir con los casinos que usaban 0 y 00. Menos ventaja para la casa = más jugadores. La casa que gana menos por giro gana más porque juegan más.",
+      "fuente": "Wikipedia, \"Roulette\", sección History (consultada el 07/10/2026)."
+     }
     },
     {
      "t": "herramienta",
@@ -111,7 +116,12 @@
      "t": "cierre",
      "titulo": "Lo que pasó",
      "txt": "Con 50 giros, más o menos 1 de cada 3 jugadores sale con más fichas de las que trajo. Por eso el casino no te prohíbe ganar: te deja ganar hoy, porque sabe que mañana volvés.\n\nA eso se le llama **valor esperado**: lo que ganás o perdés en promedio por jugada. Si es negativo, jugar mucho es perder seguro.",
-     "pregunta": "¿Qué te sorprendió? (opcional)"
+     "preguntas": [
+      "¿Y si la rueda tuviera **dos** ceros, como en Estados Unidos? ¿Cuánto cambia?",
+      "Los Blanc bajaron la ventaja de la casa y ganaron más. ¿Qué otro negocio gana más cobrando menos?",
+      "Un sorteo, una rifa, un juego del celular con cofres: ¿cuál es el \"cero\" de cada uno?"
+     ],
+     "pregunta": "¿Qué te quedaste preguntando? Escribí tu pregunta, la que sea. (opcional)"
     }
    ]
   },
@@ -141,7 +151,12 @@
      "t": "dato",
      "titulo": "El dato",
      "txt": "12 × 11.500 = **138.000**. Pagás 38.000 más: un **38 %** sobre el precio.\n\nPero ese 38 % engaña para el otro lado: no debés los 100.000 durante un año entero, porque cada mes devolvés una parte. Si hacés la cuenta bien, esa oferta cobra **5,3 % por mes**, que es más de **85 % al año**.\n\nEn los anuncios de financiación aparece la sigla **CFT** (costo financiero total): es el número que junta intereses y gastos. Es el que hay que mirar.",
-     "fuente": "Cuentas propias con los números del ejemplo. Cambiá los números en el paso que sigue y la cuenta se rehace."
+     "fuente": "Cuentas propias con los números del ejemplo. Cambiá los números en el paso que sigue y la cuenta se rehace.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "Prestar y cobrar por prestar es más viejo que la moneda. En Mesopotamia, hace más de **4.000 años**, ya se prestaba plata y grano con interés: alrededor del **20 % anual en plata** y del **33 % en grano**, y esas tasas no las fijaba cada prestamista sino los templos y los palacios. El **Código de Hammurabi**, una de las primeras leyes escritas, ya ponía topes a lo que se podía cobrar.\n\nDesde entonces la pelea es la misma: cuánto es justo cobrar por adelantar plata. La cuota \"sin interés\" del anuncio es un capítulo más de esa historia.",
+      "fuente": "History Collection, \"Mesopotamia economics: the first financial system\" (consultado el 07/10/2026)."
+     }
     },
     {
      "t": "herramienta",
@@ -184,7 +199,12 @@
      "t": "cierre",
      "titulo": "Lo que pasó",
      "txt": "La cuota se diseña para que parezca chica. El total es lo que pagás.\n\nA lo que te cobran por prestarte la plata se le llama **tasa de interés**, y se mide por mes o por año. Dos ofertas sólo se comparan con el mismo número: total pagado, o tasa.",
-     "pregunta": "¿Viste alguna oferta en cuotas últimamente? ¿Qué decía? (opcional)"
+     "preguntas": [
+      "¿Por qué un banco presta plata, si el que la recibe puede no devolverla? ¿Qué cobra por ese riesgo?",
+      "Si los precios suben todos los meses, ¿la cuota fija de dentro de un año vale lo mismo que la de hoy?",
+      "¿Quién decidió, hace 4.000 años, que 20 % era el tope? ¿Por qué ese número y no otro?"
+     ],
+     "pregunta": "¿Qué te quedaste preguntando? Escribí tu pregunta, la que sea. (opcional)"
     }
    ]
   },
@@ -257,7 +277,12 @@
      "t": "cierre",
      "titulo": "Lo que pasó",
      "txt": "Toda comparación necesita un **precio de referencia**: el número contra el que medís. Si lo elige el vendedor, elige el precio de lista, y las cuotas parecen gratis.\n\nEl tuyo es lo que pagarías hoy. Contra ese, las cuotas siempre cuestan algo: lo que no te descuentan.",
-     "pregunta": "¿Alguna vez viste \"descuento por contado\" y \"cuotas sin interés\" en el mismo cartel? ¿Qué decía? (opcional)"
+     "preguntas": [
+      "¿Quién pone el precio de lista, y para qué sirve si nadie lo paga?",
+      "¿Qué le conviene al negocio: que pagues hoy con descuento o en 12 cuotas? ¿Por qué?",
+      "¿Hay otras cosas que se anuncian contra un precio que nadie paga?"
+     ],
+     "pregunta": "¿Qué te quedaste preguntando? Escribí tu pregunta, la que sea. (opcional)"
     }
    ]
   },
@@ -287,7 +312,12 @@
      "t": "dato",
      "titulo": "El dato",
      "txt": "Un estudio miró **286 penales** de ligas profesionales y anotó a dónde fue la pelota y a dónde fue el arquero.\n\nLos arqueros se tiraron a un lado el **44,4 %** de las veces, al otro el **49,3 %**, y se quedaron en el medio sólo el **6,3 %**: 6 de cada 100.\n\nLas pelotas, en cambio, fueron a un lado el 39,2 %, al otro el 32,2 % y **al medio el 28,7 %**: casi 3 de cada 10.\n\nO sea: el lugar al que van 3 de cada 10 penales es el lugar que el arquero deja libre 94 veces de cada 100.",
-     "fuente": "Bar-Eli y otros (2007), Journal of Economic Psychology, 286 penales. Cifras tomadas del gráfico de The Guardian (2023) que cita ese estudio."
+     "fuente": "Bar-Eli y otros (2007), Journal of Economic Psychology, 286 penales. Cifras tomadas del gráfico de The Guardian (2023) que cita ese estudio.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "El penal no existió siempre. Hasta **1891**, si un defensor frenaba la pelota con la mano en la línea, el castigo era un tiro libre indirecto: casi nada. Un arquero irlandés, **William McCrum**, del club Milford, propuso un tiro desde 12 yardas con el arquero solo. La idea entró a las reglas en 1891 y los ingleses la llamaron con desprecio \"la moción del irlandés\". El punto del penal se pintó recién en **1902**.\n\nO sea: una regla que hoy parece parte del fútbol la inventó una persona porque vio un problema concreto. Y cada regla nueva cambia cómo juegan todos.",
+      "fuente": "Outside Write, \"The Irishman's motion and the birth of the penalty kick\" (consultado el 07/10/2026)."
+     }
     },
     {
      "t": "herramienta",
@@ -337,7 +367,91 @@
      "t": "cierre",
      "titulo": "Lo que pasó",
      "txt": "El arquero no adivina: elige, y elige lo que queda mejor, no lo que rinde más. Eso pasa mucho más allá del fútbol: un médico que receta algo \"por hacer algo\", alguien que vende todo cuando la bolsa baja.\n\nY para el pateador hay otra lección: cuando todos esperan que hagas lo de siempre, lo raro rinde. Si pateás siempre al mismo lado, te leen; si mezclás, no. A eso se le llama **estrategia mixta**.",
-     "pregunta": "¿A dónde patearías vos un penal importante, y por qué? (opcional)"
+     "preguntas": [
+      "Si todos los arqueros leyeran este estudio y se quedaran en el medio, ¿qué harían los pateadores? ¿Y después?",
+      "¿Qué otra cosa hacés \"porque queda mejor\" aunque no rinda? ¿Y qué hace la gente grande por lo mismo?",
+      "McCrum inventó el penal por un problema de 1891. ¿Qué regla le falta al fútbol de hoy, y para qué problema?"
+     ],
+     "pregunta": "¿Qué te quedaste preguntando? Escribí tu pregunta, la que sea. (opcional)"
+    }
+   ]
+  },
+  {
+   "id": "m-foto-1",
+   "gancho": "foto",
+   "titulo": "¿Qué es una foto, en realidad?",
+   "sub": "10 minutos. Arrancás apostando. Vas a necesitar una foto tuya.",
+   "nuevo": "Píxel",
+   "hecha": {
+    "titulo": "Ya sabés qué es una foto.",
+    "sub": "Una tabla de números. Millones. Y quien escribe la tabla, escribe la foto.",
+    "chip": "Nuevo: Píxel"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "Una foto de 12 megapíxeles, de las que saca cualquier celular. ¿Cuántos **números** creés que hacen falta para guardarla?",
+     "ops": [
+      "Doce: uno por megapíxel",
+      "Unos 12.000",
+      "Unos 12 millones",
+      "Unos 36 millones"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "Una imagen es una grilla de puntitos: **píxeles**. Cada píxel no sabe nada de caras ni de paisajes: son **tres números**, cuánto rojo, cuánto verde y cuánto azul, cada uno de 0 a 255.\n\n12 megapíxeles son 12.000.000 de píxeles. Por 3: **36.000.000 de números**. Eso es una foto: una tabla de 36 millones de números, nada más. Si cada número ocupa 1 byte, son 36 MB; el archivo JPG pesa mucho menos porque está comprimido.\n\nY acá está la diferencia que importa: **la cámara mide luz** y escribe esos números según lo que había enfrente. **Una IA calcula números** que parecen una foto, sin que haya nada enfrente. El resultado es la misma tabla; lo que cambia es de dónde salieron los números.",
+     "fuente": "Aritmética: 3 números por píxel (RGB, 8 bits cada uno). Los tamaños exactos cambian con cada celular; 12 MP es un valor común.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "La primera foto de la historia la hizo **Nicéphore Niépce** en Francia, en 1826 o 1827: una vista desde su ventana, sobre una placa de metal con betún, con una exposición de **ocho horas**. Todavía existe, en un museo de Texas.\n\nLa primera cámara digital la armó **Steven Sasson** en Kodak, en diciembre de **1975**: pesaba 3,6 kilos, tardaba **23 segundos** en capturar una imagen de **100 × 100 píxeles** (0,01 megapíxeles) y la grababa en un cassette. De 10.000 píxeles en 1975 a 12.000.000 en tu bolsillo: eso es evolución, y pasó en menos de una vida.",
+      "fuente": "Digital Camera World (2025) sobre la foto de Niépce; ETHW/IEEE, \"Milestones: Handheld Digital Camera, 1975\"."
+     }
+    },
+    {
+     "t": "herramienta",
+     "tool": "pixeles",
+     "titulo": "Lupa de píxeles",
+     "txt": "Elegí una foto de tu teléfono y tocala en cualquier parte: vas a ver los píxeles de alrededor agrandados y los tres números del que tocaste. Probá en un borde, en el cielo, en una cara. Buscá un píxel casi blanco (los tres números altos) y uno casi negro.",
+     "params": {}
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "Un píxel tiene los números **255, 255, 255**. ¿De qué color es?",
+       "ops": [
+        "Blanco: los tres al máximo",
+        "Negro: los tres al máximo se anulan",
+        "Rojo, porque el primero es el rojo",
+        "Gris: están todos iguales"
+       ],
+       "exp": "Rojo, verde y azul al máximo, mezclados como luz, dan blanco. Negro es 0, 0, 0 (nada de luz). Un gris es los tres iguales pero intermedios, como 128, 128, 128."
+      },
+      {
+       "q": "Dos fotos de la misma plaza: una sacada con una cámara, otra generada por una IA. Si abrís las dos con la lupa, ¿qué ves?",
+       "ops": [
+        "Las dos son grillas de píxeles con tres números cada uno: no se distinguen",
+        "La generada por IA tiene píxeles más grandes y eso se nota enseguida en la grilla",
+        "La de la cámara tiene colores que una IA todavía no puede fabricar",
+        "La de la IA no tiene píxeles de verdad: es otro tipo de archivo distinto"
+       ],
+       "exp": "Las dos son la misma clase de cosa: una tabla de números. Por eso \"mirar de cerca\" no alcanza para saber cuál es cuál. Lo que cambia es el origen de los números, y eso es lo que vamos a buscar en la próxima misión."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "Una foto es una tabla de millones de números. Quien sabe escribir esa tabla, escribe una foto: una cámara la escribe midiendo luz, una IA la escribe calculando. Por eso la pregunta \"¿es real?\" no se contesta mirando los píxeles: se contesta preguntando **de dónde salieron**.\n\nLo mismo vale para un video (muchas fotos por segundo) y para un audio (una lista de números que dicen cuánto se mueve el parlante).",
+     "preguntas": [
+      "Si una foto son 36 millones de números, ¿por qué el archivo pesa 3 MB y no 36? ¿Qué se tira y por qué no se nota?",
+      "De 100 × 100 píxeles en 1975 a 12 millones hoy. ¿Qué viene después, y para qué sirve tener más?",
+      "Un dibujo hecho a mano, ¿también es una tabla de números? ¿Cuándo pasa a serlo?"
+     ],
+     "pregunta": "¿Qué te quedaste preguntando? Escribí tu pregunta, la que sea. (opcional)"
     }
    ]
   }

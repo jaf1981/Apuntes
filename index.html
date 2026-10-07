@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="07/10 16:10">
+<meta name="apuntes-version" content="07/10 18:15">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2138,6 +2138,15 @@ body {
 .mis-tool .mis-res { margin-top: 12px; }
 .mis-capa textarea { width: 100%; min-height: 76px; font-family: "Crimson Pro", Georgia, serif; font-size: 16px; padding: 10px; border-radius: 10px;
   border: 1.5px solid var(--border); background: var(--bg-elev); color: var(--text); resize: vertical; margin-bottom: 12px; }
+/* 07/10 (2a tanda): historia detras, preguntas abiertas y lupa de pixeles */
+.mis-h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; margin: 18px 0 8px; }
+.mis-hist { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 2px; }
+.mis-preg { margin: 0 0 14px 20px; font-family: "Crimson Pro", Georgia, serif; font-size: 16.5px; line-height: 1.45; }
+.mis-preg li { margin-bottom: 6px; }
+.mis-file { display: block; width: 100%; font-family: "Manrope", sans-serif; font-size: 14px; margin: 6px 0 10px; color: var(--text); }
+.mis-prev { display: block; max-width: 100%; height: auto; border-radius: 10px; border: 1.5px solid var(--border); cursor: crosshair; touch-action: none; }
+.mis-lupa { display: block; max-width: 100%; height: auto; margin: 10px auto 10px; border-radius: 8px; image-rendering: pixelated; }
+.mis-tool .mis-filas .mis-chico b { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
 
 /* ---- Sugerencias dinámicas del panel de práctica ---- */
 .dash-sug { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
@@ -27433,7 +27442,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "07/10 16:10";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "07/10 18:15";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -29022,6 +29031,14 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'El dato'));
     capa.appendChild(misTxt(misEl('p', 'mis-p'), paso.txt));
     if (paso.fuente) capa.appendChild(misEl('p', 'mis-fuente', 'Fuente: ' + paso.fuente));
+    if (paso.historia && paso.historia.txt) {
+      /* la historia detras (07/10, pedido de Javier): quien tuvo el problema y como evoluciono la solucion */
+      var hb = misEl('div', 'mis-hist');
+      hb.appendChild(misEl('h3', 'mis-h3', paso.historia.titulo || 'La historia detrás'));
+      hb.appendChild(misTxt(misEl('p', 'mis-p'), paso.historia.txt));
+      if (paso.historia.fuente) hb.appendChild(misEl('p', 'mis-fuente', 'Fuente: ' + paso.historia.fuente));
+      capa.appendChild(hb);
+    }
     var b = misEl('button', 'mis-btn', 'Probalo →');
     b.addEventListener('click', function () { sig(2); });
     var acc = misEl('div', 'mis-acc'); acc.appendChild(b); capa.appendChild(acc);
@@ -29035,6 +29052,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     if (paso.tool === 'ruleta') resumen = misToolRuleta(caja, pr, s);
     else if (paso.tool === 'cuotas') resumen = misToolCuotas(caja, pr, s);
     else if (paso.tool === 'penales') resumen = misToolPenales(caja, pr, s);
+    else if (paso.tool === 'pixeles') resumen = misToolPixeles(caja, pr, s);
     else caja.appendChild(misEl('p', 'mis-nota', 'Esta herramienta no está en esta versión de la app. Actualizala y volvé.'));
     var b = misEl('button', 'mis-btn', 'Al desafío →');
     b.addEventListener('click', function () {
@@ -29158,6 +29176,81 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     pintar();
     return function () { return 'pat=' + st.p.n + '/' + st.p.gol + ';ataj=' + st.a.n + '/' + st.a.ataj + ';porPat=' + st.p.por.join('-') + ';porAtaj=' + st.a.por.join('-'); };
   }
+  function misToolPixeles(caja, pr, s) {
+    /* Lupa de pixeles (07/10, serie "foto" 1/3). El chico elige una foto de su telefono; la app la
+       dibuja en un canvas y, al tocar, muestra la grilla de pixeles alrededor y los tres numeros
+       (R, G, B, 0-255) del pixel tocado, tambien en binario. Nada sale del telefono: la foto no se
+       sube a ningun lado; a las metricas va solo cuantas fotos probo y el tamano en pixeles. */
+    var st = (s.cur && s.cur.pix) ? s.cur.pix : { fotos: 0, ult: '' };
+    var N = 9, CEL = 30;
+    caja.appendChild(misEl('p', 'mis-nota', 'La foto no sale de tu teléfono: se mira acá y nada más.'));
+    var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.className = 'mis-file';
+    caja.appendChild(inp);
+    var dims = misEl('p', 'mis-nota', 'Elegí una foto (mejor una sacada con la cámara).'); caja.appendChild(dims);
+    var prev = document.createElement('canvas'); prev.className = 'mis-prev'; prev.style.display = 'none'; caja.appendChild(prev);
+    var ayuda = misEl('p', 'mis-nota', ''); caja.appendChild(ayuda);
+    var lupa = document.createElement('canvas'); lupa.width = N * CEL; lupa.height = N * CEL; lupa.className = 'mis-lupa'; lupa.style.display = 'none'; caja.appendChild(lupa);
+    var filas = misEl('div', 'mis-filas'); filas.style.display = 'none'; caja.appendChild(filas);
+    function fila(lbl, cls) { var l = misEl('span', '', lbl), v = misEl('b', '', ''); if (cls) { l.className = cls; v.className = cls; } filas.appendChild(l); filas.appendChild(v); return v; }
+    var vPos = fila('Píxel tocado (columna, fila)'), vR = fila('Rojo'), vG = fila('Verde'), vB = fila('Azul'), vBin = fila('Los mismos tres números en binario', 'mis-chico');
+    var ctxP = prev.getContext('2d', { willReadFrequently: true }), ctxL = lupa.getContext('2d');
+    var escala = 1, natW = 0, natH = 0;
+    function bin(n) { var t = n.toString(2); while (t.length < 8) t = '0' + t; return t; }
+    function mirar(cx, cy) {
+      var W = prev.width, H = prev.height;
+      cx = Math.max(0, Math.min(W - 1, Math.round(cx))); cy = Math.max(0, Math.min(H - 1, Math.round(cy)));
+      var x0 = Math.max(0, Math.min(W - N, cx - (N - 1) / 2)), y0 = Math.max(0, Math.min(H - N, cy - (N - 1) / 2));
+      var d = ctxP.getImageData(x0, y0, N, N).data;
+      ctxL.clearRect(0, 0, lupa.width, lupa.height);
+      for (var j = 0; j < N; j++) for (var i = 0; i < N; i++) {
+        var k = (j * N + i) * 4;
+        ctxL.fillStyle = 'rgb(' + d[k] + ',' + d[k + 1] + ',' + d[k + 2] + ')';
+        ctxL.fillRect(i * CEL, j * CEL, CEL, CEL);
+      }
+      ctxL.strokeStyle = 'rgba(0,0,0,.25)'; ctxL.lineWidth = 1;
+      for (var g = 0; g <= N; g++) { ctxL.beginPath(); ctxL.moveTo(g * CEL + .5, 0); ctxL.lineTo(g * CEL + .5, N * CEL); ctxL.stroke(); ctxL.beginPath(); ctxL.moveTo(0, g * CEL + .5); ctxL.lineTo(N * CEL, g * CEL + .5); ctxL.stroke(); }
+      var ci = cx - x0, cj = cy - y0, kc = (cj * N + ci) * 4;
+      ctxL.strokeStyle = '#fff'; ctxL.lineWidth = 3; ctxL.strokeRect(ci * CEL + 1.5, cj * CEL + 1.5, CEL - 3, CEL - 3);
+      ctxL.strokeStyle = '#000'; ctxL.lineWidth = 1; ctxL.strokeRect(ci * CEL + 3, cj * CEL + 3, CEL - 6, CEL - 6);
+      lupa.style.display = 'block'; filas.style.display = '';
+      vPos.textContent = misNum(Math.round(cx * escala)) + ', ' + misNum(Math.round(cy * escala));
+      vR.textContent = d[kc]; vG.textContent = d[kc + 1]; vB.textContent = d[kc + 2];
+      vBin.textContent = bin(d[kc]) + ' ' + bin(d[kc + 1]) + ' ' + bin(d[kc + 2]);
+      st.ult = d[kc] + ',' + d[kc + 1] + ',' + d[kc + 2];
+      var s2 = misEstado(); if (s2.cur) { s2.cur.pix = st; misGuardar(s2); }
+    }
+    function cargar(file) {
+      if (!file) return;
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () {
+        natW = img.naturalWidth; natH = img.naturalHeight;
+        var maxW = Math.min(640, caja.clientWidth - 28 || 320);
+        escala = Math.max(1, natW / maxW);
+        prev.width = Math.max(N, Math.round(natW / escala)); prev.height = Math.max(N, Math.round(natH / escala));
+        ctxP.drawImage(img, 0, 0, prev.width, prev.height);
+        prev.style.display = 'block'; lupa.style.display = 'none'; filas.style.display = 'none';
+        var tot = natW * natH;
+        dims.textContent = 'Esta foto tiene ' + misNum(natW) + ' × ' + misNum(natH) + ' = ' + misNum(tot) + ' píxeles. Cada píxel son 3 números: ' + misNum(tot * 3) + ' números en total.';
+        ayuda.textContent = 'Tocá un punto de la foto para ver sus píxeles de cerca.';
+        st.fotos++; st.px = natW + 'x' + natH;
+        var s2 = misEstado(); if (s2.cur) { s2.cur.pix = st; misGuardar(s2); }
+        URL.revokeObjectURL(url);
+      };
+      img.onerror = function () { dims.textContent = 'No pude abrir esa imagen. Probá con otra.'; URL.revokeObjectURL(url); };
+      img.src = url;
+    }
+    inp.addEventListener('change', function () { cargar(inp.files && inp.files[0]); });
+    function tocar(ev) {
+      var r = prev.getBoundingClientRect();
+      var p = ev.touches && ev.touches[0] ? ev.touches[0] : ev;
+      var sx = prev.width / r.width, sy = prev.height / r.height;
+      mirar((p.clientX - r.left) * sx, (p.clientY - r.top) * sy);
+      if (ev.cancelable) ev.preventDefault();
+    }
+    prev.addEventListener('click', tocar);
+    prev.addEventListener('touchstart', tocar, { passive: false });
+    return function () { return 'fotos=' + st.fotos + ';px=' + (st.px || '-') + ';ult=' + (st.ult || '-'); };
+  }
   function misPasoPreg(capa, m, paso, s, sig) {
     capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Desafío'));
     var items = Array.isArray(paso.items) ? paso.items : [], idx = 0, ok = 0;
@@ -29209,6 +29302,11 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     if (ap && Array.isArray(ap.ops) && cur.ap !== undefined && ap.ops[cur.ap] !== undefined) {
       var pa = misEl('p', 'mis-p'); pa.appendChild(misEl('strong', '', 'Tu apuesta: ')); pa.appendChild(document.createTextNode(ap.ops[cur.ap])); capa.appendChild(pa);
     }
+    if (cur.pix && cur.pix.fotos) {
+      var px = misEl('p', 'mis-p'); px.appendChild(misEl('strong', '', 'En tu simulación: '));
+      px.appendChild(document.createTextNode('miraste ' + misNum(cur.pix.fotos) + (cur.pix.fotos === 1 ? ' foto' : ' fotos') + ' de cerca' + (cur.pix.px ? ' (la última, de ' + cur.pix.px.replace('x', ' × ') + ' píxeles)' : '') + '.'));
+      capa.appendChild(px);
+    }
     if (cur.pen && (cur.pen.p.n || cur.pen.a.n)) {
       var pp = misEl('p', 'mis-p'); pp.appendChild(misEl('strong', '', 'En tu simulación: '));
       pp.appendChild(document.createTextNode('pateaste ' + misNum(cur.pen.p.n) + ' (' + misNum(cur.pen.p.gol) + ' goles) y atajaste ' + misNum(cur.pen.a.n) + ' (' + misNum(cur.pen.a.ataj) + ' atajadas).'));
@@ -29221,6 +29319,13 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     }
     capa.appendChild(misTxt(misEl('p', 'mis-p'), paso.txt));
     if (cur.tot) capa.appendChild(misEl('p', 'mis-nota', 'Desafío: ' + cur.ok + ' de ' + cur.tot + '.'));
+    if (Array.isArray(paso.preguntas) && paso.preguntas.length) {
+      /* preguntas que la mision deja abiertas a proposito (07/10): el modelo de pregunta que queremos que se haga */
+      capa.appendChild(misEl('h3', 'mis-h3', 'Para seguir pensando'));
+      var ul = misEl('ul', 'mis-preg');
+      paso.preguntas.slice(0, 4).forEach(function (q) { ul.appendChild(misTxt(misEl('li'), q)); });
+      capa.appendChild(ul);
+    }
     var ta = null;
     if (paso.pregunta) {
       capa.appendChild(misEl('p', 'mis-nota', paso.pregunta));
