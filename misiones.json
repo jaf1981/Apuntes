@@ -544,6 +544,87 @@
      "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
     }
    ]
+  },
+  {
+   "id": "m-foto-2",
+   "gancho": "foto",
+   "titulo": "¿Se puede saber si una foto es falsa?",
+   "sub": "10 minutos. Arrancás apostando. Vas a necesitar una foto tuya.",
+   "nuevo": "Metadatos",
+   "hecha": {
+    "titulo": "Ya sabés por qué mirar no alcanza.",
+    "sub": "La pregunta útil no es si parece real: es de dónde salió.",
+    "chip": "Nuevo: Metadatos"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "Te muestran caras: algunas son fotos de personas reales y otras las inventó una IA. ¿Qué porcentaje creés que acierta la gente?",
+     "ops": [
+      "Casi todas: una cara falsa se nota",
+      "Unas 7 u 8 de cada 10",
+      "La mitad: como tirar una moneda",
+      "Menos de 3 de cada 10"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "Acordate de la misión anterior: una foto es una tabla de números, y una IA sabe escribir esa tabla.\n\nEn 2022, dos investigadores le mostraron caras reales e inventadas a **315 personas**. Acertaron el **48,2 %**: lo mismo que tirar una moneda. Con entrenamiento, otras 219 personas llegaron al **59 %**. Y lo más raro: a otras 223 personas las caras inventadas les parecieron **más confiables** que las reales.\n\nAhora sumale esto: un estudio de 2018 siguió unas **126.000 noticias** que compartieron 3 millones de personas en Twitter. Lo falso tenía un **70 % más** de chances de ser compartido, y llegaba a 1.500 personas **seis veces más rápido** que lo cierto. Y no lo empujaban robots: lo compartía la gente.\n\nMirar no alcanza. Hay que preguntar **de dónde salió**.",
+     "fuente": "Nightingale y Farid, PNAS (2022), vía Scientific American; Vosoughi, Roy y Aral, Science (2018), vía MIT Sloan.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "En julio de **1917**, en el pueblo inglés de Cottingley, Elsie Wright, de 16 años, le sacó una foto a su prima Frances, de 10, rodeada de hadas bailando. Las hadas eran dibujos copiados de un libro para chicos, recortados y clavados en el pasto con alfileres.\n\nEn 1920, **Arthur Conan Doyle**, el autor de Sherlock Holmes, publicó las fotos en una revista como prueba de que las hadas existían. Las primas recién confesaron el truco en **1983**: 66 años después. No hizo falta una IA: alcanzó con que alguien famoso las creyera y las mostrara.",
+      "fuente": "Leeds University Library, \"Fooled by fairies\"; SPR Psi Encyclopedia, \"Cottingley Fairies\"."
+     }
+    },
+    {
+     "t": "herramienta",
+     "tool": "metadatos",
+     "titulo": "Lo que el archivo dice de sí mismo",
+     "txt": "Además de la tabla de números, muchas fotos traen una etiqueta escondida: los **metadatos**. Dicen con qué cámara se sacó, cuándo, con qué programa se editó y a veces dónde.\n\nElegí una foto tuya y mirá qué dice. Después probá con la foto de ejemplo. Si tu teléfono achica la foto al elegirla, puede borrarle los datos: eso también es parte de la respuesta.",
+     "params": {
+      "ejemplo": "data:image/jpeg;base64,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AI5KkHqpBwR+BBFT/wBsaWc/8TK04/6br/jVCa+sF1BGt723kF0211SVWO/A2nr0IXB99uOprODs7FSV0W6KKK3MgooooAKKKKACiiigAooooAKKKKACiiigAooooAKpaL/yA7D/AK9o/wD0EVdqlov/ACA7D/r2j/8AQRQBdooooAKKKKACiiigAooooAKKKKAKVj/x+al/18j/ANFR1dqlY/8AH5qX/XyP/RUdXaEDCiiigAooooAKKKKACiiigAorziiuL63/AHSeY9Horziij63/AHQ5j0eivOKKPrf90OY9Horziij63/dDmPR6paL/AMgOw/69o/8A0EVwtMhUpBGrDBCgH8qPrXkPmPSqK84oo+t/3Rcx6PRXnFFH1v8AuhzHo9FecUUfW/7ocx6PRXnFFH1v+6HMej0V5xRR9b/uhzHdWP8Ax+al/wBfI/8ARUdXa81RSHkJHDNkfkKfR9at0G5Ho9FecUUfW/7ouY9Horziij63/dDmPR6K84oo+t/3Q5j0eivOKKPrf90OYKKKK4iQooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/2Q=="
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "Una foto que se volvió viral **no trae ningún metadato**. ¿Qué podés concluir?",
+       "ops": [
+        "Todavía nada: pudo perderlos al compartirse, hay que ver de dónde salió",
+        "Que es falsa, porque una foto real siempre trae sus datos de cámara",
+        "Que es real, porque una IA siempre deja escrito su nombre dentro del archivo",
+        "Que la sacó un celular viejo, de esos que no guardaban datos"
+       ],
+       "exp": "Que no tenga datos no prueba nada: WhatsApp y las redes los borran, y también una captura de pantalla. Para saber de dónde salió hay que buscarla: quién la publicó primero y cuándo."
+      },
+      {
+       "q": "La foto de ejemplo dice que la sacó una cámara en **1917**. ¿Qué muestra eso?",
+       "ops": [
+        "Que los metadatos se escriben a mano: son pista, no prueba",
+        "Que la foto es de verdad de 1917, porque el archivo lo dice así",
+        "Que en 1917 ya había cámaras digitales que guardaban metadatos",
+        "Que la lupa de píxeles de la misión anterior estaba mal hecha"
+       ],
+       "exp": "Esos datos los escribimos nosotros, a propósito. Igual que las hadas de Cottingley: lo que la foto dice de sí misma no alcanza. Sirve como pista, y hay que cruzarla con otras."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "Ni mirando de cerca (la mitad de las veces la gente se equivoca) ni leyendo el archivo (los datos se borran y se inventan) se puede estar seguro. Lo que sí funciona es investigar el **origen**: buscar la imagen en internet con una búsqueda por imagen y ver dónde apareció antes, quién la publicó primero y si otros la vieron.\n\nY el momento que más importa es uno solo: **antes de reenviar**. Ahí decidís vos si sos de los que la hacen viajar seis veces más rápido.",
+     "preguntas": [
+      "Si lo falso viaja seis veces más rápido, ¿qué tendría que pasar para que lo cierto lo alcance?",
+      "¿Por qué una cara inventada nos parecería más confiable que una real?",
+      "Las hadas de Cottingley engañaron a un escritor famoso durante 66 años. ¿Qué foto que viste este año podría ser una Cottingley?"
+     ],
+     "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
+    }
+   ]
   }
  ]
 }

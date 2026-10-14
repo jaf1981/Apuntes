@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="07/10 18:15">
+<meta name="apuntes-version" content="13/10 22:00">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2138,6 +2138,15 @@ body {
 .mis-tool .mis-res { margin-top: 12px; }
 .mis-capa textarea { width: 100%; min-height: 76px; font-family: "Crimson Pro", Georgia, serif; font-size: 16px; padding: 10px; border-radius: 10px;
   border: 1.5px solid var(--border); background: var(--bg-elev); color: var(--text); resize: vertical; margin-bottom: 12px; }
+/* 07/10 (2a tanda): historia detras, preguntas abiertas y lupa de pixeles */
+.mis-h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; margin: 18px 0 8px; }
+.mis-hist { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 2px; }
+.mis-preg { margin: 0 0 14px 20px; font-family: "Crimson Pro", Georgia, serif; font-size: 16.5px; line-height: 1.45; }
+.mis-preg li { margin-bottom: 6px; }
+.mis-file { display: block; width: 100%; font-family: "Manrope", sans-serif; font-size: 14px; margin: 6px 0 10px; color: var(--text); }
+.mis-prev { display: block; max-width: 100%; height: auto; border-radius: 10px; border: 1.5px solid var(--border); cursor: crosshair; touch-action: none; }
+.mis-lupa { display: block; max-width: 100%; height: auto; margin: 10px auto 10px; border-radius: 8px; image-rendering: pixelated; }
+.mis-tool .mis-filas .mis-chico b { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
 /* 07/10 (2a tanda): historia detras, preguntas abiertas y lupa de pixeles */
 .mis-h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; margin: 18px 0 8px; }
 .mis-hist { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 2px; }
@@ -27442,7 +27451,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "07/10 18:15";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "13/10 22:00";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -28872,8 +28881,10 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     return null;
   }
   function misUltimaHecha(s) {
-    var mejor = null, f = '';
-    for (var id in s.h) { if (s.h[id] && s.h[id].f >= f) { f = s.h[id].f; mejor = id; } }
+    /* 13/10: hoy() no rellena con ceros ("2026-10-7"), asi que la fecha se compara como numero, no como texto */
+    var mejor = null, f = -1;
+    function num(x) { var p = String(x || '').split('-'); return p.length === 3 ? (+p[0]) * 10000 + (+p[1]) * 100 + (+p[2]) : 0; }
+    for (var id in s.h) { if (s.h[id] && num(s.h[id].f) >= f) { f = num(s.h[id].f); mejor = id; } }
     return mejor ? misPorId(mejor) : null;
   }
   function misRacha(s) { return s.r && s.r.n ? '🔥 ' + s.r.n + (s.r.n === 1 ? ' semana' : ' semanas') : ''; }
@@ -29053,6 +29064,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     else if (paso.tool === 'cuotas') resumen = misToolCuotas(caja, pr, s);
     else if (paso.tool === 'penales') resumen = misToolPenales(caja, pr, s);
     else if (paso.tool === 'pixeles') resumen = misToolPixeles(caja, pr, s);
+    else if (paso.tool === 'metadatos') resumen = misToolMetadatos(caja, pr, s);
     else caja.appendChild(misEl('p', 'mis-nota', 'Esta herramienta no está en esta versión de la app. Actualizala y volvé.'));
     var b = misEl('button', 'mis-btn', 'Al desafío →');
     b.addEventListener('click', function () {
@@ -29251,6 +29263,120 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     prev.addEventListener('touchstart', tocar, { passive: false });
     return function () { return 'fotos=' + st.fotos + ';px=' + (st.px || '-') + ';ult=' + (st.ult || '-'); };
   }
+  function misLeerMeta(buf) {
+    /* Lee lo minimo de los metadatos de una foto, sin librerias: tipo de archivo y, si es JPEG con
+       bloque EXIF, marca/modelo de camara, programa, fecha y si trae ubicacion (sin leer coordenadas). */
+    var r = { tipo: 'desconocido', exif: false, campos: {}, gps: false };
+    var v; try { v = new DataView(buf); } catch (e) { return r; }
+    var L = v.byteLength;
+    if (L >= 4 && v.getUint16(0) === 0xFFD8) {
+      r.tipo = 'JPEG';
+      var off = 2;
+      while (off + 4 <= L) {
+        var m = v.getUint16(off);
+        if ((m & 0xFF00) !== 0xFF00) break;
+        var len = v.getUint16(off + 2);
+        if (m === 0xFFE1 && off + 10 <= L && v.getUint32(off + 4) === 0x45786966) { misLeerTiff(v, off + 10, r); break; }
+        if (m === 0xFFDA || len < 2) break;
+        off += 2 + len;
+      }
+    } else if (L >= 8 && v.getUint32(0) === 0x89504E47) {
+      r.tipo = 'PNG';
+    } else if (L >= 12 && String.fromCharCode(v.getUint8(4), v.getUint8(5), v.getUint8(6), v.getUint8(7)) === 'ftyp') {
+      r.tipo = 'HEIC u otro formato del teléfono';
+    }
+    return r;
+  }
+  function misLeerTiff(v, t, r) {
+    var L = v.byteLength;
+    if (t + 8 > L) return;
+    var le = v.getUint16(t) === 0x4949;
+    function u16(o) { return v.getUint16(o, le); }
+    function u32(o) { return v.getUint32(o, le); }
+    if (u16(t + 2) !== 42) return;
+    r.exif = true;
+    function ifd(o, tags) {
+      var out = {};
+      if (!o || t + o + 2 > L) return out;
+      var n = u16(t + o);
+      for (var i = 0; i < n && i < 300; i++) {
+        var e = t + o + 2 + i * 12;
+        if (e + 12 > L) break;
+        var tag = u16(e), nombre = tags[tag];
+        if (!nombre) continue;
+        var tipo = u16(e + 2), cnt = u32(e + 4);
+        if (tipo === 2) {
+          var p = cnt > 4 ? t + u32(e + 8) : e + 8, txt = '';
+          for (var k = 0; k < cnt - 1 && k < 80 && p + k < L; k++) txt += String.fromCharCode(v.getUint8(p + k));
+          out[nombre] = txt.replace(/\s+$/, '');
+        } else if (tipo === 4) out[nombre] = u32(e + 8);
+        else if (tipo === 3) out[nombre] = u16(e + 8);
+        else out[nombre] = true;
+      }
+      return out;
+    }
+    var d0 = ifd(u32(t + 4), { 0x010F: 'marca', 0x0110: 'modelo', 0x0131: 'programa', 0x0132: 'fecha', 0x8769: 'pexif', 0x8825: 'pgps' });
+    ['marca', 'modelo', 'programa', 'fecha'].forEach(function (k) { if (typeof d0[k] === 'string' && d0[k]) r.campos[k] = d0[k]; });
+    if (d0.pexif) { var ex = ifd(d0.pexif, { 0x9003: 'fechaOrig' }); if (ex.fechaOrig) r.campos.fecha = ex.fechaOrig; }
+    if (d0.pgps) { var g = ifd(d0.pgps, { 0x0002: 'lat', 0x0004: 'lon' }); r.gps = !!(g.lat || g.lon); }
+  }
+  function misToolMetadatos(caja, pr, s) {
+    /* Lector de metadatos (13/10, serie "foto" 2/3). El chico elige una foto de su telefono (o la de
+       ejemplo, que viene en misiones.json con metadatos escritos a mano a proposito) y ve que dice el
+       archivo de si mismo. Nada sale del telefono; la ubicacion no se muestra: solo si existe. A las
+       metricas va solo cuantas fotos probo, cuantas traian datos y si probo la de ejemplo. */
+    var st = (s.cur && s.cur.meta) ? s.cur.meta : { fotos: 0, conDatos: 0, gps: 0, ejemplo: 0 };
+    caja.appendChild(misEl('p', 'mis-nota', 'La foto no sale de tu teléfono: se lee acá y nada más.'));
+    var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.className = 'mis-file';
+    caja.appendChild(inp);
+    var bEj = null;
+    if (typeof pr.ejemplo === 'string' && pr.ejemplo.indexOf('data:image/jpeg;base64,') === 0) {
+      bEj = misEl('button', 'mis-btn sec', 'Probar con la foto de ejemplo');
+      bEj.style.marginTop = '4px';
+      caja.appendChild(bEj);
+    }
+    var prev = document.createElement('img'); prev.className = 'mis-prev'; prev.alt = ''; prev.style.display = 'none'; prev.style.marginTop = '10px';
+    caja.appendChild(prev);
+    var filas = misEl('div', 'mis-filas'); filas.style.display = 'none'; filas.style.marginTop = '10px'; caja.appendChild(filas);
+    function fila(lbl) { var l = misEl('span', '', lbl), v = misEl('b', '', ''); filas.appendChild(l); filas.appendChild(v); return v; }
+    var vTipo = fila('Tipo de archivo'), vTam = fila('Tamaño'), vCam = fila('Cámara'), vFecha = fila('Fecha que dice'), vProg = fila('Programa'), vGps = fila('Ubicación');
+    var veredicto = misEl('div', 'mis-exp'); veredicto.style.display = 'none'; caja.appendChild(veredicto);
+    function guardar() { var s2 = misEstado(); if (s2.cur) { s2.cur.meta = st; misGuardar(s2); } }
+    function mostrar(meta, url, esEjemplo) {
+      prev.src = url; prev.style.display = 'block';
+      prev.onload = function () { vTam.textContent = misNum(prev.naturalWidth) + ' × ' + misNum(prev.naturalHeight) + ' píxeles'; };
+      var c = meta.campos, hay = !!(c.marca || c.modelo || c.fecha || c.programa || meta.gps);
+      vTipo.textContent = meta.tipo;
+      vCam.textContent = (c.marca || c.modelo) ? ((c.marca || '') + ' ' + (c.modelo || '')).trim() : 'no dice';
+      vFecha.textContent = c.fecha ? c.fecha.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$3/$2/$1') : 'no dice';
+      vProg.textContent = c.programa || 'no dice';
+      vGps.textContent = meta.gps ? 'sí: dice dónde estabas (no la mostramos)' : 'no dice';
+      filas.style.display = ''; veredicto.style.display = '';
+      veredicto.innerHTML = '';
+      var t;
+      if (esEjemplo) t = 'Esta foto dice que la sacó una cámara en **' + (c.fecha ? c.fecha.slice(0, 4) : '?') + '**. Esos datos los escribimos nosotros a mano, en un minuto. Los metadatos son una pista, no una prueba: se pueden borrar y se pueden inventar.';
+      else if (hay) t = 'Esta foto trae su etiqueta: dice con qué se sacó' + (c.fecha ? ' y cuándo' : '') + (meta.gps ? ', y hasta dónde' : '') + '. Si la mandás por WhatsApp, casi todo eso se borra.';
+      else t = 'Esta foto no trae datos de origen. Puede ser una captura, una foto que pasó por una red social, o tu teléfono los borró al elegirla. Que no tenga datos **no prueba que sea falsa**: sólo que el archivo no cuenta de dónde viene.';
+      misTxt(veredicto, t);
+      st.fotos++; if (hay) st.conDatos++; if (meta.gps) st.gps++; if (esEjemplo) st.ejemplo = 1;
+      guardar();
+    }
+    inp.addEventListener('change', function () {
+      var f = inp.files && inp.files[0]; if (!f) return;
+      var rd = new FileReader();
+      rd.onload = function () { var meta = misLeerMeta(rd.result); mostrar(meta, URL.createObjectURL(f), false); };
+      rd.onerror = function () { veredicto.style.display = ''; veredicto.textContent = 'No pude leer ese archivo. Probá con otro.'; };
+      rd.readAsArrayBuffer(f);
+    });
+    if (bEj) bEj.addEventListener('click', function () {
+      try {
+        var b64 = pr.ejemplo.split(',')[1], bin = atob(b64), arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        mostrar(misLeerMeta(arr.buffer), pr.ejemplo, true);
+      } catch (e) {}
+    });
+    return function () { return 'fotos=' + st.fotos + ';conDatos=' + st.conDatos + ';gps=' + st.gps + ';ejemplo=' + st.ejemplo; };
+  }
   function misPasoPreg(capa, m, paso, s, sig) {
     capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Desafío'));
     var items = Array.isArray(paso.items) ? paso.items : [], idx = 0, ok = 0;
@@ -29301,6 +29427,11 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     var ap = m.pasos[0], cur = s.cur || {};
     if (ap && Array.isArray(ap.ops) && cur.ap !== undefined && ap.ops[cur.ap] !== undefined) {
       var pa = misEl('p', 'mis-p'); pa.appendChild(misEl('strong', '', 'Tu apuesta: ')); pa.appendChild(document.createTextNode(ap.ops[cur.ap])); capa.appendChild(pa);
+    }
+    if (cur.meta && cur.meta.fotos) {
+      var pm = misEl('p', 'mis-p'); pm.appendChild(misEl('strong', '', 'En tu simulación: '));
+      pm.appendChild(document.createTextNode('leíste ' + misNum(cur.meta.fotos) + (cur.meta.fotos === 1 ? ' foto' : ' fotos') + '; ' + misNum(cur.meta.conDatos) + ' traían datos de origen.'));
+      capa.appendChild(pm);
     }
     if (cur.pix && cur.pix.fotos) {
       var px = misEl('p', 'mis-p'); px.appendChild(misEl('strong', '', 'En tu simulación: '));
