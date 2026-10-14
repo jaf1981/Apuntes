@@ -1,5 +1,5 @@
 {
- "version": "07/10",
+ "version": "13/10",
  "ganchos": [
   {
    "id": "casa",
@@ -450,6 +450,96 @@
       "Si una foto son 36 millones de números, ¿por qué el archivo pesa 3 MB y no 36? ¿Qué se tira y por qué no se nota?",
       "De 100 × 100 píxeles en 1975 a 12 millones hoy. ¿Qué viene después, y para qué sirve tener más?",
       "Un dibujo hecho a mano, ¿también es una tabla de números? ¿Cuándo pasa a serlo?"
+     ],
+     "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
+    }
+   ]
+  },
+  {
+   "id": "m-penales-2",
+   "gancho": "penales",
+   "titulo": "¿Y si pateás siempre al medio?",
+   "sub": "10 minutos. Arrancás apostando. Segunda de penales.",
+   "nuevo": "Estrategia mixta",
+   "hecha": {
+    "titulo": "Ya sabés por qué los profesionales mezclan.",
+    "sub": "Contra un arquero que te mira, lo único que no se puede leer es una moneda.",
+    "chip": "Nuevo: Estrategia mixta"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "En el simulador de la misión anterior, patear **al medio** entraba casi siempre. En las ligas de Francia e Italia, de cada **100 penales** profesionales, ¿cuántos creés que van al medio?",
+     "ops": [
+      "Casi ninguno: menos de 5",
+      "Entre 5 y 10",
+      "Entre 15 y 20",
+      "Más de 30"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "Otro estudio miró **459 penales** de primera división de **Francia e Italia** y anotó a dónde fue la pelota, a dónde fue el arquero y si fue gol. \"Lado natural\" es el que te queda cómodo con el empeine: para un derecho, su izquierda.\n\nLos pateadores fueron al lado natural **45** de cada 100 veces, al otro lado 38 y **al medio 17**. Los arqueros se tiraron al lado natural 57 de cada 100, al otro 41 y se quedaron en el medio **2**.\n\nY acá viene lo que el simulador no te contó: cuando el arquero **adivinó** el lado natural, **igual entraron 63 de cada 100**. Cuando adivinó el otro lado, 44. El único lugar donde adivinar ataja todo es el medio: pasó 3 veces en 459. Al medio entraron 81 de cada 100; al lado natural, 77; al otro, 70.\n\nEntonces, ¿por qué no patean todos al medio, si es donde más entra? Porque un arquero que te vio tres penales al medio **se queda parado en el cuarto**. En el simulador no: el arquero del simulador patea el penal 300 igual que el 1. En la cancha, el rival **aprende**.",
+     "fuente": "Chiappori, Levitt y Groseclose (2002), American Economic Review, 459 penales de Francia e Italia; tablas reproducidas en el curso Networks de la Universidad de Cornell. Porcentajes redondeados.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "En **1928**, un matemático húngaro de 24 años, **John von Neumann**, demostró un teorema sobre los juegos donde lo que uno gana el otro lo pierde (como un penal): existe una forma de jugar que te garantiza lo mejor posible **aunque el rival te conozca**, y casi siempre consiste en **mezclar** las jugadas al azar, en ciertas proporciones. Lo llamó **minimax**. En 1944 escribió con Oskar Morgenstern el libro que fundó la teoría de juegos.\n\nSetenta años después, el economista **Ignacio Palacios-Huerta** miró **1.417 penales** (1995-2000) para ver si los jugadores hacían lo que decía el teorema. Lo hacían: la teoría decía que el pateador tenía que ir a su lado natural unas 6 de cada 10 veces, y el arquero algo parecido, y las proporciones reales eran casi idénticas, sin que ninguno hubiera leído a von Neumann. En 2008 asesoró al Chelsea antes de la final de la Champions: esa noche Anelka pateó a su lado natural y Van der Sar se la atajó. La matemática mejora las chances; no garantiza un penal.\n\nY el medio tiene inventor: el **20 de junio de 1976**, en la final de la Eurocopa, el checoslovaco **Antonín Panenka** picó la pelota al medio mientras Sepp Maier se tiraba a un lado. La había practicado **dos años**. Funcionó porque nadie lo esperaba; hoy la jugada lleva su nombre y los arqueros la esperan.",
+      "fuente": "historyofinformation.com (von Neumann, Mathematische Annalen 1928; libro de 1944); curso Networks de Cornell y Fathom Consulting sobre Palacios-Huerta (2003); The42.ie (2018), entrevista a Palacios-Huerta; Radio Prague International y Wikipedia sobre Panenka."
+     }
+    },
+    {
+     "t": "herramienta",
+     "tool": "penales",
+     "titulo": "Probalo vos",
+     "txt": "Esta vez el arquero y el pateador se mueven como en Francia e Italia. **Izquierda = lado natural.** Pateá: buscá el lugar que más rinde y repetilo 20 veces; mirá el %. Después atajá: ¿a dónde conviene tirarse siempre?\n\nRepetir te va a rendir. Fijate por qué: el del simulador **no te mira**. Un arquero de verdad, después de tres al mismo lugar, ya sabe.\n\n**Simplificación del simulador:** acá, si el arquero va a donde va la pelota, ataja. En Francia e Italia, aun así entraban 63 de cada 100.",
+     "params": {
+      "arquero": [
+       56.6,
+       2.4,
+       41.0
+      ],
+      "pateador": [
+       44.9,
+       17.2,
+       37.9
+      ]
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "En Francia e Italia, cuando el arquero adivinó el lado natural, igual entraron **63 de cada 100**. ¿Qué dice eso del simulador?",
+       "ops": [
+        "Que exagera al arquero: adivinar el lado no alcanza para atajar",
+        "Que los arqueros de Francia e Italia atajan peor que el promedio",
+        "Que los pateadores profesionales casi nunca van a su lado natural",
+        "Que en la realidad el arquero que adivina el lado ataja siempre"
+       ],
+       "exp": "El simulador simplifica: si el arquero va a donde va la pelota, ataja. En la realidad, adivinar el lado es sólo una parte: la pelota puede ir fuerte, alta o al palo. Por eso el simulador ataja más de lo que ataja un arquero de verdad."
+      },
+      {
+       "q": "Según la teoría, ¿qué le pasaría a un profesional que pateara **siempre al medio**?",
+       "ops": [
+        "Los arqueros lo estudiarían y se quedarían parados: el medio dejaría de rendir",
+        "Seguiría entrando 8 de cada 10, porque los arqueros nunca se quedan en el medio",
+        "El árbitro lo obligaría a cambiar de lado después de tres penales iguales",
+        "Ganaría siempre, porque patear al medio es la jugada perfecta de von Neumann"
+       ],
+       "exp": "El medio rinde **porque casi nadie lo espera**. Si vos lo hacés siempre, el rival aprende y deja de rendir. Lo que dice von Neumann es lo contrario de \"la jugada perfecta\": **mezclar** para que no haya nada que aprender. A eso se le llama **estrategia mixta**."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "Contra un rival que **no aprende** (el simulador), repetí lo que más rinde. Contra uno que **te mira**, mezclá, y mezclá de verdad: sin patrón, como una moneda. Si vos no podés predecir tu próximo penal, el arquero tampoco.\n\nLos profesionales lo hacen sin haber leído el teorema: mezclan casi en las proporciones exactas que calculó un matemático en 1928. Y lo mismo pasa en el tenis (¿saque abierto o al cuerpo?), en el póker y en cualquier juego donde el otro te estudia.",
+     "preguntas": [
+      "Para mezclar bien hay que ser impredecible. ¿Podés vos elegir \"al azar\"? Escribí 20 letras I y D sin patrón: ¿alguien podría adivinar la que sigue?",
+      "¿En qué otro juego o situación conviene ser impredecible? ¿Y en cuál conviene lo contrario: que todos sepan exactamente qué vas a hacer?",
+      "Palacios-Huerta le vendió sus cuentas al Chelsea. Si todos los equipos contratan matemáticos, ¿se anulan entre sí? ¿Quién gana entonces?"
      ],
      "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
     }
