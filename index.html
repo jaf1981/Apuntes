@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="14/10 22:20">
+<meta name="apuntes-version" content="15/10 09:30">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2149,24 +2149,6 @@ body {
 .mis-tool .mis-filas .mis-chico b { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
 .mis-hash { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 14px; letter-spacing: 1px; line-height: 1.5; padding: 8px 10px; border-radius: 8px; border: 1.5px solid var(--border); word-break: break-all; }
 .mis-hash .dif { color: var(--accent); font-weight: 700; text-decoration: underline; }
-/* 07/10 (2a tanda): historia detras, preguntas abiertas y lupa de pixeles */
-.mis-h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; margin: 18px 0 8px; }
-.mis-hist { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 2px; }
-.mis-preg { margin: 0 0 14px 20px; font-family: "Crimson Pro", Georgia, serif; font-size: 16.5px; line-height: 1.45; }
-.mis-preg li { margin-bottom: 6px; }
-.mis-file { display: block; width: 100%; font-family: "Manrope", sans-serif; font-size: 14px; margin: 6px 0 10px; color: var(--text); }
-.mis-prev { display: block; max-width: 100%; height: auto; border-radius: 10px; border: 1.5px solid var(--border); cursor: crosshair; touch-action: none; }
-.mis-lupa { display: block; max-width: 100%; height: auto; margin: 10px auto 10px; border-radius: 8px; image-rendering: pixelated; }
-.mis-tool .mis-filas .mis-chico b { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
-/* 07/10 (2a tanda): historia detras, preguntas abiertas y lupa de pixeles */
-.mis-h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; margin: 18px 0 8px; }
-.mis-hist { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 2px; }
-.mis-preg { margin: 0 0 14px 20px; font-family: "Crimson Pro", Georgia, serif; font-size: 16.5px; line-height: 1.45; }
-.mis-preg li { margin-bottom: 6px; }
-.mis-file { display: block; width: 100%; font-family: "Manrope", sans-serif; font-size: 14px; margin: 6px 0 10px; color: var(--text); }
-.mis-prev { display: block; max-width: 100%; height: auto; border-radius: 10px; border: 1.5px solid var(--border); cursor: crosshair; touch-action: none; }
-.mis-lupa { display: block; max-width: 100%; height: auto; margin: 10px auto 10px; border-radius: 8px; image-rendering: pixelated; }
-.mis-tool .mis-filas .mis-chico b { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
 
 /* ---- Sugerencias dinámicas del panel de práctica ---- */
 .dash-sug { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
@@ -27462,7 +27444,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "14/10 22:20";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "15/10 09:30";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -29507,7 +29489,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   }
   function misPasoPreg(capa, m, paso, s, sig) {
     capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Desafío'));
-    var items = Array.isArray(paso.items) ? paso.items : [], idx = 0, ok = 0;
+    var items = Array.isArray(paso.items) ? paso.items : [], idx = 0, ok = 0, fallos = [];
     var zona = misEl('div'); capa.appendChild(zona);
     var acc = misEl('div', 'mis-acc'); capa.appendChild(acc);
     function mostrar() {
@@ -29517,7 +29499,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         var b = misEl('button', 'mis-btn', 'Ver qué pasó →');
         b.addEventListener('click', function () {
           var s2 = misEstado(); s2.cur.ok = ok; s2.cur.tot = items.length; misGuardar(s2);
-          misEv('desafio=' + m.id + ';ok=' + ok + '/' + items.length);
+          misEv('desafio=' + m.id + ';ok=' + ok + '/' + items.length + (fallos.length ? ';fallo=' + fallos.join(',') : ''));  /* fallo= nº de pregunta fallada (15/10, pedido de Javier) */
           sig(4);
         });
         acc.appendChild(b); return;
@@ -29533,7 +29515,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         var b = misEl('button', 'mis-op'); b.appendChild(misEl('span', 'mis-tic')); b.appendChild(misEl('span', '', ops[oi]));
         b.addEventListener('click', function () {
           if (contestada) return; contestada = true;
-          if (oi === 0) ok++;
+          if (oi === 0) ok++; else fallos.push(idx + 1);
           var all = zona.querySelectorAll('.mis-op');
           for (var k = 0; k < all.length; k++) {
             all[k].disabled = true;
