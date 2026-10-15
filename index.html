@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="13/10 22:00">
+<meta name="apuntes-version" content="14/10 22:20">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2138,6 +2138,17 @@ body {
 .mis-tool .mis-res { margin-top: 12px; }
 .mis-capa textarea { width: 100%; min-height: 76px; font-family: "Crimson Pro", Georgia, serif; font-size: 16px; padding: 10px; border-radius: 10px;
   border: 1.5px solid var(--border); background: var(--bg-elev); color: var(--text); resize: vertical; margin-bottom: 12px; }
+/* 07/10 (2a tanda): historia detras, preguntas abiertas y lupa de pixeles */
+.mis-h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; margin: 18px 0 8px; }
+.mis-hist { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 2px; }
+.mis-preg { margin: 0 0 14px 20px; font-family: "Crimson Pro", Georgia, serif; font-size: 16.5px; line-height: 1.45; }
+.mis-preg li { margin-bottom: 6px; }
+.mis-file { display: block; width: 100%; font-family: "Manrope", sans-serif; font-size: 14px; margin: 6px 0 10px; color: var(--text); }
+.mis-prev { display: block; max-width: 100%; height: auto; border-radius: 10px; border: 1.5px solid var(--border); cursor: crosshair; touch-action: none; }
+.mis-lupa { display: block; max-width: 100%; height: auto; margin: 10px auto 10px; border-radius: 8px; image-rendering: pixelated; }
+.mis-tool .mis-filas .mis-chico b { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.mis-hash { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 14px; letter-spacing: 1px; line-height: 1.5; padding: 8px 10px; border-radius: 8px; border: 1.5px solid var(--border); word-break: break-all; }
+.mis-hash .dif { color: var(--accent); font-weight: 700; text-decoration: underline; }
 /* 07/10 (2a tanda): historia detras, preguntas abiertas y lupa de pixeles */
 .mis-h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; margin: 18px 0 8px; }
 .mis-hist { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 2px; }
@@ -27451,7 +27462,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "13/10 22:00";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "14/10 22:20";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -29065,6 +29076,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     else if (paso.tool === 'penales') resumen = misToolPenales(caja, pr, s);
     else if (paso.tool === 'pixeles') resumen = misToolPixeles(caja, pr, s);
     else if (paso.tool === 'metadatos') resumen = misToolMetadatos(caja, pr, s);
+    else if (paso.tool === 'huella') resumen = misToolHuella(caja, pr, s);
     else caja.appendChild(misEl('p', 'mis-nota', 'Esta herramienta no está en esta versión de la app. Actualizala y volvé.'));
     var b = misEl('button', 'mis-btn', 'Al desafío →');
     b.addEventListener('click', function () {
@@ -29377,6 +29389,122 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     });
     return function () { return 'fotos=' + st.fotos + ';conDatos=' + st.conDatos + ';gps=' + st.gps + ';ejemplo=' + st.ejemplo; };
   }
+  function misSha256(bytes) {
+    /* SHA-256 (FIPS 180-4) sin librerias y sincronico: funciona igual en http, file y cualquier telefono.
+       Devuelve los 64 caracteres hexadecimales. Probado contra hashlib de Python (probar_foto3.py). */
+    var K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2];
+    var H = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+    var n = bytes.length, tot = ((n + 9 + 63) >> 6) << 6, m = new Uint8Array(tot);
+    m.set(bytes); m[n] = 0x80;
+    var bits = n * 8, hi = Math.floor(bits / 4294967296), lo = bits >>> 0;
+    m[tot - 8] = hi >>> 24; m[tot - 7] = (hi >>> 16) & 255; m[tot - 6] = (hi >>> 8) & 255; m[tot - 5] = hi & 255;
+    m[tot - 4] = lo >>> 24; m[tot - 3] = (lo >>> 16) & 255; m[tot - 2] = (lo >>> 8) & 255; m[tot - 1] = lo & 255;
+    var w = new Array(64);
+    function ror(x, r) { return (x >>> r) | (x << (32 - r)); }
+    for (var off = 0; off < tot; off += 64) {
+      for (var i = 0; i < 16; i++) w[i] = (m[off + 4 * i] << 24) | (m[off + 4 * i + 1] << 16) | (m[off + 4 * i + 2] << 8) | m[off + 4 * i + 3];
+      for (i = 16; i < 64; i++) {
+        var s0 = ror(w[i - 15], 7) ^ ror(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+        var s1 = ror(w[i - 2], 17) ^ ror(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+      }
+      var a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+      for (i = 0; i < 64; i++) {
+        var t1 = (h + (ror(e, 6) ^ ror(e, 11) ^ ror(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + w[i]) | 0;
+        var t2 = ((ror(a, 2) ^ ror(a, 13) ^ ror(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+      H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+      H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+    }
+    var out = '';
+    for (i = 0; i < 8; i++) out += ('00000000' + (H[i] >>> 0).toString(16)).slice(-8);
+    return out;
+  }
+  function misToolHuella(caja, pr, s) {
+    /* Huella digital de un archivo (15/10, serie "foto" 3/3). Se calcula la huella (SHA-256) de una foto
+       (la de ejemplo o una del telefono), se cambia UN byte y se ve que la huella cambia casi entera; se
+       vuelve al original y la huella vuelve a coincidir: asi se verifica una prueba. Nada sale del telefono.
+       A las metricas va solo cuantas fotos, cuantos cambios y si verifico el original. */
+    var st = (s.cur && s.cur.hue) ? s.cur.hue : { fotos: 0, cambios: 0, verif: 0 };
+    caja.appendChild(misEl('p', 'mis-nota', 'La foto no sale de tu teléfono: la huella se calcula acá.'));
+    var bEj = null;
+    if (typeof pr.ejemplo === 'string' && pr.ejemplo.indexOf('data:image/jpeg;base64,') === 0) {
+      bEj = misEl('button', 'mis-btn sec', 'Usar la foto de ejemplo');
+      caja.appendChild(bEj);
+    }
+    var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.className = 'mis-file';
+    inp.style.marginTop = '6px'; caja.appendChild(inp);
+    var zona = misEl('div'); zona.style.display = 'none'; zona.style.marginTop = '10px'; caja.appendChild(zona);
+    var lblA = misEl('p', 'mis-nota', ''); zona.appendChild(lblA);
+    var hA = misEl('div', 'mis-hash'); zona.appendChild(hA);
+    var acc = misEl('div'); acc.style.marginTop = '8px'; zona.appendChild(acc);
+    var bCam = misEl('button', 'mis-btn sec', 'Cambiar 1 solo byte'); acc.appendChild(bCam);
+    var bVol = misEl('button', 'mis-btn sec', 'Volver al original'); bVol.style.marginTop = '6px'; acc.appendChild(bVol);
+    var lblB = misEl('p', 'mis-nota', ''); lblB.style.marginTop = '10px'; zona.appendChild(lblB);
+    var hB = misEl('div', 'mis-hash'); zona.appendChild(hB);
+    var veredicto = misEl('div', 'mis-exp'); veredicto.style.display = 'none'; zona.appendChild(veredicto);
+    var orig = null, hOrig = '', idx = -1;
+    function guardar() { var s2 = misEstado(); if (s2.cur) { s2.cur.hue = st; misGuardar(s2); } }
+    function pintar(div, hx, ref) {
+      /* 64 caracteres en 4 renglones de 16; si hay referencia, se marcan los que cambiaron */
+      div.innerHTML = '';
+      for (var r = 0; r < 4; r++) {
+        var lin = misEl('div', '');
+        for (var c = 0; c < 16; c++) {
+          var k = r * 16 + c, sp = misEl('span', ref && ref.charAt(k) !== hx.charAt(k) ? 'dif' : '', hx.charAt(k));
+          lin.appendChild(sp);
+        }
+        div.appendChild(lin);
+      }
+    }
+    function cargar(bytes, nombre) {
+      orig = bytes; hOrig = misSha256(orig);
+      idx = Math.floor(orig.length * 0.6);
+      while (idx < orig.length - 1 && (orig[idx] >= 0xFE || orig[idx - 1] === 0xFF)) idx++;
+      lblA.textContent = 'Huella de ' + nombre + ' (' + misNum(orig.length) + ' bytes):';
+      pintar(hA, hOrig, null);
+      lblB.textContent = ''; hB.innerHTML = ''; veredicto.style.display = 'none';
+      zona.style.display = '';
+      st.fotos++; guardar();
+    }
+    bCam.addEventListener('click', function () {
+      if (!orig) return;
+      var mod = new Uint8Array(orig); mod[idx] = mod[idx] ^ 1;
+      var h2 = misSha256(mod), n = 0;
+      for (var k = 0; k < 64; k++) if (h2.charAt(k) !== hOrig.charAt(k)) n++;
+      lblB.textContent = 'Huella con 1 byte cambiado (el nº ' + misNum(idx + 1) + ' de ' + misNum(orig.length) + '):';
+      pintar(hB, h2, hOrig);
+      veredicto.style.display = ''; veredicto.innerHTML = '';
+      misTxt(veredicto, 'Cambiaste **1 byte de ' + misNum(orig.length) + '** y cambiaron **' + n + ' de los 64 caracteres** de la huella (marcados). A simple vista la foto sería igual; para la huella es otra foto.');
+      st.cambios++; guardar();
+    });
+    bVol.addEventListener('click', function () {
+      if (!orig) return;
+      var h3 = misSha256(orig);
+      lblB.textContent = 'Huella calculada de nuevo, con el original:';
+      pintar(hB, h3, hOrig);
+      veredicto.style.display = ''; veredicto.innerHTML = '';
+      misTxt(veredicto, h3 === hOrig ? 'Coincide **carácter por carácter** con la primera. Eso es lo que se hace en un juicio: si la huella de hoy es igual a la que se anotó el día que se secuestró la prueba, el archivo no cambió ni un byte.' : 'No coincide: algo cambió.');
+      if (h3 === hOrig) st.verif = 1;
+      guardar();
+    });
+    if (bEj) bEj.addEventListener('click', function () {
+      try {
+        var bin = atob(pr.ejemplo.split(',')[1]), arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        cargar(arr, 'la foto de ejemplo');
+      } catch (e) {}
+    });
+    inp.addEventListener('change', function () {
+      var f = inp.files && inp.files[0]; if (!f) return;
+      var rd = new FileReader();
+      rd.onload = function () { cargar(new Uint8Array(rd.result), 'tu foto'); };
+      rd.onerror = function () { zona.style.display = ''; veredicto.style.display = ''; veredicto.textContent = 'No pude leer ese archivo. Probá con otro.'; };
+      rd.readAsArrayBuffer(f);
+    });
+    return function () { return 'fotos=' + st.fotos + ';cambios=' + st.cambios + ';verif=' + st.verif; };
+  }
   function misPasoPreg(capa, m, paso, s, sig) {
     capa.appendChild(misEl('h2', 'mis-h', paso.titulo || 'Desafío'));
     var items = Array.isArray(paso.items) ? paso.items : [], idx = 0, ok = 0;
@@ -29432,6 +29560,11 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       var pm = misEl('p', 'mis-p'); pm.appendChild(misEl('strong', '', 'En tu simulación: '));
       pm.appendChild(document.createTextNode('leíste ' + misNum(cur.meta.fotos) + (cur.meta.fotos === 1 ? ' foto' : ' fotos') + '; ' + misNum(cur.meta.conDatos) + ' traían datos de origen.'));
       capa.appendChild(pm);
+    }
+    if (cur.hue && cur.hue.fotos) {
+      var ph = misEl('p', 'mis-p'); ph.appendChild(misEl('strong', '', 'En tu simulación: '));
+      ph.appendChild(document.createTextNode('calculaste la huella de ' + misNum(cur.hue.fotos) + (cur.hue.fotos === 1 ? ' foto' : ' fotos') + (cur.hue.cambios ? ', cambiaste 1 byte ' + misNum(cur.hue.cambios) + (cur.hue.cambios === 1 ? ' vez' : ' veces') : '') + (cur.hue.verif ? ' y verificaste el original' : '') + '.'));
+      capa.appendChild(ph);
     }
     if (cur.pix && cur.pix.fotos) {
       var px = misEl('p', 'mis-p'); px.appendChild(misEl('strong', '', 'En tu simulación: '));
