@@ -1,5 +1,5 @@
 {
- "version": "13/10",
+ "version": "14/10",
  "ganchos": [
   {
    "id": "casa",
@@ -621,6 +621,89 @@
       "Si lo falso viaja seis veces más rápido, ¿qué tendría que pasar para que lo cierto lo alcance?",
       "¿Por qué una cara inventada nos parecería más confiable que una real?",
       "Las hadas de Cottingley engañaron a un escritor famoso durante 66 años. ¿Qué foto que viste este año podría ser una Cottingley?"
+     ],
+     "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
+    }
+   ]
+  },
+  {
+   "id": "m-cuotas-3",
+   "gancho": "cuotas",
+   "titulo": "¿Y si la plata vale menos cada mes?",
+   "sub": "10 minutos. Arrancás apostando. Tercera de cuotas.",
+   "nuevo": "Valor presente",
+   "hecha": {
+    "titulo": "Ya sabés que un peso de hoy no es un peso de dentro de un año.",
+    "sub": "La cuota fija se compara con la inflación, no sólo con el contado.",
+    "chip": "Nuevo: Valor presente"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "La oferta de la misión anterior: **$96.000 al contado** o **12 cuotas de $10.000** (números de ejemplo). Ahí las cuotas salían 24.000 más. Pero cada mes los precios suben. ¿Cambia la respuesta?",
+     "ops": [
+      "No: 120.000 sigue siendo más que 96.000",
+      "Sí: con inflación las cuotas convienen siempre",
+      "Depende de cuánto suban los precios por mes",
+      "Depende de cuántas cuotas sean"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "La cuota es **fija en pesos**: 10.000 hoy y 10.000 dentro de un año. Pero con los 10.000 de dentro de un año comprás menos.\n\nEn **septiembre de 2026** los precios subieron **1,9 %** en el mes (INDEC). A ese ritmo, en 12 meses suben 25 %: los 10.000 de la última cuota compran lo que hoy compran **7.978**.\n\nSi medís cada cuota en **plata de hoy** y las sumás, las 12 cuotas no son 120.000: son **106.400**. Contra 96.000 al contado, las cuotas siguen saliendo más, pero **10.400** más, no 24.000.\n\nY acá está el truco: la oferta cobra **3,6 % por mes** (lo decía la calculadora). La inflación es 1,9 %. Como 3,6 es más que 1,9, el contado gana. **Si la inflación fuera mayor que 3,6 %**, la cuota fija perdería valor más rápido de lo que la oferta cobra: las cuotas saldrían **menos** que el contado. Con 10 % por mes, las 12 cuotas valen 68.100 de hoy.\n\nLa misma oferta, la misma cuenta, y la respuesta cambia según un número que el anuncio no dice.",
+     "fuente": "INDEC, Índice de precios al consumidor, septiembre de 2026 (informe del 13/10/2026): 1,9 % mensual, 23,6 % en el año, 33,4 % interanual. Cuentas propias con los números del ejemplo, con la misma fórmula que la calculadora.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "El que inventó esta cuenta es alguien que ya conocés: **Leonardo de Pisa, Fibonacci**, el de la serie de los conejos (1, 1, 2, 3, 5, 8…). En **1202** escribió el *Liber Abaci* para los mercaderes de Pisa, que comerciaban por todo el Mediterráneo y pagaban y cobraban en fechas distintas. Ahí resolvió por primera vez cómo comparar pagos que caen en momentos distintos: traer cada uno a **plata de hoy**. Hoy se llama **valor presente**, y un historiador de las finanzas dice que esa idea fue más influyente que su famosa serie.\n\nEn la Argentina esa cuenta se volvió de todos los días. En **julio de 1989** los precios subieron **196,6 % en un solo mes**: algo que salía 100 el 1º salía casi 300 el 31. Con esa inflación, de 12 cuotas fijas de 10.000, la segunda ya compraba **un tercio** de lo que compraba la primera, y las 12 juntas valían 5.000 de hoy. El que había comprado en cuotas fijas casi no pagó; el que había prestado, perdió casi todo.",
+      "fuente": "Goetzmann, \"Fibonacci and the Financial Revolution\", NBER (2004). El Cronista y El Economista sobre la hiperinflación de 1989 (consultados el 14/10/2026)."
+     }
+    },
+    {
+     "t": "herramienta",
+     "tool": "cuotas",
+     "titulo": "Calculadora",
+     "txt": "Mirá la **tasa por mes** de la oferta y comparala con la inflación del mes (septiembre de 2026: **1,9 %**). Si la inflación es más alta que esa tasa, las cuotas fijas te salen menos que el contado, medido en lo que la plata compra.\n\nProbá: ¿de cuánto tendría que ser la cuota para que la tasa de la oferta sea 1,9 %, igual que la inflación? Bajá la cuota hasta que la tasa por mes diga 1,9. Ese es el precio en cuotas que **empata** con el contado.\n\nOjo: la cuenta vale si tu plata acompaña a los precios (un sueldo que se ajusta, un plazo fijo). Plata guardada en un cajón pierde igual que la cuota.",
+     "params": {
+      "precio": 96000,
+      "cuotas": 12,
+      "cuota": 10000
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "La oferta cobra **3,6 % por mes**. La inflación es **1,9 % por mes**. Medido en lo que la plata compra, ¿qué conviene?",
+       "ops": [
+        "Contado: la oferta cobra más (3,6 %) de lo que la plata pierde (1,9 %)",
+        "Cuotas: cuando hay inflación siempre conviene pagar en cuotas fijas",
+        "Da lo mismo: 12 × 10.000 son 120.000 con o sin inflación",
+        "Cuotas: la última cuota vale la mitad que la primera"
+       ],
+       "exp": "Los dos números se comparan directo: la oferta te cobra 3,6 % por mes por pagar después; la inflación te \"devuelve\" 1,9 % por mes porque la cuota fija pierde valor. Como 3,6 es más que 1,9, pagar después sigue costando: unos 10.400 de hoy. Con la cuenta de la misión anterior parecían 24.000."
+      },
+      {
+       "q": "¿Con qué inflación mensual la misma oferta (96.000 contado o 12 × 10.000) pasa a convenir en cuotas?",
+       "ops": [
+        "Con más de 3,6 % por mes: la tasa que cobra la oferta",
+        "Con cualquier inflación mayor que cero",
+        "Con más de 25 % por mes: el recargo total de la oferta",
+        "Nunca: 120.000 siempre es más que 96.000"
+       ],
+       "exp": "El punto de empate es la tasa de la oferta: 3,6 % por mes. Con una inflación igual, las 12 cuotas valen exactamente 96.000 de hoy. Con más inflación, menos. Con menos, más. Por eso no alcanza con saber el recargo: hay que saber a qué ritmo pierde valor la plata."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "Tres misiones, la misma oferta, tres respuestas: en la primera mirabas el **total**; en la segunda, el **precio de referencia**; en esta, **cuándo** se paga cada peso. Ninguna estaba mal: cada una agregó un número que la anterior no veía.\n\nUn peso de hoy y un peso de dentro de un año son cosas distintas. Comparar pagos que caen en fechas distintas sin traerlos a la misma fecha es comparar peras con manzanas. Fibonacci lo vio en 1202; en 1989 lo aprendió a los golpes un país entero.",
+     "preguntas": [
+      "Si la inflación le saca valor a la cuota fija, ¿por qué los negocios ofrecen cuotas igual? ¿Quién pierde, el negocio o alguien más?",
+      "¿Por qué suben los precios? ¿Hay alguien que decida que suban, o nadie lo decide?",
+      "Un plazo fijo paga una tasa por mes. ¿Cómo sabés si tu plata ganó o perdió? ¿Contra qué la medís?"
      ],
      "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
     }
