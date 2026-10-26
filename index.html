@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="25/10 15:20">
+<meta name="apuntes-version" content="25/10 22:15">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -2071,6 +2071,12 @@ body {
 [data-theme="dark"] .pend-card button { background: #16202c; color: #d8e4f3; border-color: #4a6f9a; }
 [data-theme="dark"] .pend-card button.pend-ok { background: #6f9ad0; color: #0f1720; }
 [data-theme="dark"] .pend-card select { background: #16202c; color: #d8e4f3; border-color: #4a6f9a; }
+.pend-card input[type="date"] {
+  font-family: inherit; font-size: 14px; padding: 8px 10px; border-radius: 10px;
+  border: 1.5px solid #6f9ad0; background: #fff; color: #1f3550; max-width: 100%;
+}
+.pend-card button:disabled { opacity: .45; cursor: default; }
+[data-theme="dark"] .pend-card input[type="date"] { background: #16202c; color: #d8e4f3; border-color: #4a6f9a; }
 
 /* ---- Misiones (07/10): ganchos propios, fuera de las materias. La banda vive arriba
    de las tarjetas de materia; el jugador es una capa completa como la tienda. ---- */
@@ -28646,7 +28652,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "25/10 15:20";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "25/10 22:15";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -29921,9 +29927,12 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     if (txt !== undefined) e.textContent = txt;
     return e;
   }
-  function pendResponder(p, respuesta, materia) {
-    send('reporte', { tipo: 'confirmacion', materia: p.materia || '', capitulo: p.tema || '', pagina: p.id,
-                      texto: 'id=' + p.id + '; respuesta=' + respuesta + '; materia=' + (materia || '') });
+  function pendResponder(p, respuesta, materia, fecha) {
+    /* 25/10: la misma tarjeta pregunta tambien la fecha de examen (p.tipo === 'examen'); la respuesta
+       viaja por el mismo canal con tipo 'examen' y la fecha en el texto (dd/mm/aaaa) */
+    var esEx = p.tipo === 'examen';
+    send('reporte', { tipo: esEx ? 'examen' : 'confirmacion', materia: p.materia || '', capitulo: p.tema || '', pagina: p.id,
+                      texto: 'id=' + p.id + '; respuesta=' + respuesta + (esEx ? '; fecha=' + (fecha || '') : '; materia=' + (materia || '')) });
     pendMarcar(p.id);
     var slot = document.getElementById('pendSlot');
     if (!slot) return;
@@ -29943,6 +29952,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     }
     slot.innerHTML = '';
     if (!p) return;
+    if (p.tipo === 'examen') { pendRenderExamen(slot, p, quedan); return; }
     var card = pendEl('div', 'pend-card');
     if (quedan > 1) card.appendChild(pendEl('div', 'pend-cuenta', 'Quedan ' + quedan + ' preguntas'));
     var fila = pendEl('div', 'pend-txt');
@@ -29979,6 +29989,42 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       fila2.appendChild(sel); fila2.appendChild(bConf);
       card.appendChild(fila2);
     });
+    slot.appendChild(card);
+  }
+  function pendRenderExamen(slot, p, quedan) {
+    /* 25/10 (pedido de Javier): "¿cuando es el examen?" con calendario, "Todavia no se" y "No hay examen" */
+    var card = pendEl('div', 'pend-card');
+    if (quedan > 1) card.appendChild(pendEl('div', 'pend-cuenta', 'Quedan ' + quedan + ' preguntas'));
+    var fila = pendEl('div', 'pend-txt');
+    fila.appendChild(pendEl('span', 'pend-ico', '📅'));
+    var txt = pendEl('span');
+    txt.appendChild(document.createTextNode('¿Cuándo es el próximo examen de '));
+    txt.appendChild(pendEl('strong', '', String(p.materia || '?')));
+    txt.appendChild(document.createTextNode('? Así te aviso cuántos días faltan.'));
+    fila.appendChild(txt);
+    card.appendChild(fila);
+    var fila2 = pendEl('div', 'pend-otra');
+    var inp = document.createElement('input');
+    inp.type = 'date';
+    var h = new Date(), mm = h.getMonth() + 1, dd = h.getDate();
+    inp.min = h.getFullYear() + '-' + (mm < 10 ? '0' : '') + mm + '-' + (dd < 10 ? '0' : '') + dd;
+    var bGuardar = pendEl('button', 'pend-ok', 'Guardar');
+    bGuardar.disabled = true;
+    inp.addEventListener('input', function () { bGuardar.disabled = !inp.value; });
+    inp.addEventListener('change', function () { bGuardar.disabled = !inp.value; });
+    bGuardar.addEventListener('click', function () {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(inp.value || '');
+      if (m) pendResponder(p, 'fecha', p.materia, m[3] + '/' + m[2] + '/' + m[1]);
+    });
+    fila2.appendChild(inp); fila2.appendChild(bGuardar);
+    card.appendChild(fila2);
+    var btns = pendEl('div', 'pend-btns');
+    var bNose = pendEl('button', '', 'Todavía no sé');
+    var bNohay = pendEl('button', '', 'No hay examen');
+    btns.appendChild(bNose); btns.appendChild(bNohay);
+    card.appendChild(btns);
+    bNose.addEventListener('click', function () { pendResponder(p, 'nose', p.materia, ''); });
+    bNohay.addEventListener('click', function () { pendResponder(p, 'nohay', p.materia, ''); });
     slot.appendChild(card);
   }
   function pendBuscar(forzar) {
