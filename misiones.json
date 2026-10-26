@@ -1,5 +1,5 @@
 {
- "version": "15/10",
+ "version": "26/10",
  "ganchos": [
   {
    "id": "casa",
@@ -785,6 +785,96 @@
       "Si de la huella no se puede volver al archivo, ¿cómo podría servir para guardar contraseñas sin que nadie las pueda leer?",
       "Vucetich clasificaba huellas a mano, en fichas de cartón. ¿Cómo hará hoy la policía para encontrar una huella entre millones?",
       "¿Qué foto o video de hoy te gustaría que dentro de 50 años alguien pudiera probar que es verdadero? ¿Cómo lo guardarías?"
+     ],
+     "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
+    }
+   ]
+  },
+  {
+   "id": "m-penales-3",
+   "gancho": "penales",
+   "titulo": "¿Sirve el papelito del arquero?",
+   "sub": "10 minutos. Arrancás apostando. Tercera de penales.",
+   "nuevo": "Información",
+   "hecha": {
+    "titulo": "Ya sabés para qué sirve el papelito del arquero.",
+    "sub": "Sirve al que lo tiene… hasta que el otro se entera.",
+    "chip": "Nuevo: Información"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "Mundial 2006, cuartos de final, **Alemania-Argentina** por penales. Antes de cada remate, el arquero alemán sacaba de la canillera un **papel** con anotaciones sobre los pateadores argentinos. Patearon 4 argentinos. ¿Cuántos penales creés que atajó?",
+     "ops": [
+      "Ninguno: un papel no ataja penales",
+      "Uno",
+      "Dos",
+      "Tres o los cuatro"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "El **30 de junio de 2006**, en Berlín, Alemania y Argentina empataron 1-1 y fueron a los penales. El arquero alemán, **Jens Lehmann**, tenía un papel con membrete de hotel. Lo habían armado el entrenador de arqueros, Andreas Köpke, y Huub Stevens revisando una base de datos de **13.000 penales**; tenía **seis nombres** a lápiz: Riquelme, Crespo, Heinze, Ayala, Aimar y Maxi Rodríguez.\n\nAlemania ganó **4-2**. Lehmann atajó **dos**: el de **Ayala**, que estaba en el papel, y el de **Cambiasso**, que **no estaba**: para ese se acordó de un video de Cambiasso jugando en el Inter. A Maxi Rodríguez, que sí estaba, le adivinó el lado… y fue gol igual.\n\nEl papel se vendió después en una subasta solidaria por **un millón de euros** y hoy está en un museo de Bonn. Riquelme dice que estaba **en blanco**, y que lo que jugaba era el tiempo que Lehmann se tomaba para leerlo. Lehmann dice que no.",
+     "fuente": "FIFA.com, \"The piece of paper that helped Germany turn the page\" (consultado el 26/10/2026).",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "Hasta 1970, un partido eliminatorio que terminaba empatado se jugaba de nuevo otro día o se definía **tirando una moneda**. En la Eurocopa de **1968**, Italia pasó a la final contra la Unión Soviética por una moneda, después de un 0-0 de 120 minutos. Ese mismo año, en los Juegos Olímpicos de México, Israel quedó afuera contra Bulgaria por otra moneda.\n\nUn dirigente israelí, **Yosef Dagan**, y un árbitro alemán, **Karl Wald**, propusieron cada uno por su lado definir con penales. La FIFA lo aprobó en **1970**. La primera final grande por penales fue la Eurocopa de **1976** (la de Panenka, de la misión anterior); en un Mundial, recién en **1982**.\n\nO sea: la definición por penales no la inventó \"el fútbol\": la inventaron personas hartas de perder por una moneda. Y apenas existió, apareció el problema siguiente: cómo ganarla. El papel de Lehmann es una respuesta; las bases de datos y los videos de hoy, otra.",
+      "fuente": "Soccerway/Flashscore, \"The evolution of football's tiebreakers\"; Biblioteca Nacional de Israel, \"The Israeli Roots of the Penalty Shoot-Out\" (consultados el 26/10/2026)."
+     }
+    },
+    {
+     "t": "herramienta",
+     "tool": "penales",
+     "titulo": "Probalo vos",
+     "txt": "Esta vez el pateador del simulador es **inventado para el ejercicio** y tiene una costumbre: **7 de cada 10 a la izquierda**, 1 al medio, 2 a la derecha. (El cartel del simulador dice \"como los profesionales\": esta vez no, ignoralo.)\n\n**Atajá** 20 penales tirándote como quieras y mirá la fila \"El otro\": a dónde fueron las pelotas. Ese es tu papelito. Después atajá 20 más tirándote siempre a donde dice el papel, y compará el %.\n\nDespués **pateá**: ahora el arquero tiene **tu** papel (también inventado: sabe que vas 7 de cada 10 a la izquierda y se tira ahí). ¿A dónde te conviene patear?\n\nSimplificación de siempre: mismo lugar = atajada.",
+     "params": {
+      "arquero": [
+       70,
+       10,
+       20
+      ],
+      "pateador": [
+       70,
+       10,
+       20
+      ]
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "Cambiasso **no figuraba** en el papel y Lehmann igual le atajó el penal. ¿Qué te dice eso?",
+       "ops": [
+        "Que el papel ayudó, pero no fue lo único: Lehmann también usó lo que recordaba de un video",
+        "Que Lehmann tenía anotados a todos los jugadores argentinos, incluido Cambiasso, aunque no se viera",
+        "Que el papel no servía para nada, porque los pateadores no tienen costumbres",
+        "Que Lehmann adivinó de casualidad y la información no cambió nada"
+       ],
+       "exp": "El papel tenía seis nombres y Cambiasso no era uno. Lehmann usó otra información: un video que recordaba. La fuente de la información cambia; lo que no cambia es que el arquero llegó al penal sabiendo algo del pateador."
+      },
+      {
+       "q": "En el simulador, el pateador iba **7 de cada 10** a la izquierda. Tirándote siempre a la izquierda, ¿cuánto podías atajar en promedio?",
+       "ops": [
+        "Unos 7 de cada 10: los que iban a la izquierda",
+        "Todos: con el papel en la mano se ataja cualquier penal",
+        "La mitad, igual que tirándose al azar",
+        "1 de cada 10"
+       ],
+       "exp": "Si te tirás siempre a la izquierda, atajás los que van a la izquierda: 7 de cada 10. Los 3 que van al medio o a la derecha entran igual. Tirándote al azar (un tercio a cada lado) atajás en promedio 33 de cada 100. El papel no ataja todo: sube de 33 a 70."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "El papel sirve al que lo tiene y hunde al que figura en él. Pero tiene **fecha de vencimiento**: en cuanto el pateador sabe que el arquero tiene su papel, deja de patear como dice el papel, y volvemos a la moneda de la misión anterior. **La información vale mientras el otro no sepa que la tenés.**\n\nY queda la duda de Riquelme: si el papel estaba en blanco, ¿funcionó igual? Quizás parte del papel no era información sino presión: un pateador que ve al arquero leer sobre él patea distinto. Esta misión no lo contesta.",
+     "preguntas": [
+      "Riquelme dice que el papel estaba en blanco. Si fuera cierto, ¿serviría igual? ¿Qué cambia en la cabeza del que patea?",
+      "Hoy todos los equipos tienen videos de todos los pateadores. Si los dos saben que el otro sabe, ¿vuelve a mandar la moneda de la misión anterior?",
+      "¿Qué \"papelito\" tenés vos sobre alguien (un rival, un profesor, un amigo)? ¿Y quién tiene el tuyo?"
      ],
      "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
     }
