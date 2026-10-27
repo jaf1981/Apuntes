@@ -1,5 +1,5 @@
 {
- "version": "26/10",
+ "version": "26/10b",
  "ganchos": [
   {
    "id": "casa",
@@ -875,6 +875,89 @@
       "Riquelme dice que el papel estaba en blanco. Si fuera cierto, ¿serviría igual? ¿Qué cambia en la cabeza del que patea?",
       "Hoy todos los equipos tienen videos de todos los pateadores. Si los dos saben que el otro sabe, ¿vuelve a mandar la moneda de la misión anterior?",
       "¿Qué \"papelito\" tenés vos sobre alguien (un rival, un profesor, un amigo)? ¿Y quién tiene el tuyo?"
+     ],
+     "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
+    }
+   ]
+  },
+  {
+   "id": "m-cuotas-4",
+   "gancho": "cuotas",
+   "titulo": "¿Cuotas más chicas = más barato?",
+   "sub": "10 minutos. Arrancás apostando. Cuarta de cuotas.",
+   "nuevo": "Interés compuesto",
+   "hecha": {
+    "titulo": "Ya sabés que el plazo también tiene precio.",
+    "sub": "Interés sobre interés: una deuda al 3,6 % se duplica en 20 meses.",
+    "chip": "Nuevo: Interés compuesto"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "La oferta de siempre: **$96.000 al contado** o **12 cuotas de $10.000** (3,6 % por mes, números de ejemplo). El vendedor te dice: \"si querés, te lo paso a **24 cuotas**, misma tasa\". ¿De cuánto creés que sale cada cuota?",
+     "ops": [
+      "De 5.000: el doble de cuotas, la mitad cada una",
+      "Un poco más de 5.000: unos 6.000",
+      "Bastante más: unos 8.000",
+      "Menos de 5.000: más cuotas, más descuento"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "Con la misma tasa, **24 cuotas no son de 5.000: son de 6.050**. Total: **145.000**. Pasaste de pagar 24.000 de más a pagar **49.000** de más.\n\nY sigue: 36 cuotas de 4.800 son **173.000**; 48 cuotas de 4.240 son **203.000**, más del doble del contado. La cuota baja, el total sube. **El plazo tiene precio.**\n\n¿Por qué? Porque el 3,6 % de cada mes se cobra sobre **todo lo que todavía debés**, y lo que debés incluye los intereses de los meses anteriores que todavía no pagaste. Interés sobre interés: eso es el **interés compuesto**. Cuanto más tardás en pagar, más meses cobra, y cada mes cobra sobre más.\n\nUn número para tener en la cabeza: a 3,6 % por mes, una deuda que no pagás **se duplica en 20 meses**. Hay una cuenta rapidísima para eso: **72 ÷ la tasa** = meses para duplicar. 72 ÷ 3,6 = 20. Vale para cualquier cosa que crezca un porcentaje fijo: una deuda, un plazo fijo, los precios.",
+     "fuente": "Cuentas propias con los números del ejemplo, con la misma fórmula que la calculadora (valor presente). Regla del 72: aproximación; el valor exacto a 3,6 % es 19,6 meses.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "La regla del 72 aparece impresa por primera vez en **Venecia, en 1494**, en la *Summa de arithmetica* de **Luca Pacioli**, un fraile matemático. La escribe como un truco de mercader: \"tené en mente el número 72, que siempre dividirás por el interés\", y da el ejemplo: al 6 % por año, el dinero se duplica en 12. **No la deduce ni la explica**: la regla ya se usaba antes de que él la anotara. Alguien la encontró a mano, sin calculadora, y nadie sabe quién.\n\nEl mismo libro trae una de las primeras descripciones publicadas de la **contabilidad por partida doble** que usaban los mercaderes venecianos, la manera de anotar cada peso dos veces (de dónde sale y a dónde va) que todavía usan todas las empresas del mundo. Por eso a Pacioli lo llaman el padre de la contabilidad.\n\nY un dato más: en Milán, Pacioli le enseñó matemática a **Leonardo da Vinci**. Vivieron en la misma casa, y Leonardo le dibujó los poliedros de su libro siguiente, *De divina proportione*. El que explicó cómo se duplican las deudas y el que pintó la Gioconda eran compañeros de casa.",
+      "fuente": "Wikipedia, \"Rule of 72\" (sección History) y \"Luca Pacioli\" (consultadas el 26/10/2026)."
+     }
+    },
+    {
+     "t": "herramienta",
+     "tool": "cuotas",
+     "titulo": "Calculadora",
+     "txt": "Arranca con **24 cuotas de 5.000**: el mismo total que 12 de 10.000 (120.000), pero mirá la **tasa por mes**: 1,9 %, no 3,6. Pagar lo mismo más tarde cuesta menos por mes. (1,9 % era la inflación de la misión anterior: a 24 cuotas de 5.000, la oferta **empata** con el contado.)\n\nAhora **subí la cuota** hasta que la tasa vuelva a decir 3,6 %. Ese es el precio real de pasar a 24 cuotas. Después probá con **36** y con **48** cuotas: buscá la cuota que da 3,6 % y mirá qué pasa con el total.\n\nÚltimo: ¿cuántas cuotas de **3.000** hacen falta para que la tasa sea 3,6 %? ¿Y de 2.000? Fijate si llegás.",
+     "params": {
+      "precio": 96000,
+      "cuotas": 24,
+      "cuota": 5000
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "Misma tasa (3,6 % por mes), el doble de cuotas: 24 en vez de 12. ¿Qué pasa con el **total** que pagás?",
+       "ops": [
+        "Sube: de 120.000 a unos 145.000",
+        "Queda igual: 120.000, repartido en más cuotas",
+        "Baja, porque cada cuota es más chica",
+        "Se duplica: 240.000"
+       ],
+       "exp": "Más meses = más meses de interés, y cada mes se cobra sobre lo que todavía debés, intereses incluidos. 24 cuotas de 6.050 son 145.000. La cuota baja a poco más de la mitad, pero el total sube 25.000."
+      },
+      {
+       "q": "A **3,6 % por mes**, ¿en cuánto tiempo se duplica una deuda que no pagás?",
+       "ops": [
+        "En unos 20 meses: 72 ÷ 3,6",
+        "En unos 28 meses: 100 ÷ 3,6",
+        "En 12 meses: un año",
+        "Nunca, si no comprás nada más"
+       ],
+       "exp": "Regla del 72: 72 ÷ 3,6 = 20 meses (el valor exacto es 19,6). 100 ÷ 3,6 = 28 sería la cuenta si el interés se cobrara siempre sobre los 96.000 originales (interés simple); pero se cobra sobre la deuda crecida, y por eso llega antes. Una deuda no se queda quieta: crece aunque no compres nada más."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "Cuatro misiones y la misma oferta. Hoy agregaste el **tiempo**: no sólo cuánto y cuándo pagás, sino **durante cuántos meses** te cobran. La cuota chica es el anzuelo; el total es el precio.\n\nEl interés compuesto corre para los dos lados. Si **debés**, juega en contra y se duplica en 72 ÷ tasa. Si **ahorrás** a una tasa, juega a favor con la misma cuenta. Y los precios suben con la misma regla: a 1,9 % por mes, se duplican en 38 meses. La pregunta de siempre es contra qué medís.",
+     "preguntas": [
+      "Un plazo fijo paga una tasa por mes. Con la regla del 72, ¿en cuántos meses se duplica tu plata? ¿Y en cuántos se duplican los precios? ¿Cuál gana?",
+      "Si la regla del 72 ya se usaba antes de 1494, ¿cómo la habrán encontrado sin calculadora? ¿Probando? ¿Se te ocurre una forma?",
+      "¿Por qué el cartel del negocio dice el valor de la cuota en grande y el total en chico? ¿Qué pasaría si fuera al revés?"
      ],
      "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
     }
