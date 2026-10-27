@@ -13,7 +13,7 @@
  *    el dibujo cambia el nombre o la version del cache. Asi una publicacion
  *    nueva no obliga a bajar de nuevo 268 KB de arte que no cambio.
  */
-var VERSION = '25/10 22:15';
+var VERSION = '26/10 21:10';
 var CACHE = 'apuntes-' + VERSION;
 
 var ESENCIALES = ['./', './index.html', './manifest.json',
