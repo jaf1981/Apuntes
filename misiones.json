@@ -1,5 +1,5 @@
 {
- "version": "26/10b",
+ "version": "28/10",
  "ganchos": [
   {
    "id": "casa",
@@ -958,6 +958,89 @@
       "Un plazo fijo paga una tasa por mes. Con la regla del 72, ¿en cuántos meses se duplica tu plata? ¿Y en cuántos se duplican los precios? ¿Cuál gana?",
       "Si la regla del 72 ya se usaba antes de 1494, ¿cómo la habrán encontrado sin calculadora? ¿Probando? ¿Se te ocurre una forma?",
       "¿Por qué el cartel del negocio dice el valor de la cuota en grande y el total en chico? ¿Qué pasaría si fuera al revés?"
+     ],
+     "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
+    }
+   ]
+  },
+  {
+   "id": "m-cuotas-5",
+   "gancho": "cuotas",
+   "titulo": "¿Quién paga las cuotas \"sin interés\"?",
+   "sub": "10 minutos. Arrancás apostando. Quinta de cuotas.",
+   "nuevo": "Tasa de descuento",
+   "hecha": {
+    "titulo": "Ya sabés quién paga las cuotas \"sin interés\".",
+    "sub": "El negocio cobra menos y lo mete en el precio de lista.",
+    "chip": "Nuevo: Tasa de descuento"
+   },
+   "pasos": [
+    {
+     "t": "apuesta",
+     "q": "Comprás algo de **$100.000** con tarjeta, en **6 cuotas sin interés** de un plan oficial (números de la regla de marzo de 2024). Vos pagás 6 × 16.667 = 100.000, uno por mes. ¿Qué creés que recibe el **negocio**?",
+     "ops": [
+      "Los 100.000, cuota a cuota, en 6 meses",
+      "Los 100.000 juntos, a los pocos días",
+      "Unos 83.000 juntos, a los pocos días",
+      "Unos 83.000, cuota a cuota, en 6 meses"
+     ]
+    },
+    {
+     "t": "dato",
+     "titulo": "El dato",
+     "txt": "La regla del plan (Resolución 91/2024) dice dos cosas sobre el negocio: cobra la venta **en hasta 10 días hábiles**, y el banco le descuenta **hasta el 17,32 %** si fueron 6 cuotas (**9,34 %** si fueron 3). Vos pagás 100.000; al negocio le llegan **82.680**.\n\nAhora mirá la misma cuenta desde el banco: pone 82.680 hoy y cobra 6 cuotas de 16.667. Esa es la oferta de siempre, al revés: un préstamo de 82.680 que se devuelve con 100.000. Da **5,7 % por mes**, más de **90 % al año**. \"Sin interés\" para vos; interés para el banco, pagado por el negocio.\n\n¿Y el negocio se lo come? No: para que le queden 100.000 limpios, pone **121.000 de lista**. Y a vos, si pagás hoy, te hace \"**17 % de descuento** por contado\" y te cobra 100.000. ¿Te suena? Es el 20 % de descuento de la segunda misión: no era un regalo, era el negocio ahorrándose la tasa del banco. Los topes de la regla cambian con el tiempo; el mecanismo no.",
+     "fuente": "Resolución 91/2024, Secretaría de Comercio (punto 6.4, incisos iv a vi; números de marzo de 2024, se actualizan con la tasa del BCRA). Cuentas propias con la misma fórmula que la calculadora.",
+     "historia": {
+      "titulo": "La historia detrás",
+      "txt": "La tarjeta de crédito nació en un restaurante. En **1949**, en el Major's Cabin Grill de Nueva York, a **Frank McNamara** se le ocurrió una tarjeta que sirviera en muchos restaurantes a la vez. La leyenda dice que fue porque una noche se olvidó la billetera; el primer encargado de prensa de la empresa dijo años después que eso **nunca pasó**, que la historia la inventaron. Lo que sí pasó: el **8 de febrero de 1950** McNamara y su abogado Ralph Schneider fundaron **Diners Club**, con **27 restaurantes** adheridos y unos **200** conocidos como socios.\n\nY el modelo ya era el de hoy: a los restaurantes les cobraban el **7 %** de cada cuenta; a los socios, 5 dólares por año. A fines de 1950 tenían **20.000 socios**. Desde el primer día, el que paga la tarjeta es el negocio, y el cliente cree que es gratis. Setenta y cinco años después, con el teléfono en vez de la cartulina, la cuenta es la misma.",
+      "fuente": "Wikipedia, \"Diners Club International\" (consultada el 28/10/2026)."
+     }
+    },
+    {
+     "t": "herramienta",
+     "tool": "cuotas",
+     "titulo": "Calculadora del banco",
+     "txt": "Esta vez la calculadora es la del **banco**. \"Precio al contado\" es lo que el banco le pone al negocio hoy (**82.680**), y las cuotas son lo que vos le pagás al banco (6 de 16.667). La **tasa por mes** es lo que gana el banco con tus cuotas \"sin interés\".\n\nProbá con **3 cuotas**: el negocio recibe 90.660 y vos pagás 3 de 33.333. ¿Le rinde más o menos al banco?\n\nDespués, la del **negocio**: precio **121.000** (la lista) y 6 cuotas de **20.158** (121.000 ÷ 6): tasa 0, \"sin interés\". Ahora **bajá el precio** hasta que la tasa diga 5,7 %, la del banco. Ese precio es el contado que al negocio le da lo mismo que las 6 cuotas: fijate cuánto es y qué descuento sobre la lista le sale.",
+     "params": {
+      "precio": 82680,
+      "cuotas": 6,
+      "cuota": 16667
+     }
+    },
+    {
+     "t": "pregunta",
+     "titulo": "Desafío",
+     "items": [
+      {
+       "q": "Vendés algo a **100.000** en **6 cuotas \"sin interés\"** con la regla de 2024. ¿Cuánto recibís, y cuándo?",
+       "ops": [
+        "Unos 82.700, en menos de dos semanas",
+        "Los 100.000 juntos, en menos de dos semanas",
+        "Los 100.000 en 6 pagos de 16.667, uno por mes",
+        "Unos 82.700 en 6 pagos, uno por mes"
+       ],
+       "exp": "El banco te acredita la venta en hasta 10 días hábiles, menos la tasa de descuento: 100.000 − 17,32 % = 82.680. Vos cobrás rápido y cobrás menos; el que espera las 6 cuotas es el banco, y por esperar cobra unos 17.300."
+      },
+      {
+       "q": "Entonces, ¿quién paga el interés de las cuotas \"sin interés\"?",
+       "ops": [
+        "El negocio, que cobra menos; y lo recupera en el precio de lista",
+        "Nadie: \"sin interés\" quiere decir que el banco no gana nada con eso",
+        "El comprador, por una comisión escondida dentro de cada cuota",
+        "El banco, que pierde plata para que la gente use más la tarjeta"
+       ],
+       "exp": "Las 6 cuotas suman exactamente 100.000: en tu cuota no hay nada escondido. El banco cobra unos 17.300 (5,7 % por mes sobre lo que puso), y se los cobra al negocio. El negocio los mete en el precio de lista, y por eso al que paga hoy le puede \"descontar\": en realidad le cobra lo que quería cobrar."
+      }
+     ]
+    },
+    {
+     "t": "cierre",
+     "titulo": "Lo que pasó",
+     "txt": "Cinco misiones. Hoy diste vuelta la calculadora: la misma cuenta, vista desde el banco. **El interés siempre lo paga alguien**: si no lo ves en tu cuota, está en el precio de lista, y lo pagan todos los que compran, también los que pagan al contado si no piden el descuento.\n\nLas cuotas \"sin interés\" y el descuento por contado son la misma cosa vista de los dos lados: el negocio reparte entre todos lo que le cobra el banco, y le devuelve una parte al que paga hoy. Desde 1950, con un 7 % en los restaurantes de Nueva York, hasta hoy.",
+     "preguntas": [
+      "Si el negocio le paga al banco hasta 17 % de cada venta en cuotas, ¿por qué acepta la tarjeta igual? ¿Qué perdería si no la aceptara?",
+      "El que paga contado sin pedir descuento paga el precio de lista. ¿Subsidia al que paga en cuotas? ¿Y es justo que el que menos plata tiene pague más por lo mismo?",
+      "El Estado le puso un tope a lo que el banco le cobra al negocio. ¿Por qué se mete en un precio entre dos privados? ¿Qué pasaría sin tope?"
      ],
      "pregunta": "¿Qué te quedaste pensando? ¿Se te ocurren nuevas preguntas? (opcional)"
     }
