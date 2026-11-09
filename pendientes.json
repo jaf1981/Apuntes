@@ -1,1 +1,6 @@
-{"pendientes": []}
+{"pendientes": [
+  {"id": "p-2026-11-08-geografia", "device": "dzsanzmp0msnqzs8p", "fecha": "08/11",
+   "materia": "Geografía", "tema": "Relieve, hidrografía y climas de América (14 fotos)",
+   "opciones": ["Biología", "Geografía", "Historia", "Tecnología", "Lengua", "O.M.A.", "Electricidad", "Inglés"]},
+  {"id": "e-2026-11-08-geografia", "tipo": "examen", "device": "dzsanzmp0msnqzs8p", "materia": "Geografía"}
+]}
