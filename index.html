@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="12/11 10:30">
+<meta name="apuntes-version" content="12/11 10:45">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -27858,14 +27858,15 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   }
 
   function ejFrases(texto) {
-    return texto.split(/(?<=[.:;])\s+/)
-      .map(f => f.replace(/\s+/g, " ").replace(/\s+([,.;:)])/g, "$1").replace(/\(\s+/g, "(").trim());
+    return texto.split(/(?<=[.:;])\s+|\s*¶\s*/)   // 12/11 (b): "¶" = fin de bloque (ver ejTextoSinTablas)
+      .map(f => f.replace(/\s+/g, " ").replace(/\s+([,.;:)])/g, "$1").replace(/\(\s+/g, "(").trim())
+      .filter(Boolean);
   }
 
   /* Frases que arrancan refiriéndose a algo anterior ("Para hacerlo…", "Esto
      significa…") quedan sin sentido fuera de su párrafo: no sirven de ejercicio. */
   const EJ_ARRANQUE_DEPENDIENTE =
-    /^(esto|eso|esta|este|estos|estas|ese|esa|esos|esas|así|asi|además|ademas|también|tambien|por eso|por ello|para (hacerlo|ello|eso|esto)|de ahí|de ahi|ahí|ahi|allí|alli|luego|entonces|después|despues|sin embargo|en cambio|con ella|con él|con el |con esto|de este|de esta|de ellos|de ellas|a partir de ello|dicho esto|lo mismo|los mismos|le |les |su |sus )\b/i;
+    /^(porque|es decir|es |son |esto|eso|esta|este|estos|estas|ese|esa|esos|esas|así|asi|además|ademas|también|tambien|por eso|por ello|para (hacerlo|ello|eso|esto)|de ahí|de ahi|ahí|ahi|allí|alli|luego|entonces|después|despues|sin embargo|en cambio|con ella|con él|con el |con esto|de este|de esta|de ellos|de ellas|a partir de ello|dicho esto|lo mismo|los mismos|le |les |su |sus )\b/i;
 
   function ejEscapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 
@@ -27906,8 +27907,15 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
      ({p, c, frase con un ___, ok, malas[3]}), que el runner agrega al cargar contenido nuevo. */
   const _ejSinTablas = new WeakMap();
   function ejTextoSinTablas(p, idx) {
-    if (!p || !p.html || p.html.indexOf("<table") === -1) return PAGE_TEXTS_RAW[idx] || "";
-    if (!_ejSinTablas.has(p)) _ejSinTablas.set(p, strip(p.html.replace(/<table[\s\S]*?<\/table>/g, " ")));
+    if (!p || !p.html) return PAGE_TEXTS_RAW[idx] || "";
+    /* 12/11 (b): tampoco dibujos (svg, figure/figcaption) ni titulos, y cada bloque cierra con "¶"
+       para que ejFrases no pegue un titulo o un rotulo con el parrafo siguiente. */
+    if (!_ejSinTablas.has(p)) _ejSinTablas.set(p, strip(p.html
+      .replace(/<table[\s\S]*?<\/table>/gi, " ")
+      .replace(/<svg[\s\S]*?<\/svg>/gi, " ")
+      .replace(/<figure[\s\S]*?<\/figure>|<figcaption[\s\S]*?<\/figcaption>/gi, " ¶ ")
+      .replace(/<h[1-6][^>]*>[\s\S]*?<\/h[1-6]>/gi, " ¶ ")
+      .replace(/<\/(p|li|div|dd|dt|blockquote|section|summary|ul|ol)>|<br\s*\/?>/gi, " ¶ ")));
     return _ejSinTablas.get(p);
   }
 
@@ -27928,6 +27936,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
         if (/^[·\-–—•]/.test(f)) return;                   // resto de una viñeta
         if (!/^[A-ZÁÉÍÓÚÑ¿]/.test(f)) return;              // fragmento que empieza en minúscula
         if (/[:;]$/.test(f)) return;                       // es la entradilla de una lista
+        if (/\?$/.test(f) || / · .* · /.test(f)) return;   // 12/11 (b): pregunta suelta o lista con puntos
         /* Las tablas quedan aplanadas como texto ("Punto cardinal Lugar Territorio…"):
            se delatan por la proporción de palabras con mayúscula inicial. */
         const mayus = palabras.slice(1).filter(w => /^[A-ZÁÉÍÓÚÑ]/.test(w)).length;
@@ -31630,7 +31639,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "12/11 10:30";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "12/11 10:45";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
