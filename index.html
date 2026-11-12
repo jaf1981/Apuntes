@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="10/11 21:40">
+<meta name="apuntes-version" content="12/11 09:30">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1757,6 +1757,9 @@ body {
   box-shadow: 0 0 0 1.5px var(--highlight);
   border-radius: 2px;
 }
+/* 12/11: capitulo en Completar/Unir/Ordenar/Clasificar */
+.ej-cap-row{margin:0 0 12px}
+.ej-cap{width:100%;font-size:15px;padding:9px 12px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg-elev);color:var(--text);font-family:inherit}
 /* ---- Ejercicios nuevos: Completar y Unir pares (19/08) ---- */
 .ej-frase {
   font-family: "Crimson Pro", serif;
@@ -3206,6 +3209,7 @@ body {
 
     <!-- COMPLETAR (blancos con opciones) -->
     <div class="pr-screen" id="screen-blancos">
+      <div class="ej-cap-row"><select class="ej-cap" id="blCap" aria-label="Capítulo"></select></div>
       <div class="quiz-prog">
         <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="blProgFill" style="width:0%"></div></div>
         <span class="quiz-prog-text" id="blProgText">1 / 8</span>
@@ -3220,6 +3224,7 @@ body {
 
     <!-- UNIR PARES -->
     <div class="pr-screen" id="screen-pares">
+      <div class="ej-cap-row"><select class="ej-cap" id="paCap" aria-label="Capítulo"></select></div>
       <div class="quiz-prog">
         <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="paProgFill" style="width:0%"></div></div>
         <span class="quiz-prog-text" id="paProgText">0 / 4</span>
@@ -3237,6 +3242,7 @@ body {
 
     <!-- ORDENAR (secuencias) -->
     <div class="pr-screen" id="screen-ordenar">
+      <div class="ej-cap-row"><select class="ej-cap" id="orCap" aria-label="Capítulo"></select></div>
       <div class="quiz-prog">
         <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="orProgFill" style="width:0%"></div></div>
         <span class="quiz-prog-text" id="orProgText">0 / 3</span>
@@ -3252,6 +3258,7 @@ body {
 
     <!-- CLASIFICAR (columnas) -->
     <div class="pr-screen" id="screen-clasificar">
+      <div class="ej-cap-row"><select class="ej-cap" id="clCap" aria-label="Capítulo"></select></div>
       <div class="quiz-prog">
         <div class="quiz-prog-bar"><div class="quiz-prog-bar-fill" id="clProgFill" style="width:0%"></div></div>
         <span class="quiz-prog-text" id="clProgText">0 / 6</span>
@@ -27096,13 +27103,44 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   function ejEscapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 
   /* Frases del apunte que contienen exactamente UNA vez un término del glosario. */
-  function generarBlancos(n) {
+  /* 12/11 (Javier): Completar, Unir pares, Ordenar y Clasificar no respetaban el capitulo
+     elegido y mezclaban toda la materia. Ahora usan un capitulo de practica compartido
+     (selectedEjChap): se elige arriba de cada actividad y toma el que se haya elegido en
+     Cuestionario o Flashcards. Cada selector ofrece solo capitulos con material suficiente;
+     si el elegido no alcanza para esa actividad, esa actividad usa todos (y lo avisa). */
+  let selectedEjChap = "all";
+  function ejPagIdxDeCap(c) {
+    const ch = TOC.find(t => t.num === c);
+    return ch ? ch.pages.map(p => p.idx) : [];
+  }
+  function ejCapSelect(selId, alcanza, reiniciar) {
+    let c = selectedEjChap === "all" ? null : parseInt(selectedEjChap, 10);
+    if (c !== null && !alcanza(c)) {
+      c = null;
+      showToast("📚", "Ese capítulo no tiene esta actividad: van todos los capítulos");
+    }
+    const sel = $(selId);
+    if (sel) {
+      let h = '<option value="all">✨ Todos los capítulos</option>';
+      for (const chap of TOC) {
+        if (!alcanza(chap.num)) continue;
+        h += `<option value="${chap.num}">${chap.icon} ${escapeHtml(chap.name)}</option>`;
+      }
+      sel.innerHTML = h;
+      sel.value = c === null ? "all" : String(c);
+      sel.onchange = () => { selectedEjChap = sel.value; reiniciar(); };
+    }
+    return c;
+  }
+
+  function generarBlancos(n, soloIdx) {
     const terminos = GLOSSARY
       .map(g => g.t)
       .filter(t => t.length >= 5 && t.length <= 28 && !t.includes("(") && !/\d/.test(t));
     const items = [];
     PAGES.forEach((p, idx) => {
       if (ejEsPaginaExcluida(p.title)) return;
+      if (soloIdx && soloIdx.indexOf(idx) === -1) return;   // 12/11: capitulo elegido
       const crudo = PAGE_TEXTS_RAW[idx] || "";
       ejFrases(crudo).forEach(f => {
         if (f.length < 55 || f.length > 200) return;
@@ -27156,7 +27194,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   let blSesion = null;
 
   function iniciarBlancos() {
-    const items = generarBlancos(8);
+    const c = ejCapSelect("blCap", k => generarBlancos(8, ejPagIdxDeCap(k)).length >= 3, iniciarBlancos);
+    const items = generarBlancos(8, c === null ? null : ejPagIdxDeCap(c));
     if (items.length < 3) {
       showToast("✏️", "Esta materia todavía no tiene frases para completar");
       goScreen("dashboard");
@@ -27240,9 +27279,11 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
   let paSesion = null;
 
   function iniciarPares() {
-    const cand = GLOSSARY
+    const candDe = k => GLOSSARY
+      .filter(g => k === null || g.c === k)   // 12/11: capitulo elegido
       .map(g => ({ t: g.t, d: (g.d || "").split("\n")[0].trim() }))
       .filter(g => g.d.length >= 20 && g.d.length <= 120);
+    const cand = candDe(ejCapSelect("paCap", k => candDe(k).length >= 4, iniciarPares));
     if (cand.length < 4) {
       showToast("🔗", "Esta materia todavía no tiene términos para unir");
       goScreen("dashboard");
@@ -27392,7 +27433,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
 
   let orHechos = [];
   function iniciarOrdenar(seguir) {
-    const bancos = (SUBJECT_DATA && SUBJECT_DATA.secuencias) || [];
+    const todosOr = (SUBJECT_DATA && SUBJECT_DATA.secuencias) || [];
+    const cOr = ejCapSelect("orCap", k => todosOr.some(b => b.c === k), () => iniciarOrdenar());
+    const bancos = cOr === null ? todosOr : todosOr.filter(b => b.c === cOr);   // 12/11: capitulo elegido
     if (!bancos.length) { showToast("🔢", "Esta materia todavía no tiene secuencias"); goScreen("dashboard"); return; }
     if (!seguir) orHechos = [];
     orSesion = { sec: elegirBanco(bancos, "or", orHechos), paso: 0, errores: 0, xp: 0, t: Date.now() };
@@ -27467,7 +27510,9 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
 
   let clHechos = [];
   function iniciarClasificar(seguir) {
-    const bancos = (SUBJECT_DATA && SUBJECT_DATA.clasif) || [];
+    const todosCl = (SUBJECT_DATA && SUBJECT_DATA.clasif) || [];
+    const cCl = ejCapSelect("clCap", k => todosCl.some(b => b.c === k), () => iniciarClasificar());
+    const bancos = cCl === null ? todosCl : todosCl.filter(b => b.c === cCl);   // 12/11: capitulo elegido
     if (!bancos.length) { showToast("🗂️", "Esta materia todavía no tiene clasificaciones"); goScreen("dashboard"); return; }
     if (!seguir) clHechos = [];
     clSesion = { banco: elegirBanco(bancos, "cl", clHechos), puestos: 0, errores: 0, sel: null, xp: 0, t: Date.now() };
@@ -27888,6 +27933,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     const marcarSeleccion = (c) => {
       $("quizChapPick").querySelectorAll(".chap-pick-opt").forEach(x => x.classList.toggle("selected", x.dataset.c === String(c)));
       selectedQuizChap = String(c);
+      selectedEjChap = String(c);   // 12/11: lo usan tambien Completar/Unir/Ordenar/Clasificar
     };
 
     $("quizChapPick").querySelectorAll(".chap-pick-opt").forEach(el => {
@@ -28487,6 +28533,7 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
         $("fcChapPick").querySelectorAll(".chap-pick-opt").forEach(x => x.classList.remove("selected"));
         el.classList.add("selected");
         selectedFcChap = el.dataset.c;
+        selectedEjChap = el.dataset.c;   // 12/11
       });
     });
   }
@@ -28859,7 +28906,8 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     MASTER_BADGES = cat.masterBadges || null;
 
     // Cargar datos en las variables globales
-    SUBJECT_DATA = subj;   // materia activa: da acceso a secuencias/clasif (19/08)
+    SUBJECT_DATA = subj;
+    if (typeof selectedEjChap !== "undefined") selectedEjChap = "all";   // 12/11: otra materia, otros capitulos   // materia activa: da acceso a secuencias/clasif (19/08)
     PAGES = subj.pages;
     TOC = subj.toc;
     IMG_DB = subj.imgs;
@@ -30793,7 +30841,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "10/11 21:40";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "12/11 09:30";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
