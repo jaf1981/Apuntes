@@ -1,1 +1,10 @@
-{"pendientes": []}
+{
+ "pendientes": [
+  {
+   "id": "e-2026-11-16-tecnologia",
+   "tipo": "examen",
+   "device": "dzsanzmp0msnqzs8p",
+   "materia": "Tecnología"
+  }
+ ]
+}
