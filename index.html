@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="18/11 22:10">
+<meta name="apuntes-version" content="18/11 22:35">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -38251,10 +38251,43 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
              drT: dr.t || 0, drV: dr.v || 0 };
   }
 
+  /* 18/11 (Javier): con un examen hoy, mañana o pasado ("a menos de 48 hs") el inicio no distrae:
+     sin la banda de Misiones y con el REPASO sólo de materias con examen en esa ventana. Las tarjetas
+     van siempre ordenadas por la fecha de examen más próxima; después las demás, en el orden de siempre. */
+  function diasAlExamen(subj) {
+    const m = subj && subj.exam_date ? String(subj.exam_date).match(/(\d{1,2})\/(\d{1,2})/) : null;
+    if (!m) return null;
+    const hoy = new Date();
+    const ex = new Date(hoy.getFullYear(), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+    return Math.round((ex - new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) / 86400000);
+  }
+  function materiasEnVentana() {
+    return Object.keys(SUBJECTS).filter(k => { const d = diasAlExamen(SUBJECTS[k]); return d !== null && d >= 0 && d <= 2; });
+  }
+  try { window.apuntesVentanaExamen = materiasEnVentana; } catch (e) {}
+  function ordenarTarjetas() {
+    const cont = document.querySelector('.sp-cards');
+    if (!cont) return;
+    const cards = Array.from(cont.querySelectorAll('.sp-card'));
+    if (!cont.dataset.orden) cont.dataset.orden = cards.map(c => c.dataset.subject).join(',');
+    const base = cont.dataset.orden.split(',');
+    const dias = k => { const d = diasAlExamen(SUBJECTS[k]); return (d === null || d < 0) ? null : d; };
+    cards.sort((a, b) => {
+      const ka = a.dataset.subject, kb = b.dataset.subject, da = dias(ka), db = dias(kb);
+      if (da !== null && db !== null && da !== db) return da - db;
+      if (da !== null && db === null) return -1;
+      if (da === null && db !== null) return 1;
+      return base.indexOf(ka) - base.indexOf(kb);
+    });
+    cards.forEach(c => cont.appendChild(c));
+  }
+
   function renderSpSlot() {
     const slot = document.getElementById('spSlot');
     if (!slot) return;
     slot.innerHTML = '';
+    try { ordenarTarjetas(); } catch (e) {}
+    const ventana = materiasEnVentana();   // 18/11: examen a 2 días o menos
     const infos = Object.keys(SUBJECTS).map(infoRepasoMateria).filter(Boolean);
     const hecho = infos.find(i => i.hechoHoy);
     // (02/09) EL SLOT SE APAGABA SOLO. Solo aparecia si faltaban 0..7 dias para
@@ -38263,14 +38296,14 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     // desaparecio en silencio. No se rompio nada: se cumplio una condicion que ya
     // no se puede cumplir. Las metricas lo confirman: 2 repasos completados en
     // toda la vida de la app.
-    const listos = infos.filter(i => i.debiles >= 3 && !i.hechoHoy);
+    const listos = infos.filter(i => i.debiles >= 3 && !i.hechoHoy && (!ventana.length || ventana.includes(i.k)));
     const porExamen = listos
       .filter(i => i.dias !== null && i.dias >= 0 && i.dias <= 7)
       .sort((a, b) => a.dias - b.dias)[0];
     // Con un examen cerca manda el examen, que es el mejor motivo posible. Sin
     // examen a la vista (lo normal fuera de epoca de pruebas) se ofrece la materia
     // donde MAS cuesta, para que el slot siga teniendo sentido todo el ano.
-    const porDebiles = listos.slice().sort((a, b) => b.debiles - a.debiles)[0];
+    const porDebiles = ventana.length ? null : listos.slice().sort((a, b) => b.debiles - a.debiles)[0];   // 18/11
     // UN repaso por dia en TODA la app, no uno por materia. Antes el limite real
     // lo ponia la ventana de examen; sin esa ventana, 200 XP por materia por dia
     // seria la forma mas rentable de juntar XP sin estudiar.
@@ -38304,6 +38337,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     if (nudgeOfrecido || !CURRENT_SUBJECT) return;
     if (document.getElementById('apNudge') || document.getElementById('spSlotBtn')) return;  // el slot ya lo ofrece
     if (state.nudgeDia === lectHoyStr()) return;   // ya dijo "ahora no" hoy
+    { const v = materiasEnVentana(); if (v.length && v.indexOf(CURRENT_SUBJECT) === -1) return; }   // 18/11: examen cerca
     if (state.desafioRepaso && state.desafioRepaso.f === lectHoyStr()) return;
     const n = poolDebiles().length;
     if (n < 3) return;
@@ -38679,7 +38713,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "18/11 22:10";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "18/11 22:35";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -40161,6 +40195,8 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   function misRender() {
     var slot = document.getElementById('misSlot');
     if (!slot || !MIS_DATA) return;
+    /* 18/11 (Javier): con un examen a 2 días o menos, sin Misiones en el inicio (no se borra nada: vuelven solas) */
+    try { if (typeof window.apuntesVentanaExamen === 'function' && window.apuntesVentanaExamen().length) { slot.innerHTML = ''; return; } } catch (e) {}
     var s = misEstado();
     slot.innerHTML = '';
     var band = misEl('div', 'mis-band'), cab = misEl('div', 'mis-cab');
