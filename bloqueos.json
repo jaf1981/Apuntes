@@ -23,6 +23,6 @@
     "Se publica solo en un par de minutos. Editar: repo Apuntes -> bloqueos.json -> lapiz -> Commit."
   ],
   "bloqueos": [
-    { "diario": { "desde": "04:00", "hasta": "07:00" } }
+    { "diario": { "desde": "00:00", "hasta": "07:00" } }
   ]
 }
