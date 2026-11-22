@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="18/11 22:35">
+<meta name="apuntes-version" content="22/11 10:20">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -1057,7 +1057,7 @@ body {
 
 .dash-stats-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;   /* 22/11: + Dominio */
   gap: 10px;
   margin-top: 16px;
 }
@@ -2371,6 +2371,9 @@ body {
   color: var(--card-tint);
   font-variant-numeric: tabular-nums;
 }
+/* 22/11: con "Nivel · 25% dominado" la barra quedaba finita; si no entra, el texto baja de renglón */
+.sp-card-progress { flex-wrap: wrap; row-gap: 4px; }
+.sp-card-progress-bar { min-width: 80px; }
 
 .sp-card-arrow {
   font-size: 24px;
@@ -3094,6 +3097,10 @@ body {
           <div class="dash-stat">
             <div class="dash-stat-num" id="statAccuracy">—</div>
             <div class="dash-stat-label">🎯 Precisión</div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-num" id="statDominio">—</div>
+            <div class="dash-stat-label">📚 Dominio</div>
           </div>
         </div>
       </div>
@@ -35627,6 +35634,12 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
     $("statAccuracy").textContent = state.totalAnswered > 0
       ? Math.round(100 * state.totalCorrect / state.totalAnswered) + "%"
       : "—";
+    /* 22/11 (Javier): dominio = preguntas de la materia contestadas bien al menos una vez,
+       sobre las que hay HOY. Si entra contenido nuevo, baja solo; los puntos no se tocan. */
+    { const _ids = new Set(QUIZ_BANK.map(q => q.id));
+      const _dom = (state.quizCorrectIds || []).filter(id => _ids.has(id)).length;
+      const _el = $("statDominio");
+      if (_el) _el.textContent = QUIZ_BANK.length ? Math.round(100 * _dom / QUIZ_BANK.length) + "%" : "—"; }
     $("glossCount").textContent = GLOSSARY.length + " términos";
     ajustarActividades();
 
@@ -35651,13 +35664,17 @@ var AV_GARAGE = {"a_clasico":{"w":1000,"h":313},"a_deportivo":{"w":1000,"h":313}
       const cs = state.chapStats[chap.num] || {a:0, c:0};
       const total = QUIZ_BANK.filter(q => q.c === chap.num).length;
       const acc = cs.a > 0 ? Math.round(100 * cs.c / cs.a) : 0;
+      /* 22/11: la barra muestra cuanto del capitulo ya domina (preguntas bien al menos una vez) */
+      const _corr = state.quizCorrectIds || [];
+      const dom = QUIZ_BANK.filter(q => q.c === chap.num && _corr.includes(q.id)).length;
+      const domPct = total ? Math.round(100 * dom / total) : 0;
       ph += `<div class="chap-progress">
         <div class="chap-progress-head">
           <span class="icon">${chap.icon}</span>
           <span class="name">${escapeHtml(chap.name)}</span>
-          <span class="stats">${cs.c}/${cs.a} · ${cs.a > 0 ? acc + "%" : "—"}</span>
+          <span class="stats">✓ ${dom}/${total} · ${cs.a > 0 ? acc + "% aciertos" : "—"}</span>
         </div>
-        <div class="chap-progress-bar"><div class="chap-progress-bar-fill" style="width:${acc}%"></div></div>
+        <div class="chap-progress-bar"><div class="chap-progress-bar-fill" style="width:${domPct}%"></div></div>
       </div>`;
     }
     $("chapProgressList").innerHTML = ph;
@@ -38408,9 +38425,16 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   }
   
   function updatePickerStats() {
+    /* 22/11: la primera llamada (showSubjectPicker al arrancar) llega ANTES de que exista CATALOGOS
+       (const mas abajo en este mismo bloque): leerlo ahi tira error y corta toda la app. Se usa una
+       escala provisoria un instante y se vuelve a pintar apenas termina de cargar. */
+    let _cat = null;
+    try { _cat = CATALOGOS; } catch (e) { setTimeout(updatePickerStats, 0); }
+    const NIV_PROVISORIO = [{xp: 0, name: "Aprendiz"}, {xp: 50, name: "Estudiante"}, {xp: 150, name: "Avanzado"},
+                            {xp: 350, name: "Experto"}, {xp: 700, name: "Maestro"}];
     for (const key in SUBJECTS) {
       const subj = SUBJECTS[key];
-      let xp = 0, totalAnswered = 0, totalCorrect = 0, pagesVisited = 0;
+      let xp = 0, totalAnswered = 0, totalCorrect = 0, pagesVisited = 0, correctIds = [];
       try {
         const saved = localStorage.getItem(subj.storage_key);
         if (saved) {
@@ -38419,15 +38443,17 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
           totalAnswered = s.totalAnswered || 0;
           totalCorrect = s.totalCorrect || 0;
           pagesVisited = (s.pagesVisited || []).length;
+          correctIds = s.quizCorrectIds || [];
         }
       } catch (e) {}
       
-      // Calcular nivel basado en XP
+      /* 22/11 (Javier): el nivel sale de la MISMA escala que adentro de la materia (CATALOGOS).
+         Antes el inicio usaba otros umbrales: con 400 XP adentro decia Experto y aca Avanzado. */
       let levelName = "Aprendiz";
-      if (xp >= 1200) levelName = "Maestro";
-      else if (xp >= 700) levelName = "Experto";
-      else if (xp >= 350) levelName = "Avanzado";
-      else if (xp >= 150) levelName = "Estudiante";
+      const _lv = (_cat && (_cat[key] || _cat.bio).levels) || NIV_PROVISORIO;
+      for (const l of _lv) if (xp >= l.xp) levelName = l.name;
+      const _ids = new Set(subj.quiz.map(q => q.id));
+      const domPct = subj.quiz.length ? Math.round(100 * correctIds.filter(id => _ids.has(id)).length / subj.quiz.length) : 0;
       
       const accuracy = totalAnswered > 0 ? Math.round(100 * totalCorrect / totalAnswered) : 0;
       const progress = Math.min(100, Math.round(100 * pagesVisited / subj.pages.length));
@@ -38436,9 +38462,9 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       const textEl = document.getElementById(key + 'ProgressText');
       const statsEl = document.getElementById(key + 'Stats');
       
-      if (fillEl) fillEl.style.width = progress + '%';
+      if (fillEl) fillEl.style.width = domPct + '%';   // 22/11: la barra acompaña al "% dominado" (las páginas leídas ya están en el texto)
       if (textEl) {
-        if (xp > 0) textEl.textContent = xp + ' XP · ' + levelName;
+        if (xp > 0) textEl.textContent = levelName + ' · ' + domPct + '% dominado';   // 22/11
         else textEl.textContent = 'Nuevo';
       }
       if (statsEl) {
@@ -38713,7 +38739,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "18/11 22:35";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "22/11 10:20";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
