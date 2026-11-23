@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="23/11 12:00">
+<meta name="apuntes-version" content="23/11 13:05">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -37705,13 +37705,45 @@ function avatarIACara(px) {
     div.id = "apTienda";
     div.className = "tienda-overlay";
     document.body.appendChild(div);
+    colVisAbrir("tienda");
     pintarTienda();
   }
   function cerrarTienda() {
     var t = document.getElementById("apTienda");
-    if (t) t.remove();
+    if (t) { t.remove(); colVisCerrar(); }
     renderAvatarInicio();
   }
+
+  /* 23/11 (Javier): uso de "Tu colección". Una visita va desde que abre la tienda o el garage hasta que
+     cierra los dos (cambiar de solapa no la corta). Al cerrar, o al salir de la app con la tienda abierta,
+     manda UN evento (ver 'apuntes:tienda' en el bloque de eventos). Sólo mide: no bloquea nada. */
+  var colVis = null;
+  function colVisAbrir(sol) {
+    if (!colVis) colVis = { t0: Date.now(), compras: 0, monedas: 0, cambios: 0, sol: [] };
+    if (colVis.sol.indexOf(sol) === -1) colVis.sol.push(sol);
+  }
+  function colVisMandar() {
+    if (!colVis) return;
+    var v = colVis; colVis = null;
+    var seg = Math.round((Date.now() - v.t0) / 1000);
+    if (seg < 1) return;
+    var est = 0; try { est = diaHoy().seg || 0; } catch (e) {}
+    try {
+      window.dispatchEvent(new CustomEvent('apuntes:tienda', { detail: { detalle: 'seg=' + seg + ';compras=' + v.compras +
+        ';monedas=' + v.monedas + ';cambios=' + v.cambios + ';est=' + est + ';sol=' + v.sol.join(',') } }));
+    } catch (e) {}
+  }
+  function colVisCerrar() {
+    /* diferido: al cambiar de solapa se cierra una y se abre la otra en el mismo toque */
+    setTimeout(function () {
+      if (!document.getElementById("apTienda") && !document.getElementById("apGarage")) colVisMandar();
+    }, 0);
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") { colVisMandar(); return; }
+    if (document.getElementById("apTienda")) colVisAbrir("tienda");
+    else if (document.getElementById("apGarage")) colVisAbrir("garage");
+  });
 
   /* ---- "Tu colección": la casa de todo lo ludico (20/08) -----------------
      La tienda y el garage siguen siendo dos overlays independientes (no se
@@ -37853,6 +37885,7 @@ function avatarIACara(px) {
     div.id = "apGarage";
     div.className = "tienda-overlay";
     document.body.appendChild(div);
+    colVisAbrir("garage");
     revisarAutos();                       /* antes de leer el estado */
     var a = avatarData();
     var v = garVehiculos();
@@ -37863,7 +37896,7 @@ function avatarIACara(px) {
   }
   function cerrarGarage() {
     var g = document.getElementById("apGarage");
-    if (g) g.remove();
+    if (g) { g.remove(); colVisCerrar(); }
     renderAvatarInicio();
   }
 
@@ -38085,15 +38118,8 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
       listenersTiendaBase(t);
       return;
     }
-    /* candado 2 de COMPRAS: 5 minutos efectivos del día */
-    if (diaHoy().seg < 300) {
-      var m = Math.floor(diaHoy().seg / 60), sgs = diaHoy().seg % 60;
-      t.innerHTML = h + '<div class="tienda-lock"><div class="grande">📚</div>' +
-        '<p><strong>Las compras abren con 5 minutos de estudio del día.</strong></p>' +
-        '<p>Llevás ' + m + ':' + (sgs < 10 ? "0" : "") + sgs + ' — leé o practicá un poco y volvé, que tus ' + saldo + ' monedas te esperan.</p></div>';
-      listenersTiendaBase(t);
-      return;
-    }
+    /* 23/11 (Javier): se sacó el candado 2 de COMPRAS (5 minutos de estudio del día). En su lugar se mide
+       cuánto se usa la tienda (colVis*, evento 'desafio' materia 'tienda') para decidir con datos. */
     for (var ci = 0; ci < TIENDA_CATS.length; ci++) {
       var cat = TIENDA_CATS[ci];
       var items = CATALOGO.filter(function (x) { return x.slot === cat[0]; });
@@ -38179,9 +38205,11 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
         a.eq[it.slot] = id;
       }
       guardarAvatar(a);
+      if (colVis) colVis.cambios++;
     } else {
       var saldo = monedasSaldo();
       if (saldo < it.p) { showToast("🪙", "Te faltan " + (it.p - saldo) + " monedas"); return; }
+      if (colVis) { colVis.compras++; colVis.monedas += it.p; }
       a.gastadas = (a.gastadas || 0) + it.p;
       a.comprados.push(id);
       a.eq[it.slot] = id;
@@ -38742,7 +38770,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "23/11 12:00";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "23/11 13:05";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -39179,6 +39207,12 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   window.addEventListener('apuntes:desafio', function (e) {
     var m = e && e.detail && e.detail.materia ? e.detail.materia : '';
     send('desafio', { materia: m, detalle: 'repaso completado (+200 XP)' });
+  });
+  /* 23/11: uso de la tienda. Va como 'desafio' con materia 'tienda' porque el Apps Script sólo acepta
+     tipos de evento conocidos (EVENTOS_VALIDOS) y así no hay que tocarlo. */
+  window.addEventListener('apuntes:tienda', function (e) {
+    var d = e && e.detail && e.detail.detalle ? String(e.detail.detalle) : '';
+    if (d) send('desafio', { materia: 'tienda', detalle: d.slice(0, 120) });
   });
 
   /* ---- aviso de versión nueva (chequeo liviano contra el servidor) ---- */
