@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apuntes-version" content="22/11 10:20">
+<meta name="apuntes-version" content="23/11 12:00">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#f4ecd8">
@@ -38320,7 +38320,10 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
     // Con un examen cerca manda el examen, que es el mejor motivo posible. Sin
     // examen a la vista (lo normal fuera de epoca de pruebas) se ofrece la materia
     // donde MAS cuesta, para que el slot siga teniendo sentido todo el ano.
-    const porDebiles = ventana.length ? null : listos.slice().sort((a, b) => b.debiles - a.debiles)[0];   // 18/11
+    /* 23/11 (Javier): el REPASO del inicio sólo en época de examen (7 días o menos) y después desaparece.
+       Ya no se ofrece "la materia donde más cuesta" sin examen (porDebiles del 02/09). El aviso al salir
+       de una materia (ofrecerNudgeRepaso) sigue igual. */
+    const porDebiles = null;
     // UN repaso por dia en TODA la app, no uno por materia. Antes el limite real
     // lo ponia la ventana de examen; sin esa ventana, 200 XP por materia por dia
     // seria la forma mas rentable de juntar XP sin estudiar.
@@ -38739,7 +38742,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
 (function () {
   'use strict';
   var APUNTES_EVENTS_URL = "https://script.google.com/macros/s/AKfycbxEVmpEToGz7QSHqdpAckNEbtoh5-t1tuwNjavRi1rTCPq6WSfWOPxn9Qa0cOi8H8AB/exec";
-  var APUNTES_VERSION = "22/11 10:20";  /* sello de compilacion, inyectado por build_publico.py */
+  var APUNTES_VERSION = "23/11 12:00";  /* sello de compilacion, inyectado por build_publico.py */
 
   /* mostrar la version en el pie del selector */
   (function () {
@@ -40140,6 +40143,8 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
      Todo lo que llega del JSON se pinta con textContent. */
   var MIS_K = 'apuntes_mis';
   var MIS_DATA = null;
+  /* 23/11 (Javier): misiones dadas de baja. No se borra nada; para volver, false. */
+  var MIS_BAJA = true;
   var misUltimoFetch = 0;
   var MIS_PASOS = ['apuesta', 'dato', 'herramienta', 'pregunta', 'cierre'];
   function misEstado() {
@@ -40220,6 +40225,7 @@ var ICONOS = {"r_basica": [0, 0], "r_buzo": [1, 0], "p_clasico": [2, 0], "p_rapa
   /* ---------- la banda en el inicio ---------- */
   function misRender() {
     var slot = document.getElementById('misSlot');
+    if (MIS_BAJA) { if (slot) slot.innerHTML = ''; return; }   // 23/11: misiones dadas de baja
     if (!slot || !MIS_DATA) return;
     /* 18/11 (Javier): con un examen a 2 días o menos, sin Misiones en el inicio (no se borra nada: vuelven solas) */
     try { if (typeof window.apuntesVentanaExamen === 'function' && window.apuntesVentanaExamen().length) { slot.innerHTML = ''; return; } } catch (e) {}
